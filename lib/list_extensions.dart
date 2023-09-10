@@ -1,4 +1,4 @@
-library list_extensions;
+library innerlibs;
 
 
 extension StringListExtensions on List<String> {
