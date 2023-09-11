@@ -1,4 +1,4 @@
-library brazil_tools;
+library innerlibs;
 
 import 'dart:math';
 
