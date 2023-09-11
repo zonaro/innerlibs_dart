@@ -2,7 +2,7 @@ library brazil_tools;
 
 import 'dart:math';
 
-import 'package:brazil_tools/utils.dart';
+import 'package:innerlibs/string_extensions.dart';
 
 part 'brazil_tools.part.dart';
 
