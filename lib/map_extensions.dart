@@ -1,3 +1,5 @@
+library innerlibs;
+
 extension MapExtension<K, V> on Map<K, V> {
   /// Function to convert the map into a List<T>.
   /// Takes a function as parameter that defines how the key and value are mapped into T
