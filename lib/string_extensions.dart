@@ -106,4 +106,29 @@ extension StringExtensions on String {
 
     return replaceAllMapped(_diacriticsRegExp, (a) => _diacriticsMap[a.group(0)] ?? a.group(0));
   }
+
+  /// Splits a camel case string
+  String get camelSplitString => camelSplit.join(" ");
+
+  /// Splits a camel case string into a list of words.
+  List<String> get camelSplit {
+    List<String> words = [];
+    String word = '';
+    for (int i = 0; i < length; i++) {
+      if (this[i] == this[i].toUpperCase()) {
+        if (word.isNotEmpty) {
+          words.add(word);
+        }
+        word = this[i];
+      } else {
+        word += this[i];
+      }
+    }
+
+    if (word.isNotEmpty) {
+      words.add(word);
+    }
+
+    return words;
+  }
 }
