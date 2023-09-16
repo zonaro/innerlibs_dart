@@ -1,6 +1,5 @@
 library innerlibs;
 
-
 extension StringListExtensions on List<String> {
   ///Verify if any [String] in a [List<String>]  contains the specified [String]
   bool containsLike(String s) {
@@ -13,6 +12,22 @@ extension StringListExtensions on List<String> {
 
 /// Adds extensions to the `List` class
 extension ListExtension<T> on List<T> {
+
+  /// Remove the last [count] items of a list thats satisfy the [predicate]
+  List<T> removeLastWhere(bool Function(T) predicate, [int count = 1]) {
+    if (count > 0) {
+      int c = 0;
+      for (int i = length - 1; i >= 0; i--) {
+        if (c >= count) break;
+        if (predicate(this[i])) {
+          removeAt(i);
+          c++;
+        }
+      }
+    }
+    return this;
+  }
+
   /// Groups the items in the list by the item returned by the lambda function.
   ///
   /// The lambda function takes an item of type T and returns a item of type M used as key.
