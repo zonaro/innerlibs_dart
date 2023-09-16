@@ -12,7 +12,6 @@ extension StringListExtensions on List<String> {
 
 /// Adds extensions to the `List` class
 extension ListExtension<T> on List<T> {
-
   /// Remove the last [count] items of a list thats satisfy the [predicate]
   List<T> removeLastWhere(bool Function(T) predicate, [int count = 1]) {
     if (count > 0) {
@@ -20,6 +19,20 @@ extension ListExtension<T> on List<T> {
       for (int i = length - 1; i >= 0; i--) {
         if (c >= count) break;
         if (predicate(this[i])) {
+          removeAt(i);
+          c++;
+        }
+      }
+    }
+    return this;
+  }
+
+  List<T> removeFirstWhere(bool Function(T) predicate, [int count = 1]) {
+    if (count > 0) {
+      int c = 0;
+      for (int i = 0; i < length; i++) {
+        if (predicate(this[i])) {
+          if (c >= count) break;
           removeAt(i);
           c++;
         }
