@@ -131,4 +131,26 @@ extension StringExtensions on String {
 
     return words;
   }
+
+  String get singularPt {
+    if (endsWith('ões')) {
+      return substring(0, length - 3) + 'ão';
+    } else if (endsWith('ães')) {
+      return substring(0, length - 3) + 'ão';
+    } else if (endsWith('s')) {
+      return substring(0, length - 1);
+    }
+    return this;
+  }
+
+  String get singular {
+    if (endsWith('ies')) {
+      return '${substring(0, length - 3)}y';
+    } else if (endsWith('es')) {
+      return substring(0, length - 2);
+    } else if (endsWith('s')) {
+      return substring(0, length - 1);
+    }
+    return this;
+  }
 }
