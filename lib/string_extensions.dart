@@ -132,11 +132,27 @@ extension StringExtensions on String {
     return words;
   }
 
+  String emptyIf(String text) {
+    if (this == text) {
+      return "";
+    } else {
+      return this;
+    }
+  }
+
+    String? nullIf(String text) {
+    if (this == text) {
+      return null;
+    } else {
+      return this;
+    }
+  }
+
   String get singularPt {
     if (endsWith('ões')) {
-      return substring(0, length - 3) + 'ão';
+      return '${substring(0, length - 3)}ão';
     } else if (endsWith('ães')) {
-      return substring(0, length - 3) + 'ão';
+      return '${substring(0, length - 3)}ão';
     } else if (endsWith('s')) {
       return substring(0, length - 1);
     }
