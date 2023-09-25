@@ -31,7 +31,7 @@ class FutureAwaiter<T> extends StatelessWidget {
             } else if (snapshot.hasData && snapshot.data != null) {
               return doneWidget(snapshot.data as T);
             } else {
-              return doneWithoutDataWidget
+              return doneWithoutDataWidget;
             }
           }
         },
