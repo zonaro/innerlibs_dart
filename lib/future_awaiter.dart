@@ -7,7 +7,8 @@ class FutureAwaiter<T> extends StatelessWidget {
   final Widget doneWithoutDataWidget;
   final Widget Function(Object error) errorWidget;
 
-  const FutureAwaiter({super.key, 
+  const FutureAwaiter({
+    super.key,
     required this.future,
     required this.loadingWidget,
     required this.doneWidget,
@@ -17,19 +18,19 @@ class FutureAwaiter<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FutureBuilder<T>(
-      future: future,
-      builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return loadingWidget;
-        } else {
-          if (snapshot.hasError) {
-            return errorWidget(snapshot.error!);
-          } else if (snapshot.hasData) {
-            return doneWidget(snapshot.data!);
+        future: future,
+        builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return loadingWidget;
           } else {
-            return doneWithoutDataWidget;
+            if (snapshot.hasError) {
+              return errorWidget(snapshot.error!);
+            } else if (snapshot.hasData && snapshot.data != null) {
+              return doneWidget(snapshot.data as T);
+            } else {
+              return doneWithoutDataWidget;
+            }
           }
-        }
-      },
-    );
+        },
+      );
 }
