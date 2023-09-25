@@ -23,8 +23,8 @@ class FutureAwaiter<T> extends StatelessWidget {
         future: future,
         initialData: initialData,
         builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting && loadingWidget != null) {
-            return loadingWidget!;
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return loadingWidget ?? const CircularProgressIndicator();
           } else {
             if (snapshot.hasError && errorWidget != null) {
               return errorWidget!(snapshot.error!);
