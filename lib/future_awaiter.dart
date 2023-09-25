@@ -6,15 +6,16 @@ class FutureAwaiter<T> extends StatelessWidget {
   final Future<T> future;
   final Widget loadingWidget;
   final Widget Function(T data) doneWidget;
-  final Widget doneWithoutDataWidget;
   final Widget errorWidget;
+  final Widget? doneWithoutDataWidget;
 
-  const FutureAwaiter({super.key, 
+  const FutureAwaiter({
+    super.key,
     required this.future,
     required this.loadingWidget,
     required this.doneWidget,
-    required this.doneWithoutDataWidget,
     required this.errorWidget,
+    this.doneWithoutDataWidget,
   });
 
   @override
@@ -30,7 +31,7 @@ class FutureAwaiter<T> extends StatelessWidget {
           } else if (snapshot.hasData && snapshot.data != null) {
             return doneWidget(snapshot.data as T);
           } else {
-            return doneWithoutDataWidget;
+            return doneWithoutDataWidget ?? errorWidget;
           }
         }
       },
