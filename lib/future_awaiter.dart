@@ -32,8 +32,9 @@ class FutureAwaiter<T> extends StatelessWidget {
               if (snapshot.data is List) {
                 var l = snapshot.data as List;
                 if (l.isEmpty) {
+                  debugPrint("List is empty");
                   return doneWithoutDataWidget;
-                } 
+                }
               }
               return doneWidget(snapshot.data as T);
             } else {
