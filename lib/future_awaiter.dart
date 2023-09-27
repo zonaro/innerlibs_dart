@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:string_extensions/string_extensions.dart';
 
 /// Wraps a [FutureBuilder] and make is easier to use
 class FutureAwaiter<T> extends StatelessWidget {
@@ -44,14 +45,22 @@ class FutureAwaiter<T> extends StatelessWidget {
               return errorWidget != null ? errorWidget!(snapshot.error!) : ErrorWidget(snapshot.error!);
             } else {
               if (snapshot.hasData && snapshot.data != null) {
-                if (snapshot.data is List) {
-                  var l = snapshot.data as List;
-                  if (l.isEmpty) {
-                    debugPrint("List is empty");
-                    return doneWithoutDataWidget ?? const Placeholder();
-                  }
+                switch (snapshot.data) {
+                  case String():
+                    var l = snapshot.data as String;
+                    if (l.isBlank) {
+                      debugPrint("String is null, blank or empty");
+                      return doneWithoutDataWidget ?? const Placeholder();
+                    }
+                  case List():
+                    var l = snapshot.data as List;
+                    if (l.isEmpty) {
+                      debugPrint("List is empty");
+                      return doneWithoutDataWidget ?? const Placeholder();
+                    }
+                  default:
+                    return doneWidget(snapshot.data as T);
                 }
-                return doneWidget(snapshot.data as T);
               } else {
                 return doneWithoutDataWidget ?? const Placeholder();
               }
