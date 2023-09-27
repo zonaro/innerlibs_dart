@@ -43,28 +43,26 @@ class FutureAwaiter<T> extends StatelessWidget {
           } else {
             if (snapshot.hasError) {
               return errorWidget != null ? errorWidget!(snapshot.error!) : ErrorWidget(snapshot.error!);
-            } else {
-              if (snapshot.hasData && snapshot.data != null) {
-                switch (snapshot.data) {
-                  case String():
-                    var l = snapshot.data as String;
-                    if (l.isBlank) {
-                      debugPrint("String is null, blank or empty");
-                      return doneWithoutDataWidget ?? const Placeholder();
-                    }
-                  case List():
-                    var l = snapshot.data as List;
-                    if (l.isEmpty) {
-                      debugPrint("List is empty");
-                      return doneWithoutDataWidget ?? const Placeholder();
-                    }
-                  default:
-                    return doneWidget(snapshot.data as T);
-                }
-              } else {
-                return doneWithoutDataWidget ?? const Placeholder();
+            } else if (snapshot.hasData && snapshot.data != null) {
+              switch (snapshot.data) {
+                case String():
+                  var l = snapshot.data as String;
+                  if (l.isBlank) {
+                    debugPrint("String is null, blank or empty");
+                    return doneWithoutDataWidget ?? const Placeholder();
+                  }
+                case List():
+                  var l = snapshot.data as List;
+                  if (l.isEmpty) {
+                    debugPrint("List is empty");
+                    return doneWithoutDataWidget ?? const Placeholder();
+                  }
+                default:
+                  break;
               }
+              return doneWidget(snapshot.data as T);
             }
+            return doneWithoutDataWidget ?? const Placeholder();
           }
         },
       );
