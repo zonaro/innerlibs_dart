@@ -7,20 +7,22 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// If no future has yet completed, including in the case where [future] is null, the data provided to the [builder] will be set to [initialData]
   final Future<T> future;
 
-  /// function thats receive a [T] and return a [Widget] after the completion of [future]
+  /// Function thats receive a [T] data returned by [future] and return a [Widget]. 
   final Widget Function(T data) doneWidget;
 
-  /// A [Widget] to return if [T] is null or empty (if [List])
+  /// A [Widget] to return if [T] is null or empty. If not specified return a [Placeholder]
+  /// 
+  /// Empty [List] and blank [String] will be considered empty data in this case.
   final Widget? doneWithoutDataWidget;
 
   /// [Widget] to show while [future] is running
   final Widget? loadingWidget;
 
-  /// A functions thas receive an error and return a [Widget]
+  /// A function thats receive an error and return a [Widget]. If not specified return a [ErrorWidget]
   final Widget Function(Object error)? errorWidget;
 
   /// The data that will be used to create the snapshots provided until a non-null [future] has completed.
-  /// If the future completes with an error, the data in the [AsyncSnapshot] provided to the [builder] will become null, regardless of [initialData]. (The error itself will be available in [AsyncSnapshot.error], and [AsyncSnapshot.hasError] will be true.)
+  /// If the future completes with an error, the data in the [AsyncSnapshot] provided to the [builder] will become null, regardless of [initialData]. (The error itself will be available in [errorWidget] function)
   final T? initialData;
 
   const FutureAwaiter({
