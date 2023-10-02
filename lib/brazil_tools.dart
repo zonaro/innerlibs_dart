@@ -191,7 +191,7 @@ abstract interface class Brasil extends _Brasil {
   }
 
   /// Lista com todas as cidades do Brasil
-  static List<Cidade> get cidades => estados.expand((element) => element.cidades).toList()..sort();
+  static List<Cidade> get cidades => estados.expand((e) => e.cidades).toList()..sort();
 
   /// pega um estado a partir do nome, UF ou IBGE
   static Estado? pegarEstado(String nomeOuUFOuIBGE) => pesquisarEstado(nomeOuUFOuIBGE).singleOrNull;

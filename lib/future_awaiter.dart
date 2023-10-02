@@ -7,11 +7,11 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// If no future has yet completed, including in the case where [future] is null, the data provided to the [builder] will be set to [initialData]
   final Future<T> future;
 
-  /// Function thats receive a [T] data returned by [future] and return a [Widget]. 
+  /// Function thats receive a [T] data returned by [future] and return a [Widget].
   final Widget Function(T data) doneWidget;
 
   /// A [Widget] to return if [T] is null or empty. If not specified return a [Placeholder]
-  /// 
+  ///
   /// Empty [List] and blank [String] will be considered empty data in this case.
   final Widget? doneWithoutDataWidget;
 
@@ -41,7 +41,7 @@ class FutureAwaiter<T> extends StatelessWidget {
         initialData: initialData,
         builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return loadingWidget ?? const CircularProgressIndicator();
+            return Center(child: loadingWidget ?? const CircularProgressIndicator());
           } else {
             if (snapshot.hasError) {
               return errorWidget != null ? errorWidget!(snapshot.error!) : ErrorWidget(snapshot.error!);
@@ -51,20 +51,20 @@ class FutureAwaiter<T> extends StatelessWidget {
                   var l = snapshot.data as String;
                   if (l.isBlank) {
                     debugPrint("String is null, blank or empty");
-                    return doneWithoutDataWidget ?? const Placeholder();
+                    return doneWithoutDataWidget ?? const SizedBox.shrink();
                   }
                 case List():
                   var l = snapshot.data as List;
                   if (l.isEmpty) {
                     debugPrint("List is empty");
-                    return doneWithoutDataWidget ?? const Placeholder();
+                    return doneWithoutDataWidget ?? const SizedBox.shrink();
                   }
                 default:
                   break;
               }
               return doneWidget(snapshot.data as T);
             }
-            return doneWithoutDataWidget ?? const Placeholder();
+            return doneWithoutDataWidget ?? const SizedBox.shrink();
           }
         },
       );
