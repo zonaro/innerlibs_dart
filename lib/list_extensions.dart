@@ -12,7 +12,6 @@ extension StringListExtensions on List<String> {
 
 /// Adds extensions to the `List` class
 extension ListExtension<T> on List<T> {
-
   /// Remove the last [count] items of a list thats satisfy the [predicate]
   List<T> removeLastWhere(bool Function(T) predicate, [int count = 1]) {
     if (count > 0) {
@@ -27,6 +26,7 @@ extension ListExtension<T> on List<T> {
     }
     return this;
   }
+
   /// Remove the first [count] items of a list thats satisfy the [predicate]
   List<T> removeFirstWhere(bool Function(T) predicate, [int count = 1]) {
     if (count > 0) {
@@ -61,14 +61,16 @@ extension ListExtension<T> on List<T> {
 
   /// Detach items from a list according to a
   /// function and return these items in a new list
-  List<T> detachItems(bool Function(T) test) {
+  List<T> detachItems([bool Function(T)? test]) {
+    test = test ?? (x) => true;
     var items = where(test).toList();
     removeWhere((e) => items.contains(e));
     return items;
   }
 
   /// Move items from one list into another list, and return these items
-  List<T> moveTo(List<T> other, bool Function(T) test) {
+  List<T> moveTo(List<T> other, [bool Function(T)? test]) {
+    test = test ?? (x) => true;
     var i = detachItems(test);
     other.addAll(i);
     return i;
