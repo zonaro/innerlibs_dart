@@ -47,16 +47,25 @@ extension ListExtension<T> on List<T> {
   /// The lambda function takes an item of type T and returns a item of type M used as key.
   /// The function returns a Map<M,List<T>> where each key is a item of type M
   /// returned by the lambda function and each value is a list of items that have that key.
-  Map<M, List<T>> groupAndMapBy<M>(M Function(T) f) {
+  Map<M, List<T>> groupAndMapBy<M>(M Function(T) keyFunction) {
     Map<M, List<T>> map = {};
     forEach((item) {
-      M key = f(item);
+      M key = keyFunction(item);
       if (!map.containsKey(key)) {
         map[key] = [];
       }
       map[key]?.add(item);
     });
     return map;
+  }
+
+  /// Groups the items in the list by the item returned by the lambda function and remaps the values.
+  ///
+  /// The lambda function takes an item of type T and returns a item of type M used as key.
+  /// The function returns a Map<M,V> where each key is a item of type M
+  /// returned by the lambda function and each value is a List<T> that have that key remmaped as V.
+  Map<M, V> groupAndRemapBy<M,V>(M Function(T) keyFunction, V Function(List<T>) valueFunction) {
+    return groupAndMapBy(keyFunction).map((key, value) => MapEntry(key,  valueFunction(value)));
   }
 
   /// Detach items from a list according to a
