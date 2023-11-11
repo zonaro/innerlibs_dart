@@ -3,9 +3,6 @@ import 'dart:ui';
 
 import 'package:innerlibs/num_extensions.dart';
 
-
-
-
 Size sizeFromAspect({required String aspectRatio, double? width, double? height}) {
   if (width != null && height != null) {
     return Size(width, height);
