@@ -22,16 +22,18 @@ Size sizeFromAspect({required String aspectRatio, double? width, double? height}
   }
 }
 
-String getAspectratioString(Size size) {
-  var h = size.height;
-  var w = size.width;
-  while (w.hasDecimal) {
-    w = w * 10;
-  }
-  while (h.hasDecimal) {
-    h = h * 10;
-  }
+extension SizeExt on Size {
+  String get getAspectratioString {
+    var h = height;
+    var w = width;
+    while (w.hasDecimal) {
+      w = w * 10;
+    }
+    while (h.hasDecimal) {
+      h = h * 10;
+    }
 
-  var gcd = w.findGreatestCommonDivisor(h.round());
-  return '${size.width ~/ gcd}:${size.height ~/ gcd}';
+    var gcd = w.findGreatestCommonDivisor(h.round());
+    return '${w ~/ gcd}:${h ~/ gcd}';
+  }
 }
