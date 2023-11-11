@@ -3,6 +3,9 @@ import 'dart:ui';
 
 import 'package:innerlibs/num_extensions.dart';
 
+
+
+
 Size sizeFromAspect({required String aspectRatio, double? width, double? height}) {
   if (width != null && height != null) {
     return Size(width, height);
@@ -23,7 +26,7 @@ Size sizeFromAspect({required String aspectRatio, double? width, double? height}
 }
 
 extension SizeExt on Size {
-  String get aspectRatioString {
+  String getAspectRatioString([String separator = ":"]) {
     var h = height;
     var w = width;
     while (w.hasDecimal) {
@@ -34,6 +37,6 @@ extension SizeExt on Size {
     }
 
     var gcd = w.findGreatestCommonDivisor(h.round());
-    return '${w ~/ gcd}:${h ~/ gcd}';
+    return '${w ~/ gcd}$separator${h ~/ gcd}';
   }
 }

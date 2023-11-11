@@ -1,4 +1,3 @@
-library innerlibs;
 
 extension StringListExtensions on List<String> {
   ///Verify if any [String] in a [List<String>]  contains the specified [String]

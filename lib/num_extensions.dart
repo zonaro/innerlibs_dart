@@ -1,4 +1,4 @@
-library innerlibs;
+
 
 import 'package:innerlibs/string_extensions.dart';
 import 'package:string_extensions/string_extensions.dart';

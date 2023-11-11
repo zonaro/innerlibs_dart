@@ -1,4 +1,4 @@
-library innerlibs;
+
 
 import 'package:flutter/widgets.dart';
 import 'package:string_extensions/string_extensions.dart';
