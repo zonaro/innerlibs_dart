@@ -1,8 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
-Size sizeFromAspect({required String aspectRatio, double? width, double? height}) {
+import 'package:innerlibs/num_extensions.dart';
 
+Size sizeFromAspect({required String aspectRatio, double? width, double? height}) {
   if (width != null && height != null) {
     return Size(width, height);
   }
@@ -19,4 +20,18 @@ Size sizeFromAspect({required String aspectRatio, double? width, double? height}
   } else {
     throw ArgumentError('Either width or height must be provided.');
   }
+}
+
+String getAspectratioString(Size size) {
+  var h = size.height;
+  var w = size.width;
+  while (w.hasDecimal) {
+    w = w * 10;
+  }
+  while (h.hasDecimal) {
+    h = h * 10;
+  }
+
+  var gcd = w.findGreatestCommonDivisor(h.round());
+  return '${size.width ~/ gcd}:${size.height ~/ gcd}';
 }
