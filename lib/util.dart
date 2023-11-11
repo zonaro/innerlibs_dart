@@ -23,7 +23,7 @@ Size sizeFromAspect({required String aspectRatio, double? width, double? height}
 }
 
 extension SizeExt on Size {
-  String get getAspectratioString {
+  String get aspectRatioString {
     var h = height;
     var w = width;
     while (w.hasDecimal) {
