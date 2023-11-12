@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:string_extensions/string_extensions.dart';
 
@@ -97,7 +98,17 @@ extension StringExtensions on String {
 
   Text get asText => Text(this);
 
-  Color get asColor => Color(int.parse(ifBlank("#00000000").removeFirstAny(['#'])!.padRight(8, "0"), radix: 16));
+  Color get asColor {
+    String updatedHexColor = ifBlank("00000000")!.toUpperCase().replaceAll('#', '');
+    while (updatedHexColor.length < 6) {
+      updatedHexColor = '${updatedHexColor}0';
+    }
+    if (updatedHexColor.length == 6) {
+      updatedHexColor = 'FF$updatedHexColor';
+    }
+    updatedHexColor = updatedHexColor.first(n: 8)!;
+    return Color(int.parse(updatedHexColor, radix: 16));
+  }
 
   String removeDiacritics() {
     if (_diacriticsMap.isEmpty) {
