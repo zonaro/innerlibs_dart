@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/widgets.dart';
 import 'package:string_extensions/string_extensions.dart';
 
@@ -99,8 +97,7 @@ extension StringExtensions on String {
 
   Text get asText => Text(this);
 
-    Color get  asColor => Color(int.parse(ifBlank("#00000000")!.replaceFirst('#', ''), radix: 16));
-
+  Color get asColor => Color(int.parse(ifBlank("#00000000").removeFirstAny(['#'])!.padRight(8, "0"), radix: 16));
 
   String removeDiacritics() {
     if (_diacriticsMap.isEmpty) {
