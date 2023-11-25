@@ -1,4 +1,3 @@
-
 extension StringListExtensions on List<String> {
   ///Verify if any [String] in a [List<String>]  contains the specified [String]
   bool containsLike(String s) {
@@ -63,7 +62,7 @@ extension ListExtension<T> on List<T> {
   /// The lambda function takes an item of type T and returns a item of type M used as key.
   /// The function returns a Map<M,V> where each key is a item of type M
   /// returned by the lambda function and each value is a List<T> that have that key remmaped as V.
-  Map<M, V> groupAndRemapBy<M,V>(M Function(T) keyFunction, V Function(List<T>) valueFunction) => groupAndMapBy(keyFunction).map((key, value) => MapEntry(key,  valueFunction(value)));
+  Map<M, V> groupAndRemapBy<M, V>(M Function(T) keyFunction, V Function(List<T>) valueFunction) => groupAndMapBy(keyFunction).map((key, value) => MapEntry(key, valueFunction(value)));
 
   /// Detach items from a list according to a
   /// function and return these items in a new list
@@ -81,4 +80,11 @@ extension ListExtension<T> on List<T> {
     other.addAll(i);
     return i;
   }
+
+/// Group the itens of a list
+  List<List<T>> groupInPage(int pageSize) => List.generate((length / pageSize).ceil(), (index) {
+        int start = index * pageSize;
+        int end = start + pageSize > length ? length : start + pageSize;
+        return sublist(start, end);
+      });
 }
