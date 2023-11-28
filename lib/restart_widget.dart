@@ -23,12 +23,10 @@ class _RestartWidgetState extends State<RestartWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return KeyedSubtree(
+  Widget build(BuildContext context) => KeyedSubtree(
       key: key,
       child: widget.child,
     );
-  }
 }
 
 extension RestartExtensions on BuildContext {

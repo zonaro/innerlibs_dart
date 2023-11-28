@@ -3,14 +3,14 @@ import 'dart:ui';
 
 import 'package:innerlibs/num_extensions.dart';
 
-Size sizeFromAspect({required String aspectRatio, double? width, double? height}) {
+Size sizeFromAspect({required String aspectRatio, double? width, double? height,String separator = ":"}) {
   if (width != null && height != null) {
     return Size(width, height);
   }
 
-  var ratioParts = aspectRatio.split(':').map((e) => double.parse(e)).toList();
+  var ratioParts = aspectRatio.split(separator).map((e) => double.parse(e)).toList();
   if (ratioParts.length != 2) {
-    throw ArgumentError('Invalid aspect ratio format. It should be in the format "width:height".');
+    throw ArgumentError('Invalid aspect ratio format. It should be in the format "width${separator}height".');
   }
 
   if (width != null) {
