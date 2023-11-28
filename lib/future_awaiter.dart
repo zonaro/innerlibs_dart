@@ -31,40 +31,46 @@ class FutureAwaiter<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FutureBuilder<T>(
-      future: future,
-      builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: loadingWidget ?? const CircularProgressIndicator());
-        } else {
-          if (snapshot.hasError) {
-            return errorWidget != null ? errorWidget!(snapshot.error!) : ErrorWidget(snapshot.error!);
-          } else if (snapshot.hasData && snapshot.data != null) {
-            switch (snapshot.data) {
-              case String():
-                var l = snapshot.data as String;
-                if (l.isBlank) {
-                  debugPrint("String is null, blank or empty");
-                  return doneWithoutDataWidget ?? const SizedBox.shrink();
-                }
-              case List():
-                var l = snapshot.data as List;
-                if (l.isEmpty) {
-                  debugPrint("List is empty");
-                  return doneWithoutDataWidget ?? const SizedBox.shrink();
-                }
-              case Map():
-                var l = snapshot.data as Map;
-                if (l.isEmpty) {
-                  debugPrint("Map is empty");
-                  return doneWithoutDataWidget ?? const SizedBox.shrink();
-                }
-              default:
-                break;
+        future: future,
+        builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: loadingWidget ?? const CircularProgressIndicator());
+          } else {
+            if (snapshot.hasError) {
+              return errorWidget != null ? errorWidget!(snapshot.error!) : ErrorWidget(snapshot.error!);
+            } else if (snapshot.hasData && snapshot.data != null) {
+              switch (snapshot.data) {
+                case String():
+                  var l = snapshot.data as String;
+                  if (l.isBlank) {
+                    debugPrint("String is null, blank or empty");
+                    return doneWithoutDataWidget ?? const SizedBox.shrink();
+                  }
+                case List():
+                  var l = snapshot.data as List;
+                  if (l.isEmpty) {
+                    debugPrint("List is empty");
+                    return doneWithoutDataWidget ?? const SizedBox.shrink();
+                  }
+                case Map():
+                  var l = snapshot.data as Map;
+                  if (l.isEmpty) {
+                    debugPrint("Map is empty");
+                    return doneWithoutDataWidget ?? const SizedBox.shrink();
+                  }
+                case Iterable():
+                  var l = snapshot.data as Iterable;
+                  if (l.isEmpty) {
+                    debugPrint("Iterable is empty");
+                    return doneWithoutDataWidget ?? const SizedBox.shrink();
+                  }
+                default:
+                  break;
+              }
+              return doneWidget(snapshot.data as T);
             }
-            return doneWidget(snapshot.data as T);
+            return doneWithoutDataWidget ?? const SizedBox.shrink();
           }
-          return doneWithoutDataWidget ?? const SizedBox.shrink();
-        }
-      },
-    );
+        },
+      );
 }
