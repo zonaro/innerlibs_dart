@@ -148,6 +148,27 @@ extension StringExtensions on String {
     return words;
   }
 
+  bool flatEquals(String text) => removeDiacritics().toLowerCase() == text.removeDiacritics().toLowerCase();
+  bool flatContains(String text) => removeDiacritics().toLowerCase().contains(text.removeDiacritics().toLowerCase());
+
+  bool flatEqualAny(List<String> texts) {
+    for (var t in texts) {
+      if (flatEquals(t)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool flatContainsAny(List<String> texts) {
+    for (var t in texts) {
+      if (flatContains(t)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   String emptyIf(String text) {
     if (this == text) {
       return "";
