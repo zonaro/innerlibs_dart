@@ -96,6 +96,31 @@ extension StringExtensions on String {
 
   static final _diacriticsRegExp = RegExp('[^\u0000-\u007E]', multiLine: true);
 
+// A function that converts a string to title case
+  String get toTitleCase {
+    // Split the string by spaces
+    List<String> words = split(' ');
+    // Initialize an empty string to store the result
+    String result = '';
+    // Loop through each word
+    for (String word in words) {
+      // If the word is not empty
+      if (word.isNotEmpty) {
+        // Capitalize the first letter if it is lowercase
+        if (word[0].toLowerCase() == word[0]) {
+          result += word[0].toUpperCase();
+        } else {
+          // Otherwise, keep the original letter
+          result += word[0];
+        }
+        // Append the rest of the word
+        result += '${word.substring(1)} ';
+      }
+    }
+    // Trim the trailing space and return the result
+    return result.trim();
+  }
+
   Text get asText => Text(this);
 
   Color get asColor {
