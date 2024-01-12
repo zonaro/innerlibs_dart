@@ -97,7 +97,8 @@ extension StringExtensions on String {
   static final _diacriticsRegExp = RegExp('[^\u0000-\u007E]', multiLine: true);
 
 // A function that converts a string to title case
-  String get toTitleCase {
+  String get toProperCase {
+     
     // Split the string by spaces
     List<String> words = split(' ');
     // Initialize an empty string to store the result
