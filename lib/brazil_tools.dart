@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 
 import 'package:innerlibs/string_extensions.dart';
@@ -221,7 +219,7 @@ abstract interface class Brasil extends _Brasil {
       if (e == null && nomeOuUFOuIBGE.trim() != "") {
         e = pegarEstado(nomeOuUFOuIBGE);
       }
-      return (e?.cidades ?? (cidades)).where((c) => c.nome.toLowerCase().removeDiacritics().contains(nomeCidadeOuIBGE) || c.ibge.toString().startsWith(nomeCidadeOuIBGE)).toList(growable: false);
+      return (e?.cidades ?? (cidades)).where((c) => c.nome.flatContains(nomeCidadeOuIBGE) || c.ibge.toString().startsWith(nomeCidadeOuIBGE)).toList(growable: false);
     } catch (e) {
       return [];
     }
@@ -277,6 +275,11 @@ class Estado implements Comparable<Estado> {
     if (other is Cidade) {
       return ibge == other.estado.ibge;
     }
+
+    if (other is num) {
+      return ibge == other.floor();
+    }
+
     return false;
   }
 }
@@ -316,6 +319,11 @@ class Cidade implements Comparable<Cidade> {
     if (other is Estado) {
       return estado.ibge == other.ibge;
     }
+
+    if (other is num) {
+      return ibge == other.floor();
+    }
+
     return false;
   }
 

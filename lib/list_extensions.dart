@@ -15,8 +15,8 @@ extension ListExtension<T> on List<T> {
     if (count > 0) {
       int c = 0;
       for (int i = length - 1; i >= 0; i--) {
-        if (c >= count) break;
         if (predicate(this[i])) {
+          if (c >= count) break;
           removeAt(i);
           c++;
         }
@@ -81,7 +81,7 @@ extension ListExtension<T> on List<T> {
     return i;
   }
 
-/// Group the itens of a list
+  /// Group the itens of a list
   List<List<T>> groupInPage(int pageSize) => List.generate((length / pageSize).ceil(), (index) {
         int start = index * pageSize;
         int end = start + pageSize > length ? length : start + pageSize;
