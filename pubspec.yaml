@@ -12,6 +12,9 @@ dependencies:
     sdk: flutter
   string_extensions: 
   awesome_extensions:
+  prompt_dialog:
+  confirm_dialog:
+  alert_dialog:
 
 dev_dependencies:
   flutter_test:
