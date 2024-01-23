@@ -12,6 +12,17 @@ dependencies:
     sdk: flutter
   string_extensions: ^0.6.13 
   awesome_extensions:
+  extension:
+  dart_extensions:
+  daily_extensions:
+  super_extensions:
+  extensions_kit:
+  dart_extensions_methods:
+  byte_extensions:
+  responsive_sizer:
+  handy_extensions:
+  gits_extension:
+
   prompt_dialog:
   confirm_dialog:
   alert_dialog:
