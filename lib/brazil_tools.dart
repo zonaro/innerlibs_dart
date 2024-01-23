@@ -212,11 +212,11 @@ abstract interface class Brasil extends _Brasil {
   static Cidade? pegarCidade(String nomeCidadeOuIBGE, [String nomeOuUFOuIBGE = ""]) => (pesquisarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE)).singleOrNull;
 
   /// Pesquisa uma cidade no Brasil todo ou em algum estado especifico se [nomeOuUFOuIBGE] for especificado
-  static List<Cidade> pesquisarCidade(String nomeCidadeOuIBGE, [String nomeOuUFOuIBGE = ""]) {
+  static List<Cidade> pesquisarCidade(String nomeCidadeOuIBGE, [String? nomeOuUFOuIBGE ]) {
     try {
-      nomeCidadeOuIBGE = nomeCidadeOuIBGE.toLowerCase().removeDiacritics().trim();
+      nomeCidadeOuIBGE = nomeCidadeOuIBGE.toLowerCase().removeDiacritics()?.trim() ?? "";
       Estado? e = pegarEstado(nomeCidadeOuIBGE);
-      if (e == null && nomeOuUFOuIBGE.trim() != "") {
+      if (e == null && nomeOuUFOuIBGE!.trim() != "") {
         e = pegarEstado(nomeOuUFOuIBGE);
       }
       return (e?.cidades ?? (cidades)).where((c) => c.nome.flatContains(nomeCidadeOuIBGE) || c.ibge.toString().startsWith(nomeCidadeOuIBGE)).toList(growable: false);

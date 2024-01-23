@@ -10,8 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  string_extensions: ^0.6.13 
-  awesome_extensions:
+  string_extensions: ^0.6.13   
   extension:
   dart_extensions:
   daily_extensions:
