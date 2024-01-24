@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:innerlibs/innerlibs.dart';
+import 'package:innerlibs/string_extensions.dart';
+ 
  
 
 /// Wraps a [FutureBuilder] and make is easier to use

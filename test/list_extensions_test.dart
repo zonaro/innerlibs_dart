@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:innerlibs/brazil_tools.dart';
+import 'package:innerlibs/brazil/brazil_tools.dart';
+ 
 import 'package:innerlibs/util.dart';
 
 void main() {

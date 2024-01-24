@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:innerlibs/context_extensions/localizations_extension.dart';
 import 'package:innerlibs/context_extensions/navigation_extension.dart';
-import 'package:innerlibs/widgets/platform.dart';
- 
+
+import 'package:innerlibs/platform.dart';
 
 extension DialogExt on BuildContext {
   void showAlertDialog({
     required String title,
     required String message,
-    List<String>? positiveButtonsTitle,
+    List<String> actionButtonsTitle = const [],
     String? cancelButtonTitle,
     Function(int)? onDone,
     Color? positiveTitleColor,
@@ -16,6 +17,10 @@ extension DialogExt on BuildContext {
     double? fontSize,
     bool barrierDismissible = true,
   }) {
+ 
+    if (actionButtonsTitle.isEmpty) {  
+      cancelButtonTitle ??= materialLocalizations.okButtonLabel;
+    }
     // Check the platform
     if (MyPlatform.isIOS) {
       // show cuperino dialog
@@ -23,7 +28,7 @@ extension DialogExt on BuildContext {
         this,
         title,
         message,
-        positiveButtonsTitle,
+        actionButtonsTitle,
         cancelButtonTitle,
         onDone,
         positiveTitleColor,
@@ -37,7 +42,7 @@ extension DialogExt on BuildContext {
         this,
         title,
         message,
-        positiveButtonsTitle,
+        actionButtonsTitle,
         cancelButtonTitle,
         onDone,
         positiveTitleColor,
@@ -48,17 +53,7 @@ extension DialogExt on BuildContext {
     }
   }
 
-  void _showIOSDialog(
-      BuildContext context,
-      String title,
-      String message,
-      List<String>? buttons,
-      String? cancelButton,
-      Function(int)? onDone,
-      Color? positiveTitleColor,
-      Color? cancelTitleColor,
-      double? fontSize,
-      bool barrierDismissible) {
+  void _showIOSDialog(BuildContext context, String title, String message, List<String> buttons, String? cancelButton, Function(int)? onDone, Color? positiveTitleColor, Color? cancelTitleColor, double? fontSize, bool barrierDismissible) {
     List<Widget> arrWidget = [];
 
     if (cancelButton != null) {
@@ -73,7 +68,7 @@ extension DialogExt on BuildContext {
       arrWidget.add(action);
     }
 
-    if (buttons != null) {
+    if (buttons.isNotEmpty) {
       for (String buttonTitle in buttons) {
         CupertinoDialogAction action = CupertinoDialogAction(
           isDefaultAction: true,
@@ -103,17 +98,7 @@ extension DialogExt on BuildContext {
         });
   }
 
-  void _showAndroidDialog(
-      BuildContext context,
-      String title,
-      String message,
-      List<String>? buttons,
-      String? cancelButton,
-      Function(int)? onDone,
-      Color? positiveTitleColor,
-      Color? cancelTitleColor,
-      double? fontSize,
-      bool barrierDismissible) {
+  void _showAndroidDialog(BuildContext context, String title, String message, List<String> buttons, String? cancelButton, Function(int)? onDone, Color? positiveTitleColor, Color? cancelTitleColor, double? fontSize, bool barrierDismissible) {
     // flutter defined function
     List<Widget> arrWidget = [];
 
@@ -135,7 +120,7 @@ extension DialogExt on BuildContext {
       arrWidget.add(action);
     }
 
-    if (buttons != null) {
+    if (buttons.isNotEmpty) {
       for (String buttonTitle in buttons) {
         TextButton action = TextButton(
           style: TextButton.styleFrom(
@@ -164,8 +149,7 @@ extension DialogExt on BuildContext {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             title: Text(title),
             content: Text(message),
             actions: arrWidget,
