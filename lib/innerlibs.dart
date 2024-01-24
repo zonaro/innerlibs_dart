@@ -10,8 +10,7 @@ export 'restart_widget.dart';
 export 'future_awaiter.dart';
 export 'util.dart';
 
-export 'package:string_extensions/string_extensions.dart';
-export 'package:string_extensions/string_helpers.dart';
+ 
  
 
 export 'package:alert_dialog/alert_dialog.dart';

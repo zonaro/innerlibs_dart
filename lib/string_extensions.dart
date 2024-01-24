@@ -1,10 +1,66 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:convert/convert.dart';
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/material.dart';
-import 'package:string_extensions/string_helpers.dart';
+import 'package:innerlibs/string_helpers.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+// for the utf8.encode method
 
-extension StringExtension on String? {
+extension NullStringExtension on String? {
+  /// Checks if the `String` is Blank (null, empty or only white spaces).
+  bool get isBlank => this == null || this!.isBlank;
+
+  /// Checks if the `String` is not blank (null, empty or only white spaces).
+  bool get isNotBlank => isBlank == false;
+
+  String? ifBlank(String? newString) => isNotBlank ? this : newString;
+
+  /// Provide default value if the `String` is `null`.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String? foo = null;
+  /// foo.ifNull('dont be null'); // returns 'dont be null'
+  /// ```
+  String? defaultValue(String defaultValue) {
+    return this ?? defaultValue;
+  }
+
+  /// Checks whether the `String` is `null`.
+  /// ### Example 1
+  /// ```dart
+  /// String? foo;
+  /// bool isNull = foo.isNull; // returns true
+  /// ```
+  /// ### Example 2
+  /// ```dart
+  /// String foo = 'fff';
+  /// bool isNull = foo.isNull; // returns false
+  /// ```
+  bool get isNull {
+    return this == null;
+  }
+
+  /// Checks whether the `String` is not `null`.
+  /// ### Example 1
+  /// ```dart
+  /// String? foo;
+  /// bool isNull = foo.isNotNull; // returns false
+  /// ```
+  /// ### Example 2
+  /// ```dart
+  /// String foo = 'fff';
+  /// bool isNull = foo.isNotNull; // returns true
+  /// ```
+  bool get isNotNull {
+    return isNull == false;
+  }
+}
+
+extension StringExtension on String {
   static final _defaultDiacriticsRemovalap = [
     {'base': 'A', 'letters': '\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F'},
     {'base': 'AA', 'letters': '\uA732'},
@@ -102,7 +158,7 @@ extension StringExtension on String? {
   String? get toProperCase {
     if (isNotBlank) {
       // Split the string by spaces
-      List<String> words = this!.split(' ');
+      List<String> words = split(' ');
       // Initialize an empty string to store the result
       String result = '';
       // Loop through each word
@@ -126,7 +182,7 @@ extension StringExtension on String? {
     return this;
   }
 
-  Text get asText => Text(this ?? "");
+  Text get asText => Text(this);
 
   Color get asColor {
     String updatedHexColor = ifBlank("00000000")!.toUpperCase().replaceAll('#', '');
@@ -150,7 +206,7 @@ extension StringExtension on String? {
       }
     }
 
-    return this?.replaceAllMapped(_diacriticsRegExp, (a) => _diacriticsMap[a.group(0)] ?? a.group(0));
+    return replaceAllMapped(_diacriticsRegExp, (a) => _diacriticsMap[a.group(0)] ?? a.group(0));
   }
 
   /// Splits a camel case string
@@ -161,14 +217,14 @@ extension StringExtension on String? {
     List<String> words = [];
     String word = '';
     if (isNotBlank) {
-      for (int i = 0; i < this!.length; i++) {
-        if (this![i] == this![i].toUpperCase()) {
+      for (int i = 0; i < length; i++) {
+        if (this[i] == this[i].toUpperCase()) {
           if (word.isNotEmpty) {
             words.add(word);
           }
-          word = this![i];
+          word = this[i];
         } else {
-          word += this![i];
+          word += this[i];
         }
       }
 
@@ -180,8 +236,16 @@ extension StringExtension on String? {
     return words;
   }
 
-  bool flatEquals(String? text) => removeDiacritics().toLowerCase() == text.removeDiacritics().toLowerCase();
-  bool flatContains(String? text) => removeDiacritics().toLowerCase().contains(text.removeDiacritics().toLowerCase());
+  bool flatEquals(String? text) => removeDiacritics()?.toLowerCase() == text?.removeDiacritics()?.toLowerCase();
+
+  bool flatContains(String? text) {
+    if (isBlank) return text.isBlank;
+
+    if (text.isBlank) {
+      return true;
+    }
+    return removeDiacritics()!.toLowerCase().contains(text!.removeDiacritics()!.toLowerCase());
+  }
 
   bool flatEqualAny(List<String> texts) {
     for (var t in texts) {
@@ -199,22 +263,6 @@ extension StringExtension on String? {
       }
     }
     return false;
-  }
-
-  String emptyIf(String text) {
-    if (this == text) {
-      return "";
-    } else {
-      return this;
-    }
-  }
-
-  String? nullIf(String text) {
-    if (this == text) {
-      return null;
-    } else {
-      return this;
-    }
   }
 
   String get singularPt {
@@ -335,19 +383,6 @@ extension StringExtension on String? {
     var words = trim().split(RegExp(r'(\s+)'));
     var magicalNumber = words.length / wordsPerMinute;
     return (magicalNumber * 100).toInt();
-  }
-
-  /// Capitalizes the `String` in normal form.
-  /// ### Example
-  /// ```dart
-  /// String foo = 'hAckErrR';
-  /// String cFoo = foo.capitalize; // returns 'Hackerrr'.
-  /// ```
-  String? get capitalize {
-    if (isBlank) {
-      return this;
-    }
-    return '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
   }
 
   /// Returns the word count in the given `String`.
@@ -474,36 +509,6 @@ extension StringExtension on String? {
     // ignore: unnecessary_raw_strings
     var regex = RegExp(r'[/!@#$%^\-&*()+",.?":{}|<>~_-`]');
     return replaceAll(regex, '');
-  }
-
-  /// Checks whether the `String` is `null`.
-  /// ### Example 1
-  /// ```dart
-  /// String? foo;
-  /// bool isNull = foo.isNull; // returns true
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = 'fff';
-  /// bool isNull = foo.isNull; // returns false
-  /// ```
-  bool get isNull {
-    return this == null;
-  }
-
-  /// Checks whether the `String` is not `null`.
-  /// ### Example 1
-  /// ```dart
-  /// String? foo;
-  /// bool isNull = foo.isNotNull; // returns false
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = 'fff';
-  /// bool isNull = foo.isNotNull; // returns true
-  /// ```
-  bool get isNotNull {
-    return isNull == false;
   }
 
   /// Checks whether the `String` is a valid IPv4.
@@ -1245,22 +1250,7 @@ extension StringExtension on String? {
   /// foo.ifEmpty(()=>print('String is null'));
   /// ```
   String ifNull(Function act) {
-    if (this == null) {
-      return act();
-    } else {
-      return this;
-    }
-  }
-
-  /// Provide default value if the `String` is `null`.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String? foo = null;
-  /// foo.ifNull('dont be null'); // returns 'dont be null'
-  /// ```
-  String? defaultValue(String defaultValue) {
-    return this ?? defaultValue;
+    return this;
   }
 
   /// Repeats the `String` [count] times.
@@ -1864,19 +1854,7 @@ extension StringExtension on String? {
   /// String text = 'yes';
   /// bool? textBool = text.toBool ; // returns true
   /// ```
-  bool? get toBool {
-    if (isBlank) {
-      return null;
-    }
-
-    if (toLowerCase() == 'true' || toLowerCase() == 'yes') {
-      return true;
-    }
-    if (toLowerCase() == 'false' || toLowerCase() == 'no') {
-      return false;
-    }
-    return null;
-  }
+  bool? get toBool => bool.tryParse(this, caseSensitive: false);
 
   /// Returns the `String` after a specific character.
   ///
@@ -2004,7 +1982,7 @@ extension StringExtension on String? {
   }
 
   /// Checks if the `String` is Blank (null, empty or only white spaces).
-  bool get isBlank => trim().isEmpty ?? true;
+  bool get isBlank => trim().isEmpty;
 
   /// Checks if the `String` is not blank (null, empty or only white spaces).
   bool get isNotBlank => isBlank == false;
@@ -2049,12 +2027,12 @@ extension StringExtension on String? {
   /// String s = "esentis".wrap("AA", after: "BB"); // returns "AAesentisBB";
   /// ```
   String wrap(String? before, {String? after}) {
-    before = before.ifBlank("");
+    before = before.ifBlank("")!;
     if (after.isBlank) {
       if (before.isCloseWrapChar()) {
         before = before.getOppositeChar();
       }
-      after = before.getOppositeChar();
+      after = before!.getOppositeChar();
     }
     return "$before$this${after.ifBlank(before)}";
   }
@@ -2132,7 +2110,7 @@ extension StringExtension on String? {
       for (var pattern in patterns) {
         if (pattern != null && pattern.isNotEmpty) {
           while (from.startsWith(pattern)) {
-            from = from.removeFirst(pattern.length);
+            from = from.removeFirst(pattern.length)!;
           }
         }
       }
@@ -2153,7 +2131,7 @@ extension StringExtension on String? {
       for (var pattern in patterns) {
         if (pattern != null && pattern.isNotEmpty) {
           while (from.endsWith(pattern)) {
-            from = from.removeLast(pattern.length);
+            from = from.removeLast(pattern.length)!;
           }
         }
       }
@@ -2162,7 +2140,7 @@ extension StringExtension on String? {
   }
 
   /// Continuously removes from the beginning & the end of the `String`, any match in [patterns].
-  String? removeFirstAndLastAny(List<String?> patterns) => removeFirstAny(patterns).removeLastAny(patterns);
+  String? removeFirstAndLastAny(List<String?> patterns) => removeFirstAny(patterns)?.removeLastAny(patterns);
 
   /// Removes the [pattern] from the end of the `String`.
   ///
@@ -2189,7 +2167,7 @@ extension StringExtension on String? {
   /// ```dart
   /// String edited = "abracadabra".removeFirstAndLastEqual("a"); // returns "bracadabr";
   /// ```
-  String? removeFirstAndLastEqual(String? pattern) => removeFirstEqual(pattern).removeLastEqual(pattern);
+  String? removeFirstAndLastEqual(String? pattern) => removeFirstEqual(pattern)?.removeLastEqual(pattern);
 
   /// Removes everything in the `String` after the first match of the [pattern].
   ///

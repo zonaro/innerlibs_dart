@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:string_extensions/string_extensions.dart';
+import 'package:innerlibs/innerlibs.dart';
+ 
 
 /// Wraps a [FutureBuilder] and make is easier to use
 class FutureAwaiter<T> extends StatelessWidget {
