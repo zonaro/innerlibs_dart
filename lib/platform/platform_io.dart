@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 class GeneralPlatform {
-  static bool get isWeb => false;
+
+  static bool get isWeb => kIsWeb;
 
   static bool get isMacOS => Platform.isMacOS;
 
@@ -15,6 +18,7 @@ class GeneralPlatform {
 
   static bool get isFuchsia => Platform.isFuchsia;
 
-  static bool get isDesktop =>
-      Platform.isMacOS || Platform.isWindows || Platform.isLinux;
+  static bool get isDesktop => Platform.isMacOS || Platform.isWindows || Platform.isLinux;
+  
+  static bool get isMobile => Platform.isIOS || Platform.isAndroid || Platform.isLinux;
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/context_extensions/navigation_extension.dart';
-import 'package:innerlibs/src/platform.dart';
+import 'package:innerlibs/widgets/platform.dart';
+ 
 
 extension DialogExt on BuildContext {
   void showAlertDialog({

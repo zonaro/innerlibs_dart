@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:innerlibs/src/platform.dart';
-
+import 'package:innerlibs/widgets/platform.dart';
 
 extension MediaQueryExt on BuildContext {
   /// The same of [MediaQuery.of(context).size]

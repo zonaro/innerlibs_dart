@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:innerlibs/src/shimmer.dart';
+import 'package:innerlibs/widgets/shimmer.dart';
+ 
 
 
 extension ShimmerEffect on Widget {

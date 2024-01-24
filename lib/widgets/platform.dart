@@ -1,7 +1,7 @@
 
  
 
-import 'package:innerlibs/src/platform/platform_io.dart';
+import 'package:innerlibs/platform/platform_io.dart';
 
 class MyPlatform {
   static bool get isWeb => GeneralPlatform.isWeb;
