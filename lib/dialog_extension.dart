@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:innerlibs/context_extensions/localizations_extension.dart';
-import 'package:innerlibs/context_extensions/navigation_extension.dart';
+
+import 'package:innerlibs/localizations_extension.dart';
+import 'package:innerlibs/navigation_extension.dart';
 
 import 'package:innerlibs/platform.dart';
 
@@ -17,8 +18,7 @@ extension DialogExt on BuildContext {
     double? fontSize,
     bool barrierDismissible = true,
   }) {
- 
-    if (actionButtonsTitle.isEmpty) {  
+    if (actionButtonsTitle.isEmpty) {
       cancelButtonTitle ??= materialLocalizations.okButtonLabel;
     }
     // Check the platform
