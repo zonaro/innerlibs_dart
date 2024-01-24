@@ -154,6 +154,8 @@ extension StringExtension on String {
 
   static final _diacriticsRegExp = RegExp('[^\u0000-\u007E]', multiLine: true);
 
+  String? get asNullable => this;
+
 // A function that converts a string to title case
   String? get toProperCase {
     if (isNotBlank) {
@@ -1046,7 +1048,7 @@ extension StringExtension on String {
   /// String foo = '4f';
   /// var fooNull = foo.toNum(); // returns null;
   /// ```
-  num? toNum() {
+  num? get toNum {
     if (isBlank) {
       return null;
     }
@@ -1071,7 +1073,7 @@ extension StringExtension on String {
   /// String foo = '4.0';
   /// var fooNull = foo.toInt(); // returns 4;
   /// ```
-  int? toInt() {
+  int? get toInt {
     if (isBlank) {
       return null;
     }
@@ -1092,7 +1094,7 @@ extension StringExtension on String {
   /// String foo = '4f';
   /// var fooNull = foo.toDouble(); // returns null;
   /// ```
-  double? toDouble() {
+  double? get toDouble {
     if (isBlank) {
       return null;
     }
@@ -1107,7 +1109,7 @@ extension StringExtension on String {
   /// String greek = 'Τι κάνεις πώς τα περνάς φίλτατέ μου';
   /// String greekUpper = greek.toGreekUpperCase(); // returns 'ΤΙ ΚΑΝΕΙΣ ΠΩΣ ΤΑ ΠΕΡΝΑΣ ΦΙΛΤΑΤΕ ΜΟΥ'
   /// ```
-  String? toGreekUpperCase() {
+  String? get toGreekUpperCase {
     if (isBlank) {
       return this;
     }
@@ -1231,28 +1233,6 @@ extension StringExtension on String {
     return replaceAll(regex, '');
   }
 
-  /// If the provided `String` is empty do something.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = '';
-  /// foo.ifEmpty(()=>print('String is empty'));
-  /// ```
-  String? ifEmpty(Function act) {
-    return trim().isEmpty ? act() : this;
-  }
-
-  /// If the provided `String` is `null` do something.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = ''
-  /// foo.ifEmpty(()=>print('String is null'));
-  /// ```
-  String ifNull(Function act) {
-    return this;
-  }
-
   /// Repeats the `String` [count] times.
   ///
   /// ### Example
@@ -1260,7 +1240,7 @@ extension StringExtension on String {
   /// String foo = 'foo';
   /// String fooRepeated = foo.repeat(5); // 'foofoofoofoofoo'
   /// ```
-  String? repeat(int count) {
+  String? repeat([int count = 1]) {
     if (isBlank || count <= 0) {
       return this;
     }
@@ -1415,7 +1395,7 @@ extension StringExtension on String {
   /// String foo = 'esentis'
   /// String newFoo = foo.removeFirst(3) // 'ntis';
   /// ```
-  String? removeFirst(int n) {
+  String? removeFirst([int n = 1]) {
     if (isBlank) {
       return this;
     }
@@ -1436,7 +1416,7 @@ extension StringExtension on String {
   /// String foo = 'esentis';
   /// String newFoo = foo.removeLast(3); // 'esen';
   /// ```
-  String? removeLast(int n) {
+  String? removeLast([int n = 1]) {
     if (isBlank || n <= 0) {
       return this;
     }
@@ -2369,7 +2349,7 @@ extension StringExtension on String {
     if (isBlank) {
       return this;
     }
-    var number = toInt();
+    var number = toInt;
     if (number == null) {
       return this;
     }
@@ -2548,7 +2528,7 @@ extension StringExtension on String {
     if (isBlank) {
       return false;
     }
-    return this == toGreekUpperCase();
+    return this == toGreekUpperCase;
   }
 
   /// Swaps the case in the `String`.
@@ -2720,7 +2700,7 @@ extension StringExtension on String {
       return true;
     }
     final word = this;
-    final wordSplit = word.toGreekUpperCase()!.split('').toSet();
+    final wordSplit = word.toGreekUpperCase!.split('').toSet();
     return word.length == wordSplit.length;
   }
 
