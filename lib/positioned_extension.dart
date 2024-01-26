@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 
 extension PositionedExtensions on Widget {
+
+
   Positioned positionTop({
     Key? key,
     required double top,
@@ -11,6 +13,34 @@ extension PositionedExtensions on Widget {
       Positioned(
         key: key,
         top: top,
+        width: width,
+        height: height,
+        child: this,
+      );
+
+      Positioned positionLeft({
+    Key? key,
+    required double left,
+    double? width,
+    double? height,
+  }) =>
+      Positioned(
+        key: key,
+        left: left,
+        width: width,
+        height: height,
+        child: this,
+      );
+
+       Positioned positionRight({
+    Key? key,
+    required double right,
+    double? width,
+    double? height,
+  }) =>
+      Positioned(
+        key: key,
+        right: right,
         width: width,
         height: height,
         child: this,
