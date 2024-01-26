@@ -12,9 +12,7 @@ extension DateOnlyCompare on DateTime {
     return add(Duration(days: daysDifference));
   }
 
-  bool isSameDate(DateTime other) {
-    return year == other.year && month == other.month && day == other.day;
-  }
+  bool isSameDate(DateTime other) => year == other.year && month == other.month && day == other.day;
 
   bool get isToday {
     final nowDate = DateTime.now();
@@ -173,9 +171,7 @@ extension DateOnlyCompare on DateTime {
   /// true
   /// ```
   ///
-  bool isBetween(DateTime start, DateTime end) {
-    return isAfter(start) && isBefore(end);
-  }
+  bool isBetween(DateTime start, DateTime end) => isAfter(start) && isBefore(end);
 
   /// Time Format
   ///
