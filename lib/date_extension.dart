@@ -2,7 +2,9 @@ import 'package:innerlibs/utils/constants.dart';
 import 'package:innerlibs/utils/format_time.dart';
 
 extension DateOnlyCompare on DateTime {
+
   DateTime findNextDate(int weekday) {
+
     int daysDifference = weekday - this.weekday;
     if (daysDifference <= 0) {
       daysDifference += 7;
@@ -191,9 +193,7 @@ extension DateOnlyCompare on DateTime {
   /// 08:00pm
   /// ```
   ///
-  String get timeFormat {
-    return formatTime(this);
-  }
+  String get timeFormat => formatTime(this);
 
   /// Readable Date Time Format
   ///
@@ -210,9 +210,7 @@ extension DateOnlyCompare on DateTime {
   /// ```dart
   /// Tuesday 1 January 2022, 08:00pm
   /// ```
-  String get readableDateTimeFormat {
-    return '$readableDate, $timeFormat';
-  }
+  String get readableDateTimeFormat => '$readableDate, $timeFormat';
 
   /// Describe
   ///
