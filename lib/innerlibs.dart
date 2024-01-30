@@ -1,16 +1,9 @@
 library innerlibs;
 
-export 'brazil/brazil_tools.dart';
-
-export 'widgets/avatar_image.dart';
-export 'widgets/future_awaiter.dart';
-export 'widgets/nil.dart';
-export 'widgets/restart_widget.dart';
-export 'widgets/shimmer.dart';
-
-export 'align_extension.dart';
+export 'align_extensions.dart';
 export 'alignment_extensions.dart';
-export 'center_extension.dart';
+export 'brazil/brazil_tools.dart';
+export 'center_extensions.dart';
 export 'color_extensions.dart';
 export 'container_extension.dart';
 export 'date_extension.dart';
@@ -29,9 +22,10 @@ export 'opacity_extension.dart';
 export 'padding_extension.dart';
 export 'pixel_converter.dart';
 export 'platform.dart';
-export 'positioned_extension.dart';
-export 'shimmer_extension.dart';
+export 'positioned_extensions.dart';
+export 'shimmer_extensions.dart';
 export 'size_box_extension.dart';
+export 'size_extensions.dart';
 export 'string_extensions.dart';
 export 'string_helpers.dart';
 export 'text_extension.dart';
@@ -40,3 +34,8 @@ export 'theme_extension.dart';
 export 'tooltip_extension.dart';
 export 'util.dart';
 export 'view_extensions.dart';
+export 'widgets/avatar_image.dart';
+export 'widgets/future_awaiter.dart';
+export 'widgets/nil.dart';
+export 'widgets/restart_widget.dart';
+export 'widgets/shimmer.dart';

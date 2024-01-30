@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/platform.dart';
 
 
-extension MediaQueryExt on BuildContext {
+extension MediaQueryExtensions on BuildContext {
   /// The same of [MediaQuery.of(context).size]
   Size get mediaQuerySize => MediaQuery.of(this).size;
 

@@ -1,10 +1,8 @@
 import 'package:innerlibs/utils/constants.dart';
 import 'package:innerlibs/utils/format_time.dart';
 
-extension DateOnlyCompare on DateTime {
-
+extension DateExtensions on DateTime {
   DateTime findNextDate(int weekday) {
-
     int daysDifference = weekday - this.weekday;
     if (daysDifference <= 0) {
       daysDifference += 7;
@@ -28,12 +26,12 @@ extension DateOnlyCompare on DateTime {
   /// Readable Date
   ///
   /// Returns date string in the format Tuesday 1 January 2022
-  String get readableDate => '$getDay $getDate $getMonth $getYear';
+  String get readableDate => '$getDay $day $getMonth $year';
 
   /// Readable DateTime
   ///
   /// Returns date and time string in the format January 12, 2022 08:00:15
-  String get readableDateTime => "$getMonth $getDate, $getYear ${hour >= 10 ? hour : "0$hour"}"
+  String get readableDateTime => "$getMonth $day, $year ${hour >= 10 ? hour : "0$hour"}"
       ":${minute >= 10 ? minute : "0$minute"}:${second >= 10 ? second : "0"
           "$second"}";
 
@@ -53,12 +51,6 @@ extension DateOnlyCompare on DateTime {
   /// Returns short day string in the format Mon, Tue, Wed etc
   String get getShortDay => getDay.substring(0, 3);
 
-  /// Get Date
-  ///
-  /// Returns date integer i.e. simply returns .day value of the
-  /// given [DateTime]
-  int get getDate => day;
-
   /// Get Month
   ///
   /// Returns month string in the format January, February etc
@@ -68,11 +60,6 @@ extension DateOnlyCompare on DateTime {
   ///
   /// Returns short month string in the format Jan, Feb etc
   String get getShortMonth => getMonth.substring(0, 3);
-
-  /// Get Year
-  ///
-  /// Returns year in the format 2020, 2021 etc
-  String get getYear => '$year';
 
   /// Time Ago
   ///
@@ -234,7 +221,7 @@ extension DateOnlyCompare on DateTime {
     } else if (difference <= 7) {
       return getDay;
     } else {
-      return '$getDate/$getMonth/$getYear';
+      return '$day/$getMonth/$year';
     }
   }
 }

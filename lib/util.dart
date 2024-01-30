@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:innerlibs/num_extensions.dart';
 
 Size sizeFromAspect({required String aspectRatio, double? width, double? height, String separator = ":"}) {
   if (width != null && height != null) {
@@ -19,21 +18,5 @@ Size sizeFromAspect({required String aspectRatio, double? width, double? height,
     return Size(height / min(ratioParts[0], ratioParts[1]) * max(ratioParts[0], ratioParts[1]), height);
   } else {
     throw ArgumentError('Either width or height must be provided.');
-  }
-}
-
-extension SizeExt on Size {
-  String getAspectRatioString([String separator = ":"]) {
-    var h = height;
-    var w = width;
-    while (w.hasDecimal) {
-      w = w * 10;
-    }
-    while (h.hasDecimal) {
-      h = h * 10;
-    }
-
-    var gcd = w.findGreatestCommonDivisor(h.round());
-    return '${w ~/ gcd}$separator${h ~/ gcd}';
   }
 }

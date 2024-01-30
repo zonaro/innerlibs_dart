@@ -3,13 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/string_extensions.dart';
 
-extension SizeBoxNumExtension on num {
+extension NumExtensions on num {
   Widget get widthBox => SizedBox(width: double.tryParse(toString()));
 
   Widget get heightBox => SizedBox(height: double.tryParse(toString()));
-}
 
-extension NumExtensions on num {
   ///   print('+ wait for 2 seconds');
   ///   await 2.delay();
   ///   print('- 2 seconds completed');

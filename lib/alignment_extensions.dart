@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-extension AlignExt on Alignment {
+extension AlignmentExtensions on Alignment {
   TextAlign get toTextAlign {
     if (this == Alignment.topLeft || this == Alignment.centerLeft || this == Alignment.bottomLeft) {
       return TextAlign.left;

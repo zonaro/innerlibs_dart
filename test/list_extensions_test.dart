@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:innerlibs/brazil/brazil_tools.dart';
-
-import 'package:innerlibs/util.dart';
+import 'package:innerlibs/size_extensions.dart';
 import 'package:innerlibs/utils/constants.dart';
 
 void main() {
