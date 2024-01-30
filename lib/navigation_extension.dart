@@ -25,7 +25,7 @@ extension NavigatorExt on BuildContext {
   /// perform replash with routeName
   void popUntilRoute(String screenName, {bool rootNavigator = false}) => Navigator.of(this, rootNavigator: rootNavigator).popUntil(ModalRoute.withName(screenName));
 
-// perform replash with route predicate
+  /// perform replash with route predicate
   void popUntil(RoutePredicate predicate) => Navigator.popUntil(this, predicate);
 
   void popUntilFirst() => popUntil((route) => route.isFirst);
