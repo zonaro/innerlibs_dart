@@ -28,5 +28,6 @@ extension NavigatorExt on BuildContext {
   /// perform replash with route predicate
   void popUntil(RoutePredicate predicate) => Navigator.popUntil(this, predicate);
 
+  /// perform a continuous pop until the first route
   void popUntilFirst() => popUntil((route) => route.isFirst);
 }
