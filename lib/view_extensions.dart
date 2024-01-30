@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 extension ViewExtension on BuildContext {
+  
   FlutterView get flutterView => View.of(this);
 
   double get pixelRatio => flutterView.devicePixelRatio;
