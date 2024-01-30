@@ -1,9 +1,9 @@
 import 'dart:math';
-import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:innerlibs/num_extensions.dart';
 
-Size sizeFromAspect({required String aspectRatio, double? width, double? height,String separator = ":"}) {
+Size sizeFromAspect({required String aspectRatio, double? width, double? height, String separator = ":"}) {
   if (width != null && height != null) {
     return Size(width, height);
   }
@@ -35,5 +35,16 @@ extension SizeExt on Size {
 
     var gcd = w.findGreatestCommonDivisor(h.round());
     return '${w ~/ gcd}$separator${h ~/ gcd}';
+  }
+}
+
+extension WidgetExt on Widget {
+  
+  Widget wrapIf(bool test, Widget Function(Widget w) func) {
+    if (test) {
+      return func(this);
+    } else {
+      return this;
+    }
   }
 }

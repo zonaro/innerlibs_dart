@@ -5,7 +5,7 @@ extension NavigatorExt on BuildContext {
   bool canPop() => Navigator.canPop(this);
 
   /// performs a simple [Navigator.pop] action and returns given [result]
-  void pop<T>({result}) => Navigator.pop(this, result);
+  void pop<T>([result]) => Navigator.pop(this, result);
 
   /// performs a simple [Navigator.push] action with given [route]
   Future<dynamic> push(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).push(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
