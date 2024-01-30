@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 extension MyPlatform on Platform {
-  
   static bool get isWeb => kIsWeb;
 
   static bool get isDesktop => Platform.isMacOS || Platform.isWindows || Platform.isLinux;

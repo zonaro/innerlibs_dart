@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 
- 
-
 class RestartWidget extends StatefulWidget {
   const RestartWidget({super.key, required this.child});
 
@@ -26,11 +24,7 @@ class _RestartWidgetState extends State<RestartWidget> {
 
   @override
   Widget build(BuildContext context) => KeyedSubtree(
-      key: key,
-      child: widget.child,
-    );
-}
-
-extension RestartExtensions on BuildContext {
-  restartApp() => RestartWidget.restartApp(this);
+        key: key,
+        child: widget.child,
+      );
 }
