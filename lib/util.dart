@@ -39,8 +39,7 @@ extension SizeExt on Size {
 }
 
 extension WidgetExt on Widget {
-  
-  Widget wrapIf(bool test, Widget Function(Widget w) func) {
+  Widget wrapIf(bool test, Widget Function(Widget children) func) {
     if (test) {
       return func(this);
     } else {
