@@ -31,6 +31,7 @@ export 'text_style_extension.dart';
 export 'theme_extension.dart';
 export 'tooltip_extension.dart';
 export 'util.dart';
+export 'widget_ext.dart';
 export 'widgets/avatar_image.dart';
 export 'widgets/future_awaiter.dart';
 export 'widgets/nil.dart';
