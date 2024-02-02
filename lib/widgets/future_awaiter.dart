@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:innerlibs/string_extensions.dart';
- 
- 
 
 /// Wraps a [FutureBuilder] and make is easier to use
 class FutureAwaiter<T> extends StatelessWidget {
@@ -36,7 +34,7 @@ class FutureAwaiter<T> extends StatelessWidget {
         future: future,
         builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: loadingWidget ?? const CircularProgressIndicator());
+            return loadingWidget ?? const Center(child: CircularProgressIndicator());
           } else {
             if (snapshot.hasError) {
               return errorWidget != null ? errorWidget!(snapshot.error!) : ErrorWidget(snapshot.error!);

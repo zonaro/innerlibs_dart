@@ -567,7 +567,8 @@ extension StringExtension on String {
       return false;
     }
     substring(0, 1);
-    var regex = RegExp(r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
+    var regex = RegExp(
+        r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
     return regex.hasMatch(this);
   }
 
@@ -2792,9 +2793,7 @@ extension StringExtension on String {
       return {};
     }
 
-    String processString(String input) {
-      return (caseSensitive ? input : input.toLowerCase()).split('').where((char) => includeSpaces || char != ' ').join('');
-    }
+    String processString(String input) => (caseSensitive ? input : input.toLowerCase()).split('').where((char) => includeSpaces || char != ' ').join('');
 
     final Set<String> thisSet = processString(this).split('').toSet();
     final Set<String> otherStringSet = processString(otherString).split('').toSet();
@@ -2852,7 +2851,7 @@ extension StringExtension on String {
   /// String foo = 'HelloWorld';
   /// bool hasWhitespace = foo.hasWhitespace; // returns false;
   /// ```
-  bool hasWhitespace() {
+  bool get hasWhitespace {
     if (isBlank) {
       return false;
     }
@@ -2867,7 +2866,7 @@ extension StringExtension on String {
   /// String text = 'hello world';
   /// bool isLettersOnly = text.isLettersOnly(); // Returns true
   /// ```
-  bool isLettersOnly() {
+  bool get isLettersOnly {
     if (isBlank) {
       return false;
     }
@@ -2907,9 +2906,7 @@ extension StringExtension on String {
   /// List<String> lines = text.splitLines();
   /// print(lines); // prints ['hello', 'world']
   /// ```
-  List<String> splitLines() {
-    return split(RegExp(r'\r?\n'));
-  }
+  List<String> get splitLines => split(RegExp(r'\r?\n'));
 
   /// Returns a new `String` with the first occurrence of the given pattern replaced with the replacement `String`.
   ///
@@ -2947,9 +2944,9 @@ extension StringExtension on String {
 
   /// Capitalize each word inside string
   /// Example: your name => Your Name, your name => Your name
-  String capitalize() {
+  String get capitalize {
     if (isEmpty) return this;
-    return split(' ').map((e) => e.capitalize()).join(' ');
+    return split(' ').map((e) => e.capitalize).join(' ');
   }
 
   /// Uppercase first letter inside string and let the others lowercase
@@ -2961,26 +2958,42 @@ extension StringExtension on String {
 
   /// Remove all whitespace inside string
   /// Example: your name => yourname
-  String removeAllWhitespace() {
-    return replaceAll(' ', '');
-  }
+  String removeAllWhitespace() => replaceAll(' ', '');
 
-  bool hasMatch(String pattern) {
-    return RegExp(pattern).hasMatch(this);
-  }
+  static final RegExp _mustacheregex = RegExp(r'\{\{([a-zA-Z0-9_]+)\}\}');
+
+  String replaceMustachesWithList(List<dynamic> params) => replaceAllMapped(_mustacheregex, (match) {
+        if (match.group(1) != null) {
+          int? index = int.tryParse(match.group(1)!);
+          if (index != null) {
+            if (index < params.length) {
+              return params[index].toString();
+            }
+          }
+        }
+        return match.group(0) ?? "";
+      });
+
+  String? replaceMustachesWithMap(Map<String, dynamic> params) => replaceAllMapped(_mustacheregex, (match) {
+        String key = match.group(1) ?? "";
+        if (params.containsKey(key)) {
+          return params[key].toString();
+        }
+        return match.group(0) ?? "";
+      });
+
+  bool hasMatch(String pattern) => RegExp(pattern).hasMatch(this);
 
   /// Checks if string consist only numeric.
   /// Numeric only doesn't accepting "." which double data type have
-  bool isNumericOnly() => hasMatch(r'^\d+$');
+  bool get isNumericOnly => hasMatch(r'^\d+$');
 
   /// Checks if string consist only Alphabet. (No Whitespace)
-  bool isAlphabetOnly() => hasMatch(r'^[a-zA-Z]+$');
+  bool get isAlphabetOnly => hasMatch(r'^[a-zA-Z]+$');
 
   /// Checks if string contains at least one Capital Letter
-  bool hasCapitalletter() => hasMatch(r'[A-Z]');
+  bool get hasCapitalletter => hasMatch(r'[A-Z]');
 
   /// Checks if string is boolean.
-  bool isBool() {
-    return (this == 'true' || this == 'false');
-  }
+  bool get isBool => (this == 'true' || this == 'false');
 }

@@ -256,9 +256,6 @@ extension BuildContextExtensions on BuildContext {
   double get safeWidth => logicalWidth - paddingLeft - paddingRight;
   double get safeHeight => logicalHeight - paddingTop - paddingBottom;
 
-  /// The same of [MediaQuery.of(context).size]
-  Size get mediaQuerySize => MediaQuery.of(this).size;
-
   /// The same of [MediaQuery.of(context).size.height]
   /// Note: updates when you rezise your screen (like on a browser or
   /// desktop window)
@@ -338,15 +335,17 @@ extension BuildContextExtensions on BuildContext {
   /// specific property of MediaQuery the ability to declare that when reading the MediaQuery from the context.
 
   /// The same of MediaQuery.sizeOf(context)
-  Size get mqSize => MediaQuery.sizeOf(this);
+  Size get mediaQuerySize => mediaQuery.size;
+
+  MediaQueryData get mediaQuery => MediaQuery.of(this);
 
   /// The same of MediaQuery.sizeOf(context).height
-  double get mqHeight => mqSize.height;
+  double get mqHeight => mediaQuerySize.height;
 
   /// The same of [MediaQuery.sizeOf(context).width]
   /// Note: updates when you rezise your screen (like on a browser or
   /// desktop window)
-  double get mqWidth => mqSize.width;
+  double get mqWidth => mediaQuerySize.width;
 
   /// similar to [ MediaQuery.paddingOf(context)]
   EdgeInsets get mqPadding => MediaQuery.paddingOf(this);
