@@ -15,6 +15,11 @@ void main() {
     debugPrint(t?.uf);
   });
 
+  test(' ', () async {
+    var t = await Brasil.pesquisarCEP("05366000");
+    t.toString();
+  });
+
   test(' ', () {
     for (var m in DateConstants.months) {
       debugPrint(m.month);

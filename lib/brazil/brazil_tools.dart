@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:innerlibs/string_extensions.dart';
 
 part 'brazil_tools.part.dart';
@@ -176,6 +179,24 @@ abstract interface class Brasil extends _Brasil {
 
   static final List<Estado> _estados = [];
 
+  static bool validarCEP(String cep) {
+    // Remover espaços e traços (se existirem)
+    final cleanedCEP = cep.replaceAll(RegExp(r'[-\s]'), '');
+
+    // Verificar se o CEP possui o tamanho correto
+    if (cleanedCEP.length != 8) {
+      return false;
+    }
+
+    // Verificar se todos os caracteres são dígitos
+    if (!cleanedCEP.contains(RegExp(r'^\d{8}$'))) {
+      return false;
+    }
+
+    // Se chegou até aqui, o CEP é válido
+    return true;
+  }
+
   /// Lista com todos os Estados do Brasil
   static List<Estado> get estados {
     if (_estados.isEmpty) {
@@ -212,7 +233,7 @@ abstract interface class Brasil extends _Brasil {
   static Cidade? pegarCidade(String nomeCidadeOuIBGE, [String nomeOuUFOuIBGE = ""]) => (pesquisarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE)).singleOrNull;
 
   /// Pesquisa uma cidade no Brasil todo ou em algum estado especifico se [nomeOuUFOuIBGE] for especificado
-  static List<Cidade> pesquisarCidade(String nomeCidadeOuIBGE, [String? nomeOuUFOuIBGE ]) {
+  static List<Cidade> pesquisarCidade(String nomeCidadeOuIBGE, [String? nomeOuUFOuIBGE]) {
     try {
       nomeCidadeOuIBGE = nomeCidadeOuIBGE.toLowerCase().removeDiacritics()?.trim() ?? "";
       Estado? e = pegarEstado(nomeCidadeOuIBGE);
@@ -224,6 +245,63 @@ abstract interface class Brasil extends _Brasil {
       return [];
     }
   }
+
+  static Future<Endereco?> pesquisarCEP(String cep, [String numero = "", String complemento = ""]) async {
+    final url = 'https://viacep.com.br/ws/$cep/json/';
+    if (validarCEP(cep)) {
+      try {
+        final response = await http.get(Uri.parse(url));
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> data = json.decode(response.body);
+          return Endereco.fromJson(data)
+            ..numero = numero
+            ..complemento = complemento;
+        } else {
+          debugPrint('Erro ao buscar endereço: ${response.statusCode} ${response.reasonPhrase}');
+        }
+      } catch (e) {
+        debugPrint('Erro ao buscar endereço: $e');
+      }
+    }
+    return null;
+  }
+}
+
+class Endereco {
+  final String cep;
+  final String logradouro;
+  String numero = "";
+  String complemento;
+  final String bairro;
+  final String ibge;
+  final String gia;
+  final String ddd;
+  final String siafi;
+
+  Endereco({
+    required this.cep,
+    required this.logradouro,
+    required this.complemento,
+    required this.bairro,
+    required this.ibge,
+    required this.gia,
+    required this.ddd,
+    required this.siafi,
+  });
+
+  Cidade? get cidade => Brasil.pegarCidade(ibge);
+  Estado? get estado => cidade?.estado ?? Brasil.pegarEstado(ibge);
+
+  factory Endereco.fromJson(Map<String, dynamic> json) => Endereco(
+        cep: json['cep'],
+        logradouro: json['logradouro'],
+        complemento: json['complemento'],
+        bairro: json['bairro'],
+        ibge: json['ibge'],
+        gia: json['gia'],
+        ddd: json['ddd'],
+        siafi: json['siafi'],
+      );
 }
 
 class Estado implements Comparable<Estado> {

@@ -13,6 +13,7 @@ dependencies:
   crypto:
   intl:
   convert:
+  http: 
  
    
 

@@ -99,7 +99,7 @@ extension DialogExt on BuildContext {
     );
   }
 
-  void alert(String message, String? title) => dialog(title: title ?? "", message: message, cancelButton: "OK");
+  void alert(String message, [String? title]) => dialog(title: title ?? "", message: message, cancelButton: "OK");
 
   /// The `title` argument is used to title of alert dialog.
   /// The `content` argument is used to content of alert dialog.
@@ -109,9 +109,10 @@ extension DialogExt on BuildContext {
   /// The `onPopInvoked` argument is `onPopInvoked` of PopScope.
   ///
   /// Returns a [Future<bool>].
-  Future<bool> confirm({
-    Widget? title,
+  Future<bool> confirm(
+    Text asText, {
     Widget? content,
+    Widget? title,
     Widget? textOK,
     Widget? textCancel,
     bool canPop = false,
