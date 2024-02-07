@@ -110,8 +110,7 @@ extension DialogExt on BuildContext {
   ///
   /// Returns a [Future<bool>].
   Future<bool> confirm(
-    Text asText, {
-    Widget? content,
+    Widget? content, {
     Widget? title,
     Widget? textOK,
     Widget? textCancel,

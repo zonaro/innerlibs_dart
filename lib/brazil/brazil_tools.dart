@@ -265,6 +265,85 @@ abstract interface class Brasil extends _Brasil {
     }
     return null;
   }
+
+  // Função para validar CNPJ
+  static bool validaCNPJ(String text) {
+    if (text.length != 14) {
+      return false;
+    }
+
+    // Calcula o primeiro dígito verificador do CNPJ
+    List<int> multiplicadores = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    int soma = 0;
+    for (int i = 0; i < 12; i++) {
+      soma += int.parse(text[i]) * multiplicadores[i];
+    }
+    int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+    if (primeiroDigito != int.parse(text[12])) {
+      return false;
+    }
+
+    // Calcula o segundo dígito verificador do CNPJ
+    multiplicadores = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    soma = 0;
+    for (int i = 0; i < 13; i++) {
+      soma += int.parse(text[i]) * multiplicadores[i];
+    }
+    int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+    return segundoDigito == int.parse(text[13]);
+  }
+
+  // Função para validar CPF
+  static bool validaCPF(String text) {
+    if (text.length != 11) {
+      return false;
+    }
+
+    // Calcula o primeiro dígito verificador do CPF
+    int soma = 0;
+    for (int i = 0; i < 9; i++) {
+      soma += int.parse(text[i]) * (10 - i);
+    }
+    int primeiroDigito = (soma * 10) % 11;
+
+    if (primeiroDigito != int.parse(text[9])) {
+      return false;
+    }
+
+    // Calcula o segundo dígito verificador do CPF
+    soma = 0;
+    for (int i = 0; i < 10; i++) {
+      soma += int.parse(text[i]) * (11 - i);
+    }
+    int segundoDigito = (soma * 10) % 11;
+
+    return segundoDigito == int.parse(text[10]);
+  }
+
+  // Função para validar CPF ou CNPJ
+  static bool validaCPFouCNPJ(String text) {
+    // Implementação da validação que verifica se o texto é um CPF ou CNPJ válido
+    // Retorne true se for válido, caso contrário, retorne false
+    return validaCPF(text) || validaCNPJ(text);
+  }
+
+  // Função para formatar CPF
+  static String formataCPF(num number) {
+    // Implementação para formatar o número do CPF
+    // Retorne uma string formatada (por exemplo: "123.456.789-01")
+    String cpf = number.toString();
+    return "${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9)}";
+  }
+
+  // Função para formatar CNPJ
+  static String formataCNPJ(num number) {
+    // Implementação para formatar o número do CNPJ
+    // Retorne uma string formatada (por exemplo: "12.345.678/0001-90")
+    String cnpj = number.toString();
+    return "${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12)}";
+  }
 }
 
 class Endereco {
