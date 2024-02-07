@@ -37,3 +37,10 @@ export 'widgets/future_awaiter.dart';
 export 'widgets/nil.dart';
 export 'widgets/restart_widget.dart';
 export 'widgets/shimmer.dart';
+
+// ignore: camel_case_types
+typedef string = String;
+typedef JsonMap = Map<String, dynamic>;
+typedef SQLResponseRow = Map<String, dynamic>;
+typedef SQLResponseTable = List<SQLResponseRow>;
+typedef SQLResponseSet = List<SQLResponseTable>;
