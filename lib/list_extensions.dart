@@ -87,4 +87,42 @@ extension ListExtension<T> on List<T> {
         int end = start + pageSize > length ? length : start + pageSize;
         return sublist(start, end);
       });
+
+  /// Checks if this list contains all elements from [otherList].
+  bool containsAll(List<T> otherList) {
+    for (final element in otherList) {
+      if (!contains(element)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  List<List<T?>> pairUp(List<T> other) {
+    return pairUpIndexes(other).map((e) {
+      if (e.first == -1) {
+        return [null, other[e.last]];
+      } else if (e.last == -1) {
+        return [this[e.first], null];
+      } else {
+        return [this[e.first], other[e.last]];
+      }
+    }).toList();
+  }
+
+  List<List<int>> pairUpIndexes(List<T> other) {
+    final resultado = <List<int>>[];
+
+    for (var i = 0; i < length; i++) {
+      resultado.add([i, other.indexOf(this[i])]);
+    }
+    for (var j = 0; j < other.length; j++) {
+      final index1 = indexOf(other[j]);
+      if (index1 == -1) {
+        resultado.add([-1, j]);
+      }
+    }
+
+    return resultado;
+  }
 }

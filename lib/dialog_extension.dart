@@ -99,7 +99,7 @@ extension DialogExt on BuildContext {
     );
   }
 
-  void alert(String message, [String? title]) => dialog(title: title ?? "", message: message, cancelButton: "OK");
+  Future<void> alert(String message, [String? title]) async => await dialog(message, title: title, cancelButton: "OK");
 
   /// The `title` argument is used to title of alert dialog.
   /// The `content` argument is used to content of alert dialog.
@@ -143,7 +143,7 @@ extension DialogExt on BuildContext {
     return isConfirm ?? false;
   }
 
-  void dialog({required String title, required String message, List<String> buttons = const [], String? cancelButton, Function(String)? onDone, Color? positiveTitleColor, Color? cancelTitleColor, double? fontSize, bool barrierDismissible = true}) {
+  Future<void> dialog(String message, {String? title, List<String> buttons = const [], String? cancelButton, Function(String)? onDone, Color? positiveTitleColor, Color? cancelTitleColor, double? fontSize, bool barrierDismissible = true}) async {
     List<Widget> arrWidget = [];
 
     if (buttons.isEmpty) {
@@ -210,20 +210,20 @@ extension DialogExt on BuildContext {
       arrWidget.add(action);
     }
 
-    showDialog(
+    return await showDialog(
         barrierDismissible: barrierDismissible,
         context: this,
         builder: (BuildContext context) {
           if (MyPlatform.isApple) {
             return CupertinoAlertDialog(
-              title: Text(title),
+              title: title?.asText,
               content: Text(message),
               actions: arrWidget,
             );
           } else {
             return AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              title: Text(title),
+              title: title?.asText,
               content: Text(message),
               actions: arrWidget,
             );

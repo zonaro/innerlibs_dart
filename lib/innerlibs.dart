@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 library innerlibs;
 
 export 'align_extensions.dart';
@@ -38,8 +40,9 @@ export 'widgets/nil.dart';
 export 'widgets/restart_widget.dart';
 export 'widgets/shimmer.dart';
 
-// ignore: camel_case_types
 typedef string = String;
+typedef decimal = double;
+
 typedef JsonMap = Map<String, dynamic>;
 typedef SQLResponseRow = Map<String, dynamic>;
 typedef SQLResponseTable = List<SQLResponseRow>;
