@@ -98,28 +98,28 @@ extension ListExtension<T> on List<T> {
     return true;
   }
 
-  List<List<T?>> pairUp(List<T> other) {
+  List<(T?, T?)> pairUp(List<T> other) {
     return pairUpIndexes(other).map((e) {
-      if (e.first == -1) {
-        return [null, other[e.last]];
-      } else if (e.last == -1) {
-        return [this[e.first], null];
+      if (e.$1 == -1) {
+        return (null, other[e.$2]);
+      } else if (e.$2 == -1) {
+        return (this[e.$1], null);
       } else {
-        return [this[e.first], other[e.last]];
+        return (this[e.$1], other[e.$2]);
       }
     }).toList();
   }
 
-  List<List<int>> pairUpIndexes(List<T> other) {
-    final resultado = <List<int>>[];
+  List<(int, int)> pairUpIndexes(List<T> other) {
+    final resultado = <(int, int)>[];
 
     for (var i = 0; i < length; i++) {
-      resultado.add([i, other.indexOf(this[i])]);
+      resultado.add((i, other.indexOf(this[i])));
     }
     for (var j = 0; j < other.length; j++) {
       final index1 = indexOf(other[j]);
       if (index1 == -1) {
-        resultado.add([-1, j]);
+        resultado.add((-1, j));
       }
     }
 
