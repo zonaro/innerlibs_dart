@@ -10,6 +10,14 @@ import 'package:intl/intl.dart';
 // for the utf8.encode method
 
 extension NullStringExtension on String? {
+  bool get isUrl {
+    try {
+      return isNotBlank && Uri.tryParse(this!) != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /// Checks if the `String` is Blank (null, empty or only white spaces).
   bool get isBlank => this == null || this!.isBlank;
 
@@ -2004,7 +2012,9 @@ extension StringExtension on String {
   /// String t = 'OK'.nullIf("OK"); // returns null;
   /// String f = 'NO'.nullIf("YES"); // returns "NO";
   /// ```
-  String? nullIf(String? comparisonString) => asIf((s) => s == comparisonString, null, this);
+  String? nullIfEqual(String? comparisonString) => nullIf((s) => s == comparisonString);
+
+  String? nullIf(bool Function(String? s) fn) => asIf(fn, null, this);
 
   /// Return [this] if not blank. Otherwise return [newString].
   String? ifBlank(String? newString) => asIf((s) => s.isNotBlank, this, newString);
