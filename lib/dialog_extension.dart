@@ -1,8 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:innerlibs/build_context_extensions.dart';
-import 'package:innerlibs/platform.dart';
-import 'package:innerlibs/string_extensions.dart';
+import 'package:innerlibs/innerlibs.dart';
 
 extension DialogExt on BuildContext {
   /// The `title` argument is used to title of alert dialog.\
@@ -230,6 +231,65 @@ extension DialogExt on BuildContext {
           }
         });
   }
+
+  Future<T?> showLoaderTask<T>({Future<T> Function()? task, String cancelTaskButtonText = '', String? description, Widget? textOK, Widget? textCancel, String? confirmationMessage}) async {
+    T? result;
+    CancelableOperation<T>? operation;
+
+    bool cancellable = cancelTaskButtonText.isNotBlank && task != null;
+
+    cancelTask() async {
+      if (cancellable) {
+        if (confirmationMessage.isBlank || await confirm(confirmationMessage!.asText, textCancel: textCancel, textOK: textOK)) {
+          await operation?.cancel();
+        }
+      }
+    }
+
+    showDialog(
+      context: this,
+      barrierDismissible: false,
+      builder: (BuildContext context) => PopScope(
+        canPop: cancellable,
+        onPopInvoked: (f) => cancelTask(),
+        child: AlertDialog(
+          actions: [
+            if (cancellable) ...[
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: cancelTask,
+                child: cancelTaskButtonText.asText,
+              ),
+            ],
+          ],
+          content: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const CircularProgressIndicator(),
+                if (description != null) ...[
+                  const SizedBox(height: 20),
+                  Text(description),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    if (task != null) {
+      operation = CancelableOperation.fromFuture(task());
+      result = await operation.valueOrCancellation();
+    }
+
+    if (canPop()) {
+      pop();
+    }
+
+    return result;
+  }
 }
 
 class _PromptDialog extends StatefulWidget {
@@ -303,7 +363,7 @@ class __PromptDialogState extends State<_PromptDialog> {
 
   String? value;
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -327,7 +387,7 @@ class __PromptDialogState extends State<_PromptDialog> {
         title: widget.title,
         content: SingleChildScrollView(
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: TextFormField(
               controller: controller,
               decoration: widget.decoration.copyWith(
@@ -364,7 +424,7 @@ class __PromptDialogState extends State<_PromptDialog> {
               obscuringCharacter: widget.obscuringCharacter,
               textCapitalization: widget.textCapitalization,
               onEditingComplete: () {
-                if (_formKey.currentState!.validate()) {
+                if (formKey.currentState!.validate()) {
                   Navigator.pop(context, value);
                 }
               },
@@ -379,7 +439,7 @@ class __PromptDialogState extends State<_PromptDialog> {
           ),
           TextButton(
             onPressed: () {
-              if (_formKey.currentState!.validate()) {
+              if (formKey.currentState!.validate()) {
                 Navigator.pop(context, value);
               }
             },
