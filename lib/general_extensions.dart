@@ -1,13 +1,19 @@
 import 'package:innerlibs/string_extensions.dart';
 
-
-  
-
-
 extension ObjectExtensions on Object? {
+  // return a string of this object as a SQL Value
+  String get asSqlValue {
+    if (this == null) {
+      return 'NULL';
+    } else if (this is num) {
+      return toString();
+    } else if (this is bool) {
+      return asBool() ? "1" : "0";
+    } else {
+      return "'${this?.toString().replaceAll("'", "''")}'";
+    }
+  }
 
-
-  
   bool asBool({bool everythingIsTrue = true}) => asNullableBool(everythingIsTrue: everythingIsTrue) ?? false;
 
   bool? asNullableBool({bool everythingIsTrue = true}) {

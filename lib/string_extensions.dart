@@ -265,7 +265,7 @@ extension StringExtension on String {
     return words;
   }
 
-  bool flatEquals(String? text) => removeDiacritics()?.toLowerCase() == text?.removeDiacritics()?.toLowerCase();
+  bool flatEqual(String? text) => removeDiacritics()?.toLowerCase() == text?.removeDiacritics()?.toLowerCase();
 
   bool flatContains(String? text) {
     if (isBlank) return text.isBlank;
@@ -278,7 +278,7 @@ extension StringExtension on String {
 
   bool flatEqualAny(List<String> texts) {
     for (var t in texts) {
-      if (flatEquals(t)) {
+      if (flatEqual(t)) {
         return true;
       }
     }
