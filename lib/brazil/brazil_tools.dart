@@ -268,58 +268,69 @@ abstract interface class Brasil extends _Brasil {
 
   // Função para validar CNPJ
   static bool validarCNPJ(String text) {
-    if (text.length != 14) {
+    try {
+      text = text.onlyNumbers!;
+      if (text.length != 14) {
+        return false;
+      }
+
+      // Calcula o primeiro dígito verificador do CNPJ
+      List<int> multiplicadores = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+      int soma = 0;
+      for (int i = 0; i < 12; i++) {
+        soma += int.parse(text[i]) * multiplicadores[i];
+      }
+      int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+      if (primeiroDigito != int.parse(text[12])) {
+        return false;
+      }
+
+      // Calcula o segundo dígito verificador do CNPJ
+      multiplicadores = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+      soma = 0;
+      for (int i = 0; i < 13; i++) {
+        soma += int.parse(text[i]) * multiplicadores[i];
+      }
+      int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+      return segundoDigito == int.parse(text[13]);
+    } catch (e) {
       return false;
     }
-
-    // Calcula o primeiro dígito verificador do CNPJ
-    List<int> multiplicadores = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-    int soma = 0;
-    for (int i = 0; i < 12; i++) {
-      soma += int.parse(text[i]) * multiplicadores[i];
-    }
-    int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
-
-    if (primeiroDigito != int.parse(text[12])) {
-      return false;
-    }
-
-    // Calcula o segundo dígito verificador do CNPJ
-    multiplicadores = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-    soma = 0;
-    for (int i = 0; i < 13; i++) {
-      soma += int.parse(text[i]) * multiplicadores[i];
-    }
-    int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
-
-    return segundoDigito == int.parse(text[13]);
   }
 
   // Função para validar CPF
   static bool validarCPF(String text) {
-    if (text.length != 11) {
+    try {
+      text = text.onlyNumbers!;
+
+      if (text.length != 11) {
+        return false;
+      }
+
+      // Calcula o primeiro dígito verificador do CPF
+      int soma = 0;
+      for (int i = 0; i < 9; i++) {
+        soma += int.parse(text[i]) * (10 - i);
+      }
+      int primeiroDigito = (soma * 10) % 11;
+
+      if (primeiroDigito != int.parse(text[9])) {
+        return false;
+      }
+
+      // Calcula o segundo dígito verificador do CPF
+      soma = 0;
+      for (int i = 0; i < 10; i++) {
+        soma += int.parse(text[i]) * (11 - i);
+      }
+      int segundoDigito = (soma * 10) % 11;
+
+      return segundoDigito == int.parse(text[10]);
+    } catch (e) {
       return false;
     }
-
-    // Calcula o primeiro dígito verificador do CPF
-    int soma = 0;
-    for (int i = 0; i < 9; i++) {
-      soma += int.parse(text[i]) * (10 - i);
-    }
-    int primeiroDigito = (soma * 10) % 11;
-
-    if (primeiroDigito != int.parse(text[9])) {
-      return false;
-    }
-
-    // Calcula o segundo dígito verificador do CPF
-    soma = 0;
-    for (int i = 0; i < 10; i++) {
-      soma += int.parse(text[i]) * (11 - i);
-    }
-    int segundoDigito = (soma * 10) % 11;
-
-    return segundoDigito == int.parse(text[10]);
   }
 
   static Map<String, String> separarTelefone(String telefone) {
@@ -348,24 +359,28 @@ abstract interface class Brasil extends _Brasil {
   }
 
   static bool validarTelefone(String telefone) {
-    // Remove todos os caracteres não numéricos
-    String apenasNumeros = telefone.replaceAll(RegExp(r'\D'), '');
+    try {
+      // Remove todos os caracteres não numéricos
+      String apenasNumeros = telefone.replaceAll(RegExp(r'\D'), '');
 
-    // Verifica se o número tem o tamanho correto (8 ou 9 dígitos locais + 0 ou 2 dígitos DDD)
-    if (apenasNumeros.length < 8 || apenasNumeros.length > 11) {
-      return false;
-    }
-
-    // Se o número tem 10 ou 11 dígitos, verifica se os dois primeiros são um DDD válido
-    if (apenasNumeros.length > 9) {
-      int ddd = int.parse(apenasNumeros.substring(0, 2));
-      if (ddd < 11 || ddd > 99) {
+      // Verifica se o número tem o tamanho correto (8 ou 9 dígitos locais + 0 ou 2 dígitos DDD)
+      if (apenasNumeros.length < 8 || apenasNumeros.length > 11) {
         return false;
       }
-    }
 
-    // Se chegou até aqui, o número é válido
-    return true;
+      // Se o número tem 10 ou 11 dígitos, verifica se os dois primeiros são um DDD válido
+      if (apenasNumeros.length > 9) {
+        int ddd = int.parse(apenasNumeros.substring(0, 2));
+        if (ddd < 11 || ddd > 99) {
+          return false;
+        }
+      }
+
+      // Se chegou até aqui, o número é válido
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // Função para validar CPF ou CNPJ
