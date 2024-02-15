@@ -9,52 +9,58 @@ extension BuildContextExtensions on BuildContext {
 //  THEMES
 
   /// performs a simple [Theme.of(context)] action and returns given [result]
+  ///
   ThemeData get theme => Theme.of(this);
-  TextTheme get textTheme => Theme.of(this).textTheme;
+
+  TextTheme get textTheme => theme.textTheme;
 
   /// performs a simple [Theme.of(context).primaryTextTheme] action and returns given [primaryTextTheme]
-  TextTheme get primaryTextTheme => Theme.of(this).primaryTextTheme;
+  TextTheme get primaryTextTheme => theme.primaryTextTheme;
 
   /// performs a simple [Theme.of(context).bottomAppBarTheme] action and returns given [bottomAppBarTheme]
-  BottomAppBarTheme get bottomAppBarTheme => Theme.of(this).bottomAppBarTheme;
+  BottomAppBarTheme get bottomAppBarTheme => theme.bottomAppBarTheme;
 
   /// performs a simple [Theme.of(context).bottomSheetTheme] action and returns given [bottomSheetTheme]
-  BottomSheetThemeData get bottomSheetTheme => Theme.of(this).bottomSheetTheme;
+  BottomSheetThemeData get bottomSheetTheme => theme.bottomSheetTheme;
 
   /// performs a simple [Theme.of(context).appBarTheme] action and returns given [appBarTheme]
-  AppBarTheme get appBarTheme => Theme.of(this).appBarTheme;
+  AppBarTheme get appBarTheme => theme.appBarTheme;
 
   // COLOR
 
   /// performs a simple [Theme.of(context).backgroundColor] action and returns given [backgroundColor]
-  Color get backgroundColor => Theme.of(this).colorScheme.background;
+  Color get backgroundColor => theme.colorScheme.background;
 
   /// performs a simple [Theme.of(context).primaryColor] action and returns given [primaryColor]
-  Color get primaryColor => Theme.of(this).primaryColor;
+  Color get primaryColor => theme.primaryColor;
 
   /// A lighter version of the [primaryColor].
-  Color get primaryColorLight => Theme.of(this).primaryColorLight;
+  Color get primaryColorLight => theme.primaryColorLight;
 
   /// A darker version of the [primaryColor].
-  Color get primaryColorDark => Theme.of(this).primaryColorDark;
+  Color get primaryColorDark => theme.primaryColorDark;
 
   /// The focus color used indicate that a component has the input focus.
-  Color get focusColor => Theme.of(this).focusColor;
+  Color get focusColor => theme.focusColor;
 
   /// The hover color used to indicate when a pointer is hovering over a
   /// component.
-  Color get hoverColor => Theme.of(this).hoverColor;
+  Color get hoverColor => theme.hoverColor;
 
   /// The default color of the [Material] that underlies the [Scaffold]. The
   /// background color for a typical material app or a page within the app.
-  Color get scaffoldBackgroundColor => Theme.of(this).scaffoldBackgroundColor;
+  Color get scaffoldBackgroundColor => theme.scaffoldBackgroundColor;
+
+  ScaffoldState get scaffold => Scaffold.of(this);
+
+  ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
 
   /// The color of [Divider]s and [PopupMenuDivider]s, also used
   /// between [ListTile]s, between rows in [DataTable]s, and so forth.
   ///
   /// To create an appropriate [BorderSide] that uses this color, consider
   /// [Divider.createBorderSide].
-  Color get dividerColor => Theme.of(this).dividerColor;
+  Color get dividerColor => theme.dividerColor;
 
   // // TYPOGRAPHY 2018
 
@@ -267,17 +273,19 @@ extension BuildContextExtensions on BuildContext {
   /// desktop window)
   double get width => mediaQuerySize.width;
 
+  MediaQueryData get mediaQuery => MediaQuery.of(this);
+
   /// similar to [MediaQuery.of(context).padding]
-  EdgeInsets get mediaQueryPadding => MediaQuery.of(this).padding;
+  EdgeInsets get mediaQueryPadding => mediaQuery.padding;
 
   /// similar to [MediaQuery.of(context).viewPadding]
-  EdgeInsets get mediaQueryViewPadding => MediaQuery.of(this).viewPadding;
+  EdgeInsets get mediaQueryViewPadding => mediaQuery.viewPadding;
 
   /// similar to [MediaQuery.of(context).viewInsets]
-  EdgeInsets get mediaQueryViewInsets => MediaQuery.of(this).viewInsets;
+  EdgeInsets get mediaQueryViewInsets => mediaQuery.viewInsets;
 
   /// similar to [MediaQuery.of(context).orientation]
-  Orientation get orientation => MediaQuery.of(this).orientation;
+  Orientation get orientation => mediaQuery.orientation;
 
   /// check if device is on landscape mode
   bool get isLandscape => orientation == Orientation.landscape;
@@ -285,12 +293,12 @@ extension BuildContextExtensions on BuildContext {
   /// check if device is on portrait mode
   bool get isPortrait => orientation == Orientation.portrait;
 
-  bool get alwaysUse24HourFormat => MediaQuery.of(this).alwaysUse24HourFormat;
+  bool get alwaysUse24HourFormat => mediaQuery.alwaysUse24HourFormat;
 
-  /// similar to [MediaQuery.of(this).devicePixelRatio]
-  double get devicePixelRatio => MediaQuery.of(this).devicePixelRatio;
+  /// similar to [mediaQuery.devicePixelRatio]
+  double get devicePixelRatio => mediaQuery.devicePixelRatio;
 
-  Brightness get platformBrightness => MediaQuery.of(this).platformBrightness;
+  Brightness get platformBrightness => mediaQuery.platformBrightness;
 
   /// get the shortestSide from screen
   double get mediaQueryShortestSide => mediaQuerySize.shortestSide;
@@ -337,7 +345,7 @@ extension BuildContextExtensions on BuildContext {
   /// The same of MediaQuery.sizeOf(context)
   Size get mediaQuerySize => mediaQuery.size;
 
-  MediaQueryData get mediaQuery => MediaQuery.of(this);
+ 
 
   /// The same of MediaQuery.sizeOf(context).height
   double get mqHeight => mediaQuerySize.height;
