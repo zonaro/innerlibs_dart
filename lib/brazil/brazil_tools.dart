@@ -219,9 +219,9 @@ abstract interface class Brasil extends _Brasil {
   static List<Estado> pesquisarEstado(String nomeOuUFOuIBGE) {
     try {
       nomeOuUFOuIBGE = nomeOuUFOuIBGE.toLowerCase().trim();
-      var l = estados.where((e) => e.nome.flatContains(nomeOuUFOuIBGE) || e.uf.flatEquals(nomeOuUFOuIBGE) || e.ibge.toString() == nomeOuUFOuIBGE.trim().substring(0, 2)).toList(growable: false);
+      var l = estados.where((e) => e.nome.flatContains(nomeOuUFOuIBGE) || e.uf.flatEqual(nomeOuUFOuIBGE) || e.ibge.toString() == nomeOuUFOuIBGE.trim().substring(0, 2)).toList(growable: false);
       if (l.isEmpty) {
-        l = estados.where((e) => e.cidades.any((c) => c.nome.flatEquals(nomeOuUFOuIBGE))).toList(growable: false);
+        l = estados.where((e) => e.cidades.any((c) => c.nome.flatEqual(nomeOuUFOuIBGE))).toList(growable: false);
       }
       return l;
     } catch (e) {
@@ -267,66 +267,127 @@ abstract interface class Brasil extends _Brasil {
   }
 
   // Função para validar CNPJ
-  static bool validaCNPJ(String text) {
-    if (text.length != 14) {
+  static bool validarCNPJ(String text) {
+    try {
+      text = text.onlyNumbers!;
+      if (text.length != 14) {
+        return false;
+      }
+
+      // Calcula o primeiro dígito verificador do CNPJ
+      List<int> multiplicadores = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+      int soma = 0;
+      for (int i = 0; i < 12; i++) {
+        soma += int.parse(text[i]) * multiplicadores[i];
+      }
+      int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+      if (primeiroDigito != int.parse(text[12])) {
+        return false;
+      }
+
+      // Calcula o segundo dígito verificador do CNPJ
+      multiplicadores = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+      soma = 0;
+      for (int i = 0; i < 13; i++) {
+        soma += int.parse(text[i]) * multiplicadores[i];
+      }
+      int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+      return segundoDigito == int.parse(text[13]);
+    } catch (e) {
       return false;
     }
-
-    // Calcula o primeiro dígito verificador do CNPJ
-    List<int> multiplicadores = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-    int soma = 0;
-    for (int i = 0; i < 12; i++) {
-      soma += int.parse(text[i]) * multiplicadores[i];
-    }
-    int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
-
-    if (primeiroDigito != int.parse(text[12])) {
-      return false;
-    }
-
-    // Calcula o segundo dígito verificador do CNPJ
-    multiplicadores = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-    soma = 0;
-    for (int i = 0; i < 13; i++) {
-      soma += int.parse(text[i]) * multiplicadores[i];
-    }
-    int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
-
-    return segundoDigito == int.parse(text[13]);
   }
 
   // Função para validar CPF
-  static bool validaCPF(String text) {
-    if (text.length != 11) {
+  static bool validarCPF(String text) {
+    try {
+      text = text.onlyNumbers!;
+
+      if (text.length != 11) {
+        return false;
+      }
+
+      // Calcula o primeiro dígito verificador do CPF
+      int soma = 0;
+      for (int i = 0; i < 9; i++) {
+        soma += int.parse(text[i]) * (10 - i);
+      }
+      int primeiroDigito = (soma * 10) % 11;
+
+      if (primeiroDigito != int.parse(text[9])) {
+        return false;
+      }
+
+      // Calcula o segundo dígito verificador do CPF
+      soma = 0;
+      for (int i = 0; i < 10; i++) {
+        soma += int.parse(text[i]) * (11 - i);
+      }
+      int segundoDigito = (soma * 10) % 11;
+
+      return segundoDigito == int.parse(text[10]);
+    } catch (e) {
       return false;
     }
+  }
 
-    // Calcula o primeiro dígito verificador do CPF
-    int soma = 0;
-    for (int i = 0; i < 9; i++) {
-      soma += int.parse(text[i]) * (10 - i);
+  static Map<String, String> separarTelefone(String telefone) {
+    if (validarTelefone(telefone)) {
+      // Remove todos os caracteres não numéricos
+      String apenasNumeros = telefone.replaceAll(RegExp(r'\D'), '');
+
+      // Extrai o DDD, prefixo e sufixo
+      RegExp exp = RegExp(r'(\d{2})(\d{4,5})(\d{4})$');
+      var match = exp.firstMatch(apenasNumeros);
+
+      // Retorna um mapa com as partes do telefone
+      return {
+        'original': telefone,
+        'semMascara': apenasNumeros,
+        'mascara': apenasNumeros,
+        'ddd': "${match?.group(1)}",
+        'prefixo': "${match?.group(2)}",
+        'sufixo': "${match?.group(3)}",
+        'numero': "${match?.group(2)}${match?.group(3)}",
+        'numeroMascara': "${match?.group(2)}-${match?.group(3)}",
+      };
+    } else {
+      return {'original': telefone};
     }
-    int primeiroDigito = (soma * 10) % 11;
+  }
 
-    if (primeiroDigito != int.parse(text[9])) {
+  static bool validarTelefone(String telefone) {
+    try {
+      // Remove todos os caracteres não numéricos
+      String apenasNumeros = telefone.replaceAll(RegExp(r'\D'), '');
+
+      // Verifica se o número tem o tamanho correto (8 ou 9 dígitos locais + 0 ou 2 dígitos DDD)
+      if (apenasNumeros.length < 8 || apenasNumeros.length > 11) {
+        return false;
+      }
+
+      // Se o número tem 10 ou 11 dígitos, verifica se os dois primeiros são um DDD válido
+      if (apenasNumeros.length > 9) {
+        int ddd = int.parse(apenasNumeros.substring(0, 2));
+        if (ddd < 11 || ddd > 99) {
+          return false;
+        }
+      }
+
+      // Se chegou até aqui, o número é válido
+      return true;
+    } catch (e) {
       return false;
     }
-
-    // Calcula o segundo dígito verificador do CPF
-    soma = 0;
-    for (int i = 0; i < 10; i++) {
-      soma += int.parse(text[i]) * (11 - i);
-    }
-    int segundoDigito = (soma * 10) % 11;
-
-    return segundoDigito == int.parse(text[10]);
   }
 
   // Função para validar CPF ou CNPJ
-  static bool validaCPFouCNPJ(String text) {
+  static bool validarCPFouCNPJ(String text) {
     // Implementação da validação que verifica se o texto é um CPF ou CNPJ válido
     // Retorne true se for válido, caso contrário, retorne false
-    return validaCPF(text) || validaCNPJ(text);
+    return validarCPF(text) || validarCNPJ(text);
   }
 
   // Função para formatar CPF

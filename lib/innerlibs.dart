@@ -26,6 +26,7 @@ export 'positioned_extensions.dart';
 export 'shimmer_extensions.dart';
 export 'size_box_extension.dart';
 export 'size_extensions.dart';
+export 'sql_row_extensions.dart';
 export 'string_extensions.dart';
 export 'string_helpers.dart';
 export 'text_extension.dart';
