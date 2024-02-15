@@ -2,8 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:innerlibs/platform.dart';
-import 'package:innerlibs/widgets/restart_widget.dart';
+import 'package:innerlibs/innerlibs.dart';
 
 extension BuildContextExtensions on BuildContext {
 //  THEMES
@@ -54,6 +53,9 @@ extension BuildContextExtensions on BuildContext {
   ScaffoldState get scaffold => Scaffold.of(this);
 
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(SnackBar snackBar) => scaffoldMessenger.showSnackBar(snackBar);
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBarMessage(string snackBar) => showSnackBar(SnackBar(content: snackBar.asText));
 
   /// The color of [Divider]s and [PopupMenuDivider]s, also used
   /// between [ListTile]s, between rows in [DataTable]s, and so forth.
@@ -344,8 +346,6 @@ extension BuildContextExtensions on BuildContext {
 
   /// The same of MediaQuery.sizeOf(context)
   Size get mediaQuerySize => mediaQuery.size;
-
- 
 
   /// The same of MediaQuery.sizeOf(context).height
   double get mqHeight => mediaQuerySize.height;

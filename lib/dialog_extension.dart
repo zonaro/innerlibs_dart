@@ -285,7 +285,7 @@ extension DialogExt on BuildContext {
     }
 
     if (canPop()) {
-      pop();
+      pop(result);
     }
 
     return result;

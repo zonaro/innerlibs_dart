@@ -14,13 +14,14 @@ extension ObjectExtensions on dynamic {
     }
   }
 
-  /// Checks if the `String` is Blank (null, empty or only white spaces).
+  /// Checks if [this] is a Blank value:
+  ///( Null, empty or only white spaces for [String], 0 for [num] , [DateExtension.min] for [DateTime], Call [isBlank] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
   bool get isBlank {
     if (this == null) {
       return true;
     }
     if (this is String) {
-      return (this as string).trimAll!.isEmpty;
+      return (this as string).trim().isEmpty;
     }
     if (this is num) {
       return this == 0;
@@ -29,11 +30,14 @@ extension ObjectExtensions on dynamic {
       return (this as DateTime) == DateExtensions.min;
     }
     if (this is Iterable) {
-      return (this as Iterable).isEmpty;
+      var l = (this as Iterable).toList();
+      return l.isEmpty || l.where((x) => x.isBlank).isEmpty;
     }
     if (this is Map) {
-      return (this as Map).isEmpty;
+      var m = (this as Map);
+      return m.isEmpty || m.values.isBlank;
     }
+
     return ToString().isBlank;
   }
 
