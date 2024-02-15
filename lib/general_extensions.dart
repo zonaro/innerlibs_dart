@@ -15,34 +15,45 @@ extension ObjectExtensions on dynamic {
   }
 
   /// Checks if [this] is a Blank value:
-  ///( Null, empty or only white spaces for [String], 0 for [num] , [DateExtension.min] for [DateTime], Call [isBlank] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
-  bool get isBlank {
-    if (this == null) {
-      return true;
-    }
-    if (this is String) {
-      return (this as string).trim().isEmpty;
-    }
-    if (this is num) {
-      return this == 0;
-    }
-    if (this is DateTime) {
-      return (this as DateTime) == DateExtensions.min;
-    }
-    if (this is Iterable) {
-      var l = (this as Iterable).toList();
-      return l.isEmpty || l.where((x) => x.isBlank).isEmpty;
-    }
-    if (this is Map) {
-      var m = (this as Map);
-      return m.isEmpty || m.values.isBlank;
-    }
+  ///( Null, empty or only white spaces for [String], 0 for [num] , [DateExtension.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
+  bool get isValid {
+    try {
+      if (this == null) {
+        return false;
+      }
+      if (this is String) {
+        return (this as String).trim().isNotEmpty;
+      }
+      if (this is num) {
+        return this != 0;
+      }
+      if (this is DateTime) {
+        return (this as DateTime) != DateExtensions.min;
+      }
 
-    return ToString().isBlank;
+      if (this is Iterable) {
+        var l = (this as Iterable);
+        if (l.isEmpty) return false;
+        for (var e in l) {
+          if ((e as Object?).isValid) {
+            return true;
+          }
+        }
+      }
+      if (this is Map) {
+        var m = (this as Map);
+        return m.isNotEmpty && m.values.isValid;
+      }
+
+      return toString().isValid;
+    } catch (e) {
+      return false;
+    }
   }
 
-  /// Checks if the `String` is not blank (null, empty or only white spaces).
-  bool get isNotBlank => !isBlank;
+  /// Checks if [this] is not a Blank value:
+  ///( Null, empty or only white spaces for [String], 0 for [num] , [DateExtension.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
+  bool get isNotValid => !isValid;
 
   bool asBool({bool everythingIsTrue = true}) => asNullableBool(everythingIsTrue: everythingIsTrue) ?? false;
 
