@@ -47,34 +47,6 @@ class FutureAwaiter<T> extends StatelessWidget {
               } else if (!snapshot.hasData || snapshot.data == null || (validate && (snapshot.data).isNotValid)) {
                 return emptyChild ?? const SizedBox.shrink();
               } else {
-                // switch (snapshot.data) {
-                //   case String():
-                //     var l = snapshot.data as String;
-                //     if (l.isBlank) {
-                //       debugPrint("String is null, blank or empty");
-                //       return emptyChild ?? const SizedBox.shrink();
-                //     }
-                //   case List():
-                //     var l = snapshot.data as List;
-                //     if (l.isEmpty) {
-                //       debugPrint("List is empty");
-                //       return emptyChild ?? const SizedBox.shrink();
-                //     }
-                //   case Map():
-                //     var l = snapshot.data as Map;
-                //     if (l.isEmpty) {
-                //       debugPrint("Map is empty");
-                //       return emptyChild ?? const SizedBox.shrink();
-                //     }
-                //   case Iterable():
-                //     var l = snapshot.data as Iterable;
-                //     if (l.isEmpty) {
-                //       debugPrint("Iterable is empty");
-                //       return emptyChild ?? const SizedBox.shrink();
-                //     }
-                //   default:
-                //     break;
-                // }
                 return child(snapshot.data as T);
               }
             }
