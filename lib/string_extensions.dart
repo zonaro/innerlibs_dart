@@ -18,6 +18,9 @@ extension NullStringExtension on String? {
     }
   }
 
+  String get blankIfNull => this??"";
+
+
   bool get isBlank => this != null && this!.isBlank;
 
   bool get isNotBlank => !isBlank;
@@ -161,6 +164,7 @@ extension StringExtension on String {
   static final _diacriticsRegExp = RegExp('[^\u0000-\u007E]', multiLine: true);
 
   String? get asNullable => this;
+
 
   /// Returns a new string with the flag of the specified country code.
   String get countryEmoji {
