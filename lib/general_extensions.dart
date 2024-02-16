@@ -2,9 +2,9 @@ import 'package:innerlibs/innerlibs.dart';
 
 extension ObjectExtensions on Object? {
   // return a string of this object as a SQL Value
-  String get asSqlValue {
+  String asSqlValue([nullAsBlank = false]) {
     if (this == null) {
-      return 'NULL';
+      return nullAsBlank ? "''" : "NULL";
     } else if (this is num) {
       return toString();
     } else if (this is bool) {

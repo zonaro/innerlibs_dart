@@ -234,7 +234,7 @@ extension DialogExt on BuildContext {
 
   Future<T?> showLoaderTask<T>({Future<T> Function()? task, String cancelTaskButtonText = '', String? loadingText, Widget? textOK, Widget? textCancel, String? confirmationMessage}) async {
     T? result;
-    CancelableOperation<T>? operation;
+    CancelableOperation<T?>? operation;
 
     bool cancellable = cancelTaskButtonText.isNotBlank && task != null;
 
@@ -242,6 +242,9 @@ extension DialogExt on BuildContext {
       if (cancellable) {
         if (confirmationMessage.isBlank || await confirm(confirmationMessage!.asText, textCancel: textCancel, textOK: textOK)) {
           await operation?.cancel();
+        }
+        if (canPop()) {
+          pop(result);
         }
       }
     }
@@ -280,12 +283,22 @@ extension DialogExt on BuildContext {
     );
 
     if (task != null) {
-      operation = CancelableOperation.fromFuture(task());
-      result = await operation.valueOrCancellation();
-    }
+      Future<T?> tryf() async {
+        T? r;
+        try {
+          r = await task();
+        } catch (e) {
+          await operation?.cancel();
+          r = null;
+        }
+        if (canPop()) {
+          pop(result);
+        }
+        return r;
+      }
 
-    if (canPop()) {
-      pop(result);
+      operation = CancelableOperation.fromFuture(tryf());
+      result = await operation.valueOrCancellation();
     }
 
     return result;
