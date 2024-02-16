@@ -34,6 +34,8 @@ class FutureAwaiter<T> extends StatelessWidget {
     this.validate = true,
   });
 
+  _error(Object e) => errorChild != null ? errorChild!(e) : ErrorWidget(e);
+
   @override
   Widget build(BuildContext context) => FutureBuilder<T>(
         future: future,
@@ -43,7 +45,7 @@ class FutureAwaiter<T> extends StatelessWidget {
               return loading ?? const Center(child: CircularProgressIndicator());
             } else {
               if (snapshot.hasError) {
-                throw "${snapshot.error}";
+                return _error(snapshot.error!);
               } else if (!snapshot.hasData || snapshot.data == null || (validate && (snapshot.data).isNotValid)) {
                 return emptyChild ?? const SizedBox.shrink();
               } else {
@@ -51,7 +53,7 @@ class FutureAwaiter<T> extends StatelessWidget {
               }
             }
           } catch (e) {
-            return errorChild != null ? errorChild!(e) : ErrorWidget(e);
+            return _error(e);
           }
         },
       );
