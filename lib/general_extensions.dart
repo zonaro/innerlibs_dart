@@ -1,6 +1,6 @@
 import 'package:innerlibs/innerlibs.dart';
 
-extension ObjectExtensions on dynamic {
+extension ObjectExtensions on Object? {
   // return a string of this object as a SQL Value
   String get asSqlValue {
     if (this == null) {
