@@ -6,15 +6,14 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// The asynchronous computation to which this builder is currently connected, possibly null.
   final Future<T> future;
 
-  /// When true, validate the snapshot data against the [IsValid] function
+  /// When true, validate the snapshot data against the [Object.IsValid] function.
+  /// Empty [List] or [Map], [Map] with all values empty, [num] = 0, empty or blank [String] will be considered empty data if this is true.
   final bool validate;
 
   /// Function thats receive a [T] data returned by [future] and return a [Widget].
   final Widget Function(T data) child;
 
-  /// A [Widget] to return if [T] is null or empty. If not specified return a [SizedBox]
-  ///
-  /// Empty [List] or [Map] and blank [String] will be considered empty data if [validate] is true.
+  /// A [Widget] to return if [T] is null or empty. If not specified return a shrink [SizedBox]
   final Widget? emptyChild;
 
   /// [Widget] to show while [future] is running
