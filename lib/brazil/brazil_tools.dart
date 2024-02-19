@@ -393,18 +393,18 @@ abstract interface class Brasil extends _Brasil {
   }
 
   // Função para formatar CPF
-  static String formataCPF(num number) {
+  static String formataCPF(dynamic number) {
     // Implementação para formatar o número do CPF
     // Retorne uma string formatada (por exemplo: "123.456.789-01")
-    String cpf = number.toString();
+    String cpf = "$number".onlyNumbers!;
     return "${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9)}";
   }
 
   // Função para formatar CNPJ
-  static String formataCNPJ(num number) {
+  static String formataCNPJ(dynamic number) {
     // Implementação para formatar o número do CNPJ
     // Retorne uma string formatada (por exemplo: "12.345.678/0001-90")
-    String cnpj = number.toString();
+    String cnpj = "$number".onlyNumbers!;
     return "${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12)}";
   }
 }
