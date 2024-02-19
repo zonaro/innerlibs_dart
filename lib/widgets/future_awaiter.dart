@@ -1,10 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-/// Wraps a [FutureBuilder] into a [Widget] and add some data validations, making it easier to use
+/// Wraps a [FutureBuilder] into a [Widget] and add some data validations, making it easier to use. 
 class FutureAwaiter<T> extends StatelessWidget {
   /// The asynchronous computation to which this builder is currently connected, possibly null.
   final Future<T> future;
+
+  /// When true, return [emptyChild] instead of [ErrorWidget]. If [errorChild] is not null, this property do nothing. 
+  /// The default value is [kReleaseMode]
+  final bool supressError;
 
   /// When true, validate the snapshot data against the [Object.IsValid] function.
   /// Empty [List] or [Map], [Map] with all values empty, [num] = 0, empty or blank [String] will be considered empty data if this is true.
@@ -31,9 +36,12 @@ class FutureAwaiter<T> extends StatelessWidget {
     this.loading,
     this.errorChild,
     this.validate = true,
+    this.supressError = kReleaseMode
   });
 
-  _error(Object e) => errorChild != null ? errorChild!(e) : ErrorWidget(e);
+  _error(Object e) =>  errorChild != null ? errorChild!(e) : supressError ? _empty()  : ErrorWidget(e);
+
+  _empty() => emptyChild ?? const SizedBox.shrink();
 
   @override
   Widget build(BuildContext context) => FutureBuilder<T>(
@@ -46,7 +54,7 @@ class FutureAwaiter<T> extends StatelessWidget {
               if (snapshot.hasError) {
                 return _error(snapshot.error!);
               } else if (!snapshot.hasData || snapshot.data == null || (validate && (snapshot.data).isNotValid)) {
-                return emptyChild ?? const SizedBox.shrink();
+                return _empty();
               } else {
                 return child(snapshot.data as T);
               }
