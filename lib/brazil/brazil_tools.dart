@@ -349,7 +349,6 @@ abstract interface class Brasil extends _Brasil {
       return {
         'original': telefone,
         'semMascara': apenasNumeros,
-        'mascara': apenasNumeros,
         'ddd': "${match?.group(1)}",
         'prefixo': "${match?.group(2)}",
         'sufixo': "${match?.group(3)}",
