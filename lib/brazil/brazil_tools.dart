@@ -269,8 +269,9 @@ abstract interface class Brasil extends _Brasil {
   // Função para validar CNPJ
   static bool validarCNPJ(String text) {
     try {
-      text = text.onlyNumbers!;
-      if (text.length != 14) {
+      text = text.replaceAll("-", "");
+
+      if (text.isNotNumber || text.length != 14) {
         return false;
       }
 
@@ -303,9 +304,9 @@ abstract interface class Brasil extends _Brasil {
   // Função para validar CPF
   static bool validarCPF(String text) {
     try {
-      text = text.onlyNumbers!;
+      text = text.replaceAll("-", "");
 
-      if (text.length != 11) {
+      if (text.isNotNumber || text.length != 11) {
         return false;
       }
 
@@ -314,7 +315,8 @@ abstract interface class Brasil extends _Brasil {
       for (int i = 0; i < 9; i++) {
         soma += int.parse(text[i]) * (10 - i);
       }
-      int primeiroDigito = (soma * 10) % 11;
+      int primeiroDigito = 11 - (soma % 11);
+      if (primeiroDigito >= 10) primeiroDigito = 0;
 
       if (primeiroDigito != int.parse(text[9])) {
         return false;
@@ -325,7 +327,8 @@ abstract interface class Brasil extends _Brasil {
       for (int i = 0; i < 10; i++) {
         soma += int.parse(text[i]) * (11 - i);
       }
-      int segundoDigito = (soma * 10) % 11;
+      int segundoDigito = 11 - (soma % 11);
+      if (segundoDigito >= 10) segundoDigito = 0;
 
       return segundoDigito == int.parse(text[10]);
     } catch (e) {

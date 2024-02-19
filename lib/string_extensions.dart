@@ -178,11 +178,6 @@ extension StringExtension on String {
     return '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
   }
 
-  /// Checks whether string is numeric
-  bool get isNumeric {
-    return double.tryParse(this) != null;
-  }
-
 // A function that converts a string to title case
   String? get toProperCase {
     if (isNotBlank) {
@@ -661,6 +656,15 @@ extension StringExtension on String {
   bool get isNumber {
     if (isBlank) {
       return false;
+    }
+    return num.tryParse(this) != null;
+  }
+
+  bool get isNotNumber => !isNumber;
+
+  bool get isNumberOrBlank {
+    if (isBlank) {
+      return true;
     }
     return num.tryParse(this) != null;
   }
