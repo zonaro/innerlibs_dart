@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/material.dart';
-import 'package:innerlibs/string_helpers.dart';
+import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 // for the utf8.encode method
@@ -216,7 +216,7 @@ extension StringExtension on String {
     if (updatedHexColor.length == 6) {
       updatedHexColor = 'FF$updatedHexColor';
     }
-    updatedHexColor = updatedHexColor.first(n: 8)!;
+    updatedHexColor = updatedHexColor.first(8)!;
     return Color(int.parse(updatedHexColor, radix: 16));
   }
 
@@ -795,6 +795,16 @@ extension StringExtension on String {
     return replaceAll(regex, '');
   }
 
+  String removeAny(List<Pattern> texts) => replaceMany(texts, "");
+
+  String replaceMany(List<Pattern> from, String to) {
+    String result = this;
+    for (var pattern in from) {
+      result = result.replaceAll(pattern, to);
+    }
+    return result;
+  }
+
   /// Finds all character occurrences and returns count as:
   /// ```dart
   /// List<Map<dynamic,dynamic>>
@@ -922,7 +932,7 @@ extension StringExtension on String {
   /// String foo = 'hello world';
   /// bool firstChars = foo.first(3); // returns 'hel'
   /// ```
-  String? first({int n = 1}) {
+  String? first([int n = 1]) {
     if (isBlank || length < n || n < 0) {
       return this;
     }
@@ -950,7 +960,7 @@ extension StringExtension on String {
   /// String foo = 'hello world';
   /// bool firstChars = foo.last(3); // returns 'rld'
   /// ```
-  String? last({int n = 1}) {
+  String? last([int n = 1]) {
     if (isBlank || length < n || n < 0) {
       return this;
     }
@@ -1821,7 +1831,7 @@ extension StringExtension on String {
 
     int leftChars = (maxChars / 2).ceil();
     int rightChars = maxChars - leftChars;
-    return '${first(n: leftChars)}...${last(n: rightChars)}';
+    return '${first(leftChars)}...${last(rightChars)}';
   }
 
   /// Quotes the `String` adding "" at the start & at the end.
@@ -2497,7 +2507,7 @@ extension StringExtension on String {
     if (length <= 2) {
       return false;
     }
-    final countryCode = first(n: 2);
+    final countryCode = first(2);
 
     if (!StringHelpers.ibanLen.containsKey(countryCode)) {
       return false;
@@ -2535,8 +2545,8 @@ extension StringExtension on String {
       return false;
     }
 
-    final List<String> firstTwoLetters = first(n: 2)!.split('');
-    final String restLetters = last(n: 6)!;
+    final List<String> firstTwoLetters = first(2)!.split('');
+    final String restLetters = last(6)!;
 
     // Besides the first two letters, the rest of the ID should be a 6digit number.
     if (!restLetters.isNumber) {

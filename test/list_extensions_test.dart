@@ -25,4 +25,14 @@ void main() {
       debugPrint(m.month);
     }
   });
+
+  test(' ', () {
+    var cnpj = Brasil.gerarCNPJFake();
+    assert(Brasil.validarCNPJ(cnpj));
+  });
+
+   test(' ', () {
+    var cpf = Brasil.gerarCPFFake();
+    assert(Brasil.validarCPF(cpf));
+  });
 }

@@ -9,8 +9,15 @@ extension ObjectExtensions on Object? {
       return toString();
     } else if (this is bool) {
       return this == true ? "1" : "0";
+    } else if (this is DateTime) {
+      return "'${(this as DateTime).toIso8601String()}'";
     } else {
-      return "'${this?.toString().replaceAll("'", "''")}'";
+      string s = "$this";
+      if (s.isBlank && nullAsBlank == false) {
+        return 'NULL';
+      } else {
+        return "'${this!.toString().replaceAll("'", "''")}'";
+      }
     }
   }
 
