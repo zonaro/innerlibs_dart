@@ -267,9 +267,9 @@ abstract interface class Brasil extends _Brasil {
   }
 
   // Função para validar CNPJ
-  static bool validarCNPJ(String text) {
+  static bool validarCNPJ(dynamic textOrNumber) {
     try {
-      text = text.replaceAll("-", "");
+      var text = "$textOrNumber".replaceAll("-", "");
 
       if (text.isNotNumber || text.length != 14) {
         return false;
@@ -302,9 +302,9 @@ abstract interface class Brasil extends _Brasil {
   }
 
   // Função para validar CPF
-  static bool validarCPF(String text) {
+  static bool validarCPF(dynamic textOrNumber) {
     try {
-      text = text.replaceAll("-", "");
+      var text = "$textOrNumber".replaceAll("-", "");
 
       if (text.isNotNumber || text.length != 11) {
         return false;
@@ -386,7 +386,7 @@ abstract interface class Brasil extends _Brasil {
   }
 
   // Função para validar CPF ou CNPJ
-  static bool validarCPFouCNPJ(String text) {
+  static bool validarCPFouCNPJ(dynamic text) {
     // Implementação da validação que verifica se o texto é um CPF ou CNPJ válido
     // Retorne true se for válido, caso contrário, retorne false
     return validarCPF(text) || validarCNPJ(text);
@@ -406,6 +406,16 @@ abstract interface class Brasil extends _Brasil {
     // Retorne uma string formatada (por exemplo: "12.345.678/0001-90")
     String cnpj = "$number".onlyNumbers!;
     return "${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12)}";
+  }
+
+  static String formataCPFouCNPJ(dynamic number) {
+    if (validarCPF(number)) {
+      return formataCPF(number);
+    } else if (validarCNPJ(number)) {
+      return formataCNPJ(number);
+    } else {
+      return "$number";
+    }
   }
 }
 
