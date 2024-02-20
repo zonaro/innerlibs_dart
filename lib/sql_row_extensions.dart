@@ -8,7 +8,7 @@ extension SqlRowExtensions on SQLResponseRow {
       String whereClause = primaryKeys.entries.map((e) => "[${e.key}] = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' AND ');
       return 'UPDATE $tableName SET $updates WHERE $whereClause;';
     } else {
-      String columns = keys.join(', ');
+      String columns = keys.map((e) => "[$e]").join(', ');
       String values = this.values.map((e) => (e as Object?).asSqlValue(nullAsBlank)).join(', ');
       return 'INSERT INTO $tableName ($columns) VALUES ($values);';
     }

@@ -46,6 +46,7 @@ extension ObjectExtensions on Object? {
             return true;
           }
         }
+        return false;
       }
       if (this is Map) {
         var m = (this as Map);
