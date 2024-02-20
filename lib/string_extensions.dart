@@ -2561,6 +2561,12 @@ extension StringExtension on String {
     return true;
   }
 
+  bool get isEmail {
+    if (isBlank) return false;
+    final RegExp regex = RegExp(r'^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
+    return regex.hasMatch(this);
+  }
+
   /// Checks whether the `String` is in lowercase.
   bool? get isLowerCase {
     if (isBlank) {
