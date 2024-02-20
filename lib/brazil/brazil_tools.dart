@@ -267,9 +267,9 @@ abstract interface class Brasil extends _Brasil {
   }
 
   // Função para validar CNPJ
-  static bool validarCNPJ(dynamic textOrNumber) {
+  static bool validarCNPJ(dynamic numero) {
     try {
-      var text = "$textOrNumber".removeAny(["-", "/", "."]);
+      var text = "$numero".removeAny(["-", "/", "."]);
 
       if (text.isNotNumber || text.length != 14) {
         return false;
@@ -302,9 +302,9 @@ abstract interface class Brasil extends _Brasil {
   }
 
   // Função para validar CPF
-  static bool validarCPF(dynamic textOrNumber) {
+  static bool validarCPF(dynamic numero) {
     try {
-      var text = "$textOrNumber".removeAny(["-", "."]);
+      var text = "$numero".removeAny(["-", "."]);
 
       if (text.isNotNumber || text.length != 11) {
         return false;
@@ -431,17 +431,17 @@ abstract interface class Brasil extends _Brasil {
   }
 
   // Função para validar CPF ou CNPJ
-  static bool validarCPFouCNPJ(dynamic text) {
+  static bool validarCPFouCNPJ(dynamic numero) {
     // Implementação da validação que verifica se o texto é um CPF ou CNPJ válido
     // Retorne true se for válido, caso contrário, retorne false
-    return validarCPF(text) || validarCNPJ(text);
+    return validarCPF(numero) || validarCNPJ(numero);
   }
 
   // Função para formatar CPF
-  static String formataCPF(dynamic number) {
+  static String formataCPF(dynamic numero) {
     // Implementação para formatar o número do CPF
     // Retorne uma string formatada (por exemplo: "123.456.789-01")
-    String cpf = "$number".onlyNumbers!;
+    String cpf = "$numero".onlyNumbers!;
     return "${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9)}";
   }
 
@@ -453,14 +453,35 @@ abstract interface class Brasil extends _Brasil {
     return "${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12)}";
   }
 
-  static String formataCPFouCNPJ(dynamic number) {
-    if (validarCPF(number)) {
-      return formataCPF(number);
-    } else if (validarCNPJ(number)) {
-      return formataCNPJ(number);
+  static String formataCPFouCNPJ(dynamic numero) {
+    if (validarCPF(numero)) {
+      return formataCPF(numero);
+    } else if (validarCNPJ(numero)) {
+      return formataCNPJ(numero);
     } else {
-      return "$number";
+      return "$numero";
     }
+  }
+
+  static String formataTelefone(dynamic numero) {
+    String telefoneFormatado = "$numero".onlyNumbers!;
+    if (telefoneFormatado.isBlank) return "";
+
+    if (telefoneFormatado.length > 11) {
+      telefoneFormatado = telefoneFormatado.substring(0, 11);
+    }
+
+    if (telefoneFormatado.length == 11) {
+      telefoneFormatado = '(${telefoneFormatado.substring(0, 2)}) ${telefoneFormatado.substring(2, 7)}-${telefoneFormatado.substring(7, 11)}';
+    } else if (telefoneFormatado.length == 10) {
+      telefoneFormatado = '(${telefoneFormatado.substring(0, 2)}) ${telefoneFormatado.substring(2, 6)}-${telefoneFormatado.substring(6, 10)}';
+    } else if (telefoneFormatado.length == 9) {
+      telefoneFormatado = '${telefoneFormatado.substring(0, 5)}-${telefoneFormatado.substring(5, 9)}';
+    } else if (telefoneFormatado.length == 8) {
+      telefoneFormatado = '${telefoneFormatado.substring(0, 4)}-${telefoneFormatado.substring(4, 8)}';
+    }
+
+    return telefoneFormatado;
   }
 }
 
