@@ -463,6 +463,7 @@ abstract interface class Brasil extends _Brasil {
     }
   }
 
+  /// formata um numero de telefone com traço e parentesis quando necessário
   static String formataTelefone(dynamic numero) {
     String telefoneFormatado = "$numero".onlyNumbers!;
     if (telefoneFormatado.isBlank) return "";

@@ -31,8 +31,13 @@ void main() {
     assert(Brasil.validarCNPJ(cnpj));
   });
 
-   test(' ', () {
+  test(' ', () {
     var cpf = Brasil.gerarCPFFake();
     assert(Brasil.validarCPF(cpf));
+  });
+
+  test(' ', () {
+    var tel = Brasil.formataTelefone(37335600);
+    debugPrint(tel);
   });
 }

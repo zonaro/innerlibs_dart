@@ -203,6 +203,8 @@ extension BuildContextExtensions on BuildContext {
   /// content body, like captions
   TextStyle? get labelSmall => textTheme.labelSmall;
 
+  ModalRoute? get modalRoute => ModalRoute.of(this);
+
   restartApp() => RestartWidget.restartApp(this);
 
   ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
@@ -213,6 +215,8 @@ extension BuildContextExtensions on BuildContext {
 
   /// performs a simple [Navigator.push] action with given [route]
   Future<dynamic> push(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).push(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
+
+  Future<dynamic> pushRoute(Widget screen, {required string route, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await push(screen, settings: RouteSettings(name: route), maintainState: maintainState, fullscreenDialog: fullscreenDialog);
 
   /// performs a simple [Navigator.pushReplacement] action with given [route]
   Future<dynamic> pushReplacement(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).pushReplacement(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));

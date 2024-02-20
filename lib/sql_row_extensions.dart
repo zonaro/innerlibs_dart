@@ -13,4 +13,9 @@ extension SqlRowExtensions on SQLResponseRow {
       return 'INSERT INTO $tableName ($columns) VALUES ($values);';
     }
   }
+
+  String asDeleteCommand(String tableName) {
+    String whereClause = entries.map((e) => "[${e.key}] = ${(e.value as Object?).asSqlValue()}").join(' AND ');
+    return 'DELETE $tableName WHERE $whereClause;';
+  }
 }
