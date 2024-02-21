@@ -232,7 +232,7 @@ extension DialogExt on BuildContext {
         });
   }
 
-  Future<T?> showLoaderTask<T>({Future<T> Function()? task, String cancelTaskButtonText = '', String? loadingText, Widget? textOK, Widget? textCancel, String? confirmationMessage}) async {
+  Future<T?> showLoaderTask<T>({Future<T?> Function()? task, String cancelTaskButtonText = '', String? loadingText, Widget? textOK, Widget? textCancel, String? confirmationMessage}) async {
     T? result;
     CancelableOperation<T?>? operation;
 

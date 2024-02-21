@@ -25,4 +25,19 @@ void main() {
       debugPrint(m.month);
     }
   });
+
+  test(' ', () {
+    var cnpj = Brasil.gerarCNPJFake();
+    assert(Brasil.validarCNPJ(cnpj));
+  });
+
+  test(' ', () {
+    var cpf = Brasil.gerarCPFFake();
+    assert(Brasil.validarCPF(cpf));
+  });
+
+  test(' ', () {
+    var tel = Brasil.formataTelefone(37335600);
+    debugPrint(tel);
+  });
 }

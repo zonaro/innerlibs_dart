@@ -1,4 +1,4 @@
-part of 'brazil_tools.dart'; 
+part of 'brazil_tools.dart';
 
 abstract interface class _Brasil {
   static final List<Map<String, dynamic>> _br = [
