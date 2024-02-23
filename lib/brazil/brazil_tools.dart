@@ -178,31 +178,7 @@ abstract interface class Brasil extends _Brasil {
 
   static final List<Estado> _estados = [];
 
-  static bool validarEAN(dynamic input) {
-    string codigoBarra = "$input";
-    if (codigoBarra.isNotNumber) return false;
-    if (codigoBarra.length != 8 && codigoBarra.length != 13) {
-      // Verifica se o código de barras tem 8 ou 13 dígitos
-      return false;
-    }
-
-    // Extrai os dígitos do código de barras
-    String digitos = codigoBarra.substring(0, codigoBarra.length - 1);
-
-    // Calcula o dígito verificador
-    int soma = 0;
-    for (int i = 0; i < digitos.length; i++) {
-      int digito = int.parse(digitos[i]);
-      soma += (i % 2 == 0) ? digito : digito * 3;
-    }
-    int digitoVerificadorCalculado = (10 - (soma % 10)) % 10;
-
-    // Obtém o dígito verificador atual
-    int digitoVerificadorAtual = int.parse(codigoBarra[codigoBarra.length - 1]);
-
-    // Verifica se o dígito verificador atual bate com o calculado
-    return digitoVerificadorAtual == digitoVerificadorCalculado;
-  }
+  static bool validarEAN(dynamic input) => "$input".isValidEAN;
 
   static bool validarCEP(String cep) {
     // Remover espaços e traços (se existirem)

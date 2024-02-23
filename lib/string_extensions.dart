@@ -160,6 +160,46 @@ extension StringExtension on String {
 
   String? get asNullable => this;
 
+  /// Return a checksum digit for a barcode
+  String get generateBarcodeCheckSum {
+    if (isNotNumber) {
+      throw const FormatException('Code is not a number');
+    }
+
+    int i = 0;
+    int j;
+    int p = 0;
+    int t = length;
+    for (j = 1; j <= t; j++) {
+      if ((j & ~ -2) == 0) {
+        p += int.parse(substring(j - 1, j));
+      } else {
+        i += int.parse(substring(j - 1, j));
+      }
+    }
+
+    if (t == 7 || t == 11) {
+      i = i * 3 + p;
+      p = (i + 9) ~/ 10 * 10;
+      t = p - i;
+    } else {
+      p = p * 3 + i;
+      i = (p + 9) ~/ 10 * 10;
+      t = i - p;
+    }
+
+    return t.toString();
+  }
+
+  bool get isValidEAN {
+    if (isBlank || isNotNumber || length < 3) {
+      return false;
+    }
+    var bar = removeLast(1);
+    var ver = last(1);
+    return bar?.generateBarcodeCheckSum == ver;
+  }
+
   /// Returns a new string with the flag of the specified country code.
   String get countryEmoji {
     final List<String> characters = toUpperCase().split('');
