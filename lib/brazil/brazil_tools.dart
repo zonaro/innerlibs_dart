@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:innerlibs/innerlibs.dart';
 
@@ -283,10 +282,10 @@ abstract interface class Brasil extends _Brasil {
             ..numero = numero
             ..complemento = complemento;
         } else {
-          debugPrint('Erro ao buscar endereço: ${response.statusCode} ${response.reasonPhrase}');
+          consoleLog('Erro ao buscar endereço: ${response.statusCode} ${response.reasonPhrase}');
         }
       } catch (e) {
-        debugPrint('Erro ao buscar endereço: $e');
+        consoleLog('Erro ao buscar endereço: $e');
       }
     }
     return null;

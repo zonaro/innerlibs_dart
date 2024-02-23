@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -22,3 +24,23 @@ bool get isLinux => Platform.isLinux;
 Brightness get brightness => SchedulerBinding.instance.platformDispatcher.platformBrightness;
 bool get isDarkMode => brightness == Brightness.dark;
 bool get isLightMode => brightness == Brightness.light;
+
+consoleLog(
+  String message, {
+  DateTime? time,
+  int? sequenceNumber,
+  int level = 0,
+  String name = '',
+  Zone? zone,
+  Object? error,
+  StackTrace? stackTrace,
+}) =>
+    log(
+      message,
+      time: time,
+      sequenceNumber: sequenceNumber,
+      level: level,
+      name: name,
+      zone: zone,
+      error: error
+    );

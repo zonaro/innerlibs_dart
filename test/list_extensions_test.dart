@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:innerlibs/brazil/brazil_tools.dart';
+import 'package:innerlibs/global.dart';
 import 'package:innerlibs/size_extensions.dart';
 import 'package:innerlibs/utils/constants.dart';
 
 void main() {
   test(' ', () {
     var t = const Size(1920, 1080).getAspectRatioString();
-    debugPrint(t);
+    consoleLog(t);
   });
 
   test(' ', () {
     var t = Brasil.pegarEstado("São Paulo");
-    debugPrint(t?.uf);
+    consoleLog(t?.uf ?? "");
   });
 
   test(' ', () async {
@@ -22,7 +23,7 @@ void main() {
 
   test(' ', () {
     for (var m in DateConstants.months) {
-      debugPrint(m.month);
+      consoleLog(m.month);
     }
   });
 
@@ -38,6 +39,6 @@ void main() {
 
   test(' ', () {
     var tel = Brasil.formataTelefone(37335600);
-    debugPrint(tel);
+    consoleLog(tel);
   });
 }
