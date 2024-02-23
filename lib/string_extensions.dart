@@ -192,7 +192,7 @@ extension StringExtension on String {
   }
 
   bool get isValidEAN {
-    if (isBlank || isNotNumber || length < 3) {
+    if (isBlank || isNotNumber || length <= 3) {
       return false;
     }
     var bar = removeLast(1);
