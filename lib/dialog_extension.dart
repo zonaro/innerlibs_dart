@@ -152,7 +152,7 @@ extension DialogExt on BuildContext {
     }
 
     if (cancelButton.isNotBlank) {
-      if (MyPlatform.isApple) {
+      if (isApple) {
         CupertinoDialogAction action = CupertinoDialogAction(
           isDefaultAction: true,
           textStyle: TextStyle(color: cancelTitleColor, fontSize: fontSize),
@@ -179,7 +179,7 @@ extension DialogExt on BuildContext {
     for (var buttonTitle in buttons) {
       late Widget action;
 
-      if (MyPlatform.isApple) {
+      if (isApple) {
         action = CupertinoDialogAction(
           isDefaultAction: true,
           textStyle: TextStyle(color: positiveTitleColor, fontSize: fontSize),
@@ -215,7 +215,7 @@ extension DialogExt on BuildContext {
         barrierDismissible: barrierDismissible,
         context: this,
         builder: (BuildContext context) {
-          if (MyPlatform.isApple) {
+          if (isApple) {
             return CupertinoAlertDialog(
               title: title?.asText,
               content: Text(message),

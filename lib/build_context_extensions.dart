@@ -340,7 +340,7 @@ extension BuildContextExtensions on BuildContext {
     T? desktop,
   }) {
     var deviceWidth = mediaQuerySize.shortestSide;
-    if (MyPlatform.isDesktop) {
+    if (isDesktop) {
       deviceWidth = mediaQuerySize.width;
     }
     if (deviceWidth >= 1200 && desktop != null) return desktop;
@@ -386,4 +386,16 @@ extension BuildContextExtensions on BuildContext {
 
   /// similar to [MediaQuery.textScaleFactorOf(context)]
   TextScaler get mqTextScaleFactor => MediaQuery.textScalerOf(this);
+
+  Brightness get brightness => mediaQuery.platformBrightness;
+
+  /// is dark mode currently enabled?
+  bool get isDarkMode => brightness == Brightness.dark;
+
+  /// is light mode currently enabled?
+  bool get isLightMode => brightness == Brightness.light;
+
+
+ 
+
 }
