@@ -16,6 +16,7 @@ export 'flexible_extension.dart';
 export 'general_extensions.dart';
 export 'gesture_detector_extension.dart';
 export 'global.dart';
+export 'icon_extensions.dart';
 export 'list_extensions.dart';
 export 'map_extensions.dart';
 export 'num_extensions.dart';
