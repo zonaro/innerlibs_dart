@@ -35,7 +35,7 @@ extension ObjectExtensions on Object? {
         return this != 0;
       }
       if (this is DateTime) {
-        return (this as DateTime) != DateExtensions.min;
+        return (this as DateTime) != DateTimeExtensions.min;
       }
 
       if (this is Iterable) {

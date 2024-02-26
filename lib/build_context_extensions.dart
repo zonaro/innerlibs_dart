@@ -329,23 +329,18 @@ extension BuildContextExtensions on BuildContext {
   bool get isTablet => isSmallTablet || isLargeTablet;
 
   /// Returns a specific value according to the screen size
-  /// if the device width is higher than or equal to 1200 return
-  /// [desktop] value. if the device width is higher than  or equal to 600
-  /// and less than 1200 return [tablet] value.
-  /// if the device width is less than 300  return [watch] value.
-  /// in other cases return [mobile] value.
-  T? responsiveValue<T>({
-    T? mobile,
-    T? tablet,
-    T? desktop,
-  }) {
-    var deviceWidth = mediaQuerySize.shortestSide;
-    if (isDesktop) {
-      deviceWidth = mediaQuerySize.width;
-    }
-    if (deviceWidth >= 1200 && desktop != null) return desktop;
-    if (deviceWidth >= 600 && tablet != null) return tablet;
-    return mobile;
+  /// if the device width is higher than   [mediumScreenBreakpoint] return
+  /// [largeScreen] value. if the device width is higher to [smallScreenBreakpoint]
+  /// and less than 1200 return [mediumScreen] value.
+  /// in other cases return [smallScreen] value. if [smallScreen] is null, return [mediumScreen], if [mediumScreen] is null return [largeScreen]
+  T? responsiveValue<T>({T? smallScreen, T? mediumScreen, T? largeScreen, int mediumScreenBreakpoint = 1200, int smallScreenBreakpoint = 600}) {
+    // var deviceWidth = mediaQuerySize.shortestSide;
+    // if (isDesktop) {
+    //   deviceWidth = mediaQuerySize.width;
+    // }
+    if (width > mediumScreenBreakpoint && largeScreen != null) return largeScreen;
+    if (width > smallScreenBreakpoint && mediumScreen != null) return mediumScreen;
+    return smallScreen ?? mediumScreen ?? largeScreen;
   }
 
   /// This change makes MediaQuery an InheritedModel rather than an InheritedWidget,
@@ -394,8 +389,4 @@ extension BuildContextExtensions on BuildContext {
 
   /// is light mode currently enabled?
   bool get isLightMode => brightness == Brightness.light;
-
-
- 
-
 }

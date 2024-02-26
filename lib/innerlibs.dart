@@ -42,6 +42,7 @@ export 'widgets/nil.dart';
 export 'widgets/restart_widget.dart';
 export 'widgets/shimmer.dart';
 
+typedef date = DateTime;
 typedef string = String;
 typedef decimal = double;
 

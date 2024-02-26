@@ -9,5 +9,5 @@ class Responsive extends StatelessWidget {
   final Widget? desktop;
 
   @override
-  Widget build(BuildContext context) => context.responsiveValue(mobile: mobile, desktop: desktop, tablet: tablet) ?? tablet ?? desktop ?? const SizedBox.shrink();
+  Widget build(BuildContext context) => context.responsiveValue(smallScreen: mobile, largeScreen: desktop, mediumScreen: tablet) ?? tablet ?? desktop ?? const SizedBox.shrink();
 }

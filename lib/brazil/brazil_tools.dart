@@ -178,6 +178,17 @@ abstract interface class Brasil extends _Brasil {
 
   static final List<Estado> _estados = [];
 
+  static string gerarEAN(List<dynamic> partes) {
+    var n = partes.join("");
+    if (n.length == 7 || n.length == 12) {
+      n += n.generateBarcodeCheckSum;
+    }
+    if (n.isValidEAN) {
+      return n;
+    }
+    return "";
+  }
+
   static bool validarEAN(dynamic input) => "$input".isValidEAN;
 
   static bool validarCEP(String cep) {

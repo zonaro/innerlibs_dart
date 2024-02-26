@@ -1,10 +1,10 @@
 import 'package:innerlibs/utils/constants.dart';
 import 'package:innerlibs/utils/format_time.dart';
 
-extension DateExtensions on DateTime {
+extension DateTimeExtensions on DateTime {
   
-  static DateTime get min => DateTime.utc(-271821, 04, 20);
-  static DateTime get max => DateTime.utc(275760, 09, 13);
+  static DateTime get min => DateTime.utc(1970, 1, 1);
+  static DateTime get max => DateTime.utc(9999, 12, 31, 23, 59, 59);
 
   DateTime findNextDate(int weekday) {
     int daysDifference = weekday - this.weekday;
