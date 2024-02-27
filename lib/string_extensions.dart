@@ -2067,6 +2067,8 @@ extension StringExtension on String {
   /// Return [this] if not blank. Otherwise return [newString].
   String? ifBlank(String? newString) => asIf((s) => s.isNotBlank, this, newString);
 
+  String? blankCoalesce(List<string> newString) => asIf((s) => s.isNotBlank, this, newString.where((e) => e.isNotBlank).firstOrNull);
+
   /// Compares [this] using [comparison] and returns [trueString] if true, otherwise return [falseString].
   ///
   /// ### Example
