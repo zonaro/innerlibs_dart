@@ -24,7 +24,7 @@ extension ObjectExtensions on Object? {
 
   /// Checks if [this] is a Blank value:
   /// Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isValid] recursively on [List] items or [Map] values.
-  /// class thats implements [Validator] will be checked using [Validator.isValid] property.
+  /// class thats implements [Validator] will be checked using [Validator.validate] function.
   /// Other class types, this method  call [ToString()] and check the result string against [isValid].
   bool get isValid {
     try {
