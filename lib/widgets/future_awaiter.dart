@@ -15,10 +15,10 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// Empty [List] or [Map], [Map] with all values empty, [num] = 0, empty or blank [String] will be considered empty data if this is true.
   final bool validate;
 
-  /// Function thats receive a [T] data returned by [future] and return a [Widget].
+  /// Function thats receive a non-null [T] data returned by [future] and return a [Widget].
   final Widget Function(T data) child;
 
-  /// A [Widget] to return if [T] is null or empty. If not specified return a shrink [SizedBox]
+  /// A [Widget] to return if [T] is null (or invalid if [validate] is true). If not specified return a shrink [SizedBox]
   final Widget? emptyChild;
 
   /// [Widget] to show while [future] is running
@@ -30,11 +30,14 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// Wraps a [FutureBuilder] into a more readable widget
   const FutureAwaiter({super.key, required this.future, required this.child, this.emptyChild, this.loading, this.errorChild, this.validate = true, this.supressError = kReleaseMode});
 
-  _error(Object e) => errorChild != null
-      ? errorChild!(e)
-      : supressError
-          ? _empty()
-          : ErrorWidget(e);
+  _error(Object e) {
+    consoleLog("Error:", error: e);
+    return errorChild != null
+        ? errorChild!(e)
+        : supressError
+            ? _empty()
+            : ErrorWidget(e);
+  }
 
   _empty() => emptyChild ?? const SizedBox.shrink();
 
@@ -48,7 +51,9 @@ class FutureAwaiter<T> extends StatelessWidget {
             } else {
               if (snapshot.hasError) {
                 return _error(snapshot.error!);
-              } else if (validate && (!snapshot.hasData || snapshot.data == null || (snapshot.data).isNotValid)) {
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                return _empty();
+              } else if (validate && (snapshot.data).isNotValid) {
                 return _empty();
               } else {
                 return child(snapshot.data as T);

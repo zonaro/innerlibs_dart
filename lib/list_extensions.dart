@@ -1,3 +1,5 @@
+import 'package:innerlibs/general_extensions.dart';
+
 extension StringListExtensions on List<String> {
   ///Verify if any [String] in a [List<String>]  contains the specified [String]
   bool containsLike(String s) {
@@ -125,4 +127,6 @@ extension ListExtension<T> on List<T> {
 
     return resultado;
   }
+/// return only valid items
+  Iterable<T> get whereValid => where((e) => e.isValid);
 }

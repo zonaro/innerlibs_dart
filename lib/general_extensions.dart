@@ -1,4 +1,5 @@
 import 'package:innerlibs/innerlibs.dart';
+import 'package:innerlibs/utils/validation_interface.dart';
 
 extension ObjectExtensions on Object? {
   // return a string of this object as a SQL Value
@@ -22,14 +23,16 @@ extension ObjectExtensions on Object? {
   }
 
   /// Checks if [this] is a Blank value:
-  ///( Null, empty or only white spaces for [String], 0 for [num] , [DateExtension.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
+  /// Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isValid] recursively on [List] items or [Map] values.
+  /// class thats implements [Validator] will be checked using [Validator.isValid] property.
+  /// Other class types, this method  call [ToString()] and check the result string against [isValid].
   bool get isValid {
     try {
       if (this == null) {
         return false;
       }
       if (this is String) {
-        return (this as String).trim().isNotEmpty;
+        return (this as String).isNotBlank;
       }
       if (this is num) {
         return this != 0;
@@ -53,14 +56,19 @@ extension ObjectExtensions on Object? {
         return m.isNotEmpty && m.values.isValid;
       }
 
+      if (this is Validator) {
+        return (this as Validator).validate().isBlank;
+      }
+
       return toString().isValid;
     } catch (e) {
+      consoleLog("IsValid => ", error: e);
       return false;
     }
   }
 
   /// Checks if [this] is not a Blank value:
-  ///( Null, empty or only white spaces for [String], 0 for [num] , [DateExtension.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
+  ///( Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
   bool get isNotValid => !isValid;
 
   bool asBool({bool everythingIsTrue = true}) => asNullableBool(everythingIsTrue: everythingIsTrue) ?? false;
