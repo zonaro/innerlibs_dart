@@ -344,20 +344,28 @@ extension BuildContextExtensions on BuildContext {
   /// True if the current device is Tablet
   bool get isTablet => isSmallTablet || isLargeTablet;
 
-  /// Returns a specific value according to the screen size
-  /// if the device width is higher than   [largeScreenBreakpoint] return
-  /// [largeScreen] value. if the device width is higher to [mediumScreenBreakpoint]
-  /// and less than 1200 return [mediumScreen] value.
-  /// in other cases return [smallScreen] value. if [smallScreen] is null, return [mediumScreen], if [mediumScreen] is null return [largeScreen]
-  T? responsiveValue<T>({T? smallScreen, T? mediumScreen, T? largeScreen, int largeScreenBreakpoint = 1200, int mediumScreenBreakpoint = 600}) {
-    // var deviceWidth = mediaQuerySize.shortestSide;
-    // if (isDesktop) {
-    //   deviceWidth = mediaQuerySize.width;
-    // }
-
-    if (width > largeScreenBreakpoint && largeScreen != null) return largeScreen;
-    if (width > mediumScreenBreakpoint && mediumScreen != null) return mediumScreen;
-    return (smallScreen ?? mediumScreen ?? largeScreen);
+  T? responsiveValue<T>({
+    T? xs,
+    T? sm,
+    T? md,
+    T? lg,
+    T? xl,
+    T? xxl,
+  }) {
+    switch (screenTier) {
+      case ScreenTier.xs:
+        return xs;
+      case ScreenTier.sm:
+        return sm ?? xs;
+      case ScreenTier.md:
+        return md ?? sm ?? xs;
+      case ScreenTier.lg:
+        return lg ?? md ?? sm ?? xs;
+      case ScreenTier.xl:
+        return xl ?? lg ?? md ?? sm ?? xs;
+      case ScreenTier.xxl:
+        return xxl ?? xl ?? lg ?? md ?? sm ?? xs;
+    }
   }
 
   // if(rt != null) throw Exception("None of the following values have been provided: smallScreen, mediumScreenm largeScreen");

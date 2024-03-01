@@ -1,7 +1,26 @@
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-enum ScreenTier { xs, sm, md, lg, xl, xxl }
+/// represent a Screen size tier (from extra small to double extra large)
+enum ScreenTier {
+  /// Extra small screen
+  xs,
+
+  /// Small screen
+  sm,
+
+  /// Medium screen
+  md,
+
+  /// Large screen
+  lg,
+
+  /// Extra Large screen
+  xl,
+
+  /// Double Extra Large screen
+  xxl,
+}
 
 class ResponsiveColumn {
   final int xs;
@@ -23,23 +42,6 @@ class ResponsiveColumn {
     this.height,
     required this.child,
   });
-
-  int _getSegments(ScreenTier tier) {
-    switch (tier) {
-      case ScreenTier.xs:
-        return xs;
-      case ScreenTier.sm:
-        return sm ?? xs;
-      case ScreenTier.md:
-        return md ?? sm ?? xs;
-      case ScreenTier.lg:
-        return lg ?? md ?? sm ?? xs;
-      case ScreenTier.xl:
-        return xl ?? lg ?? md ?? sm ?? xs;
-      case ScreenTier.xxl:
-        return xxl ?? xl ?? lg ?? md ?? sm ?? xs;
-    }
-  }
 }
 
 class ResponsiveList extends StatelessWidget {
@@ -54,7 +56,7 @@ class ResponsiveList extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (children!.isEmpty) return Container();
+        if (children!.isEmpty) return const SizedBox.shrink();
 
         double width = constraints.maxWidth;
 
@@ -215,7 +217,6 @@ class ResponsiveRow extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final segmentSize = constraints.maxWidth / totalSegments.toDouble();
-        final ScreenTier tier = context.screenTier;
         return Wrap(
           spacing: horizontalSpacing,
           runSpacing: runSpacing,
@@ -226,7 +227,7 @@ class ResponsiveRow extends StatelessWidget {
           alignment: alignment,
           runAlignment: runAlignment,
           children: children.map((c) {
-            final segments = c._getSegments(tier);
+            final segments = context.responsiveValue(xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl) ?? 12;
 
             final width = (segmentSize * segments.toDouble()) - ((children.length - 2).toDouble() * horizontalSpacing);
 
