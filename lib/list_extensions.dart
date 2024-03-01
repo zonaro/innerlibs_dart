@@ -68,17 +68,17 @@ extension ListExtension<T> on List<T> {
 
   /// Detach items from a list according to a
   /// function and return these items in a new list
-  List<T> detachItems([bool Function(T)? test]) {
-    test = test ?? (x) => true;
-    var items = where(test).toList();
+  List<T> detachItems([bool Function(T)? predicate]) {
+    predicate = predicate ?? (x) => true;
+    var items = where(predicate).toList();
     removeWhere((e) => items.contains(e));
     return items;
   }
 
   /// Move items from one list into another list, and return these items
-  List<T> moveTo(List<T> other, [bool Function(T)? test]) {
-    test = test ?? (x) => true;
-    var i = detachItems(test);
+  List<T> moveTo(List<T> other, [bool Function(T)? predicate]) {
+    predicate = predicate ?? (x) => true;
+    var i = detachItems(predicate);
     other.addAll(i);
     return i;
   }
@@ -113,20 +113,20 @@ extension ListExtension<T> on List<T> {
   }
 
   List<(int, int)> pairUpIndexes(List<T> other) {
-    final resultado = <(int, int)>[];
-
+    final r = <(int, int)>[];
     for (var i = 0; i < length; i++) {
-      resultado.add((i, other.indexOf(this[i])));
+      r.add((i, other.indexOf(this[i])));
     }
     for (var j = 0; j < other.length; j++) {
       final index1 = indexOf(other[j]);
       if (index1 == -1) {
-        resultado.add((-1, j));
+        r.add((-1, j));
       }
     }
 
-    return resultado;
+    return r;
   }
-/// return only valid items
+
+  /// return only valid items (see [Object.isValid])
   Iterable<T> get whereValid => where((e) => e.isValid);
 }
