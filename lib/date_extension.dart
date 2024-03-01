@@ -2,7 +2,6 @@ import 'package:innerlibs/utils/constants.dart';
 import 'package:innerlibs/utils/format_time.dart';
 
 extension DateTimeExtensions on DateTime {
-  
   static DateTime get min => DateTime.utc(1970, 1, 1);
   static DateTime get max => DateTime.utc(9999, 12, 31, 23, 59, 59);
 
@@ -163,6 +162,8 @@ extension DateTimeExtensions on DateTime {
   /// ```
   ///
   bool isBetween(DateTime start, DateTime end) => isAfter(start) && isBefore(end);
+
+  bool isBetweenOrEqual(DateTime start, DateTime end) => isBetween(start, end) || this == start || this == end;
 
   /// Time Format
   ///

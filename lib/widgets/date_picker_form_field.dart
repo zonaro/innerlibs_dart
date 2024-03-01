@@ -128,7 +128,7 @@ class _DateTimePickerFormFieldState extends State<DateTimePickerFormField> {
     if (value.isBlank && widget.requiredMessage.isNotBlank) return widget.requiredMessage;
     try {
       var dt = format.parse(value ?? "");
-      if (dt.isBetween(_start, _end)) {
+      if (dt.isBetweenOrEqual(_start, _end)) {
         return null;
       } else {
         return widget.outOfRangeMessage.ifBlank("Date is out of range");
