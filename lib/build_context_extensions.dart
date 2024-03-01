@@ -329,19 +329,23 @@ extension BuildContextExtensions on BuildContext {
   bool get isTablet => isSmallTablet || isLargeTablet;
 
   /// Returns a specific value according to the screen size
-  /// if the device width is higher than   [mediumScreenBreakpoint] return
-  /// [largeScreen] value. if the device width is higher to [smallScreenBreakpoint]
+  /// if the device width is higher than   [largeScreenBreakpoint] return
+  /// [largeScreen] value. if the device width is higher to [mediumScreenBreakpoint]
   /// and less than 1200 return [mediumScreen] value.
   /// in other cases return [smallScreen] value. if [smallScreen] is null, return [mediumScreen], if [mediumScreen] is null return [largeScreen]
-  T? responsiveValue<T>({T? smallScreen, T? mediumScreen, T? largeScreen, int mediumScreenBreakpoint = 1200, int smallScreenBreakpoint = 600}) {
+  T? responsiveValue<T>({T? smallScreen, T? mediumScreen, T? largeScreen, int largeScreenBreakpoint = 1200, int mediumScreenBreakpoint = 600}) {
     // var deviceWidth = mediaQuerySize.shortestSide;
     // if (isDesktop) {
     //   deviceWidth = mediaQuerySize.width;
     // }
-    if (width > mediumScreenBreakpoint && largeScreen != null) return largeScreen;
-    if (width > smallScreenBreakpoint && mediumScreen != null) return mediumScreen;
-    return smallScreen ?? mediumScreen ?? largeScreen;
+
+    if (width > largeScreenBreakpoint && largeScreen != null) return largeScreen;
+    if (width > mediumScreenBreakpoint && mediumScreen != null) return mediumScreen;
+    return (smallScreen ?? mediumScreen ?? largeScreen);
   }
+
+   // if(rt != null) throw Exception("None of the following values have been provided: smallScreen, mediumScreenm largeScreen");
+  
 
   /// This change makes MediaQuery an InheritedModel rather than an InheritedWidget,
   /// so any widget which knows it only depends on a

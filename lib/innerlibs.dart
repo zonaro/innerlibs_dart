@@ -4,6 +4,7 @@ library innerlibs;
 
 export 'align_extensions.dart';
 export 'alignment_extensions.dart';
+export 'boolean_extensions.dart';
 export 'brazil/brazil_tools.dart';
 export 'build_context_extensions.dart';
 export 'center_extensions.dart';
@@ -37,7 +38,10 @@ export 'tooltip_extension.dart';
 export 'util.dart';
 export 'widget_ext.dart';
 export 'widgets/avatar_image.dart';
+export 'widgets/responsive_grid.dart';
+export 'widgets/date_picker_form_field.dart';
 export 'widgets/future_awaiter.dart';
+export 'widgets/group_box.dart';
 export 'widgets/nil.dart';
 export 'widgets/restart_widget.dart';
 export 'widgets/shimmer.dart';

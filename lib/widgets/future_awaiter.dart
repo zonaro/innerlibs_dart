@@ -7,6 +7,8 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// The asynchronous computation to which this builder is currently connected, possibly null.
   final Future<T> future;
 
+  final T? initialData;
+
   /// When true, return [emptyChild] instead of [ErrorWidget]. If [errorChild] is not null, this property do nothing.
   /// The default value is [kReleaseMode]
   final bool supressError;
@@ -28,7 +30,7 @@ class FutureAwaiter<T> extends StatelessWidget {
   final Widget Function(Object error)? errorChild;
 
   /// Wraps a [FutureBuilder] into a more readable widget
-  const FutureAwaiter({super.key, required this.future, required this.child, this.emptyChild, this.loading, this.errorChild, this.validate = true, this.supressError = kReleaseMode});
+  const FutureAwaiter({super.key, required this.future, required this.child, this.emptyChild, this.loading, this.errorChild, this.validate = true, this.supressError = kReleaseMode, this.initialData});
 
   _error(Object e) {
     consoleLog("Error:", error: e);
@@ -44,6 +46,7 @@ class FutureAwaiter<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FutureBuilder<T>(
         future: future,
+        initialData: initialData,
         builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
           try {
             if (snapshot.connectionState == ConnectionState.waiting) {
