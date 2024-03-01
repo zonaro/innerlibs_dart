@@ -1,25 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:innerlibs/innerlibs.dart';
 
-enum _GridTier { xs, sm, md, lg, xl, xxl }
-
-_GridTier _currentTier(BuildContext context) {
-  MediaQueryData mediaQueryData = MediaQuery.of(context);
-  double width = mediaQueryData.size.width;
-
-  if (width < 576) {
-    return _GridTier.xs;
-  } else if (width < 768) {
-    return _GridTier.sm;
-  } else if (width < 992) {
-    return _GridTier.md;
-  } else if (width < 1200) {
-    return _GridTier.lg;
-  } else if (width < 1600) {
-    return _GridTier.xl;
-  } else {
-    return _GridTier.xxl;
-  }
-}
+enum ScreenTier { xs, sm, md, lg, xl, xxl }
 
 class ResponsiveColumn {
   final int xs;
@@ -42,31 +24,31 @@ class ResponsiveColumn {
     required this.child,
   });
 
-  int _getSegments(_GridTier tier) {
+  int _getSegments(ScreenTier tier) {
     switch (tier) {
-      case _GridTier.xs:
+      case ScreenTier.xs:
         return xs;
-      case _GridTier.sm:
+      case ScreenTier.sm:
         return sm ?? xs;
-      case _GridTier.md:
+      case ScreenTier.md:
         return md ?? sm ?? xs;
-      case _GridTier.lg:
+      case ScreenTier.lg:
         return lg ?? md ?? sm ?? xs;
-      case _GridTier.xl:
+      case ScreenTier.xl:
         return xl ?? lg ?? md ?? sm ?? xs;
-      case _GridTier.xxl:
+      case ScreenTier.xxl:
         return xxl ?? xl ?? lg ?? md ?? sm ?? xs;
     }
   }
 }
 
-class BootstrapList extends StatelessWidget {
+class ResponsiveList extends StatelessWidget {
   final double? desiredItemWidth, minSpacing;
   final List<Widget>? children;
   final bool squareCells, scroll;
   final MainAxisAlignment rowMainAxisAlignment;
 
-  const BootstrapList({super.key, this.desiredItemWidth, this.minSpacing, this.squareCells = false, this.scroll = true, this.children, this.rowMainAxisAlignment = MainAxisAlignment.start});
+  const ResponsiveList({super.key, this.desiredItemWidth, this.minSpacing, this.squareCells = false, this.scroll = true, this.children, this.rowMainAxisAlignment = MainAxisAlignment.start});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +95,7 @@ class BootstrapList extends StatelessWidget {
                   if (i >= children!.length) break;
                   rowChildren.add(children![i]);
                 }
-                return _BootstrapListItem(
+                return _ResponsiveListItem(
                   mainAxisAlignment: rowMainAxisAlignment,
                   itemWidth: itemWidth,
                   spacing: spacing,
@@ -135,7 +117,7 @@ class BootstrapList extends StatelessWidget {
               rowChildren.add(children![i]);
             }
             //
-            rows.add(_BootstrapListItem(
+            rows.add(_ResponsiveListItem(
               mainAxisAlignment: rowMainAxisAlignment,
               itemWidth: itemWidth,
               spacing: spacing,
@@ -157,13 +139,13 @@ class BootstrapList extends StatelessWidget {
   }
 }
 
-class _BootstrapListItem extends StatelessWidget {
+class _ResponsiveListItem extends StatelessWidget {
   final double? spacing, itemWidth, itemHeight;
   final List<Widget>? children;
   final bool? squareCells;
   final MainAxisAlignment mainAxisAlignment;
 
-  const _BootstrapListItem({this.itemWidth, this.spacing, this.squareCells, double? itemHeight, this.children, this.mainAxisAlignment = MainAxisAlignment.start}) : itemHeight = itemHeight ?? itemWidth;
+  const _ResponsiveListItem({this.itemWidth, this.spacing, this.squareCells, double? itemHeight, this.children, this.mainAxisAlignment = MainAxisAlignment.start}) : itemHeight = itemHeight ?? itemWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +215,7 @@ class ResponsiveRow extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final segmentSize = constraints.maxWidth / totalSegments.toDouble();
-        final _GridTier tier = _currentTier(context);
+        final ScreenTier tier = context.screenTier;
         return Wrap(
           spacing: horizontalSpacing,
           runSpacing: runSpacing,

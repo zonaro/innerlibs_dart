@@ -283,6 +283,22 @@ extension BuildContextExtensions on BuildContext {
   /// desktop window)
   double get width => mediaQuerySize.width;
 
+  ScreenTier get screenTier {
+    if (width < 576) {
+      return ScreenTier.xs;
+    } else if (width < 768) {
+      return ScreenTier.sm;
+    } else if (width < 992) {
+      return ScreenTier.md;
+    } else if (width < 1200) {
+      return ScreenTier.lg;
+    } else if (width < 1600) {
+      return ScreenTier.xl;
+    } else {
+      return ScreenTier.xxl;
+    }
+  }
+
   MediaQueryData get mediaQuery => MediaQuery.of(this);
 
   /// similar to [MediaQuery.of(context).padding]
@@ -344,8 +360,7 @@ extension BuildContextExtensions on BuildContext {
     return (smallScreen ?? mediumScreen ?? largeScreen);
   }
 
-   // if(rt != null) throw Exception("None of the following values have been provided: smallScreen, mediumScreenm largeScreen");
-  
+  // if(rt != null) throw Exception("None of the following values have been provided: smallScreen, mediumScreenm largeScreen");
 
   /// This change makes MediaQuery an InheritedModel rather than an InheritedWidget,
   /// so any widget which knows it only depends on a
