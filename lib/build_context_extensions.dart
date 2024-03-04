@@ -344,6 +344,7 @@ extension BuildContextExtensions on BuildContext {
   /// True if the current device is Tablet
   bool get isTablet => isSmallTablet || isLargeTablet;
 
+  /// returns a specific value according to the current [ScreenTier]
   T? responsiveValue<T>({
     T? xs,
     T? sm,
@@ -354,21 +355,19 @@ extension BuildContextExtensions on BuildContext {
   }) {
     switch (screenTier) {
       case ScreenTier.xs:
-        return xs;
+        return xs ?? sm ?? md ?? lg ?? xl ?? xxl;
       case ScreenTier.sm:
-        return sm ?? xs;
+        return sm ?? xs ?? md ?? lg ?? xl ?? xxl;
       case ScreenTier.md:
-        return md ?? sm ?? xs;
+        return md ?? sm ?? xs ?? lg ?? xl ?? xxl;
       case ScreenTier.lg:
-        return lg ?? md ?? sm ?? xs;
+        return lg ?? md ?? sm ?? xs ?? xl ?? xxl;
       case ScreenTier.xl:
-        return xl ?? lg ?? md ?? sm ?? xs;
+        return xl ?? lg ?? md ?? sm ?? xs ?? xxl;
       case ScreenTier.xxl:
         return xxl ?? xl ?? lg ?? md ?? sm ?? xs;
     }
   }
-
-  // if(rt != null) throw Exception("None of the following values have been provided: smallScreen, mediumScreenm largeScreen");
 
   /// This change makes MediaQuery an InheritedModel rather than an InheritedWidget,
   /// so any widget which knows it only depends on a

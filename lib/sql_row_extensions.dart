@@ -1,6 +1,6 @@
 import 'package:innerlibs/innerlibs.dart';
 
-extension SqlRowExtensions on SQLResponseRow {
+extension SqlRowExtensions on JsonRow {
   String asUpsertCommand(String tableName, [Map<String, dynamic>? primaryKeys, bool nullAsBlank = false]) {
     var upsertMap = Map.from(this);
     if (primaryKeys.isValid) {
