@@ -189,6 +189,23 @@ abstract interface class Brasil extends _Brasil {
     return "";
   }
 
+  static string formataEAN(dynamic numero) {
+    var cleanedEAN = "$numero".onlyNumbers!;
+
+    // Verifique se o código EAN é válido (você pode usar sua função validarEAN aqui)
+    if (!validarEAN(cleanedEAN)) {
+      cleanedEAN = "";
+    } else {
+      // Formate o código EAN com hífens
+      if (cleanedEAN.length == 8) {
+        cleanedEAN = '${cleanedEAN.substring(0, 4)}-${cleanedEAN.substring(4)}';
+      } else if (cleanedEAN.length == 13) {
+        cleanedEAN = '${cleanedEAN.substring(0, 1)}-${cleanedEAN.substring(1, 7)}-${cleanedEAN.substring(7)}';
+      }
+    }
+    return cleanedEAN;
+  }
+
   static bool validarEAN(dynamic input) => "$input".isValidEAN;
 
   static bool validarCEP(String cep) {
@@ -311,6 +328,173 @@ abstract interface class Brasil extends _Brasil {
     } catch (e) {
       return false;
     }
+  }
+
+  static String formataPIS(dynamic numero) {
+    if (validarPIS(numero)) {
+      var n = "$numero";
+      n = n.replaceAll(RegExp(r'[.-]'), '');
+      n = n.padLeft(11, '0');
+      n = n.replaceFirstMapped(RegExp(r'(\d{3})(\d{5})(\d{2})(\d{1})'), (match) {
+        return '${match[1]}.${match[2]}.${match[3]}-${match[4]}';
+      });
+      return n;
+    } else {
+      throw const FormatException('String is not a valid PIS');
+    }
+  }
+
+  static bool validarPIS(dynamic numero) {
+    if (numero.isNotValid) {
+      return false;
+    }
+
+    numero = numero.replaceAll(RegExp(r'[^0-9]'), '');
+
+    if (numero.length != 11) {
+      return false;
+    }
+
+    var count = numero[0];
+    if (numero.split('').where((w) => w == count).length == numero.length) {
+      return false;
+    }
+
+    var multiplicador = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    int soma = 0;
+    int resto;
+
+    for (var i = 0; i < 10; i++) {
+      soma += int.parse(numero[i]) * multiplicador[i];
+    }
+
+    resto = soma % 11;
+
+    resto = resto < 2 ? 0 : 11 - resto;
+
+    return numero.toLowerCase().endsWith(resto.toString().toLowerCase());
+  }
+
+  static string pegarRotuloDocumento({dynamic documento, string rotuloPadrao = ""}) {
+    var d = "$documento";
+    if (validarCPF(d)) return "CPF";
+    if (validarCNPJ(d)) return "CNPJ";
+    if (validarCEP(d)) return "CEP";
+    if (validarEAN(d)) return "EAN";
+    if (validarPIS(d)) return "PIS";
+    if (validarCNH(d)) return "CNH";
+    if (d.isEmail) return "Email";
+    if (d.isIP) return "IP";
+    if (validarTelefone(d)) return d.onlyNumbers!.length.isIn([9, 11]) ? "Celular" : "Telefone";
+    return rotuloPadrao;
+  }
+
+  /// Retorna um documento formatado com seu rótulo
+  static string formatarDocumentoComRotulo({dynamic documento, string rotuloPadrao = ""}) {
+    var x = pegarRotuloDocumento(documento: documento, rotuloPadrao: rotuloPadrao);
+    documento = "$documento";
+    switch (x) {
+      case "CPF":
+      case "CNPJ":
+        documento = formataCPFouCNPJ(documento);
+        break;
+
+      case "CEP":
+        documento = formataCEP(documento);
+        break;
+      case "CNH":
+        documento = formataCNH(documento);
+        break;
+
+      case "PIS":
+        documento = formataPIS(documento);
+        break;
+
+      case "Email":
+        documento = "$documento".toLowerCase();
+        break;
+
+      case "EAN":
+        documento = formataEAN(documento);
+        break;
+
+      case "Telefone":
+      case "Celular":
+        documento = formataTelefone(documento);
+        break;
+
+      default: //IP
+        break;
+    }
+
+    if (x.isNotBlank) {
+      documento = "$x: $documento";
+    }
+    return documento;
+  }
+
+  static string formataCEP(dynamic numero) {
+    var cep = "$numero";
+    cep = cep.onlyNumbers ?? "";
+    cep = cep.padLeft(8, '0');
+    cep = cep.insertAt(5, "-");
+    if (validarCEP(cep)) {
+      return cep;
+    } else {
+      return "";
+    }
+  }
+
+  static String formataCNH(dynamic numero) {
+    // Remova quaisquer caracteres não numéricos da entrada
+
+    var apenasDigitos = "$numero".onlyNumbers!;
+    if (validarCNH(apenasDigitos)) {
+      // Formate a CNH no padrão XXX-XXXXXX-XX
+      final uf = apenasDigitos.substring(0, 3);
+      final sequencial = apenasDigitos.substring(3, 9);
+      final digitosVerificadores = apenasDigitos.substring(9);
+
+      return '$uf-$sequencial-$digitosVerificadores';
+    }
+    return "";
+  }
+
+  static bool validarCNH(dynamic numero) {
+    var cnh = "$numero";
+
+    if (cnh.isNotBlank && cnh.length == 11 && cnh != '1' * 11) {
+      int dsc = 0;
+      int v = 0;
+      int i = 0;
+      int j = 9;
+      while (i < 9) {
+        v += int.parse(cnh[i]) * j;
+        i += 1;
+        j -= 1;
+      }
+
+      int vl1 = v % 11;
+      if (vl1 >= 10) {
+        vl1 = 0;
+        dsc = 2;
+      }
+
+      v = 0;
+      i = 0;
+      j = 1;
+      while (i < 9) {
+        v += int.parse(cnh[i]) * j;
+        i += 1;
+        j += 1;
+      }
+
+      int x = v % 11;
+      int vl2 = x >= 10 ? 0 : x - dsc;
+      return '$vl1$vl2' == cnh.substring(cnh.length - 2);
+    }
+
+    return false;
   }
 
   // Função para validar CPF

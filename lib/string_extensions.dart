@@ -571,25 +571,6 @@ extension StringExtension on String {
     return replaceAll(regex, '');
   }
 
-  /// Checks whether the `String` is a valid IPv4.
-  /// ### Example 1
-  /// ```dart
-  /// String foo = '192.168.1.14';
-  /// bool isIpv4 = foo.isIpv4; // returns true
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = '192.168.1.14.150.1225';
-  /// bool isIpv4 = foo.isIpv4; // returns false
-  /// ```
-  bool get isIpv4 {
-    if (isBlank) {
-      return false;
-    }
-    var regex = RegExp(r'((?:^|\s)([a-z]{3,6}(?=://))?(://)?((?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?))(?::(\d{2,5}))?(?:\s|$))');
-    return regex.hasMatch(this);
-  }
-
   /// Checks whether the `String` is a valid IPv6.
   /// ### Example 1
   /// ```dart
@@ -601,7 +582,7 @@ extension StringExtension on String {
   /// String foo = '192.168.1.14.150.1225';
   /// bool isIpv6 = foo.isIpv6; // returns false
   /// ```
-  bool get isIpv6 {
+  bool get isIPv6 {
     if (isBlank) {
       return false;
     }
@@ -2589,6 +2570,29 @@ extension StringExtension on String {
     // If the first two letters of the provided String are not valid ones.
     if (!StringHelpers.validLetters.contains(firstTwoLetters.first) || !StringHelpers.validLetters.contains(firstTwoLetters.last)) {
       return false;
+    }
+
+    return true;
+  }
+
+  bool get isIP => isIPv4 || isIPv6;
+
+  bool get isIPv4 {
+    if (isBlank) return false;
+    // Divide a string em partes usando o ponto como delimitador
+    final parts = split('.');
+
+    // Deve haver exatamente 4 partes
+    if (parts.length != 4) {
+      return false;
+    }
+
+    // Verifica se cada parte é um número inteiro entre 0 e 255
+    for (final part in parts) {
+      final intValue = int.tryParse(part);
+      if (intValue == null || intValue < 0 || intValue > 255) {
+        return false;
+      }
     }
 
     return true;

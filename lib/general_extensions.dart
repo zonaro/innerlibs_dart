@@ -22,6 +22,8 @@ extension ObjectExtensions on Object? {
     }
   }
 
+  bool isIn(List items) => this != null && items.contains(this);
+
   /// Checks if [this] is a Blank value:
   /// Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isValid] recursively on [List] items or [Map] values.
   /// class thats implements [Validator] will be checked using [Validator.validate] function.
