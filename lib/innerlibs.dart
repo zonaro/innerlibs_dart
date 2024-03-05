@@ -2,6 +2,8 @@
 
 library innerlibs;
 
+import 'dart:io';
+
 export 'align_extensions.dart';
 export 'alignment_extensions.dart';
 export 'boolean_extensions.dart';
@@ -53,6 +55,8 @@ typedef StringList = List<String>;
 typedef decimal = double;
 typedef money = decimal;
 typedef IEnumerable = Iterable;
+typedef FileInfo = File;
+typedef DirectoryInfo = Directory;
 
 typedef JsonMap = Map<String, dynamic>;
 typedef JsonRow = JsonMap;

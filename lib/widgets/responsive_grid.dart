@@ -40,7 +40,7 @@ class ResponsiveColumn {
     this.xl,
     this.xxl,
     this.height,
-    required this.child,
+    this.child = const SizedBox.shrink(),
   });
 }
 
@@ -211,6 +211,47 @@ class ResponsiveRow extends StatelessWidget {
     this.alignment = WrapAlignment.start,
     this.runAlignment = WrapAlignment.start,
   });
+
+  /// Create a [ResponsiveRow] with a specific number of columns in each [ScreenTier]
+  /// and wraps [children] into [ResponsiveColumn]s automatically
+  factory ResponsiveRow.withColumns({
+    int? xs = 1,
+    int? sm = 2,
+    int? md = 3,
+    int? lg = 4,
+    int? xl = 6,
+    int? xxl = 12,
+    double? height,
+    List<Widget> children = const [],
+  }) =>
+      ResponsiveRow(
+        children: [
+          for (var child in children)
+            ResponsiveColumn(
+              child: child,
+              height: height,
+              xs: (12 / (xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+              sm: (12 / (sm ?? xs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+              md: (12 / (md ?? sm ?? xs ?? lg ?? xl ?? xxl ?? 1)).round(),
+              lg: (12 / (lg ?? md ?? sm ?? xs ?? xl ?? xxl ?? 1)).round(),
+              xl: (12 / (xl ?? lg ?? md ?? sm ?? xs ?? xxl ?? 1)).round(),
+              xxl: (12 / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? 1)).round(),
+            ),
+        ],
+      );
+
+  // case ScreenTier.xs:
+  //   return xs ?? sm ?? md ?? lg ?? xl ?? xxl;
+  // case ScreenTier.sm:
+  //   return sm ?? xs ?? md ?? lg ?? xl ?? xxl;
+  // case ScreenTier.md:
+  //   return md ?? sm ?? xs ?? lg ?? xl ?? xxl;
+  // case ScreenTier.lg:
+  //   return lg ?? md ?? sm ?? xs ?? xl ?? xxl;
+  // case ScreenTier.xl:
+  //   return xl ?? lg ?? md ?? sm ?? xs ?? xxl;
+  // case ScreenTier.xxl:
+  //   return xxl ?? xl ?? lg ?? md ?? sm ?? xs;
 
   @override
   Widget build(BuildContext context) {
