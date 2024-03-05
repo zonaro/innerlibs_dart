@@ -4,6 +4,7 @@ import 'package:innerlibs/build_context_extensions.dart';
 class Responsive extends StatelessWidget {
   const Responsive({
     super.key,
+    this.xxs,
     this.xs,
     this.sm,
     this.md,
@@ -12,6 +13,7 @@ class Responsive extends StatelessWidget {
     this.xxl,
   });
 
+  final Widget? xxs;
   final Widget? xs;
   final Widget? sm;
   final Widget? md;
@@ -22,6 +24,7 @@ class Responsive extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       context.responsiveValue(
+        xxs: xxs,
         xs: xs,
         sm: sm,
         md: md,

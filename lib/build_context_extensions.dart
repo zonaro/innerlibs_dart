@@ -284,7 +284,9 @@ extension BuildContextExtensions on BuildContext {
   double get width => mediaQuerySize.width;
 
   ScreenTier get screenTier {
-    if (width < 576) {
+    if (width < 350) {
+      return ScreenTier.xxs;
+    } else if (width < 576) {
       return ScreenTier.xs;
     } else if (width < 768) {
       return ScreenTier.sm;
@@ -346,6 +348,7 @@ extension BuildContextExtensions on BuildContext {
 
   /// returns a specific value according to the current [ScreenTier]
   T? responsiveValue<T>({
+    T? xxs,
     T? xs,
     T? sm,
     T? md,
@@ -354,18 +357,20 @@ extension BuildContextExtensions on BuildContext {
     T? xxl,
   }) {
     switch (screenTier) {
+      case ScreenTier.xxs:
+        return xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl;
       case ScreenTier.xs:
-        return xs ?? sm ?? md ?? lg ?? xl ?? xxl;
+        return xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl;
       case ScreenTier.sm:
-        return sm ?? xs ?? md ?? lg ?? xl ?? xxl;
+        return sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl;
       case ScreenTier.md:
-        return md ?? sm ?? xs ?? lg ?? xl ?? xxl;
+        return md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl;
       case ScreenTier.lg:
-        return lg ?? md ?? sm ?? xs ?? xl ?? xxl;
+        return lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl;
       case ScreenTier.xl:
-        return xl ?? lg ?? md ?? sm ?? xs ?? xxl;
+        return xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl;
       case ScreenTier.xxl:
-        return xxl ?? xl ?? lg ?? md ?? sm ?? xs;
+        return xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs;
     }
   }
 

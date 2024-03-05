@@ -3,6 +3,9 @@ import 'package:innerlibs/innerlibs.dart';
 
 /// represent a Screen size tier (from extra small to double extra large)
 enum ScreenTier {
+  /// Double-Extra small screen
+  xxs,
+
   /// Extra small screen
   xs,
 
@@ -23,7 +26,8 @@ enum ScreenTier {
 }
 
 class ResponsiveColumn {
-  final int xs;
+  final int xxs;
+  final int? xs;
   final int? sm;
   final int? md;
   final int? lg;
@@ -33,7 +37,8 @@ class ResponsiveColumn {
   final double? height;
 
   const ResponsiveColumn({
-    this.xs = 12,
+    this.xxs = 12,
+    this.xs,
     this.sm,
     this.md,
     this.lg,
@@ -215,6 +220,7 @@ class ResponsiveRow extends StatelessWidget {
   /// Create a [ResponsiveRow] with a specific number of columns in each [ScreenTier]
   /// and wraps [children] into [ResponsiveColumn]s automatically
   factory ResponsiveRow.withColumns({
+    int? xxs = 1,
     int? xs = 1,
     int? sm = 2,
     int? md = 3,
@@ -230,28 +236,16 @@ class ResponsiveRow extends StatelessWidget {
             ResponsiveColumn(
               child: child,
               height: height,
-              xs: (12 / (xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-              sm: (12 / (sm ?? xs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-              md: (12 / (md ?? sm ?? xs ?? lg ?? xl ?? xxl ?? 1)).round(),
-              lg: (12 / (lg ?? md ?? sm ?? xs ?? xl ?? xxl ?? 1)).round(),
-              xl: (12 / (xl ?? lg ?? md ?? sm ?? xs ?? xxl ?? 1)).round(),
-              xxl: (12 / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? 1)).round(),
+              xxs: (12 / (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+              xs: (12 / (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+              sm: (12 / (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+              md: (12 / (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl ?? 1)).round(),
+              lg: (12 / (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl ?? 1)).round(),
+              xl: (12 / (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl ?? 1)).round(),
+              xxl: (12 / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? 1)).round(),
             ),
         ],
       );
-
-  // case ScreenTier.xs:
-  //   return xs ?? sm ?? md ?? lg ?? xl ?? xxl;
-  // case ScreenTier.sm:
-  //   return sm ?? xs ?? md ?? lg ?? xl ?? xxl;
-  // case ScreenTier.md:
-  //   return md ?? sm ?? xs ?? lg ?? xl ?? xxl;
-  // case ScreenTier.lg:
-  //   return lg ?? md ?? sm ?? xs ?? xl ?? xxl;
-  // case ScreenTier.xl:
-  //   return xl ?? lg ?? md ?? sm ?? xs ?? xxl;
-  // case ScreenTier.xxl:
-  //   return xxl ?? xl ?? lg ?? md ?? sm ?? xs;
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +262,7 @@ class ResponsiveRow extends StatelessWidget {
           alignment: alignment,
           runAlignment: runAlignment,
           children: children.map((c) {
-            final segments = context.responsiveValue(xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl) ?? 12;
+            final segments = context.responsiveValue(xxs: c.xxs, xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl) ?? 12;
 
             final width = (segmentSize * segments.toDouble()) - ((children.length - 2).toDouble() * horizontalSpacing);
 
