@@ -245,15 +245,25 @@ extension StringExtension on String {
   Text get asText => Text(this);
 
   Color get asColor {
-    String updatedHexColor = ifBlank("00000000")!.toUpperCase().replaceAll('#', '');
-    while (updatedHexColor.length < 6) {
-      updatedHexColor = '${updatedHexColor}0';
+    if (isBlank) {
+      return Colors.transparent; // Default color if the string is empty
     }
-    if (updatedHexColor.length == 6) {
-      updatedHexColor = 'FF$updatedHexColor';
+
+    // Check if the string is a valid hexadecimal color
+    final hexColorRegex = RegExp(r'^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$');
+    if (hexColorRegex.hasMatch(this)) {
+      final hexColor = replaceFirst('#', ''); // Remove any leading '#'
+      return Color(int.parse('0xFF$hexColor', radix: 16));
     }
-    updatedHexColor = updatedHexColor.first(8)!;
-    return Color(int.parse(updatedHexColor, radix: 16));
+
+    // If not a valid hexadecimal color, compute a hash value
+    var hash = 0;
+    for (var i = 0; i < length; i++) {
+      hash = codeUnitAt(i) + ((hash << 5) - hash);
+    }
+
+    // Add an alpha channel (0xFF) to the hash value
+    return Color(hash + 0xFF000000);
   }
 
   String? removeDiacritics() {
@@ -2072,7 +2082,7 @@ extension StringExtension on String {
       if (before.isCloseWrapChar()) {
         before = before.getOppositeChar();
       }
-      after = before!.getOppositeChar();
+      after = before?.getOppositeChar();
     }
     return "$before$this${after.ifBlank(before)}";
   }

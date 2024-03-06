@@ -245,6 +245,7 @@ extension BuildContextExtensions on BuildContext {
 
   MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
   CupertinoLocalizations get cupertinoLocalizations => CupertinoLocalizations.of(this);
+
   FlutterView get flutterView => View.of(this);
 
   double get pixelRatio => flutterView.devicePixelRatio;
@@ -272,17 +273,6 @@ extension BuildContextExtensions on BuildContext {
   double get safeWidth => logicalWidth - paddingLeft - paddingRight;
   double get safeHeight => logicalHeight - paddingTop - paddingBottom;
 
-  /// The same of [MediaQuery.of(context).size.height]
-  /// Note: updates when you rezise your screen (like on a browser or
-  /// desktop window)
-  /// performs a simple [Theme.of(context).size] action and returns given [height or width]
-  double get height => mediaQuerySize.height;
-
-  /// The same of [MediaQuery.of(context).size.width]
-  /// Note: updates when you rezise your screen (like on a browser or
-  /// desktop window)
-  double get width => mediaQuerySize.width;
-
   ScreenTier get screenTier {
     if (width < 350) {
       return ScreenTier.xxs;
@@ -303,14 +293,11 @@ extension BuildContextExtensions on BuildContext {
 
   MediaQueryData get mediaQuery => MediaQuery.of(this);
 
-  /// similar to [MediaQuery.of(context).padding]
-  EdgeInsets get mediaQueryPadding => mediaQuery.padding;
-
   /// similar to [MediaQuery.of(context).viewPadding]
-  EdgeInsets get mediaQueryViewPadding => mediaQuery.viewPadding;
+  EdgeInsets get viewPadding => mediaQuery.viewPadding;
 
   /// similar to [MediaQuery.of(context).viewInsets]
-  EdgeInsets get mediaQueryViewInsets => mediaQuery.viewInsets;
+  EdgeInsets get viewInsets => mediaQuery.viewInsets;
 
   /// similar to [MediaQuery.of(context).orientation]
   Orientation get orientation => mediaQuery.orientation;
@@ -323,28 +310,25 @@ extension BuildContextExtensions on BuildContext {
 
   bool get alwaysUse24HourFormat => mediaQuery.alwaysUse24HourFormat;
 
-  /// similar to [mediaQuery.devicePixelRatio]
-  double get devicePixelRatio => mediaQuery.devicePixelRatio;
-
-  Brightness get platformBrightness => mediaQuery.platformBrightness;
+  Brightness get themeBrightness => theme.brightness;
 
   /// get the shortestSide from screen
-  double get mediaQueryShortestSide => mediaQuerySize.shortestSide;
+  double get shortestSide => screenSize.shortestSide;
 
   /// True if width be larger than 800
   bool get showNavbar => (width > 800);
 
   /// True if the shortestSide is smaller than 600p
-  bool get isPhone => (mediaQueryShortestSide < 600);
+  bool get isPhoneSize => (shortestSide < 600);
 
   /// True if the shortestSide is largest than 600p
-  bool get isSmallTablet => (mediaQueryShortestSide >= 600);
+  bool get isSmallTabletSize => (shortestSide >= 600);
 
   /// True if the shortestSide is largest than 720p
-  bool get isLargeTablet => (mediaQueryShortestSide >= 720);
+  bool get isLargeTabletSize => (shortestSide >= 720);
 
   /// True if the current device is Tablet
-  bool get isTablet => isSmallTablet || isLargeTablet;
+  bool get isTabletSize => isSmallTabletSize || isLargeTabletSize;
 
   /// returns a specific value according to the current [ScreenTier]
   T? responsiveValue<T>({
@@ -379,45 +363,34 @@ extension BuildContextExtensions on BuildContext {
   /// specific property of MediaQuery the ability to declare that when reading the MediaQuery from the context.
 
   /// The same of MediaQuery.sizeOf(context)
-  Size get mediaQuerySize => mediaQuery.size;
+  Size get screenSize => mediaQuery.size;
 
   /// The same of MediaQuery.sizeOf(context).height
-  double get mqHeight => mediaQuerySize.height;
+  double get height => screenSize.height;
 
   /// The same of [MediaQuery.sizeOf(context).width]
   /// Note: updates when you rezise your screen (like on a browser or
   /// desktop window)
-  double get mqWidth => mediaQuerySize.width;
-
-  /// similar to [ MediaQuery.paddingOf(context)]
-  EdgeInsets get mqPadding => MediaQuery.paddingOf(this);
-
-  /// similar to [MediaQuery.viewPaddingOf(context)]
-  EdgeInsets get mqViewPadding => MediaQuery.viewPaddingOf(this);
-
-  /// similar to [MediaQuery.viewInsetsOf(context)]
-  EdgeInsets get mqViewInsets => MediaQuery.viewInsetsOf(this);
-
-  /// similar to [MediaQuery.orientationOf(context)]
-  Orientation get mqOrientation => MediaQuery.orientationOf(this);
-
-  /// similar to [MediaQuery.alwaysUse24HourFormatOf(context)]
-  bool get mqAlwaysUse24HourFormat => MediaQuery.alwaysUse24HourFormatOf(this);
+  double get width => screenSize.width;
 
   /// similar to [MediaQuery.devicePixelRatioOf(context)]
-  double get mqDevicePixelRatio => MediaQuery.devicePixelRatioOf(this);
+  double get devicePixelRatio => MediaQuery.devicePixelRatioOf(this);
 
   /// similar to [MediaQuery.platformBrightnessOf(context)]
-  Brightness get mqPlatformBrightness => MediaQuery.platformBrightnessOf(this);
+  Brightness get platformBrightness => MediaQuery.platformBrightnessOf(this);
 
   /// similar to [MediaQuery.textScaleFactorOf(context)]
-  TextScaler get mqTextScaleFactor => MediaQuery.textScalerOf(this);
-
-  Brightness get brightness => mediaQuery.platformBrightness;
+  TextScaler get textScaler => MediaQuery.textScalerOf(this);
 
   /// is dark mode currently enabled?
-  bool get isDarkMode => brightness == Brightness.dark;
+  bool get isDarkMode => themeBrightness == Brightness.dark;
 
   /// is light mode currently enabled?
-  bool get isLightMode => brightness == Brightness.light;
+  bool get isLightMode => themeBrightness == Brightness.light;
+
+  /// is dark mode currently enabled?
+  bool get isPlatformDarkMode => platformBrightness == Brightness.dark;
+
+  /// is light mode currently enabled?
+  bool get isPlatformLightMode => platformBrightness == Brightness.light;
 }

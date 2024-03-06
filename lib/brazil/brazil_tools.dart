@@ -577,29 +577,7 @@ abstract interface class Brasil extends _Brasil {
     return "$n1$n2.$n3$n4$n5.$n6$n7$n8/$n9$n10$n11$n12-$d1$d2";
   }
 
-  static Map<String, String> separarTelefone(String telefone) {
-    if (validarTelefone(telefone)) {
-      // Remove todos os caracteres não numéricos
-      String apenasNumeros = telefone.replaceAll(RegExp(r'\D'), '');
-
-      // Extrai o DDD, prefixo e sufixo
-      RegExp exp = RegExp(r'(\d{2})(\d{4,5})(\d{4})$');
-      var match = exp.firstMatch(apenasNumeros);
-
-      // Retorna um mapa com as partes do telefone
-      return {
-        'original': telefone,
-        'semMascara': apenasNumeros,
-        'ddd': "${match?.group(1)}",
-        'prefixo': "${match?.group(2)}",
-        'sufixo': "${match?.group(3)}",
-        'numero': "${match?.group(2)}${match?.group(3)}",
-        'numeroMascara': "${match?.group(2)}-${match?.group(3)}",
-      };
-    } else {
-      return {'original': telefone};
-    }
-  }
+  static Telefone separarTelefone(String telefone) => Telefone(telefone);
 
   static bool validarTelefone(String telefone) {
     try {
@@ -660,26 +638,7 @@ abstract interface class Brasil extends _Brasil {
   }
 
   /// formata um numero de telefone com traço e parentesis quando necessário
-  static String formataTelefone(dynamic numero) {
-    String telefoneFormatado = "$numero".onlyNumbers!;
-    if (telefoneFormatado.isBlank) return "";
-
-    if (telefoneFormatado.length > 11) {
-      telefoneFormatado = telefoneFormatado.substring(0, 11);
-    }
-
-    if (telefoneFormatado.length == 11) {
-      telefoneFormatado = '(${telefoneFormatado.substring(0, 2)}) ${telefoneFormatado.substring(2, 7)}-${telefoneFormatado.substring(7, 11)}';
-    } else if (telefoneFormatado.length == 10) {
-      telefoneFormatado = '(${telefoneFormatado.substring(0, 2)}) ${telefoneFormatado.substring(2, 6)}-${telefoneFormatado.substring(6, 10)}';
-    } else if (telefoneFormatado.length == 9) {
-      telefoneFormatado = '${telefoneFormatado.substring(0, 5)}-${telefoneFormatado.substring(5, 9)}';
-    } else if (telefoneFormatado.length == 8) {
-      telefoneFormatado = '${telefoneFormatado.substring(0, 4)}-${telefoneFormatado.substring(4, 8)}';
-    }
-
-    return telefoneFormatado;
-  }
+  static String formataTelefone(dynamic numero) => Telefone(numero).toString();
 }
 
 class Endereco {
@@ -814,7 +773,10 @@ class Cidade implements Comparable<Cidade> {
     }
 
     if (other is num) {
-      return ibge == other.floor();
+      return ibge == "$other".toDouble?.floor();
+    }
+    if (other is string) {
+      return nome.flatEqual(other);
     }
 
     return false;
@@ -825,4 +787,42 @@ class Cidade implements Comparable<Cidade> {
 
   @override
   int compareTo(other) => nome.compareTo(other.nome);
+}
+
+class Telefone {
+  Telefone([dynamic numero]) {
+    if (Brasil.validarTelefone(numero)) {
+      string t = "$numero";
+      if (t.length > 11) {
+        t = t.substring(0, 11);
+      }
+
+      if (t.length == 11) {
+        ddd = t.substring(0, 2);
+        prefixo = t.substring(2, 7);
+        sufixo = t.substring(7, 11);
+      } else if (t.length == 10) {
+        ddd = t.substring(0, 2);
+        prefixo = t.substring(2, 6);
+        sufixo = t.substring(6, 10);
+      } else if (t.length == 9) {
+        prefixo = t.substring(0, 5);
+        sufixo = t.substring(5, 9);
+      } else if (t.length == 8) {
+        prefixo = t.substring(0, 4);
+        sufixo = t.substring(4, 8);
+      }
+    }
+  }
+
+  late string ddd;
+  late string prefixo;
+  late string sufixo;
+  string get numero => "$prefixo$sufixo";
+  string get numeroMascara => "$prefixo-$sufixo";
+  string get completo => "$ddd$numero";
+  string get completoMascara => "${ddd.isNotBlank ? "($ddd) " : ""}$numeroMascara";
+
+  @override
+  String toString() => completoMascara;
 }

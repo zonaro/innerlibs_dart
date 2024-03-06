@@ -242,24 +242,40 @@ class ResponsiveRow extends StatelessWidget {
     int? xl = 6,
     int? xxl = 12,
     double? height,
-    List<Widget> children = const [],
-  }) =>
-      ResponsiveRow(
-        children: [
-          for (var child in children)
-            ResponsiveColumn(
-              child: child,
-              height: height,
-              xxs: (12 / (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-              xs: (12 / (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-              sm: (12 / (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-              md: (12 / (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl ?? 1)).round(),
-              lg: (12 / (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl ?? 1)).round(),
-              xl: (12 / (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl ?? 1)).round(),
-              xxl: (12 / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? 1)).round(),
-            ),
-        ],
-      );
+    List<dynamic> children = const [],
+  }) {
+    for (var i = 0; i < children.length; i++) {
+      if (children[i] is ResponsiveColumn) {
+        continue;
+      }
+
+      if (children[i] is string) {
+        children[i] = Text(children[i]);
+      }
+
+      if (children[i] is num) {
+        children[i] = Text("${children[i]}");
+      }
+
+      if (children[i] is Widget) {
+        children[i] = ResponsiveColumn(
+          height: height,
+          xxs: (12 / (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+          xs: (12 / (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+          sm: (12 / (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+          md: (12 / (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl ?? 1)).round(),
+          lg: (12 / (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl ?? 1)).round(),
+          xl: (12 / (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl ?? 1)).round(),
+          xxl: (12 / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? 1)).round(),
+          child: children[i],
+        );
+      }
+    }
+
+    return ResponsiveRow(
+      children: [for (var child in children.whereType<ResponsiveColumn>()) child],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
