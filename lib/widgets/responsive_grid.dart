@@ -25,7 +25,7 @@ enum ScreenTier {
   xxl,
 }
 
-class ResponsiveColumn {
+class ResponsiveColumn  {
   final int xxs;
   final int? xs;
   final int? sm;
