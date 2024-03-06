@@ -25,7 +25,7 @@ enum ScreenTier {
   xxl,
 }
 
-class ResponsiveColumn  {
+class ResponsiveColumn {
   final int xxs;
   final int? xs;
   final int? sm;
@@ -36,6 +36,7 @@ class ResponsiveColumn  {
   final Widget child;
   final double? height;
 
+  /// Responsive Column thats have breakpoints for each [ScreenTier]. If a tier is not specified, its fall down to the next smaller screen tier
   const ResponsiveColumn({
     this.xxs = 12,
     this.xs,
@@ -44,6 +45,19 @@ class ResponsiveColumn  {
     this.lg,
     this.xl,
     this.xxl,
+    this.height,
+    this.child = const SizedBox.shrink(),
+  });
+
+  /// Responsive Column thats have breakpoints for each [ScreenTier]. Each tier has a default value
+  const ResponsiveColumn.auto({
+    this.xxs = 12,
+    this.xs = 6,
+    this.sm = 4,
+    this.md = 3,
+    this.lg = 3,
+    this.xl = 2,
+    this.xxl = 1,
     this.height,
     this.child = const SizedBox.shrink(),
   });
@@ -221,8 +235,8 @@ class ResponsiveRow extends StatelessWidget {
   /// and wraps [children] into [ResponsiveColumn]s automatically
   factory ResponsiveRow.withColumns({
     int? xxs = 1,
-    int? xs = 1,
-    int? sm = 2,
+    int? xs = 2,
+    int? sm = 3,
     int? md = 3,
     int? lg = 4,
     int? xl = 6,

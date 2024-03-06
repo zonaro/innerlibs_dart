@@ -50,15 +50,33 @@ export 'widgets/restart_widget.dart';
 export 'widgets/shimmer.dart';
 
 typedef date = DateTime;
+
+/// C# alias for [String] (in C#, string is a class but works like a primitive type)
 typedef string = String;
 typedef StringList = List<String>;
+
+/// C# alias for [double]
 typedef decimal = double;
+
 typedef money = decimal;
+
+/// C# alias for [Iterable]
 typedef IEnumerable = Iterable;
+
+/// C# alias for [File]
 typedef FileInfo = File;
+
+/// C# alias for [Directory]
 typedef DirectoryInfo = Directory;
 
+/// Alias for [Map<String, dynamic>], used in most Json serializations
 typedef JsonMap = Map<String, dynamic>;
+
+/// Alias for [Map<String, dynamic>], used to represent a row in a table
 typedef JsonRow = JsonMap;
+
+/// Alias for [List<Map<String, dynamic>>], used to represent a data table
 typedef JsonTable = List<JsonRow>;
+
+/// Alias for [List<List<Map<String, dynamic>>>], used to represent a set of data tables
 typedef JsonTableSet = List<JsonTable>;
