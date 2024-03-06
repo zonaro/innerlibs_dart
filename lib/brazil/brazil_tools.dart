@@ -577,12 +577,12 @@ abstract interface class Brasil extends _Brasil {
     return "$n1$n2.$n3$n4$n5.$n6$n7$n8/$n9$n10$n11$n12-$d1$d2";
   }
 
-  static Telefone separarTelefone(String telefone) => Telefone(telefone);
+  static Telefone separarTelefone(dynamic telefone) => Telefone(telefone);
 
-  static bool validarTelefone(String telefone) {
+  static bool validarTelefone(dynamic telefone) {
     try {
       // Remove todos os caracteres não numéricos
-      String apenasNumeros = telefone.replaceAll(RegExp(r'\D'), '');
+      String apenasNumeros = "$telefone".onlyNumbers!;
 
       // Verifica se o número tem o tamanho correto (8 ou 9 dígitos locais + 0 ou 2 dígitos DDD)
       if (apenasNumeros.length < 8 || apenasNumeros.length > 11) {
@@ -791,8 +791,11 @@ class Cidade implements Comparable<Cidade> {
 
 class Telefone {
   Telefone([dynamic numero]) {
+    ddd = "";
+    prefixo = "";
+    sufixo = "";
     if (Brasil.validarTelefone(numero)) {
-      string t = "$numero";
+      string t = "$numero".onlyNumbers!;
       if (t.length > 11) {
         t = t.substring(0, 11);
       }
@@ -819,9 +822,9 @@ class Telefone {
   late string prefixo;
   late string sufixo;
   string get numero => "$prefixo$sufixo";
-  string get numeroMascara => "$prefixo-$sufixo";
+  string get numeroMascara => "$prefixo-$sufixo".nullIf((s) => s == "-").blankIfNull;
   string get completo => "$ddd$numero";
-  string get completoMascara => "${ddd.isNotBlank ? "($ddd) " : ""}$numeroMascara";
+  string get completoMascara => "${ddd.isNotBlank ? "($ddd) " : ""}$numeroMascara".nullIf((s) => s == "-").blankIfNull;
 
   @override
   String toString() => completoMascara;
