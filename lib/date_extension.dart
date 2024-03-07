@@ -108,13 +108,13 @@ extension DateTimeExtensions on DateTime {
   ///
   String timeOfDay({string? morning, string? afternoon, string? evening, string? night}) {
     if (hour >= 0 && hour < 12) {
-      return morning.blankCoalesce([afternoon, 'morning']);
+      return morning.ifBlank(afternoon).blankIfNull;
     } else if (hour >= 12 && hour < 16) {
-      return afternoon.blankCoalesce([morning, 'afternoon']);
+      return afternoon.ifBlank(morning).blankIfNull;
     } else if (hour >= 16 && hour < 20) {
-      return evening.blankCoalesce([night, 'evening']);
+      return evening.ifBlank(night).blankIfNull;
     } else {
-      return night.blankCoalesce([evening, 'night']);
+      return night.ifBlank(evening).blankIfNull;
     }
   }
 

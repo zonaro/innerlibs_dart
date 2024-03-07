@@ -49,7 +49,10 @@ extension NullStringExtension on String? {
   /// ```
   bool get isNotNull => isNull == false;
 
-  String blankCoalesce(List<string?> newString) => "$this".asIf((s) => s.isNotBlank, this, newString.where((e) => e.isNotBlank).firstOrNull).blankIfNull;
+  String blankCoalesce(List<string?> newString) {
+    var x = [this, ...newString];
+    return x.firstWhere((element) => element.isNotBlank, orElse: () => "").blankIfNull;
+  }
 }
 
 extension StringExtension on String {
