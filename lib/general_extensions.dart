@@ -70,14 +70,58 @@ extension ObjectExtensions on Object? {
   }
 
   /// Checks if [this] is not a Blank value:
-  ///( Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
+  ///(Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
   bool get isNotValid => !isValid;
 
+  /// Converts the current object to a nullable boolean value.
+  ///
+  /// Recognized keywords (case-insensitive):
+  /// - 'NULL', 'CANCEL', 'CANCELAR', '', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N': Returns `false`.
+  /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO': Returns `true`.
+  ///
+  /// If the object doesn't match any of the recognized keywords:
+  /// - If [everythingIsTrue] is `true`, returns `true`.
+  /// - If [everythingIsTrue] is `false`, throws an [ArgumentError].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// bool result = someObject.asNullableBool(everythingIsTrue: false);
+  /// ```
+  ///
+  /// - [everythingIsTrue]: A boolean flag indicating whether to treat all non-null values as `true`.
+  ///   If set to `true`, any non-null value (except specific keywords) will be considered `true`.
+  ///   If set to `false`, an exception will be thrown for unrecognized values.
+  ///
+  /// Returns `true` or `false` based on the object's representation.
+  /// Throws an [ArgumentError] if the object doesn't represent a valid option and [everythingIsTrue] is `false`.
   bool asBool({bool everythingIsTrue = true}) => asNullableBool(everythingIsTrue: everythingIsTrue) ?? false;
 
+  /// Converts the current object to a nullable boolean value.
+  ///
+  /// If the object is null, this function returns `null`.///
+  /// Recognized keywords (case-insensitive):
+  /// - 'NULL', 'CANCEL', 'CANCELAR': Returns `null`.
+  /// - '', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N': Returns `false`.
+  /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO': Returns `true`.
+  ///
+  /// If the object doesn't match any of the recognized keywords:
+  /// - If [everythingIsTrue] is `true`, returns `true`.
+  /// - If [everythingIsTrue] is `false`, throws an [ArgumentError].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// bool? result = someObject.asNullableBool(everythingIsTrue: false);
+  /// ```
+  ///
+  /// - [everythingIsTrue]: A boolean flag indicating whether to treat all non-null values as `true`.
+  ///   If set to `true`, any non-null value (except specific keywords) will be considered `true`.
+  ///   If set to `false`, an exception will be thrown for unrecognized values.
+  ///
+  /// Returns `true`, `false`, or `null` based on the object's representation.
+  /// Throws an [ArgumentError] if the object doesn't represent a valid option and [everythingIsTrue] is `false`.
   bool? asNullableBool({bool everythingIsTrue = true}) {
     if (this == null) return null;
-    var x = '$this'.toUpperCase().removeDiacritics();
+    var x = '$this'.toUpperCase().removeDiacritics().trimAll;
     switch (x) {
       case 'NULL':
       case 'CANCEL':

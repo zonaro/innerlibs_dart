@@ -15,23 +15,13 @@ extension NullStringExtension on String? {
   }
 
   String get blankIfNull => this ?? "";
+  String? get nullIfBlank => ifBlank(null);
 
   bool get isBlank => this != null && this!.isBlank;
 
   bool get isNotBlank => !isBlank;
 
   String? ifBlank(String? newString) => this != null && this!.isNotBlank ? this : newString;
-
-  /// Provide default value if the `String` is `null`.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String? foo = null;
-  /// foo.ifNull('dont be null'); // returns 'dont be null'
-  /// ```
-  String? defaultValue(String defaultValue) {
-    return this ?? defaultValue;
-  }
 
   /// Checks whether the `String` is `null`.
   /// ### Example 1
@@ -44,9 +34,7 @@ extension NullStringExtension on String? {
   /// String foo = 'fff';
   /// bool isNull = foo.isNull; // returns false
   /// ```
-  bool get isNull {
-    return this == null;
-  }
+  bool get isNull => this == null;
 
   /// Checks whether the `String` is not `null`.
   /// ### Example 1
@@ -59,9 +47,9 @@ extension NullStringExtension on String? {
   /// String foo = 'fff';
   /// bool isNull = foo.isNotNull; // returns true
   /// ```
-  bool get isNotNull {
-    return isNull == false;
-  }
+  bool get isNotNull => isNull == false;
+
+  String blankCoalesce(List<string?> newString) => "$this".asIf((s) => s.isNotBlank, this, newString.where((e) => e.isNotBlank).firstOrNull).blankIfNull;
 }
 
 extension StringExtension on String {
@@ -197,7 +185,7 @@ extension StringExtension on String {
     }
     var bar = removeLast(1);
     var ver = last(1);
-    return bar?.generateBarcodeCheckSum == ver;
+    return bar.generateBarcodeCheckSum == ver;
   }
 
   /// Returns a new string with the flag of the specified country code.
@@ -205,41 +193,6 @@ extension StringExtension on String {
     final List<String> characters = toUpperCase().split('');
     final Iterable<int> characterCodes = characters.map((String char) => 127397 + char.codeUnits.first);
     return String.fromCharCodes(characterCodes);
-  }
-
-  /// Return a new string with first character as upper case.
-  String get titleCase {
-    if (length <= 1) return toUpperCase();
-
-    return '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
-  }
-
-// A function that converts a string to title case
-  String? get toProperCase {
-    if (isNotBlank) {
-      // Split the string by spaces
-      List<String> words = split(' ');
-      // Initialize an empty string to store the result
-      String result = '';
-      // Loop through each word
-      for (String word in words) {
-        // If the word is not empty
-        if (word.isNotEmpty) {
-          // Capitalize the first letter if it is lowercase
-          if (word[0].toLowerCase() == word[0]) {
-            result += word[0].toUpperCase();
-          } else {
-            // Otherwise, keep the original letter
-            result += word[0];
-          }
-          // Append the rest of the word
-          result += '${word.substring(1)} ';
-        }
-      }
-      // Trim the trailing space and return the result
-      return result.trim();
-    }
-    return this;
   }
 
   Text get asText => Text(this);
@@ -266,7 +219,8 @@ extension StringExtension on String {
     return Color(hash + 0xFF000000);
   }
 
-  String? removeDiacritics() {
+  String removeDiacritics() {
+    if (isBlank) return blankIfNull;
     if (_diacriticsMap.isEmpty) {
       for (int i = 0; i < _defaultDiacriticsRemovalap.length; i++) {
         var letters = _defaultDiacriticsRemovalap[i]['letters'];
@@ -306,7 +260,7 @@ extension StringExtension on String {
     return words;
   }
 
-  bool flatEqual(String? text) => removeDiacritics()?.toLowerCase() == text?.removeDiacritics()?.toLowerCase();
+  bool flatEqual(String? text) => removeDiacritics().toLowerCase() == text?.removeDiacritics().toLowerCase();
 
   bool flatContains(String? text) {
     if (isBlank) return text.isBlank;
@@ -314,7 +268,7 @@ extension StringExtension on String {
     if (text.isBlank) {
       return true;
     }
-    return removeDiacritics()!.toLowerCase().contains(text!.removeDiacritics()!.toLowerCase());
+    return removeDiacritics().toLowerCase().contains(text!.removeDiacritics().toLowerCase());
   }
 
   bool flatEqualAny(List<String> texts) {
@@ -337,11 +291,11 @@ extension StringExtension on String {
 
   String get singularPt {
     if (endsWith('ões')) {
-      return '${substring(0, length - 3)}ão';
+      return '${removeLast(3)}ão';
     } else if (endsWith('ães')) {
-      return '${substring(0, length - 3)}ão';
+      return '${removeLast(3)}ão';
     } else if (endsWith('s')) {
-      return substring(0, length - 1);
+      return removeLast(1);
     }
     return this;
   }
@@ -431,7 +385,7 @@ extension StringExtension on String {
       return '';
     }
     if (s.isBlank) {
-      return this;
+      return blankIfNull;
     }
     return replaceAll(s!, '');
   }
@@ -469,7 +423,7 @@ extension StringExtension on String {
     }
     var words = trim().split(RegExp(r'(\s+)'));
     // We filter out symbols and numbers from the word count
-    var filteredWords = words.where((e) => e.onlyLatin!.isNotEmpty);
+    var filteredWords = words.where((e) => e.isNotEmpty);
     return filteredWords.length;
   }
 
@@ -484,9 +438,9 @@ extension StringExtension on String {
   /// String foo = '1244e*s*4e*5523n*t*1i*s';
   /// String noNumbers = foo.removeNumbers; // returns 'e*s*e*n*t*i*s'
   /// ```
-  String? get removeNumbers {
+  String get removeNumbers {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     var regex = RegExp(r'(\d+)');
     return replaceAll(regex, '');
@@ -498,55 +452,13 @@ extension StringExtension on String {
   /// String foo = '4*%^55/es4e5523nt1is';
   /// String onyNumbers = foo.onlyNumbers; // returns '455455231'
   /// ```
-  String? get onlyNumbers {
+  String get onlyNumbers {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     // ignore: unnecessary_raw_strings
     var regex = RegExp(r'([^0-9]+)');
     return replaceAll(regex, '');
-  }
-
-  /// Returns only the Latin characters from the `String`.
-  /// ### Example
-  /// ```dart
-  /// String foo = '4*%^55/es4e5523nt1is';
-  /// String onlyLatin = foo.onlyLatin; // returns 'esentis'
-  /// ```
-  String? get onlyLatin {
-    if (isBlank) {
-      return this;
-    }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'([^a-zA-Z\s]+)');
-    return replaceAll(regex, '');
-  }
-
-  /// Returns only the Greek characters from the `String`.
-  /// ### Example
-  /// ```dart
-  /// String foo = '4*%^55/σοφ4e5523ια';
-  /// String onlyGreek = foo.onlyGreek; // returns 'σοφια'
-  /// String foo2 = '4*%^55/σοφ4e5523ια aaggαγάπ112η';
-  /// String onlyGreek2 = foo2.onlyGreek; // returns 'σοφια αγάπη'
-  /// ```
-  String? get onlyGreek {
-    if (isBlank) {
-      return this;
-    }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'([^α-ωΑ-ΩίϊΐόάέύϋΰήώΊΪΌΆΈΎΫΉΏ\s]+)');
-    return replaceAll(regex, '');
-  }
-
-  /// Checks whether the supplied string contains any Greek character.
-  bool get containsAnyGreekCharacter {
-    if (isBlank) {
-      return false;
-    }
-
-    String onlyGreekLetters = onlyGreek!.replaceAll(" ", "");
-    return onlyGreekLetters.isNotEmpty;
   }
 
   /// Returns only the Latin OR Greek characters from the `String`.
@@ -557,9 +469,9 @@ extension StringExtension on String {
   /// String foo2 = '4*%^55/es4e5523nt1is';
   /// String onlyL2 = foo2.onlyLetters; // returns 'esentis'
   /// ```
-  String? get onlyLetters {
+  String get onlyLetters {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     // ignore: unnecessary_raw_strings
     var regex = RegExp(r'([^α-ωΑ-ΩίϊΐόάέύϋΰήώΊΪΌΆΈΎΫΉΏa-zA-Z\s]+)');
@@ -572,9 +484,9 @@ extension StringExtension on String {
   /// String foo = '/!@#\$%^\-&*()+",.?":{}|<>~_-`*%^/ese?:"///ntis/!@#\$%^&*(),.?":{}|<>~_-`';
   /// String removed = foo.removeSpecial; // returns 'esentis'
   /// ```
-  String? get removeSpecial {
+  String get removeSpecial {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     // ignore: unnecessary_raw_strings
     var regex = RegExp(r'[/!@#$%^\-&*()+",.?":{}|<>~_-`]');
@@ -744,7 +656,7 @@ extension StringExtension on String {
   /// var iterable = ['fff','gasd'];
   /// bool isIn = foo.isIn(iterable); // returns false
   /// ```
-  bool isIn(Iterable<String?> strings) => isNotBlank && strings.isNotEmpty && strings.contains(this);
+  bool isIn(Iterable<String> strings) => isNotBlank && strings.isNotEmpty && strings.contains(this);
 
   /// Checks if the `String` has only Latin characters.
   /// ### Example
@@ -808,9 +720,9 @@ extension StringExtension on String {
   /// String foo = '1244e*s*4e*5523n*t*1i*s';
   /// String noLetters = foo.removeLetters; // returns '1244**4*5523**1*'
   /// ```
-  String? get removeLetters {
+  String get removeLetters {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     // ignore: unnecessary_raw_strings
     var regex = RegExp(r'([a-zA-Z]+)');
@@ -881,9 +793,9 @@ extension StringExtension on String {
   /// String foo = 'Hello World';
   /// String mostFrequent = foo.mostFrequent; // returns 'l'
   /// ```
-  String? mostFrequent({bool ignoreSpaces = false}) {
+  String mostFrequent({bool ignoreSpaces = false}) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     if (ignoreSpaces) {
       return replaceAll(' ', '').mostFrequent();
@@ -925,9 +837,9 @@ extension StringExtension on String {
   /// String foo = 'Hello World';
   /// String reversed = foo.reverse; // returns 'dlrow olleH'
   /// ```
-  String? get reverse {
+  String get reverse {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     var letters = split('').toList().reversed;
@@ -954,9 +866,9 @@ extension StringExtension on String {
   /// String foo = 'hello world';
   /// bool firstChars = foo.first(3); // returns 'hel'
   /// ```
-  String? first([int n = 1]) {
+  String first([int n = 1]) {
     if (isBlank || length < n || n < 0) {
-      return this;
+      return blankIfNull;
     }
 
     return substring(0, n);
@@ -982,9 +894,9 @@ extension StringExtension on String {
   /// String foo = 'hello world';
   /// bool firstChars = foo.last(3); // returns 'rld'
   /// ```
-  String? last([int n = 1]) {
+  String last([int n = 1]) {
     if (isBlank || length < n || n < 0) {
-      return this;
+      return blankIfNull;
     }
 
     return substring(length - n, length);
@@ -997,9 +909,9 @@ extension StringExtension on String {
   /// String foo = 'sLuG Case';
   /// String fooSlug = foo.toSlug; // returns 'sLuG_Case'
   /// ```
-  String? get toSlug {
+  String get toSlug {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     var words = trim().split(RegExp(r'(\s+)'));
@@ -1025,9 +937,9 @@ extension StringExtension on String {
   /// String foo = 'SNAKE CASE';
   /// String fooSNake = foo.toSnakeCase; // returns 'snake_case'
   /// ```
-  String? get toSnakeCase {
+  String get toSnakeCase {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     var words = toLowerCase().trim().split(RegExp(r'(\s+)'));
@@ -1052,9 +964,9 @@ extension StringExtension on String {
   /// String foo = 'Find max of array';
   /// String camelCase = foo.toCamelCase; // returns 'findMaxOfArray'
   /// ```
-  String? get toCamelCase {
+  String get toCamelCase {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     var words = trim().split(RegExp(r'(\s+)'));
@@ -1073,7 +985,7 @@ extension StringExtension on String {
   /// ```
   String get toTitleCase {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     var words = trim().toLowerCase().split(' ');
@@ -1168,60 +1080,6 @@ extension StringExtension on String {
     return double.tryParse(this);
   }
 
-  /// Properly upper cases Greek letters removing their tones.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String greek = 'Τι κάνεις πώς τα περνάς φίλτατέ μου';
-  /// String greekUpper = greek.toGreekUpperCase(); // returns 'ΤΙ ΚΑΝΕΙΣ ΠΩΣ ΤΑ ΠΕΡΝΑΣ ΦΙΛΤΑΤΕ ΜΟΥ'
-  /// ```
-  String? get toGreekUpperCase {
-    if (isBlank) {
-      return this;
-    }
-    return toUpperCase().replaceAllMapped(RegExp(r'[ΆΈΉΊΎΏΌ]'), (match) {
-      switch (match.group(0)) {
-        case 'Ά':
-          return 'Α';
-        case 'Έ':
-          return 'Ε';
-        case 'Ή':
-          return 'Η';
-        case 'Ί':
-          return 'Ι';
-        case 'Ύ':
-          return 'Υ';
-        case 'Ώ':
-          return 'Ω';
-        case 'Ό':
-          return 'Ο';
-        default:
-          return match.group(0) ?? toUpperCase();
-      }
-    });
-  }
-
-  /// Replaces all greek characters with latin. Comes handy when you want to normalize text for search.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'Αριστοτέλης';
-  /// String fooReplaced = foo.replaceGreek; // returns 'aristotelis'
-  /// ```
-  String? get replaceGreek {
-    if (isBlank) return this;
-    var normalizedWord = '';
-    for (var i = 0; i < length; i++) {
-      var character = this[i];
-      if (StringHelpers.greekToLatin.containsKey(character)) {
-        normalizedWord += StringHelpers.greekToLatin[character]!;
-      } else {
-        normalizedWord += character;
-      }
-    }
-    return normalizedWord;
-  }
-
   /// Adds a [replacement] character at [index] of the `String`.
   ///
   /// ### Example
@@ -1229,15 +1087,15 @@ extension StringExtension on String {
   /// String foo = 'hello';
   /// String replaced = foo.replaceAtIndex(index:2,replacement:''); // returns 'helo';
   /// ```
-  String? replaceAtIndex({required int index, required String replacement}) {
+  String replaceAtIndex({required int index, required String replacement}) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     if (index > length) {
-      return this;
+      return blankIfNull;
     }
     if (index < 0) {
-      return this;
+      return blankIfNull;
     }
 
     return '${substring(0, index)}$replacement${substring(index + 1, length)}';
@@ -1289,9 +1147,9 @@ extension StringExtension on String {
   /// String html = '<script>Hacky hacky.</script> <p>Here is some text. <span class="bold">This is bold. </span></p>';
   /// String stripped = foo.stripHtml; // returns 'Hacky hacky. Here is some text. This is bold.';
   /// ```
-  String? get stripHtml {
+  String get stripHtml {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     // ignore: unnecessary_raw_strings
@@ -1306,9 +1164,9 @@ extension StringExtension on String {
   /// String foo = 'foo';
   /// String fooRepeated = foo.repeat(5); // 'foofoofoofoofoo'
   /// ```
-  String? repeat([int count = 1]) {
+  String repeat([int count = 1]) {
     if (isBlank || count <= 0) {
-      return this;
+      return blankIfNull;
     }
     var repeated = this;
     for (var i = 0; i < count - 1; i++) {
@@ -1324,9 +1182,9 @@ extension StringExtension on String {
   /// String foo = 'foofoofoofoofoo';
   /// String fooSqueezed = foo.squeeze('o'); // 'fofofofofo';
   /// ```
-  String? squeeze(String char) {
+  String squeeze(String char) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     var sb = '';
@@ -1373,9 +1231,9 @@ extension StringExtension on String {
   /// String foo1 = 'esentis';
   /// String shuffled = foo.shuffle; // 'tsniees'
   /// ```
-  String? get shuffle {
+  String get shuffle {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     var stringArray = toArray;
@@ -1432,9 +1290,9 @@ extension StringExtension on String {
   ///var mask3 = 'Hello ####### you are from ######';
   ///var masked3 = string3.formatWithMask(mask3); // returns 'Hello esentis you are from greece'
   /// ```
-  String? formatWithMask(String mask, {String specialChar = '#'}) {
+  String formatWithMask(String mask, {String specialChar = '#'}) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     //var buffer = StringBuffer();
@@ -1461,13 +1319,13 @@ extension StringExtension on String {
   /// String foo = 'esentis'
   /// String newFoo = foo.removeFirst(3) // 'ntis';
   /// ```
-  String? removeFirst([int n = 1]) {
+  String removeFirst([int n = 1]) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     if (n <= 0) {
-      return this;
+      return blankIfNull;
     }
     if (n >= length) {
       return '';
@@ -1482,9 +1340,9 @@ extension StringExtension on String {
   /// String foo = 'esentis';
   /// String newFoo = foo.removeLast(3); // 'esen';
   /// ```
-  String? removeLast([int n = 1]) {
+  String removeLast([int n = 1]) {
     if (isBlank || n <= 0) {
-      return this;
+      return blankIfNull;
     }
 
     if (n >= length) {
@@ -1500,9 +1358,9 @@ extension StringExtension on String {
   /// String foo = 'esentis';
   /// String newFoo = foo.maxChars(3); // 'esen';
   /// ```
-  String? maxChars(int n) {
+  String maxChars(int n) {
     if (isBlank || n >= length) {
-      return this;
+      return blankIfNull;
     }
 
     if (n <= 0) {
@@ -1526,9 +1384,9 @@ extension StringExtension on String {
   /// String foo2 = 'C:\\Documents\\user\\test';
   /// String revFoo2 = foo1.reverseSlash(1); // returns 'C:/Documents/user/test'
   /// ```
-  String? reverseSlash(int direction) {
+  String reverseSlash(int direction) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     switch (direction) {
@@ -1537,7 +1395,7 @@ extension StringExtension on String {
       case 1:
         return replaceAll('\\', '/');
       default:
-        return this;
+        return blankIfNull;
     }
   }
 
@@ -1549,19 +1407,19 @@ extension StringExtension on String {
   /// String foo1 = 'esentis';
   /// String char1 = foo1.charAt(0); // returns 'e'
   /// String char2 = foo1.charAt(4); // returns 'n'
-  /// String? char3 = foo1.charAt(-20); // returns null
-  /// String? char4 = foo1.charAt(20); // returns null
+  /// String? char3 = foo1.charAt(-20); // returns ''
+  /// String? char4 = foo1.charAt(20); // returns ''
   /// ```
-  String? charAt(int index) {
+  String charAt(int index) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     if (index > length) {
-      return null;
+      return '';
     }
     if (index < 0) {
-      return null;
+      return '';
     }
     return split('')[index];
   }
@@ -1574,12 +1432,12 @@ extension StringExtension on String {
   /// String foo = 'hello';
   /// String newFoo = foo1.append(' world'); // returns 'hello world'
   /// ```
-  String append(String suffix) {
+  String append(String? suffix) {
     if (isBlank) {
-      return suffix;
+      return suffix ?? "";
     }
 
-    return this + suffix;
+    return this + (suffix ?? "");
   }
 
   /// Prepends a [prefix] to the `String`.
@@ -1590,12 +1448,12 @@ extension StringExtension on String {
   /// String foo = 'world';
   /// String newFoo = foo1.prepend('hello '); // returns 'hello world'
   /// ```
-  String prepend(String prefix) {
+  String prepend(String? prefix) {
     if (isBlank) {
-      return prefix;
+      return prefix ?? "";
     }
 
-    return prefix + this;
+    return (prefix ?? "") + this;
   }
 
   /// Tries to format the current `String` to price amount.
@@ -1608,9 +1466,9 @@ extension StringExtension on String {
   /// String price = '1234567';
   /// String formattedPrice = foo1.toPriceAmount(currencySymbol: '€'); // returns '12.345,67 €'
   /// ```
-  String? toPriceAmount({String? currencySymbol}) {
+  String toPriceAmount({String? currencySymbol}) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     try {
@@ -1618,7 +1476,7 @@ extension StringExtension on String {
 
       return f.format(double.tryParse(replaceAll(',', '.'))).replaceAll('EUR', '').trim().append(currencySymbol == null ? '' : ' $currencySymbol');
     } catch (e) {
-      return null;
+      return blankIfNull;
     }
   }
 
@@ -1740,35 +1598,6 @@ extension StringExtension on String {
         .toString();
   }
 
-  /// Replaces the Greek 12-hour time literals with the English 12-hour time literals.
-  /// πμ -> pm -> AM (ante meridiem / before mesembria / before noon)
-  /// μμ -> mm -> PM (post meridiem / after mesembria / after noon)
-  ///
-  /// For example:
-  /// ```
-  /// 05/12/2023 05:45:17 μ.μ.
-  /// ```
-  /// will return
-  /// ```
-  /// 05/12/2023 05:45:17 PM
-  /// ```
-  String get greekTimeLiteralToEnglish {
-    // If the String does not contain any Greek characters, return it as is.
-    if (!containsAnyGreekCharacter) {
-      return this;
-    }
-
-    // Translate all the Greek letters to the equivalent English ones.
-    String onlyEnglishCharacters = replaceGreek!.trim();
-
-    // Transform to the equivalent English time literals.
-    onlyEnglishCharacters = onlyEnglishCharacters.replaceAll(".", "").toLowerCase();
-
-    onlyEnglishCharacters = onlyEnglishCharacters.contains("pm") ? onlyEnglishCharacters.replaceAll("pm", "AM") : onlyEnglishCharacters.replaceAll("mm", "PM");
-
-    return onlyEnglishCharacters;
-  }
-
   /// Returns the left side of the `String` starting from [char].
   ///
   /// If [char] doesn't exist, `null` is returned.
@@ -1776,16 +1605,16 @@ extension StringExtension on String {
   ///
   /// ```dart
   ///  String s = 'peanutbutter';
-  ///  String foo = s.leftOf('butter'); // returns 'peanut'
+  ///  String foo = s.getBefore('butter'); // returns 'peanut'
   /// ```
-  String? leftOf(String char) {
+  String before(String char) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     int index = indexOf(char);
     if (index == -1) {
-      return null;
+      return "";
     }
 
     return substring(0, index);
@@ -1801,15 +1630,15 @@ extension StringExtension on String {
   ///  String s = 'peanutbutter';
   ///  String foo = s.rightOf('peanut'); // returns 'butter'
   /// ```
-  String? rightOf(String char) {
+  String after(String char) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     int index = indexOf(char);
 
     if (index == -1) {
-      return null;
+      return "";
     }
     return substring(index + char.length, length);
   }
@@ -1826,9 +1655,9 @@ extension StringExtension on String {
   /// String f = 'congratulations';
   /// String truncated = f.truncate(3); // Returns 'con...'
   /// ```
-  String? truncate(int length) {
+  String truncate(int length) {
     if (isBlank || length <= 0 || length >= this.length) {
-      return this;
+      return blankIfNull;
     }
 
     return '${substring(0, length)}...';
@@ -1846,9 +1675,9 @@ extension StringExtension on String {
   /// String f = 'congratulations';
   /// String truncated = f.truncateMiddle(5); // Returns 'con...ns'
   /// ```
-  String? truncateMiddle(int maxChars) {
+  String truncateMiddle(int maxChars) {
     if (isBlank || maxChars <= 0 || maxChars > length) {
-      return this;
+      return blankIfNull;
     }
 
     int leftChars = (maxChars / 2).ceil();
@@ -1866,14 +1695,14 @@ extension StringExtension on String {
   /// String text = '"""Is this real"';
   /// String quote = text.quote; // "Is this real"
   /// ```
-  String? get quote {
+  String get quote {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     String normalizedString = replaceAll('"', '');
 
-    return normalizedString.append('"').prepend('"');
+    return normalizedString.wrap('"');
   }
 
   /// Trims leading and trailing spaces from the `String`, so as extra spaces in between words.
@@ -1884,88 +1713,16 @@ extension StringExtension on String {
   /// String text = '    esentis    thinks   ';
   /// String trimmed = text.trimAll ; // returns 'esentis thinks'
   /// ```
-  String? get trimAll {
+  String get trimAll {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     return trim().replaceAll(RegExp(' +'), ' ');
   }
 
-  /// Checks the `String` and maps the value to a `bool` if possible.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String text = 'yes';
-  /// bool? textBool = text.toBool ; // returns true
-  /// ```
+  /// Try parse a bool value. See [asBool] to convert strings into [bool]
   bool? get toBool => bool.tryParse(this, caseSensitive: false);
-
-  /// Returns the `String` after a specific character.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String test = 'hello brother what a day today';
-  /// String afterString = test.after('brother'); // returns ' what a day today'
-  /// ```
-  String? after(String pattern) {
-    if (isBlank) {
-      return this;
-    }
-
-    if (!contains(pattern)) {
-      return '';
-    }
-
-    List<String> patternWords = pattern.split(' ');
-
-    if (patternWords.isEmpty) {
-      return '';
-    }
-    int indexOfLastPatternWord = indexOf(patternWords.last);
-
-    if (patternWords.last.isEmpty) {
-      return '';
-    }
-
-    return substring(indexOfLastPatternWord + patternWords.last.length, length);
-  }
-
-  /// Returns the `String` before a specific character
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String test = 'brother what a day today';
-  /// String beforeString = test.before('brother'); // returns 'hello '
-  /// ```
-  String? before(String pattern) {
-    if (isBlank) {
-      return this;
-    }
-
-    if (!contains(pattern)) {
-      return '';
-    }
-
-    List<String> patternWords = pattern.split(' ');
-
-    if (patternWords.isEmpty) {
-      return '';
-    }
-    int indexOfFirstPatternWord = indexOf(patternWords.first);
-
-    if (patternWords.last.isEmpty) {
-      return '';
-    }
-
-    return substring(
-      0,
-      indexOfFirstPatternWord,
-    );
-  }
 
   /// The Jaro distance is a measure of edit distance between two strings
   ///
@@ -2041,7 +1798,7 @@ extension StringExtension on String {
   /// String t = 'OK'.emptyIf("OK"); // returns "";
   /// String f = 'NO'.emptyIf("YES"); // returns "NO";
   /// ```
-  String? emptyIf(String? comparisonString) => asIf((s) => s == comparisonString, "", this);
+  String emptyIf(String? comparisonString) => asIf((s) => s == comparisonString, "", this).blankIfNull;
 
   /// Return null if [this] equals [comparisonString]. Otherwise return [this].
   ///
@@ -2057,8 +1814,6 @@ extension StringExtension on String {
 
   /// Return [this] if not blank. Otherwise return [newString].
   String? ifBlank(String? newString) => asIf((s) => s.isNotBlank, this, newString);
-
-  String? blankCoalesce(List<string> newString) => asIf((s) => s.isNotBlank, this, newString.where((e) => e.isNotBlank).firstOrNull);
 
   /// Compares [this] using [comparison] and returns [trueString] if true, otherwise return [falseString].
   ///
@@ -2079,10 +1834,10 @@ extension StringExtension on String {
   String wrap(String? before, {String? after}) {
     before = before.ifBlank("")!;
     if (after.isBlank) {
-      if (before.isCloseWrapChar()) {
-        before = before.getOppositeChar();
+      if (before.isCloseWrapChar) {
+        before = before.getOppositeChar;
       }
-      after = before?.getOppositeChar();
+      after = before.getOppositeChar;
     }
     return "$before$this${after.ifBlank(before)}";
   }
@@ -2095,7 +1850,7 @@ extension StringExtension on String {
   /// String foo = '(';
   /// String oppositeFood = foo.getOppositeChar(); // returns ')';
   /// ```
-  String? getOppositeChar() {
+  String get getOppositeChar {
     switch (this) {
       case "(":
         return ")";
@@ -2126,7 +1881,7 @@ extension StringExtension on String {
       case "¡":
         return "!";
       default:
-        return this;
+        return blankIfNull;
     }
   }
 
@@ -2136,7 +1891,7 @@ extension StringExtension on String {
   /// ```dart
   /// bool isOpenWrap = "(".isOpenWrapChar(); // returns true;
   /// ```
-  bool isOpenWrapChar() => isNotNull && StringHelpers.openWrappers.contains(this);
+  bool get isOpenWrapChar => isNotNull && StringHelpers.openWrappers.contains(this);
 
   /// Check if the `String` is a close wrap char: `>`, `}`, `]`, `"`, `'`.
   ///
@@ -2145,7 +1900,7 @@ extension StringExtension on String {
   /// ```dart
   /// bool isCloseWrap = ")".isCloseWrapChar(); // returns true;
   /// ```
-  bool isCloseWrapChar() => isNotNull && StringHelpers.closeWrappers.contains(this);
+  bool get isCloseWrapChar => isNotNull && StringHelpers.closeWrappers.contains(this);
 
   /// Continuously removes from the beginning of the `String` any match in [patterns].
   ///
@@ -2154,18 +1909,18 @@ extension StringExtension on String {
   /// ```dart
   /// String s = "esentis".removeFirstAny(["s", "ng"]);// returns "esentis";
   /// ```
-  String? removeFirstAny(List<String?> patterns) {
+  String removeFirstAny(List<String?> patterns) {
     var from = this;
     if (from.isNotBlank) {
       for (var pattern in patterns) {
         if (pattern != null && pattern.isNotEmpty) {
           while (from.startsWith(pattern)) {
-            from = from.removeFirst(pattern.length)!;
+            from = from.removeFirst(pattern.length);
           }
         }
       }
     }
-    return from;
+    return from.blankIfNull;
   }
 
   /// Continuously removes from the end of the `String`, any match in [patterns].
@@ -2175,22 +1930,22 @@ extension StringExtension on String {
   /// ```dart
   /// String s = "esentisfs12".removeLastAny(["12","s","ng","f",]); // returns "esentis";
   /// ```
-  String? removeLastAny(List<String?> patterns) {
+  String removeLastAny(List<String?> patterns) {
     var from = this;
     if (from.isNotBlank) {
       for (var pattern in patterns) {
         if (pattern != null && pattern.isNotEmpty) {
           while (from.endsWith(pattern)) {
-            from = from.removeLast(pattern.length)!;
+            from = from.removeLast(pattern.length);
           }
         }
       }
     }
-    return from;
+    return from.blankIfNull;
   }
 
   /// Continuously removes from the beginning & the end of the `String`, any match in [patterns].
-  String? removeFirstAndLastAny(List<String?> patterns) => removeFirstAny(patterns)?.removeLastAny(patterns);
+  String removeFirstAndLastAny(List<String?> patterns) => removeFirstAny(patterns).removeLastAny(patterns);
 
   /// Removes the [pattern] from the end of the `String`.
   ///
@@ -2199,7 +1954,7 @@ extension StringExtension on String {
   /// ```dart
   /// String s = "coolboy".removeLastEqual("y"); // returns "coolbo";
   /// ```
-  String? removeLastEqual(String? pattern) => removeLastAny([pattern]);
+  String removeLastEqual(String? pattern) => removeLastAny([pattern]);
 
   /// Removes any [pattern] match from the beginning of the `String`.
   ///
@@ -2208,7 +1963,7 @@ extension StringExtension on String {
   /// ```dart
   /// String s = "djing".removeFirstEqual("dj"); // returns "ing"
   /// ```
-  String? removeFirstEqual(String? pattern) => removeFirstAny([pattern]);
+  String removeFirstEqual(String? pattern) => removeFirstAny([pattern]);
 
   /// Removes any [pattern] match from the beginning & the end of the `String`.
   ///
@@ -2217,7 +1972,7 @@ extension StringExtension on String {
   /// ```dart
   /// String edited = "abracadabra".removeFirstAndLastEqual("a"); // returns "bracadabr";
   /// ```
-  String? removeFirstAndLastEqual(String? pattern) => removeFirstEqual(pattern)?.removeLastEqual(pattern);
+  String removeFirstAndLastEqual(String? pattern) => removeFirstEqual(pattern).removeLastEqual(pattern);
 
   /// Removes everything in the `String` after the first match of the [pattern].
   ///
@@ -2226,9 +1981,9 @@ extension StringExtension on String {
   /// String test = 'hello brother what a day today';
   /// String afterString = test.removeAfter('brother'); // returns 'hello ';
   /// ```
-  String? removeAfter(String pattern) {
+  String removeAfter(String pattern) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     if (!contains(pattern)) {
@@ -2257,9 +2012,9 @@ extension StringExtension on String {
   /// String test = 'hello brother what a day today';
   /// String afterString = test.removeBefore('brother'); // returns 'brother what a day today';
   /// ```
-  String? removeBefore(String pattern) {
+  String removeBefore(String pattern) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     if (!contains(pattern)) {
@@ -2293,13 +2048,13 @@ extension StringExtension on String {
   /// String test = 'hello brother what a day today';
   /// String afterString = test.addAfter('brother', ' sam '); // returns 'hello brother sam what a day today ';
   /// ```
-  String? addAfter(String pattern, String addition) {
+  String addAfter(String pattern, String addition) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     if (!contains(pattern)) {
-      return this;
+      return blankIfNull;
     }
 
     List<String> patternWords = pattern.split(' ');
@@ -2325,13 +2080,13 @@ extension StringExtension on String {
   /// String test = 'hello brother what a day today';
   /// String afterString = test.addBefore('brother', 'big '); // returns 'hello big brother what a day today';
   /// ```
-  String? addBefore(String pattern, String adition) {
+  String addBefore(String pattern, String adition) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     if (!contains(pattern)) {
-      return this;
+      return blankIfNull;
     }
 
     List<String> patternWords = pattern.split(' ');
@@ -2415,20 +2170,20 @@ extension StringExtension on String {
   /// String foo = '24117248';
   /// String formatted = foo.formatFileSize; // returns '23 MB';
   /// ```
-  String? get formatFileSize {
+  String get formatFileSize {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     var number = toInt;
     if (number == null) {
-      return this;
+      return blankIfNull;
     }
 
-    List<String> suffix = ["bytes", "KB", "MB", "GB"];
+    List<String> suffix = ["bytes", "KB", "MB", "GB", "TB"];
 
     int j = 0;
 
-    while (number! >= 1024 && j < 4) {
+    while (number! >= 1024 && j < suffix.length) {
       number = (number / 1024).floor();
       j++;
     }
@@ -2445,9 +2200,9 @@ extension StringExtension on String {
   /// String foo = 'esentis';
   /// String leet = foo.toLeet ; // returns '€5£п+!$';
   /// ```
-  String? get toLeet {
+  String get toLeet {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     final letters = split('');
 
@@ -2469,12 +2224,12 @@ extension StringExtension on String {
   /// String cc = '5104 4912 8031 9406';
   /// bool isCreditCard = cc.isCreditCard ; returns true;
   /// ```
-  bool? get isCreditCard {
+  bool get isCreditCard {
     if (isBlank) {
       return false;
     }
 
-    String trimmed = removeWhiteSpace!;
+    String trimmed = removeWhiteSpace;
 
     int sum = 0;
     bool alternate = false;
@@ -2503,86 +2258,11 @@ extension StringExtension on String {
   /// String foo = '   Hel l o W   orld';
   /// String striped = foo.removeWhiteSpace; // returns 'HelloWorld';
   /// ```
-  String? get removeWhiteSpace {
+  String get removeWhiteSpace {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
     return replaceAll(RegExp(r'\s+'), '');
-  }
-
-  /// Checks whether the `String` is a valid IBAN.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String iban = 'GR1601101250000000012300695';
-  /// bool isIban = iban.isIban; // returns true;
-  /// ```
-  ///
-  /// ```dart
-  /// String iban = 'GR01250000000012300695';
-  /// bool isIban = iban.isIban; // returns false;
-  /// ```
-  bool get isIban {
-    if (isBlank) {
-      return false;
-    }
-
-    if (length <= 2) {
-      return false;
-    }
-    final countryCode = first(2);
-
-    if (!StringHelpers.ibanLen.containsKey(countryCode)) {
-      return false;
-    }
-
-    if (StringHelpers.ibanLen[countryCode] != length) {
-      return false;
-    }
-
-    var regex = RegExp(r'(^[a-zA-Z]{2}(?:0[2-9]|[1-8][0-9]|9[0-8])[a-zA-Z0-9]{4}[0-9]{6}[a-zA-Z0-9]{0,20}$)');
-    return regex.hasMatch(this);
-  }
-
-  /// Checks whether the provided `String` is a valid Greek ID number.
-  ///
-  /// The number should be of format XX999999, where XX are letters from both the Greek and the Latin alphabet (ABEZHIKMNOPTYX).
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'AB123456';
-  /// bool isGreekId = foo.isGreekId; // returns true;
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'AB1234567';
-  /// bool isGreekId = foo.isGreekId; // returns false;
-  /// ```
-  bool get isGreekId {
-    if (isBlank) {
-      return false;
-    }
-
-    if (length != 8) {
-      return false;
-    }
-
-    final List<String> firstTwoLetters = first(2)!.split('');
-    final String restLetters = last(6)!;
-
-    // Besides the first two letters, the rest of the ID should be a 6digit number.
-    if (!restLetters.isNumber) {
-      return false;
-    }
-
-    // If the first two letters of the provided String are not valid ones.
-    if (!StringHelpers.validLetters.contains(firstTwoLetters.first) || !StringHelpers.validLetters.contains(firstTwoLetters.last)) {
-      return false;
-    }
-
-    return true;
   }
 
   bool get isIP => isIPv4 || isIPv6;
@@ -2615,7 +2295,7 @@ extension StringExtension on String {
   }
 
   /// Checks whether the `String` is in lowercase.
-  bool? get isLowerCase {
+  bool get isLowerCase {
     if (isBlank) {
       return false;
     }
@@ -2623,11 +2303,11 @@ extension StringExtension on String {
   }
 
   /// Checks whether the `String` is in uppercase.
-  bool? get isUpperCase {
+  bool get isUpperCase {
     if (isBlank) {
       return false;
     }
-    return this == toGreekUpperCase;
+    return this == toUpperCase();
   }
 
   /// Swaps the case in the `String`.
@@ -2638,9 +2318,9 @@ extension StringExtension on String {
   /// String foo = 'Hello World';
   /// String swapped = foo.swapCase(); // returns 'hELLO wORLD';
   /// ```
-  String? swapCase() {
+  String swapCase() {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
 
     List<String> letters = toArray;
@@ -2648,7 +2328,7 @@ extension StringExtension on String {
     String swapped = '';
 
     for (final l in letters) {
-      if (l.isUpperCase!) {
+      if (l.isUpperCase) {
         swapped += l.toLowerCase();
       } else {
         swapped += l.toUpperCase();
@@ -2722,9 +2402,9 @@ extension StringExtension on String {
     if (isBlank || s.isBlank) {
       return false;
     }
-    final String word1 = removeWhiteSpace!;
+    final String word1 = removeWhiteSpace;
 
-    final String word2 = s.removeWhiteSpace!;
+    final String word2 = s.removeWhiteSpace;
 
     if (word1.length != word2.length) {
       return false;
@@ -2799,7 +2479,7 @@ extension StringExtension on String {
       return true;
     }
     final word = this;
-    final wordSplit = word.toGreekUpperCase!.split('').toSet();
+    final wordSplit = word.toUpperCase().split('').toSet();
     return word.length == wordSplit.length;
   }
 
@@ -2952,7 +2632,7 @@ extension StringExtension on String {
     }
     final onlyLetters = this.onlyLetters;
 
-    return onlyLetters!.length == length;
+    return onlyLetters.length == length;
   }
 
   /// Inserts a `String` at the specified index.
@@ -2967,8 +2647,11 @@ extension StringExtension on String {
   /// print(newText); // prints 'hello! world'
   /// ```
   String insertAt(int i, String value) {
-    if (i < 0 || i > length) {
-      throw RangeError('Index out of range');
+    if (i < 0) {
+      i = 0;
+    }
+    if (i > length) {
+      i = length;
     }
     final start = substring(0, i);
     final end = substring(i);
@@ -3025,14 +2708,14 @@ extension StringExtension on String {
   /// Capitalize each word inside string
   /// Example: your name => Your Name, your name => Your name
   String get capitalize {
-    if (isEmpty) return this;
+    if (isEmpty) return blankIfNull;
     return split(' ').map((e) => e.capitalize).join(' ');
   }
 
   /// Uppercase first letter inside string and let the others lowercase
   /// Example: your name => Your name
   String capitalizeFirst() {
-    if (isEmpty) return this;
+    if (isEmpty) return blankIfNull;
     return this[0].toUpperCase() + substring(1).toLowerCase();
   }
 
@@ -3042,25 +2725,31 @@ extension StringExtension on String {
 
   static final RegExp _mustacheregex = RegExp(r'\{\{([a-zA-Z0-9_]+)\}\}');
 
-  String replaceMustachesWithList(List<dynamic> params) => replaceAllMapped(_mustacheregex, (match) {
-        if (match.group(1) != null) {
-          int? index = int.tryParse(match.group(1)!);
-          if (index != null) {
-            if (index < params.length) {
-              return params[index].toString();
-            }
+  String replaceMustachesWithList(List<dynamic> params) {
+    if (isBlank) return blankIfNull;
+    return replaceAllMapped(_mustacheregex, (match) {
+      if (match.group(1) != null) {
+        int? index = int.tryParse(match.group(1)!);
+        if (index != null) {
+          if (index < params.length) {
+            return params[index].toString();
           }
         }
-        return match.group(0) ?? "";
-      });
+      }
+      return match.group(0) ?? "";
+    });
+  }
 
-  String? replaceMustachesWithMap(Map<String, dynamic> params) => replaceAllMapped(_mustacheregex, (match) {
-        String key = match.group(1) ?? "";
-        if (params.containsKey(key)) {
-          return params[key].toString();
-        }
-        return match.group(0) ?? "";
-      });
+  String replaceMustachesWithMap(Map<String, dynamic> params) {
+    if (isBlank) return blankIfNull;
+    return replaceAllMapped(_mustacheregex, (match) {
+      String key = match.group(1) ?? "";
+      if (params.containsKey(key)) {
+        return params[key].toString();
+      }
+      return match.group(0) ?? "";
+    });
+  }
 
   bool hasMatch(String pattern) => RegExp(pattern).hasMatch(this);
 

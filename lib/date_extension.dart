@@ -1,3 +1,4 @@
+import 'package:innerlibs/innerlibs.dart';
 import 'package:innerlibs/utils/constants.dart';
 import 'package:innerlibs/utils/format_time.dart';
 
@@ -105,21 +106,21 @@ extension DateTimeExtensions on DateTime {
   /// Morning
   /// ```
   ///
-  String get timeOfDay {
+  String timeOfDay({string? morning, string? afternoon, string? evening, string? night}) {
     if (hour >= 0 && hour < 12) {
-      return 'Morning';
+      return morning.blankCoalesce([afternoon, 'morning']);
     } else if (hour >= 12 && hour < 16) {
-      return 'Afternoon';
+      return afternoon.blankCoalesce([morning, 'afternoon']);
     } else if (hour >= 16 && hour < 20) {
-      return 'Evening';
+      return evening.blankCoalesce([night, 'evening']);
     } else {
-      return 'Night';
+      return night.blankCoalesce([evening, 'night']);
     }
   }
 
   /// Time Of Day Emoji
   ///
-  /// Returns emoji of time of day in the format 🌤️, 🌤️, 🌙 or 🌙
+  /// Returns emoji of time of day in the format ☀️, 🌤️, 🌙 or 🌙
   ///
   /// Usage:
   ///
@@ -133,17 +134,7 @@ extension DateTimeExtensions on DateTime {
   /// 🌤️
   /// ```
   ///
-  String get timeOfDayEmoji {
-    if (hour >= 0 && hour < 12) {
-      return '🌤️';
-    } else if (hour >= 12 && hour < 16) {
-      return '🌤️';
-    } else if (hour >= 16 && hour < 20) {
-      return '🌙';
-    } else {
-      return '🌙';
-    }
-  }
+  String get timeOfDayEmoji => timeOfDay(morning: '☀️', afternoon: '🌤️', night: '🌙');
 
   /// Is Between
   ///

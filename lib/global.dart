@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:innerlibs/innerlibs.dart';
 
 bool get isDesktop => Platform.isMacOS || Platform.isWindows || Platform.isLinux;
 
@@ -25,6 +26,9 @@ Brightness get brightness => SchedulerBinding.instance.platformDispatcher.platfo
 bool get isDarkMode => brightness == Brightness.dark;
 bool get isLightMode => brightness == Brightness.light;
 
+date get now => DateTime.now();
+int get thisYear => now.year;
+
 consoleLog(
   String message, {
   DateTime? time,
@@ -35,12 +39,4 @@ consoleLog(
   Object? error,
   StackTrace? stackTrace,
 }) =>
-    log(
-      message,
-      time: time,
-      sequenceNumber: sequenceNumber,
-      level: level,
-      name: name,
-      zone: zone,
-      error: error
-    );
+    log(message, time: time, sequenceNumber: sequenceNumber, level: level, name: name, zone: zone, error: error);

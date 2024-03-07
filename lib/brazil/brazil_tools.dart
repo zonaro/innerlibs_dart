@@ -190,7 +190,7 @@ abstract interface class Brasil extends _Brasil {
   }
 
   static string formataEAN(dynamic numero) {
-    var cleanedEAN = "$numero".onlyNumbers!;
+    var cleanedEAN = "$numero".onlyNumbers;
 
     // Verifique se o código EAN é válido (você pode usar sua função validarEAN aqui)
     if (!validarEAN(cleanedEAN)) {
@@ -264,7 +264,7 @@ abstract interface class Brasil extends _Brasil {
   /// Pesquisa uma cidade no Brasil todo ou em algum estado especifico se [nomeOuUFOuIBGE] for especificado
   static List<Cidade> pesquisarCidade(String nomeCidadeOuIBGE, [String? nomeOuUFOuIBGE]) {
     try {
-      nomeCidadeOuIBGE = nomeCidadeOuIBGE.toLowerCase().removeDiacritics()?.trim() ?? "";
+      nomeCidadeOuIBGE = nomeCidadeOuIBGE.toLowerCase().removeDiacritics().trim();
       Estado? e = pegarEstado(nomeCidadeOuIBGE);
       if (e == null && nomeOuUFOuIBGE!.trim() != "") {
         e = pegarEstado(nomeOuUFOuIBGE);
@@ -385,7 +385,7 @@ abstract interface class Brasil extends _Brasil {
     if (validarCNH(d)) return "CNH";
     if (d.isEmail) return "Email";
     if (d.isIP) return "IP";
-    if (validarTelefone(d)) return d.onlyNumbers!.length.isIn([9, 11]) ? "Celular" : "Telefone";
+    if (validarTelefone(d)) return d.onlyNumbers.length.isIn([9, 11]) ? "Celular" : "Telefone";
     return rotuloPadrao;
   }
 
@@ -435,7 +435,7 @@ abstract interface class Brasil extends _Brasil {
 
   static string formataCEP(dynamic numero) {
     var cep = "$numero";
-    cep = cep.onlyNumbers ?? "";
+    cep = cep.onlyNumbers;
     cep = cep.padLeft(8, '0');
     cep = cep.insertAt(5, "-");
     if (validarCEP(cep)) {
@@ -448,7 +448,7 @@ abstract interface class Brasil extends _Brasil {
   static String formataCNH(dynamic numero) {
     // Remova quaisquer caracteres não numéricos da entrada
 
-    var apenasDigitos = "$numero".onlyNumbers!;
+    var apenasDigitos = "$numero".onlyNumbers;
     if (validarCNH(apenasDigitos)) {
       // Formate a CNH no padrão XXX-XXXXXX-XX
       final uf = apenasDigitos.substring(0, 3);
@@ -582,7 +582,7 @@ abstract interface class Brasil extends _Brasil {
   static bool validarTelefone(dynamic telefone) {
     try {
       // Remove todos os caracteres não numéricos
-      String apenasNumeros = "$telefone".onlyNumbers!;
+      String apenasNumeros = "$telefone".onlyNumbers;
 
       // Verifica se o número tem o tamanho correto (8 ou 9 dígitos locais + 0 ou 2 dígitos DDD)
       if (apenasNumeros.length < 8 || apenasNumeros.length > 11) {
@@ -615,7 +615,7 @@ abstract interface class Brasil extends _Brasil {
   static String formataCPF(dynamic numero) {
     // Implementação para formatar o número do CPF
     // Retorne uma string formatada (por exemplo: "123.456.789-01")
-    String cpf = "$numero".onlyNumbers!;
+    String cpf = "$numero".onlyNumbers;
     return "${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9)}";
   }
 
@@ -623,7 +623,7 @@ abstract interface class Brasil extends _Brasil {
   static String formataCNPJ(dynamic number) {
     // Implementação para formatar o número do CNPJ
     // Retorne uma string formatada (por exemplo: "12.345.678/0001-90")
-    String cnpj = "$number".onlyNumbers!;
+    String cnpj = "$number".onlyNumbers;
     return "${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12)}";
   }
 
@@ -795,7 +795,7 @@ class Telefone {
     prefixo = "";
     sufixo = "";
     if (Brasil.validarTelefone(numero)) {
-      string t = "$numero".onlyNumbers!;
+      string t = "$numero".onlyNumbers;
       if (t.length > 11) {
         t = t.substring(0, 11);
       }
