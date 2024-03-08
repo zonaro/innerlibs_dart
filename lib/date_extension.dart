@@ -109,9 +109,9 @@ extension DateTimeExtensions on DateTime {
   String timeOfDay({string? morning, string? afternoon, string? evening, string? night}) {
     if (hour >= 0 && hour < 12) {
       return morning.ifBlank(afternoon).blankIfNull;
-    } else if (hour >= 12 && hour < 16) {
+    } else if (hour >= 12 && hour < 18) {
       return afternoon.ifBlank(morning).blankIfNull;
-    } else if (hour >= 16 && hour < 20) {
+    } else if (hour >= 18 && hour < 21) {
       return evening.ifBlank(night).blankIfNull;
     } else {
       return night.ifBlank(evening).blankIfNull;
