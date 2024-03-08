@@ -271,7 +271,7 @@ extension StringExtension on String {
     if (text.isBlank) {
       return true;
     }
-    return removeDiacritics().toLowerCase().contains(text!.removeDiacritics().toLowerCase());
+    return removeDiacritics().toLowerCase().trimAll.contains(text!.removeDiacritics().toLowerCase().trimAll);
   }
 
   bool flatEqualAny(List<String> texts) {

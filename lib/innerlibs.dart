@@ -43,7 +43,6 @@ export 'widget_ext.dart';
 export 'widgets/avatar_image.dart';
 export 'widgets/date_picker_form_field.dart';
 export 'widgets/future_awaiter.dart';
-export 'widgets/group_box.dart';
 export 'widgets/nil.dart';
 export 'widgets/responsive_grid.dart';
 export 'widgets/restart_widget.dart';

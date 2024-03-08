@@ -292,7 +292,7 @@ class ResponsiveRow extends StatelessWidget {
           alignment: alignment,
           runAlignment: runAlignment,
           children: children.map((c) {
-            final segments = context.responsiveValue(xxs: c.xxs, xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl) ?? 12;
+            final segments = context.responsiveValue(xxs: c.xxs, xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl);
 
             final width = (segmentSize * segments.toDouble()) - ((children.length - 2).toDouble() * horizontalSpacing);
 
