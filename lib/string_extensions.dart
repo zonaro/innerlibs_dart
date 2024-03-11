@@ -10,10 +10,6 @@ import 'package:intl/intl.dart';
 // for the utf8.encode method
 
 extension NullStringExtension on String? {
-  bool get isUrl {
-    return this != null && this!.isUrl;
-  }
-
   String get blankIfNull => this ?? "";
   String? get nullIfBlank => ifBlank(null);
 
@@ -1813,7 +1809,11 @@ extension StringExtension on String {
   /// ```
   String? nullIfEqual(String? comparisonString) => nullIf((s) => s == comparisonString);
 
+  String? blankIfEqual(String? comparisonString) => blankIf((s) => s == comparisonString);
+
   String? nullIf(bool Function(String? s) fn) => asIf(fn, null, this);
+
+  String? blankIf(bool Function(String? s) fn) => asIf(fn, "", this);
 
   /// Return [this] if not blank. Otherwise return [newString].
   String? ifBlank(String? newString) => asIf((s) => s.isNotBlank, this, newString);
@@ -1834,7 +1834,7 @@ extension StringExtension on String {
   /// ```dart
   /// String s = "esentis".wrap("AA", after: "BB"); // returns "AAesentisBB";
   /// ```
-  String wrap(String? before, {String? after}) {
+  String wrap(String? before, [String? after]) {
     before = before.ifBlank("")!;
     if (after.isBlank) {
       if (before.isCloseWrapChar) {

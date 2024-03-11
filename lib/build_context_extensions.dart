@@ -255,10 +255,16 @@ extension BuildContextExtensions on BuildContext {
   double get physicalWidth => physicalScreenSize.width;
   double get physicalHeight => physicalScreenSize.height;
 
+  string get physicalAspectRatioString => physicalScreenSize.getAspectRatioString();
+  double get physicalAspectRatio => physicalWidth / physicalHeight;
+
   //Size in logical pixels
   Size get logicalScreenSize => flutterView.physicalSize / pixelRatio;
   double get logicalWidth => logicalScreenSize.width;
   double get logicalHeight => logicalScreenSize.height;
+
+  string get logicalAspectRatioString => logicalScreenSize.getAspectRatioString();
+  double get logicalAspectRatio => logicalWidth / logicalHeight;
 
   //Padding in physical pixels
   ViewPadding get padding => flutterView.padding;
@@ -273,8 +279,9 @@ extension BuildContextExtensions on BuildContext {
   double get safeWidth => logicalWidth - paddingLeft - paddingRight;
   double get safeHeight => logicalHeight - paddingTop - paddingBottom;
 
+  /// the current [ScreenTier]
   ScreenTier get screenTier {
-    if (width < 350) {
+    if (width < 360) {
       return ScreenTier.xxs;
     } else if (width < 576) {
       return ScreenTier.xs;
@@ -330,6 +337,18 @@ extension BuildContextExtensions on BuildContext {
   /// True if the current device is Tablet
   bool get isTabletSize => isSmallTabletSize || isLargeTabletSize;
 
+  bool get is1x1 => aspectRatioString == "1:1";
+  bool get is3x2 => aspectRatioString == "3:2";
+  bool get is5x4 => aspectRatioString == "5:4";
+  bool get is16x9 => aspectRatioString == "16:9";
+  bool get is4x3 => aspectRatioString == "4:3";
+  bool get is21x9 => aspectRatioString == "4:3";
+
+  bool get isWidescreen => is16x9;
+  bool get isUltraWide => is21x9;
+  bool get isSquare => is1x1;
+  bool get isOldTV => is4x3;
+
   /// returns a specific value according to the current [ScreenTier] or the next lower value if omitted
   T responsiveValue<T>({
     T? xxs,
@@ -375,6 +394,9 @@ extension BuildContextExtensions on BuildContext {
   /// Note: updates when you rezise your screen (like on a browser or
   /// desktop window)
   double get width => screenSize.width;
+
+  string get aspectRatioString => screenSize.getAspectRatioString();
+  double get aspectRatio => width / height;
 
   /// similar to [MediaQuery.devicePixelRatioOf(context)]
   double get devicePixelRatio => MediaQuery.devicePixelRatioOf(this);

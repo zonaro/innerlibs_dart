@@ -12,7 +12,7 @@ extension SizeExtensions on Size {
       h = h * 10;
     }
 
-    var gcd = w.findGreatestCommonDivisor(h.round());
+    var gcd = w.findGreatestCommonDivisor(h.floor());
     return '${w ~/ gcd}$separator${h ~/ gcd}';
   }
 }

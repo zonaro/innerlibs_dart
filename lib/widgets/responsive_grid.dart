@@ -72,92 +72,90 @@ class ResponsiveList extends StatelessWidget {
   const ResponsiveList({super.key, this.desiredItemWidth, this.minSpacing, this.squareCells = false, this.scroll = true, this.children, this.rowMainAxisAlignment = MainAxisAlignment.start});
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (children!.isEmpty) return const SizedBox.shrink();
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, constraints) {
+          if (children!.isEmpty) return const SizedBox.shrink();
 
-        double width = constraints.maxWidth;
+          double width = constraints.maxWidth;
 
-        double N = (width - minSpacing!) / (desiredItemWidth! + minSpacing!);
+          double N = (width - minSpacing!) / (desiredItemWidth! + minSpacing!);
 
-        int n;
-        double? spacing, itemWidth;
+          int n;
+          double? spacing, itemWidth;
 
-        if (N % 1 == 0) {
-          n = N.floor();
-          spacing = minSpacing;
-          itemWidth = desiredItemWidth;
-        } else {
-          n = N.floor();
+          if (N % 1 == 0) {
+            n = N.floor();
+            spacing = minSpacing;
+            itemWidth = desiredItemWidth;
+          } else {
+            n = N.floor();
 
-          double dw = width - (n * (desiredItemWidth! + minSpacing!) + minSpacing!);
+            double dw = width - (n * (desiredItemWidth! + minSpacing!) + minSpacing!);
 
-          itemWidth = desiredItemWidth! + (dw / n) * (desiredItemWidth! / (desiredItemWidth! + minSpacing!));
+            itemWidth = desiredItemWidth! + (dw / n) * (desiredItemWidth! / (desiredItemWidth! + minSpacing!));
 
-          spacing = (width - itemWidth * n) / (n + 1);
-        }
+            spacing = (width - itemWidth * n) / (n + 1);
+          }
 
-        if (scroll) {
-          return ListView.builder(
-              itemCount: (children!.length / n).ceil() * 2 - 1,
-              itemBuilder: (context, index) {
-                //if (index * n >= children.length) return null;
-                //separator
-                if (index % 2 == 1) {
-                  return SizedBox(
-                    height: minSpacing,
+          if (scroll) {
+            return ListView.builder(
+                itemCount: (children!.length / n).ceil() * 2 - 1,
+                itemBuilder: (context, index) {
+                  //if (index * n >= children.length) return null;
+                  //separator
+                  if (index % 2 == 1) {
+                    return SizedBox(
+                      height: minSpacing,
+                    );
+                  }
+                  //item
+                  var rowChildren = List<Widget>.empty(growable: true);
+                  index = index ~/ 2;
+                  for (int i = index * n; i < (index + 1) * n; i++) {
+                    if (i >= children!.length) break;
+                    rowChildren.add(children![i]);
+                  }
+                  return _ResponsiveListItem(
+                    mainAxisAlignment: rowMainAxisAlignment,
+                    itemWidth: itemWidth,
+                    spacing: spacing,
+                    squareCells: squareCells,
+                    children: rowChildren,
                   );
-                }
-                //item
-                var rowChildren = List<Widget>.empty(growable: true);
-                index = index ~/ 2;
-                for (int i = index * n; i < (index + 1) * n; i++) {
-                  if (i >= children!.length) break;
-                  rowChildren.add(children![i]);
-                }
-                return _ResponsiveListItem(
-                  mainAxisAlignment: rowMainAxisAlignment,
-                  itemWidth: itemWidth,
-                  spacing: spacing,
-                  squareCells: squareCells,
-                  children: rowChildren,
-                );
-              });
-        } else {
-          var rows = List<Widget>.empty(growable: true);
-          rows.add(SizedBox(
-            height: minSpacing,
-          ));
-          //
-          for (int j = 0; j < (children!.length / n).ceil(); j++) {
-            var rowChildren = List<Widget>.empty(growable: true);
-            //
-            for (int i = j * n; i < (j + 1) * n; i++) {
-              if (i >= children!.length) break;
-              rowChildren.add(children![i]);
-            }
-            //
-            rows.add(_ResponsiveListItem(
-              mainAxisAlignment: rowMainAxisAlignment,
-              itemWidth: itemWidth,
-              spacing: spacing,
-              squareCells: squareCells,
-              children: rowChildren,
-            ));
-
+                });
+          } else {
+            var rows = List<Widget>.empty(growable: true);
             rows.add(SizedBox(
               height: minSpacing,
             ));
-          }
+            //
+            for (int j = 0; j < (children!.length / n).ceil(); j++) {
+              var rowChildren = List<Widget>.empty(growable: true);
+              //
+              for (int i = j * n; i < (j + 1) * n; i++) {
+                if (i >= children!.length) break;
+                rowChildren.add(children![i]);
+              }
+              //
+              rows.add(_ResponsiveListItem(
+                mainAxisAlignment: rowMainAxisAlignment,
+                itemWidth: itemWidth,
+                spacing: spacing,
+                squareCells: squareCells,
+                children: rowChildren,
+              ));
 
-          return Column(
-            children: rows,
-          );
-        }
-      },
-    );
-  }
+              rows.add(SizedBox(
+                height: minSpacing,
+              ));
+            }
+
+            return Column(
+              children: rows,
+            );
+          }
+        },
+      );
 }
 
 class _ResponsiveListItem extends StatelessWidget {

@@ -41,6 +41,10 @@ extension NumExtensions on num {
 
   bool isEqual(num b) => this == b;
 
+  bool isBetween(num start, num end) => isGreaterThan(start) && isLowerThan(end);
+
+  bool isBetweenOrEqual(num start, num end) => isBetween(start, end) || this == start || this == end;
+
   String quantityText(String plural, [String singular = ""]) => (round() == 1 || round() == -1) ? singular.ifBlank(plural.singular)! : plural;
   String quantityTextPt(String plural, [String singular = ""]) => (round() == 1 || round() == -1) ? singular.ifBlank(plural.singularPt)! : plural;
 
@@ -54,7 +58,7 @@ extension NumExtensions on num {
     return a;
   }
 
-  bool get hasDecimal => this != floor();
+  bool get hasDecimal => this % 1 != 0;
 
   /// Num to locale currency with symbol or not
   String? toCurrency({bool? withSymbol}) {
