@@ -1,23 +1,19 @@
 /// `String` helpers
 class StringHelpers {
   /// Chars from Aa to Zz
-  static List<String> get alphaChars =>
-      (alphaUpperChars + alphaLowerChars)..sort();
+  static List<String> get alphaChars => (alphaUpperChars + alphaLowerChars)..sort();
 
   /// Chars from Aa to Zz and Numbers (0 to 9)
   static List<String> get alphaNumericChars => alphaChars + numberChars;
 
   /// Chars from A to Z
-  static List<String> get alphaUpperChars =>
-      alphaLowerChars.map((e) => e.toUpperCase()).toList();
+  static List<String> get alphaUpperChars => alphaLowerChars.map((e) => e.toUpperCase()).toList();
 
   /// Chars from a to z
-  static List<String> get alphaLowerChars =>
-      (lowerConsonants + lowerVowels)..sort();
+  static List<String> get alphaLowerChars => (lowerConsonants + lowerVowels)..sort();
 
   /// Numbers from 0 to 9
-  static List<String> get numberChars =>
-      ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  static List<String> get numberChars => ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
   /// Line feed and carriage retrun
   static List<String> get breakLineChars => ["\n", "\r", "\r\n"];
@@ -26,8 +22,7 @@ class StringHelpers {
   static List<String> get whiteSpaceChars => [" "];
 
   /// Invisible char (white space, line feed, ident, carriage return)
-  static List<String> get invisibleChars =>
-      whiteSpaceChars + breakLineChars + identChars;
+  static List<String> get invisibleChars => whiteSpaceChars + breakLineChars + identChars;
 
   /// Ident char (tab)
   static List<String> get identChars => ["\t"];
@@ -48,36 +43,13 @@ class StringHelpers {
   static List<String> get endOfSentenceChars => [".", "?", "!"];
 
   /// Upper and lower case consonants
-  static List<String> get consonants =>
-      (upperConsonants + lowerConsonants)..sort();
+  static List<String> get consonants => (upperConsonants + lowerConsonants)..sort();
 
   /// Lower consonants
-  static List<String> get lowerConsonants => [
-        "b",
-        "c",
-        "d",
-        "f",
-        "g",
-        "h",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "v",
-        "w",
-        "x",
-        "z"
-      ];
+  static List<String> get lowerConsonants => ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"];
 
   /// Upper consonants
-  static List<String> get upperConsonants =>
-      lowerConsonants.map((e) => e.toUpperCase()).toList();
+  static List<String> get upperConsonants => lowerConsonants.map((e) => e.toUpperCase()).toList();
 
   /// Upper and lower vowels
   static List<String> get vowels => (upperVowels + lowerVowels)..sort();
@@ -86,8 +58,7 @@ class StringHelpers {
   static List<String> get lowerVowels => ["a", "e", "i", "o", "u", "y"];
 
   /// Upper vowels
-  static List<String> get upperVowels =>
-      lowerVowels.map((e) => e.toUpperCase()).toList();
+  static List<String> get upperVowels => lowerVowels.map((e) => e.toUpperCase()).toList();
 
   /// Semicolon, colon and comma
   static List<String> get midSentenceChars => [":", ";", ","];
@@ -100,36 +71,12 @@ class StringHelpers {
     "e": ['3', '£', '₤', '€', 'е'],
     "f": ['7', '|=', 'ph', '|#', '|"', 'ƒ'],
     "g": ['9', '[', '[+', '6'],
-    "h": [
-      '#',
-      '|-|',
-      '[-]',
-      '{-}',
-      '}-{',
-      '}{',
-      '|=|',
-      '[=]',
-      '/-/',
-      ':-:',
-      'н'
-    ],
+    "h": ['#', '|-|', '[-]', '{-}', '}-{', '}{', '|=|', '[=]', '/-/', ':-:', 'н'],
     "i": ['1', '|', '!'],
     "j": ['√', '_|', '_/', '_7', '_)', '_]', '_}'],
     "k": ['|<', '1<', 'l<', '|{', 'l{'],
     "l": ['|_', '|', '1', ']['],
-    "m": [
-      '|/|',
-      '^^',
-      '/\\/\\',
-      '/X\\',
-      '[]/][',
-      '[]V[]',
-      ' ][\\//][',
-      '(V)',
-      '//., .\\',
-      'N\\',
-      'м'
-    ],
+    "m": ['|/|', '^^', '/\\/\\', '/X\\', '[]/][', '[]V[]', ' ][\\//][', '(V)', '//., .\\', 'N\\', 'м'],
     "n": ['||', '//', '/V', '][\\][', 'И', 'и', 'п'],
     "o": ['0', '()', '[]', '{}', '<>', 'Ø', 'oh', 'Θ', 'о', 'ө'],
     "p": ['|o', '|O', '|>', '|*', '|°', '|D', '/o', '[]D', '|7', 'р'],
@@ -139,132 +86,10 @@ class StringHelpers {
     "t": ['7', '+', "'|'", '`|`', '~|~', '-|-', "']['", 'т'],
     "v": ['V'],
     "u": ['|_|', '\\_\\', '/_/', '\\_/', '(_)', '[_]', '{_}'],
-    "w": [
-      '\\/\\/',
-      '(/\\)',
-      '\\^/',
-      '|/|',
-      '\\X/',
-      'VV',
-      '\\_|_/',
-      '\\//\\//',
-      'Ш',
-      '2u',
-      'V/'
-    ],
+    "w": ['\\/\\/', '(/\\)', '\\^/', '|/|', '\\X/', 'VV', '\\_|_/', '\\//\\//', 'Ш', '2u', 'V/'],
     "x": ['×', '%', '*', '><', 'Ж'],
     "y": ['¥', '|/', 'Ч', 'ү', 'у'],
     "z": ['5', '>_'],
-  };
-
-  static Map<String, dynamic> ibanLen = {
-    "NO": 15,
-    "BE": 16,
-    "DK": 18,
-    "FI": 18,
-    "FO": 18,
-    "GL": 18,
-    "NL": 18,
-    "MK": 19,
-    "SI": 19,
-    "AT": 20,
-    "BA": 20,
-    "EE": 20,
-    "KZ": 20,
-    "LT": 20,
-    "LU": 20,
-    "CR": 21,
-    "CH": 21,
-    "HR": 21,
-    "LI": 21,
-    "LV": 21,
-    "MA": 28,
-    "BG": 22,
-    "BH": 22,
-    "DE": 22,
-    "GB": 22,
-    "GE": 22,
-    "IE": 22,
-    "ME": 22,
-    "RS": 22,
-    "AE": 23,
-    "GI": 23,
-    "IL": 23,
-    "AD": 24,
-    "CZ": 24,
-    "ES": 24,
-    "MD": 24,
-    "PK": 24,
-    "RO": 24,
-    "SA": 24,
-    "SE": 24,
-    "SK": 24,
-    "VG": 24,
-    "TN": 24,
-    "PT": 25,
-    "IS": 26,
-    "TR": 26,
-    "FR": 27,
-    "GR": 27,
-    "IT": 27,
-    "MC": 27,
-    "MR": 27,
-    "SM": 27,
-    "AL": 28,
-    "AZ": 28,
-    "CY": 28,
-    "DO": 28,
-    "GT": 28,
-    "HU": 28,
-    "LB": 28,
-    "PL": 28,
-    "BR": 29,
-    "PS": 29,
-    "KW": 30,
-    "MU": 30,
-    "MT": 31,
-    "DZ": 26,
-    "AO": 25,
-    "BJ": 28,
-    "BF": 28,
-    "CM": 27,
-    "CV": 25,
-    "CF": 27,
-    "TD": 27,
-    "KM": 27,
-    "CG": 27,
-    "GQ": 27,
-    "GA": 27,
-    "GW": 25,
-    "HN": 28,
-    "IR": 26,
-    "CI": 28,
-    "MG": 27,
-    "ML": 28,
-    "MN": 20,
-    "MZ": 28,
-    "NI": 32,
-    "NE": 28,
-    "SN": 28,
-    "TG": 28,
-    "BY": 28,
-    "BI": 27,
-    "DJ": 27,
-    "EG": 29,
-    "SV": 28,
-    "VA": 22,
-    "IQ": 23,
-    "JO": 30,
-    "XK": 20,
-    "LY": 25,
-    "QA": 29,
-    "RU": 33,
-    "LC": 32,
-    "ST": 25,
-    "SC": 31,
-    "SD": 18,
-    "TL": 23,
-    "UA": 29,
   };
 
   static List<String> validLetters = [

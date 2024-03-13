@@ -1,10 +1,28 @@
-import 'package:innerlibs/general_extensions.dart';
+import 'package:innerlibs/innerlibs.dart';
 
-extension StringListExtensions on List<String> {
-  ///Verify if any [String] in a [List<String>]  contains the specified [String]
+extension StringListExtensions on StringList {
+  ///Verify if any [String] in a [StringList]  contains the specified [String]
   bool containsLike(String s) {
     for (var item in this) {
       if (item.toString().contains(s)) return true;
+    }
+    return false;
+  }
+
+  ///Verify if any [String] in a [StringList]  contains the specified [String] ignoring the accents and character case
+
+  bool flatContainsLike(String s) {
+    for (var item in this) {
+      if (item.toString().flatContains(s)) return true;
+    }
+    return false;
+  }
+
+  ///Verify if any [String] in a [StringList]  contains any  [String] of other [StringList] ignoring the accents and character case
+
+  bool flatContainsAny(StringList s) {
+    for (var item in this) {
+      if (s.flatContainsLike(item)) return true;
     }
     return false;
   }
@@ -67,16 +85,16 @@ extension ListExtension<T> on List<T> {
   Map<M, V> groupAndRemapBy<M, V>(M Function(T) keyFunction, V Function(List<T>) valueFunction) => groupAndMapBy(keyFunction).map((key, value) => MapEntry(key, valueFunction(value)));
 
   /// Detach items from a list according to a
-  /// function and return these items in a new list
-  List<T> detachItems([bool Function(T)? predicate]) {
+  /// function and return these items
+  Iterable<T> detachItems([bool Function(T)? predicate]) {
     predicate = predicate ?? (x) => true;
-    var items = where(predicate).toList();
+    var items = where(predicate);
     removeWhere((e) => items.contains(e));
     return items;
   }
 
   /// Move items from one list into another list, and return these items
-  List<T> moveTo(List<T> other, [bool Function(T)? predicate]) {
+  Iterable<T> moveTo(List<T> other, [bool Function(T)? predicate]) {
     predicate = predicate ?? (x) => true;
     var i = detachItems(predicate);
     other.addAll(i);
