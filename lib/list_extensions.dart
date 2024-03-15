@@ -26,10 +26,60 @@ extension StringListExtensions on StringList {
     }
     return false;
   }
+
+  /// Removes duplicate elements from a [StringList].
+  ///
+  /// Use the [flatEqual] function to compare strings.
+  List<string> distinctFlat<E>() {
+    Set<string> uniqueElements = {};
+    for (string element in this) {
+      if (!uniqueElements.any((e) => e.flatEqual(element))) {
+        uniqueElements.add(element);
+      }
+    }
+    return uniqueElements.toList();
+  }
 }
 
 /// Adds extensions to the `List` class
 extension ListExtension<T> on List<T> {
+  /// Removes duplicate elements from a list.
+  ///
+  /// Elements with the same hashCode are considered duplicates
+  /// and only the first occurrence is retained.
+  List<T> distinct() => distinctBy((x) => x.hashCode);
+
+  /// Removes duplicate elements from a list based on a provided predicate.
+  ///
+  /// The [predicate] function should return a value that uniquely identifies
+  /// each element. Elements with the same value returned by the predicate
+  /// are considered duplicates and only the first occurrence is retained.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// void main() {
+  ///   List<Map<String, dynamic>> inputList = [
+  ///     {'id': 1, 'name': 'Alice'},
+  ///     {'id': 2, 'name': 'Bob'},
+  ///     {'id': 1, 'name': 'Charlie'},
+  ///     {'id': 3, 'name': 'David'},
+  ///   ];
+  ///
+  ///   // Distinct by 'id'
+  ///   List<Map<String, dynamic>> result = distinctBy(inputList, (element) => element['id']);
+  ///   print(result);  // Output: [{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}, {'id': 3, 'name': 'David'}]
+  /// }
+  /// ```
+  List<T> distinctBy<E>(E Function(T) predicate) {
+    Set<T> uniqueElements = {};
+    for (T element in this) {
+      if (!uniqueElements.any((e) => predicate(e) == predicate(element))) {
+        uniqueElements.add(element);
+      }
+    }
+    return uniqueElements.toList();
+  }
+
   /// Remove the last [count] items of a list thats satisfy the [predicate]
   List<T> removeLastWhere(bool Function(T) predicate, [int count = 1]) {
     if (count > 0) {

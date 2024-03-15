@@ -231,7 +231,7 @@ class ResponsiveRow extends StatelessWidget {
 
   /// Create a [ResponsiveRow] with a specific number of columns in each [ScreenTier]
   /// and wraps [children] into [ResponsiveColumn]s automatically
-  factory ResponsiveRow.withColumns({
+  factory ResponsiveRow.withAutoColumns({
     int? xxs = 1,
     int? xs = 2,
     int? sm = 3,
@@ -239,6 +239,31 @@ class ResponsiveRow extends StatelessWidget {
     int? lg = 4,
     int? xl = 6,
     int? xxl = 12,
+    double? height,
+    List<dynamic> children = const [],
+  }) =>
+      ResponsiveRow.withColumns(
+        xxs: xxs,
+        xs: xs,
+        sm: sm,
+        md: md,
+        lg: lg,
+        xl: xl,
+        xxl: xxl,
+        height: height,
+        children: children,
+      );
+
+  /// Create a [ResponsiveRow] with a specific number of columns in each [ScreenTier]
+  /// and wraps [children] into [ResponsiveColumn]s automatically
+  factory ResponsiveRow.withColumns({
+    int? xxs = 1,
+    int? xs,
+    int? sm,
+    int? md,
+    int? lg,
+    int? xl,
+    int? xxl,
     double? height,
     List<dynamic> children = const [],
   }) {

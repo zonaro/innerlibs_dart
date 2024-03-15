@@ -6,21 +6,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-bool get isDesktop => Platform.isMacOS || Platform.isWindows || Platform.isLinux;
+bool get isDesktop => (isMacOS || isWindows || isLinux);
 
-bool get isMobile => Platform.isIOS || Platform.isAndroid;
+bool get isMobile => (isIOS || isAndroid);
 
-bool get isGoogle => Platform.isAndroid || Platform.isFuchsia;
+bool get isGoogle => (isAndroid || isFuchsia);
 
-bool get isApple => Platform.isIOS || Platform.isMacOS;
+bool get isApple => (isIOS || isMacOS);
 
 bool get isWeb => kIsWeb;
-bool get isMacOS => Platform.isMacOS;
-bool get isIOS => Platform.isIOS;
-bool get isWindows => Platform.isWindows;
-bool get isAndroid => Platform.isAndroid;
-bool get isFuchsia => Platform.isFuchsia;
-bool get isLinux => Platform.isLinux;
+bool get isMacOS => !isWeb && Platform.isMacOS;
+bool get isIOS => !isWeb && Platform.isIOS;
+bool get isWindows => !isWeb && Platform.isWindows;
+bool get isAndroid => !isWeb && Platform.isAndroid;
+bool get isFuchsia => !isWeb && Platform.isFuchsia;
+bool get isLinux => !isWeb && Platform.isLinux;
 
 Brightness get brightness => SchedulerBinding.instance.platformDispatcher.platformBrightness;
 bool get isDarkMode => brightness == Brightness.dark;
@@ -38,5 +38,8 @@ consoleLog(
   Zone? zone,
   Object? error,
   StackTrace? stackTrace,
-}) =>
+}) {
+  if (kDebugMode) {
     log(message, time: time, sequenceNumber: sequenceNumber, level: level, name: name, zone: zone, error: error);
+  }
+}

@@ -20,11 +20,11 @@ extension SqlRowExtensions on JsonRow {
     primaryKeys.keys.forEach(upsertMap.remove);
     String updates = upsertMap.entries.map((e) => "[${e.key}] = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
     String whereClause = primaryKeys.entries.map((e) => "[${e.key}] = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' AND ');
-    return 'UPDATE $tableName SET $updates WHERE $whereClause;';
+    return 'UPDATE [$tableName] SET $updates WHERE $whereClause;';
   }
 
   String asDeleteCommand(String tableName) {
     String whereClause = entries.map((e) => "[${e.key}] = ${(e.value as Object?).asSqlValue()}").join(' AND ');
-    return 'DELETE $tableName WHERE $whereClause;';
+    return 'DELETE [$tableName] WHERE $whereClause;';
   }
 }

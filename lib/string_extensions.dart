@@ -15,7 +15,7 @@ extension NullStringExtension on String? {
 
   bool get isBlank => this != null && this!.isBlank;
 
-  bool get isNotBlank => !isBlank;
+  bool get isNotBlank => this == null || !isBlank;
 
   String? ifBlank(String? newString) => this != null && this!.isNotBlank ? this : newString;
 
@@ -301,11 +301,11 @@ extension StringExtension on String {
 
   String get singular {
     if (endsWith('ies')) {
-      return '${substring(0, length - 3)}y';
+      return '${removeLast(3)}y';
     } else if (endsWith('es')) {
-      return substring(0, length - 2);
+      return removeLast(2);
     } else if (endsWith('s')) {
-      return substring(0, length - 1);
+      return removeLast(1);
     }
     return this;
   }
@@ -389,6 +389,18 @@ extension StringExtension on String {
     return replaceAll(s!, '');
   }
 
+  StringList operator /(int chunkSize) {
+    List<String> chunks = [];
+    if (isNotBlank) {
+      for (int i = 0; i < length; i += chunkSize) {
+        chunks.add(substring(i, i + chunkSize));
+      }
+    }
+    return chunks;
+  }
+
+  StringList slice(int chunkSize) => this / chunkSize;
+
   /// Returns the average read time duration of the given `String` in seconds.
   ///
   /// The default calculation is based on 200 words per minute.
@@ -403,9 +415,8 @@ extension StringExtension on String {
     if (isBlank) {
       return 0;
     }
-    var words = trim().split(RegExp(r'(\s+)'));
-    var magicalNumber = words.length / wordsPerMinute;
-    return (magicalNumber * 100).toInt();
+    var magicalNumber = getWords.length / wordsPerMinute;
+    return (magicalNumber * 100).round();
   }
 
   /// Returns the word count in the given `String`.
@@ -416,14 +427,17 @@ extension StringExtension on String {
   /// String foo = 'Hello dear friend how you doing ?';
   /// int count = foo.countWords; // returns 6 words.
   /// ```
-  int get countWords {
+  int get countWords => getWords.length;
+
+  /// Returns a list with distinct words of this sentence
+  StringList get getUniqueWords => getWords.distinctFlat();
+
+  /// Returns a list with words of this sentence
+  StringList get getWords {
     if (isBlank) {
-      return 0;
+      return [];
     }
-    var words = trim().split(RegExp(r'(\s+)'));
-    // We filter out symbols and numbers from the word count
-    var filteredWords = words.where((e) => e.isNotEmpty);
-    return filteredWords.length;
+    return trimAll.removeSpecial.split(RegExp(r'(\s+)')).toList();
   }
 
   /// Removes only the numbers from the `String`.
@@ -561,9 +575,8 @@ extension StringExtension on String {
       return true;
     }
     try {
-      DateTime.parse(this);
-      return true;
-    } on FormatException {
+      return DateTime.tryParse(this) != null;
+    } on Exception {
       return false;
     }
   }
@@ -574,7 +587,7 @@ extension StringExtension on String {
   /// String foo = 'esentis@esentis.com';
   /// bool isMail = foo.isMail; // returns true
   /// ```
-  bool get isMail {
+  bool get isEmail {
     if (isBlank) {
       return false;
     }
@@ -591,21 +604,11 @@ extension StringExtension on String {
   /// ```dart
   /// String foo = '45s';
   /// String isNumber = foo.isNumber; // returns false
-  bool get isNumber {
-    if (isBlank) {
-      return false;
-    }
-    return num.tryParse(this) != null;
-  }
+  bool get isNumber => isNotBlank && isNumberOrBlank;
 
   bool get isNotNumber => !isNumber;
 
-  bool get isNumberOrBlank {
-    if (isBlank) {
-      return true;
-    }
-    return num.tryParse(this) != null;
-  }
+  bool get isNumberOrBlank => isBlank || num.tryParse(this) != null;
 
   /// Checks whether the `String` complies to below rules :
   ///  * At least 1 uppercase
@@ -908,7 +911,7 @@ extension StringExtension on String {
   /// String foo = 'sLuG Case';
   /// String fooSlug = foo.toSlug; // returns 'sLuG_Case'
   /// ```
-  String get toSlug {
+  String get toSlugCase {
     if (isBlank) {
       return blankIfNull;
     }
@@ -2289,12 +2292,6 @@ extension StringExtension on String {
     }
 
     return true;
-  }
-
-  bool get isEmail {
-    if (isBlank) return false;
-    final RegExp regex = RegExp(r'^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
-    return regex.hasMatch(this);
   }
 
   /// Checks whether the `String` is in lowercase.
