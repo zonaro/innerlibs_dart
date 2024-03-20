@@ -218,7 +218,7 @@ extension StringExtension on String {
     return Color(hash + 0xFF000000);
   }
 
-  String removeDiacritics() {
+  String get removeDiacritics {
     if (isBlank) return blankIfNull;
     if (_diacriticsMap.isEmpty) {
       for (int i = 0; i < _defaultDiacriticsRemovalap.length; i++) {
@@ -259,7 +259,7 @@ extension StringExtension on String {
     return words;
   }
 
-  bool flatEqual(String? text) => removeDiacritics().toLowerCase() == text?.removeDiacritics().toLowerCase();
+  bool flatEqual(String? text) => removeDiacritics.toLowerCase() == text?.removeDiacritics.toLowerCase();
 
   bool flatContains(String? text) {
     if (isBlank) return text.isBlank;
@@ -267,10 +267,10 @@ extension StringExtension on String {
     if (text.isBlank) {
       return true;
     }
-    return removeDiacritics().toLowerCase().trimAll.contains(text!.removeDiacritics().toLowerCase().trimAll);
+    return removeDiacritics.toLowerCase().trimAll.contains(text!.removeDiacritics.toLowerCase().trimAll);
   }
 
-  bool flatEqualAny(List<String> texts) {
+  bool flatEqualAny(Iterable<String> texts) {
     for (var t in texts) {
       if (flatEqual(t)) {
         return true;
@@ -279,7 +279,7 @@ extension StringExtension on String {
     return false;
   }
 
-  bool flatContainsAny(List<String> texts) {
+  bool flatContainsAny(Iterable<String> texts) {
     for (var t in texts) {
       if (flatContains(t)) {
         return true;

@@ -121,7 +121,7 @@ extension ObjectExtensions on Object? {
   /// Throws an [ArgumentError] if the object doesn't represent a valid option and [everythingIsTrue] is `false`.
   bool? asNullableBool({bool everythingIsTrue = true}) {
     if (this == null) return null;
-    var x = '$this'.toUpperCase().removeDiacritics().trimAll;
+    var x = '$this'.toUpperCase().removeDiacritics.trimAll;
     switch (x) {
       case 'NULL':
       case 'CANCEL':

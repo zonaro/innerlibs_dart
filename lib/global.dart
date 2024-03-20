@@ -43,3 +43,39 @@ consoleLog(
     log(message, time: time, sequenceNumber: sequenceNumber, level: level, name: name, zone: zone, error: error);
   }
 }
+
+/// Returns the value associated with the highest breakpoint that is less than or equal to the given [value].
+///
+/// The [breakpoints] map contains key-value pairs where the keys are comparable values (e.g., numeric values)
+/// representing breakpoints, and the corresponding values are the associated values for those breakpoints.
+///
+/// If the [breakpoints] map is empty, an [ArgumentError] is thrown with a descriptive message.
+///
+/// Example usage:
+/// ```dart
+/// final breakpoints = {
+///   0: 'Small',
+///   768: 'Medium',
+///   1024: 'Large',
+/// };
+///
+/// final screenWidth = 800;
+/// final breakpointValue = getBreakpointValue(screenWidth, breakpoints);
+/// print('Screen size: $breakpointValue'); // Output: 'Screen size: Medium'
+/// ```
+///
+/// Throws an [ArgumentError] if [breakpoints] is empty.
+T getBreakpointValue<V extends Comparable, T>(V value, Map<V, T> breakpoints) {
+  if (breakpoints.isEmpty) throw ArgumentError.value(breakpoints, "breakpoints", "You need to provide ate least one value");
+  var items = breakpoints.entries.toList();
+  items.sort((a, b) => a.key.compareTo(b.key));
+  T? highestValue;
+  for (final entry in items) {
+    if (entry.key.compareTo(value) < 0) {
+      highestValue = entry.value;
+    } else {
+      break;
+    }
+  }
+  return highestValue ?? items.first.value;
+}

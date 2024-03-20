@@ -264,7 +264,7 @@ abstract interface class Brasil extends _Brasil {
   /// Pesquisa uma cidade no Brasil todo ou em algum estado especifico se [nomeOuUFOuIBGE] for especificado
   static List<Cidade> pesquisarCidade(String nomeCidadeOuIBGE, [String? nomeOuUFOuIBGE]) {
     try {
-      nomeCidadeOuIBGE = nomeCidadeOuIBGE.toLowerCase().removeDiacritics().trim();
+      nomeCidadeOuIBGE = nomeCidadeOuIBGE.toLowerCase().removeDiacritics.trim();
       Estado? e = pegarEstado(nomeCidadeOuIBGE);
       if (e == null && nomeOuUFOuIBGE!.trim() != "") {
         e = pegarEstado(nomeOuUFOuIBGE);

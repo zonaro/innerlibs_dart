@@ -23,7 +23,7 @@ class Responsive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      context.responsiveValue(
+      context.valueByTier(
         xxs: xxs,
         xs: xs,
         sm: sm,

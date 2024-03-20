@@ -280,23 +280,31 @@ extension BuildContextExtensions on BuildContext {
   double get safeHeight => logicalHeight - paddingTop - paddingBottom;
 
   /// the current [ScreenTier]
-  ScreenTier get screenTier {
-    if (width < 360) {
-      return ScreenTier.xxs;
-    } else if (width < 576) {
-      return ScreenTier.xs;
-    } else if (width < 768) {
-      return ScreenTier.sm;
-    } else if (width < 992) {
-      return ScreenTier.md;
-    } else if (width < 1200) {
-      return ScreenTier.lg;
-    } else if (width < 1600) {
-      return ScreenTier.xl;
-    } else {
-      return ScreenTier.xxl;
-    }
-  }
+  ScreenTier get screenTier => valueByBreakpoint(breakpoints: {
+        360: ScreenTier.xxs,
+        576: ScreenTier.xs,
+        768: ScreenTier.sm,
+        992: ScreenTier.md,
+        1200: ScreenTier.lg,
+        1600: ScreenTier.xl,
+        double.infinity: ScreenTier.xxl,
+      });
+
+  // if (width < 360) {
+  //   return ScreenTier.xxs;
+  // } else if (width < 576) {
+  //   return ScreenTier.xs;
+  // } else if (width < 768) {
+  //   return ScreenTier.sm;
+  // } else if (width < 992) {
+  //   return ScreenTier.md;
+  // } else if (width < 1200) {
+  //   return ScreenTier.lg;
+  // } else if (width < 1600) {
+  //   return ScreenTier.xl;
+  // } else {
+  //   return ScreenTier.xxl;
+  // }
 
   MediaQueryData get mediaQuery => MediaQuery.of(this);
 
@@ -349,8 +357,12 @@ extension BuildContextExtensions on BuildContext {
   bool get isSquare => is1x1;
   bool get isOldTV => is4x3;
 
+  /// returns a specific value according to the current screen [width] or [height] or the next lower value if omitted
+
+  T valueByBreakpoint<T>({required Map<double, T> breakpoints, Axis direction = Axis.horizontal}) => getBreakpointValue(direction == Axis.horizontal ? width : height, breakpoints);
+
   /// returns a specific value according to the current [ScreenTier] or the next lower value if omitted
-  T responsiveValue<T>({
+  T valueByTier<T>({
     T? xxs,
     T? xs,
     T? sm,

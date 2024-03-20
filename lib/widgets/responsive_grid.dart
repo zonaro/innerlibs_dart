@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-/// represent a Screen size tier (from extra small to double extra large)
+/// Represent a Screen size tier (from extra small to double extra large)
+/// The tier is computed by comparing the current screen width to a set of pre-defined screen sizes using hte function [responsiveValueBy]
 enum ScreenTier {
   /// Double-Extra small screen
   xxs,
@@ -254,8 +255,33 @@ class ResponsiveRow extends StatelessWidget {
         children: children,
       );
 
-  /// Create a [ResponsiveRow] with a specific number of columns in each [ScreenTier]
-  /// and wraps [children] into [ResponsiveColumn]s automatically
+  /// Creates a [ResponsiveRow] with a specific number of columns in each [ScreenTier]
+  /// and automatically wraps [children] into [ResponsiveColumn] widgets. If a child
+  /// is already a [ResponsiveColumn], it remains unchanged. If a child is not a [Widget],
+  /// this function converts it to a [Text] widget and then wraps it in a [ResponsiveColumn].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// ResponsiveRow.withColumns(
+  ///   xxs: 1,
+  ///   xs: 2,
+  ///   sm: 3,
+  ///   md: 4,
+  ///   lg: 4,
+  ///   xl: 3,
+  ///   xxl: 2,
+  ///   children: [
+  ///     Text('Column 1'),
+  ///     Text('Column 2'),
+  ///     Text('Column 3'),
+  ///   ],
+  /// )
+  /// ```
+  ///
+  /// The above example creates a responsive row with 1 column on extra-small screens (xxs),
+  /// 2 columns on small screens (xs), 3 columns on medium screens (sm), 4 columns on large
+  /// screens (md), 4 columns on extra-large screens (lg), 3 columns on extra-extra-large
+  /// screens (xl), and 2 columns on extra-extra-extra-large screens (xxl).
   factory ResponsiveRow.withColumns({
     int? xxs = 1,
     int? xs,
@@ -267,36 +293,36 @@ class ResponsiveRow extends StatelessWidget {
     double? height,
     List<dynamic> children = const [],
   }) {
+    List<ResponsiveColumn> newChildren = [];
     for (var i = 0; i < children.length; i++) {
       if (children[i] is ResponsiveColumn) {
+        newChildren.add(children[i]);
         continue;
       }
 
-      if (children[i] is string) {
-        children[i] = Text(children[i]);
-      }
-
-      if (children[i] is num) {
+      if ((children[i] is Widget) == false) {
         children[i] = Text("${children[i]}");
       }
 
       if (children[i] is Widget) {
-        children[i] = ResponsiveColumn(
-          height: height,
-          xxs: (12 / (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-          xs: (12 / (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-          sm: (12 / (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-          md: (12 / (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl ?? 1)).round(),
-          lg: (12 / (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl ?? 1)).round(),
-          xl: (12 / (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl ?? 1)).round(),
-          xxl: (12 / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? 1)).round(),
-          child: children[i],
+        newChildren.add(
+          ResponsiveColumn(
+            height: height,
+            xxs: (12 / (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+            xs: (12 / (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+            sm: (12 / (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+            md: (12 / (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl ?? 1)).round(),
+            lg: (12 / (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl ?? 1)).round(),
+            xl: (12 / (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl ?? 1)).round(),
+            xxl: (12 / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? 1)).round(),
+            child: children[i],
+          ),
         );
       }
     }
 
     return ResponsiveRow(
-      children: [for (var child in children.whereType<ResponsiveColumn>()) child],
+      children: newChildren,
     );
   }
 
@@ -315,7 +341,7 @@ class ResponsiveRow extends StatelessWidget {
           alignment: alignment,
           runAlignment: runAlignment,
           children: children.map((c) {
-            final segments = context.responsiveValue(xxs: c.xxs, xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl);
+            final segments = context.valueByTier(xxs: c.xxs, xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl);
 
             final width = (segmentSize * segments.toDouble()) - ((children.length - 2).toDouble() * horizontalSpacing);
 
