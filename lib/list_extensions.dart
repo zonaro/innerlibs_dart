@@ -27,6 +27,12 @@ extension StringListExtensions on StringList {
     return false;
   }
 
+  bool flatContains(string s) => flatContainsAny([s]);
+
+  bool flatContainsAll(Iterable<string> s) => map((e) => e.asFlat).toList().containsAll(s.map((e) => e.asFlat).toList());
+
+  bool flatContainsAtLeast(int count, Iterable<string> s) => map((e) => e.asFlat).toList().containsAtLeast(count, s.map((e) => e.asFlat).toList());
+
   /// Removes duplicate elements from a [StringList].
   ///
   /// Use the [flatEqual] function to compare strings.
@@ -41,8 +47,27 @@ extension StringListExtensions on StringList {
   }
 }
 
-/// Adds extensions to the `List` class
 extension ListExtension<T> on List<T> {
+  /// Detach items from a list according to a
+  /// function and return these items
+  Iterable<T> detachItems([bool Function(T)? predicate]) {
+    predicate = predicate ?? (x) => true;
+    var items = where(predicate);
+    removeWhere((e) => items.contains(e));
+    return items;
+  }
+
+  /// Move items from one list into another list, and return these items
+  Iterable<T> moveTo(List<T> other, [bool Function(T)? predicate]) {
+    predicate = predicate ?? (x) => true;
+    var i = detachItems(predicate);
+    other.addAll(i);
+    return i;
+  }
+}
+
+/// Adds extensions to the `List` class
+extension IterableExtension<T> on Iterable<T> {
   /// Removes duplicate elements from a list.
   ///
   /// Elements with the same hashCode are considered duplicates
@@ -82,32 +107,34 @@ extension ListExtension<T> on List<T> {
 
   /// Remove the last [count] items of a list thats satisfy the [predicate]
   List<T> removeLastWhere(bool Function(T) predicate, [int count = 1]) {
+    var l = toList();
     if (count > 0) {
       int c = 0;
-      for (int i = length - 1; i >= 0; i--) {
-        if (predicate(this[i])) {
+      for (int i = l.length - 1; i >= 0; i--) {
+        if (predicate(l[i])) {
           if (c >= count) break;
-          removeAt(i);
+          l.removeAt(i);
           c++;
         }
       }
     }
-    return this;
+    return l;
   }
 
   /// Remove the first [count] items of a list thats satisfy the [predicate]
   List<T> removeFirstWhere(bool Function(T) predicate, [int count = 1]) {
+    var l = toList();
     if (count > 0) {
       int c = 0;
-      for (int i = 0; i < length; i++) {
-        if (predicate(this[i])) {
+      for (int i = 0; i < l.length; i++) {
+        if (predicate(l[i])) {
           if (c >= count) break;
-          removeAt(i);
+          l.removeAt(i);
           c++;
         }
       }
     }
-    return this;
+    return l;
   }
 
   /// Groups the items in the list by the item returned by the lambda function.
@@ -134,28 +161,11 @@ extension ListExtension<T> on List<T> {
   /// returned by the lambda function and each value is a List<T> that have that key remmaped as V.
   Map<M, V> groupAndRemapBy<M, V>(M Function(T) keyFunction, V Function(List<T>) valueFunction) => groupAndMapBy(keyFunction).map((key, value) => MapEntry(key, valueFunction(value)));
 
-  /// Detach items from a list according to a
-  /// function and return these items
-  Iterable<T> detachItems([bool Function(T)? predicate]) {
-    predicate = predicate ?? (x) => true;
-    var items = where(predicate);
-    removeWhere((e) => items.contains(e));
-    return items;
-  }
-
-  /// Move items from one list into another list, and return these items
-  Iterable<T> moveTo(List<T> other, [bool Function(T)? predicate]) {
-    predicate = predicate ?? (x) => true;
-    var i = detachItems(predicate);
-    other.addAll(i);
-    return i;
-  }
-
   /// Group the itens of a list
   List<List<T>> groupInPage(int pageSize) => List.generate((length / pageSize).ceil(), (index) {
         int start = index * pageSize;
         int end = start + pageSize > length ? length : start + pageSize;
-        return sublist(start, end);
+        return toList().sublist(start, end);
       });
 
   /// Checks if this list contains all elements from [otherList].
@@ -169,24 +179,26 @@ extension ListExtension<T> on List<T> {
   }
 
   List<(T?, T?)> pairUp(List<T> other) {
+    var l = toList();
     return pairUpIndexes(other).map((e) {
       if (e.$1 == -1) {
         return (null, other[e.$2]);
       } else if (e.$2 == -1) {
-        return (this[e.$1], null);
+        return (l[e.$1], null);
       } else {
-        return (this[e.$1], other[e.$2]);
+        return (l[e.$1], other[e.$2]);
       }
     }).toList();
   }
 
   List<(int, int)> pairUpIndexes(List<T> other) {
+    var l = toList();
     final r = <(int, int)>[];
-    for (var i = 0; i < length; i++) {
-      r.add((i, other.indexOf(this[i])));
+    for (var i = 0; i < l.length; i++) {
+      r.add((i, other.indexOf(l[i])));
     }
     for (var j = 0; j < other.length; j++) {
-      final index1 = indexOf(other[j]);
+      final index1 = l.indexOf(other[j]);
       if (index1 == -1) {
         r.add((-1, j));
       }
@@ -197,4 +209,38 @@ extension ListExtension<T> on List<T> {
 
   /// return only valid items (see [Object.isValid])
   Iterable<T> get whereValid => where((e) => e.isValid);
+
+  /// Checks if a list contains at least [count] values from [values].
+  ///
+  /// Returns `true` if [this] has at least [count] values that also exist in [values],
+  /// otherwise returns `false`.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final list1 = [1, 2, 3, 4, 5];
+  /// final list2 = [3, 5, 6, 7, 8];
+  /// final count = 2; // Specify the minimum count
+  ///
+  /// final result = list1.containsAtLeast(count,list2);
+  /// print(result ? 'List 1 has at least $count values from List 2.' : 'Not enough matching values.');
+  /// ```
+  bool containsAtLeast(int count, List<T> values) {
+    // Convert list2 to a set for efficient lookups
+    final set2 = values.toSet();
+
+    // Initialize a counter for matching values
+    int matchingCount = 0;
+
+    // Iterate through list1 and check if each value is in set2
+    for (final value in this) {
+      if (set2.contains(value)) {
+        matchingCount++;
+        if (matchingCount >= count) {
+          return true; // Found enough matching values
+        }
+      }
+    }
+
+    return false; // Not enough matching values
+  }
 }

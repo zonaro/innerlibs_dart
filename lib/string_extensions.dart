@@ -46,8 +46,8 @@ extension NullStringExtension on String? {
   bool get isNotNull => isNull == false;
 
   String blankCoalesce(List<string?> newString) {
-    var x = [this, ...newString];
-    return x.firstWhere((element) => element.isNotBlank, orElse: () => "").blankIfNull;
+    var x = [blankIfNull, ...newString];
+    return x.where((e) => e.isNotBlank).firstOrNull.blankIfNull;
   }
 }
 
@@ -259,7 +259,7 @@ extension StringExtension on String {
     return words;
   }
 
-  bool flatEqual(String? text) => removeDiacritics.toLowerCase() == text?.removeDiacritics.toLowerCase();
+  bool flatEqual(String? text) => asFlat == text?.asFlat;
 
   bool flatContains(String? text) {
     if (isBlank) return text.isBlank;
@@ -267,8 +267,11 @@ extension StringExtension on String {
     if (text.isBlank) {
       return true;
     }
-    return removeDiacritics.toLowerCase().trimAll.contains(text!.removeDiacritics.toLowerCase().trimAll);
+    return asFlat.contains(text!.asFlat);
   }
+
+  /// Remove accents, trim white spaces and set all characters as lowercase
+  string get asFlat => removeDiacritics.toLowerCase().trimAll;
 
   bool flatEqualAny(Iterable<String> texts) {
     for (var t in texts) {

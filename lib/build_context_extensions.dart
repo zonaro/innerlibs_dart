@@ -290,22 +290,6 @@ extension BuildContextExtensions on BuildContext {
         double.infinity: ScreenTier.xxl,
       });
 
-  // if (width < 360) {
-  //   return ScreenTier.xxs;
-  // } else if (width < 576) {
-  //   return ScreenTier.xs;
-  // } else if (width < 768) {
-  //   return ScreenTier.sm;
-  // } else if (width < 992) {
-  //   return ScreenTier.md;
-  // } else if (width < 1200) {
-  //   return ScreenTier.lg;
-  // } else if (width < 1600) {
-  //   return ScreenTier.xl;
-  // } else {
-  //   return ScreenTier.xxl;
-  // }
-
   MediaQueryData get mediaQuery => MediaQuery.of(this);
 
   /// similar to [MediaQuery.of(context).viewPadding]

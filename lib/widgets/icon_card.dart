@@ -2,40 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 class IconCard extends StatelessWidget {
-  const IconCard(
-      {Key? key,
-      required this.title,
-      required this.icon,
-      this.accentColor,
-      this.description,
-      this.onTap,
-      this.elevation,
-      this.onTapDown,
-      this.onTapUp,
-      this.onTapCancel,
-      this.onDoubleTap,
-      this.onLongPress,
-      this.onSecondaryTap,
-      this.onSecondaryTapDown,
-      this.onSecondaryTapUp,
-      this.onSecondaryTapCancel,
-      this.onHighlightChanged,
-      this.onHover,
-      this.mouseCursor,
-      this.enableFeedback = true,
-      this.onFocusChange,
-      this.autofocus = false,
-      this.focusNode,
-      this.canRequestFocus = true,
-      this.statesController,
-      this.hoverDuration})
-      : super(key: key);
+  const IconCard({
+    Key? key,
+    required this.title,
+    required this.icon,
+    this.height = 100,
+    this.textScaleFactor = 1,
+    this.accentColor,
+    this.description,
+    this.onTap,
+    this.elevation,
+    this.onTapDown,
+    this.onTapUp,
+    this.onTapCancel,
+    this.onDoubleTap,
+    this.onLongPress,
+    this.onSecondaryTap,
+    this.onSecondaryTapDown,
+    this.onSecondaryTapUp,
+    this.onSecondaryTapCancel,
+    this.onHighlightChanged,
+    this.onHover,
+    this.mouseCursor,
+    this.enableFeedback = true,
+    this.onFocusChange,
+    this.autofocus = false,
+    this.focusNode,
+    this.canRequestFocus = true,
+    this.statesController,
+    this.hoverDuration,
+    this.tooltip,
+  }) : super(key: key);
 
   final String title;
   final IconData icon;
   final Color? accentColor;
   final String? description;
   final double? elevation;
+  final double textScaleFactor;
 
   /// Called when the user taps this part of the material.
   final GestureTapCallback? onTap;
@@ -151,20 +155,25 @@ class IconCard extends StatelessWidget {
   /// The default is 50ms.
   final Duration? hoverDuration;
 
+  final double height;
+
+  final string? tooltip;
+
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: description.ifBlank(title) ?? "",
+      message: tooltip.blankCoalesce([description, title]),
       child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         elevation: elevation,
         child: ClipPath(
-          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
+          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
           child: LayoutBuilder(builder: (context, cs) {
             return Container(
-              width: 250,
-              height: 100,
+              height: height,
               decoration: accentColor != null ? BoxDecoration(border: Border(right: BorderSide(color: accentColor!, width: 8))) : null,
               child: InkWell(
+                borderRadius: BorderRadius.circular(5),
                 splashColor: accentColor,
                 autofocus: autofocus,
                 canRequestFocus: canRequestFocus,
@@ -212,17 +221,19 @@ class IconCard extends StatelessWidget {
                                 title,
                                 maxLines: 2,
                                 textAlign: TextAlign.right,
-                                style: const TextStyle(fontWeight: FontWeight.w900),
+                                style: context.headlineSmall,
                                 overflow: TextOverflow.fade,
-                              ),
+                                textScaler: TextScaler.linear(textScaleFactor),
+                              ).bold(),
                               if (description.isNotBlank)
                                 Text(
                                   description!,
                                   maxLines: 2,
-                                  style: const TextStyle(fontStyle: FontStyle.italic),
                                   textAlign: TextAlign.right,
-                                  overflow: TextOverflow.fade,
-                                ),
+                                  style: context.titleMedium,
+                                  overflow: TextOverflow.ellipsis,
+                                  textScaler: TextScaler.linear(textScaleFactor),
+                                ).italic(),
                             ],
                           ),
                         ),

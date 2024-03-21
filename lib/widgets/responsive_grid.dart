@@ -26,6 +26,15 @@ enum ScreenTier {
   xxl,
 }
 
+extension ScreenTierExtensions on ScreenTier {
+  operator <(ScreenTier tier) => toInt < tier.toInt;
+  operator <=(ScreenTier tier) => toInt <= tier.toInt;
+  operator >(ScreenTier tier) => toInt > tier.toInt;
+  operator >=(ScreenTier tier) => toInt >= tier.toInt;
+
+  int get toInt => ScreenTier.values.indexOf(this);
+}
+
 class ResponsiveColumn {
   final int xxs;
   final int? xs;
