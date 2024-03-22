@@ -13,9 +13,9 @@ extension NullStringExtension on String? {
   String get blankIfNull => this ?? "";
   String? get nullIfBlank => ifBlank(null);
 
-  bool get isBlank => this != null && this!.isBlank;
+  bool get isBlank => this == null || this!.isBlank;
 
-  bool get isNotBlank => this == null || !isBlank;
+  bool get isNotBlank => this != null && !isBlank;
 
   String? ifBlank(String? newString) => this != null && this!.isNotBlank ? this : newString;
 

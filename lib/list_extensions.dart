@@ -244,3 +244,45 @@ extension IterableExtension<T> on Iterable<T> {
     return false; // Not enough matching values
   }
 }
+
+class KeyedJsonTable {
+  final string keyName;
+  final JsonTable table;
+
+  KeyedJsonTable({
+    required this.table,
+    required this.keyName,
+  });
+
+  JsonRow? operator [](string key) => table.where((row) => row[keyName] == key).singleOrNull;
+
+  void operator []=(string key, JsonRow values) {
+    var m = this[key];
+    m = m ?? JsonRow();
+    m.addAll(values);
+  }
+
+  /// Add rows to this JsonTable. Only rows with valid Ids will be added. Return a list of IDs
+  List<string> addAll(JsonTable rows, [bool override = false]) {
+    List<string> pks = [];
+    for (var newRow in rows) {
+      var pk = add(newRow, override);
+      if (pk.isNotBlank) {
+        pks.add(pk!);
+      }
+    }
+    return pks;
+  }
+
+  string? add(JsonRow row, [bool override = false]) {
+    string pk = "${row[keyName]}".blankIfNull;
+    if (pk.isNotBlank) {
+      var exist = this[pk];
+      if (exist == null || override) {
+        this[pk] = row;
+        return pk;
+      }
+    }
+    return null;
+  }
+}
