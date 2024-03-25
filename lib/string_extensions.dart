@@ -147,6 +147,60 @@ extension StringExtension on String {
 
   String? get asNullable => this;
 
+  String replaceSQLParameters(JsonRow params, [bool nullAsBlank = false, string parameterPlaceholder = ":"]) {
+    String query = this;
+
+    if (parameterPlaceholder.isBlank) throw ArgumentError.value(parameterPlaceholder, "parameterMatch", "parameterMatch cannot be blank");
+
+    // convert params to string
+    Map<String, dynamic> convertedParams = {};
+
+    for (final param in params.entries) {
+      convertedParams[param.key] = (param.value as Object?).asSqlValue(nullAsBlank);
+    }
+
+    // find all :placeholders, which can be substituted
+    final pattern = RegExp("$parameterPlaceholder(\\w+)");
+
+    final matches = pattern.allMatches(query).where((match) {
+      final subString = query.substring(0, match.start);
+
+      int count = "'".allMatches(subString).length;
+      if (count > 0 && count.isOdd) {
+        return false;
+      }
+
+      count = '"'.allMatches(subString).length;
+      if (count > 0 && count.isOdd) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+
+    int lengthShift = 0;
+
+    for (final match in matches) {
+      final paramName = match.group(1);
+
+      // check param exists
+      if (false == convertedParams.containsKey(paramName)) {
+        convertedParams[paramName!] = nullAsBlank ? "''" : "NULL";
+      }
+
+      final newQuery = query.replaceFirst(
+        match.group(0)!,
+        convertedParams[paramName]!.toString(),
+        match.start + lengthShift,
+      );
+
+      lengthShift += newQuery.length - query.length;
+      query = newQuery;
+    }
+
+    return query;
+  }
+
   /// Return a checksum digit for a barcode
   String get generateBarcodeCheckSum {
     if (isNotNumber) {
@@ -392,7 +446,7 @@ extension StringExtension on String {
     return replaceAll(s!, '');
   }
 
-  StringList operator /(int chunkSize) {
+  strings operator /(int chunkSize) {
     List<String> chunks = [];
     if (isNotBlank) {
       for (int i = 0; i < length; i += chunkSize) {
@@ -402,7 +456,7 @@ extension StringExtension on String {
     return chunks;
   }
 
-  StringList slice(int chunkSize) => this / chunkSize;
+  strings slice(int chunkSize) => this / chunkSize;
 
   /// Returns the average read time duration of the given `String` in seconds.
   ///
@@ -433,10 +487,10 @@ extension StringExtension on String {
   int get countWords => getWords.length;
 
   /// Returns a list with distinct words of this sentence
-  StringList get getUniqueWords => getWords.distinctFlat();
+  strings get getUniqueWords => getWords.distinctFlat();
 
   /// Returns a list with words of this sentence
-  StringList get getWords {
+  strings get getWords {
     if (isBlank) {
       return [];
     }

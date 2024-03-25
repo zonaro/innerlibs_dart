@@ -3,7 +3,7 @@ import 'package:innerlibs/utils/validation_interface.dart';
 
 extension ObjectExtensions on Object? {
   // return a string of this object as a SQL Value
-  String asSqlValue([nullAsBlank = false]) {
+  String asSqlValue([bool nullAsBlank = false]) {
     if (this == null) {
       return nullAsBlank ? "''" : "NULL";
     } else if (this is num) {

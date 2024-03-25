@@ -1,7 +1,9 @@
+import 'dart:collection';
+
 import 'package:innerlibs/innerlibs.dart';
 
-extension StringListExtensions on StringList {
-  ///Verify if any [String] in a [StringList]  contains the specified [String]
+extension StringListExtensions on strings {
+  ///Verify if any [String] in a [strings]  contains the specified [String]
   bool containsLike(String s) {
     for (var item in this) {
       if (item.toString().contains(s)) return true;
@@ -9,7 +11,7 @@ extension StringListExtensions on StringList {
     return false;
   }
 
-  ///Verify if any [String] in a [StringList]  contains the specified [String] ignoring the accents and character case
+  ///Verify if any [String] in a [strings]  contains the specified [String] ignoring the accents and character case
 
   bool flatContainsLike(String s) {
     for (var item in this) {
@@ -18,9 +20,9 @@ extension StringListExtensions on StringList {
     return false;
   }
 
-  ///Verify if any [String] in a [StringList]  contains any  [String] of other [StringList] ignoring the accents and character case
+  ///Verify if any [String] in a [strings]  contains any  [String] of other [strings] ignoring the accents and character case
 
-  bool flatContainsAny(StringList s) {
+  bool flatContainsAny(strings s) {
     for (var item in this) {
       if (s.flatContainsLike(item)) return true;
     }
@@ -33,7 +35,7 @@ extension StringListExtensions on StringList {
 
   bool flatContainsAtLeast(int count, Iterable<string> s) => map((e) => e.asFlat).toList().containsAtLeast(count, s.map((e) => e.asFlat).toList());
 
-  /// Removes duplicate elements from a [StringList].
+  /// Removes duplicate elements from a [strings].
   ///
   /// Use the [flatEqual] function to compare strings.
   List<string> distinctFlat<E>() {
@@ -258,11 +260,12 @@ class KeyedJsonTable {
 
   void operator []=(string key, JsonRow values) {
     var m = this[key];
-    m = m ?? JsonRow();
+    m = m ?? values;
     m.addAll(values);
   }
 
   /// Add rows to this JsonTable. Only rows with valid Ids will be added. Return a list of IDs
+
   List<string> addAll(JsonTable rows, [bool override = false]) {
     List<string> pks = [];
     for (var newRow in rows) {
@@ -284,5 +287,20 @@ class KeyedJsonTable {
       }
     }
     return null;
+  }
+
+  bool containsKey(string key) => this[key] != null;
+
+  JsonRow? remove(string key) {
+    if (containsKey(key)) {
+      var t = this[key];
+      table.removeWhere((e) => e[keyName] == key);
+      return t;
+    }
+    return null;
+  }
+
+  void clear() {
+    table.clear();
   }
 }

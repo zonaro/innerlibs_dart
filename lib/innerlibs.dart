@@ -39,6 +39,7 @@ export 'text_style_extension.dart';
 export 'theme_extension.dart';
 export 'tooltip_extension.dart';
 export 'util.dart';
+export 'utils/sql_response.dart';
 export 'widget_ext.dart';
 export 'widgets/avatar_image.dart';
 export 'widgets/date_picker_form_field.dart';
@@ -54,7 +55,9 @@ typedef date = DateTime;
 
 /// C# alias for [String] (in C#, string is a class but works like a primitive type)
 typedef string = String;
-typedef StringList = List<String>;
+typedef strings = List<String>;
+typedef ints = List<int>;
+typedef doubles = List<double>;
 
 /// C# alias for [double]
 typedef decimal = double;
@@ -73,7 +76,7 @@ typedef DirectoryInfo = Directory;
 /// Alias for [Map<String, dynamic>], used in most Json serializations
 typedef JsonMap = Map<String, dynamic>;
 
-/// Alias for [Map<String, dynamic>], used to represent a row in a table
+/// Alias for [Map<String, dynamic>], used to represent a row in a data table
 typedef JsonRow = JsonMap;
 
 /// Alias for [List<Map<String, dynamic>>], used to represent a data table
