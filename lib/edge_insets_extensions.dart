@@ -8,9 +8,9 @@ extension EdgeInsetsExtensions on EdgeInsets {
 }
 
 extension EdgeInsetsExtensionsForNum on num {
-  EdgeInsets get paddingTop => EdgeInsets.only(top: toDouble());
-  EdgeInsets get paddingBottom => EdgeInsets.only(bottom: toDouble());
-  EdgeInsets get paddingLeft => EdgeInsets.only(left: toDouble());
-  EdgeInsets get paddingRight => EdgeInsets.only(right: toDouble());
-  EdgeInsets get paddingAll => EdgeInsets.all(toDouble());
+  EdgeInsets get fromTop => EdgeInsets.only(top: toDouble());
+  EdgeInsets get fromBottom => EdgeInsets.only(bottom: toDouble());
+  EdgeInsets get fromLeft => EdgeInsets.only(left: toDouble());
+  EdgeInsets get fromRight => EdgeInsets.only(right: toDouble());
+  EdgeInsets get asEdgeInsets => EdgeInsets.all(toDouble());
 }
