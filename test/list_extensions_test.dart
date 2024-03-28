@@ -11,8 +11,8 @@ void main() {
     consoleLog(t);
   });
 
-  test(' ', () {
-    var t = Brasil.pegarEstado("São Paulo");
+  test(' ', () async {
+    var t = await Brasil.pegarEstado("São Paulo");
     consoleLog(t?.uf ?? "");
   });
 
