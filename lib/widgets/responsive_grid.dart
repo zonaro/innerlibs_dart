@@ -45,6 +45,14 @@ class ResponsiveColumn {
   final int? xxl;
   final Widget child;
   final double? height;
+  final Decoration? decoration;
+  final Decoration? foregroundDecoration;
+
+  final Alignment? alignment;
+
+  final EdgeInsets? padding;
+
+  final EdgeInsets? margin;
 
   /// Responsive Column thats have breakpoints for each [ScreenTier]. If a tier is not specified, its fall down to the next smaller screen tier
   const ResponsiveColumn({
@@ -57,6 +65,11 @@ class ResponsiveColumn {
     this.xxl,
     this.height,
     this.child = const SizedBox.shrink(),
+    this.decoration,
+    this.foregroundDecoration,
+    this.alignment,
+    this.padding,
+    this.margin,
   });
 
   /// Responsive Column thats have breakpoints for each [ScreenTier]. Each tier has a default value
@@ -70,6 +83,11 @@ class ResponsiveColumn {
     this.xxl = 1,
     this.height,
     this.child = const SizedBox.shrink(),
+    this.decoration,
+    this.foregroundDecoration,
+    this.alignment,
+    this.padding,
+    this.margin,
   });
 }
 
@@ -213,9 +231,9 @@ class ResponsiveRow extends StatelessWidget {
   final int totalSegments;
   final double horizontalSpacing;
   final double runSpacing;
-  final double? itemHeight;
-  final double? itemMaxHeight;
-  final double? itemMinHeight;
+  final double? columnHeight;
+  final double? columnMaxHeight;
+  final double? columnMinHeight;
   final Axis direction;
   final VerticalDirection verticalDirection;
   final TextDirection textDirection;
@@ -229,9 +247,9 @@ class ResponsiveRow extends StatelessWidget {
     this.totalSegments = 12,
     this.horizontalSpacing = 0,
     this.runSpacing = 0,
-    this.itemHeight,
-    this.itemMaxHeight,
-    this.itemMinHeight,
+    this.columnHeight,
+    this.columnMaxHeight,
+    this.columnMinHeight,
     this.direction = Axis.horizontal,
     this.verticalDirection = VerticalDirection.down,
     this.textDirection = TextDirection.ltr,
@@ -249,8 +267,19 @@ class ResponsiveRow extends StatelessWidget {
     int? lg = 4,
     int? xl = 6,
     int? xxl = 12,
-    double? height,
     List<dynamic> children = const [],
+    WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.start,
+    int totalSegments = 12,
+    double horizontalSpacing = 0,
+    double runSpacing = 0,
+    double? columnHeight,
+    double? columnMaxHeight,
+    double? columnMinHeight,
+    Axis direction = Axis.horizontal,
+    VerticalDirection verticalDirection = VerticalDirection.down,
+    TextDirection textDirection = TextDirection.ltr,
+    WrapAlignment alignment = WrapAlignment.start,
+    WrapAlignment runAlignment = WrapAlignment.start,
   }) =>
       ResponsiveRow.withColumns(
         xxs: xxs,
@@ -260,8 +289,19 @@ class ResponsiveRow extends StatelessWidget {
         lg: lg,
         xl: xl,
         xxl: xxl,
-        height: height,
         children: children,
+        crossAxisAlignment: crossAxisAlignment,
+        totalSegments: totalSegments,
+        horizontalSpacing: horizontalSpacing,
+        runSpacing: runSpacing,
+        columnHeight: columnHeight,
+        columnMaxHeight: columnMaxHeight,
+        columnMinHeight: columnMinHeight,
+        direction: direction,
+        verticalDirection: verticalDirection,
+        textDirection: textDirection,
+        alignment: alignment,
+        runAlignment: runAlignment,
       );
 
   /// Creates a [ResponsiveRow] with a specific number of columns in each [ScreenTier]
@@ -299,8 +339,19 @@ class ResponsiveRow extends StatelessWidget {
     int? lg,
     int? xl,
     int? xxl,
-    double? height,
     List<dynamic> children = const [],
+    WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.start,
+    int totalSegments = 12,
+    double horizontalSpacing = 0,
+    double runSpacing = 0,
+    double? columnHeight,
+    double? columnMaxHeight,
+    double? columnMinHeight,
+    Axis direction = Axis.horizontal,
+    VerticalDirection verticalDirection = VerticalDirection.down,
+    TextDirection textDirection = TextDirection.ltr,
+    WrapAlignment alignment = WrapAlignment.start,
+    WrapAlignment runAlignment = WrapAlignment.start,
   }) {
     List<ResponsiveColumn> newChildren = [];
     for (var i = 0; i < children.length; i++) {
@@ -316,14 +367,14 @@ class ResponsiveRow extends StatelessWidget {
       if (children[i] is Widget) {
         newChildren.add(
           ResponsiveColumn(
-            height: height,
-            xxs: (12 / (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-            xs: (12 / (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-            sm: (12 / (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-            md: (12 / (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl ?? 1)).round(),
-            lg: (12 / (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl ?? 1)).round(),
-            xl: (12 / (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl ?? 1)).round(),
-            xxl: (12 / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? 1)).round(),
+            height: columnHeight,
+            xxs: (totalSegments / (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+            xs: (totalSegments / (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+            sm: (totalSegments / (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
+            md: (totalSegments / (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl ?? 1)).round(),
+            lg: (totalSegments / (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl ?? 1)).round(),
+            xl: (totalSegments / (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl ?? 1)).round(),
+            xxl: (totalSegments / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? 1)).round(),
             child: children[i],
           ),
         );
@@ -332,6 +383,18 @@ class ResponsiveRow extends StatelessWidget {
 
     return ResponsiveRow(
       children: newChildren,
+      crossAxisAlignment: crossAxisAlignment,
+      totalSegments: totalSegments,
+      horizontalSpacing: horizontalSpacing,
+      runSpacing: runSpacing,
+      columnHeight: columnHeight,
+      columnMaxHeight: columnMaxHeight,
+      columnMinHeight: columnMinHeight,
+      direction: direction,
+      verticalDirection: verticalDirection,
+      textDirection: textDirection,
+      alignment: alignment,
+      runAlignment: runAlignment,
     );
   }
 
@@ -340,27 +403,34 @@ class ResponsiveRow extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final segmentSize = constraints.maxWidth / totalSegments.toDouble();
-        return Wrap(
-          spacing: horizontalSpacing,
-          runSpacing: runSpacing,
-          crossAxisAlignment: crossAxisAlignment,
-          direction: direction,
-          verticalDirection: verticalDirection,
-          textDirection: textDirection,
-          alignment: alignment,
-          runAlignment: runAlignment,
-          children: children.map((c) {
-            final segments = context.valueByTier(xxs: c.xxs, xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl);
+        return SingleChildScrollView(
+          child: Wrap(
+            spacing: horizontalSpacing,
+            runSpacing: runSpacing,
+            crossAxisAlignment: crossAxisAlignment,
+            direction: direction,
+            verticalDirection: verticalDirection,
+            textDirection: textDirection,
+            alignment: alignment,
+            runAlignment: runAlignment,
+            children: children.map((c) {
+              final segments = context.valueByTier(xxs: c.xxs, xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl);
 
-            final width = (segmentSize * segments.toDouble()) - ((children.length - 2).toDouble() * horizontalSpacing);
+              final width = (segmentSize * segments.toDouble()) - ((children.length - 2).toDouble() * horizontalSpacing);
 
-            return Container(
-              constraints: itemMaxHeight == null && itemMinHeight == null ? null : BoxConstraints(maxHeight: itemMaxHeight ?? double.infinity, minHeight: itemMinHeight ?? 0),
-              width: width,
-              height: c.height ?? itemHeight,
-              child: c.child,
-            );
-          }).toList(),
+              return Container(
+                decoration: c.decoration,
+                foregroundDecoration: c.foregroundDecoration,
+                alignment: c.alignment,
+                padding: c.padding,
+                margin: c.margin,
+                constraints: columnMaxHeight == null && columnMinHeight == null ? null : BoxConstraints(maxHeight: columnMaxHeight ?? double.infinity, minHeight: columnMinHeight ?? 0),
+                width: width,
+                height: c.height ?? columnHeight,
+                child: c.child,
+              );
+            }).toList(),
+          ),
         );
       },
     );
