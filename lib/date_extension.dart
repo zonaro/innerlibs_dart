@@ -1,10 +1,10 @@
 import 'package:innerlibs/innerlibs.dart';
 import 'package:innerlibs/utils/constants.dart';
-import 'package:innerlibs/utils/format_time.dart';
 
 extension DateTimeExtensions on DateTime {
   static DateTime get min => DateTime.utc(1970, 1, 1);
   static DateTime get max => DateTime.utc(9999, 12, 31, 23, 59, 59);
+  static DateTime get now => DateTime.now();
 
   DateTime findNextDate(int weekday) {
     int daysDifference = weekday - this.weekday;
@@ -16,16 +16,10 @@ extension DateTimeExtensions on DateTime {
 
   bool isSameDate(DateTime other) => year == other.year && month == other.month && day == other.day;
 
-  bool get isToday {
-    final nowDate = DateTime.now();
-    return year == nowDate.year && month == nowDate.month && day == nowDate.day;
-  }
+  bool get isToday => year == now.year && month == now.month && day == now.day;
 
-  bool get isYesterday {
-    final nowDate = DateTime.now();
-    const oneDay = Duration(days: 1);
-    return nowDate.subtract(oneDay).isSameDate(this);
-  }
+  bool get isYesterday => now.subtract(const Duration(days: 1)).isSameDate(this);
+  bool get isTomorrow => now.add(const Duration(days: 1)).isSameDate(this);
 
   /// Readable Date
   ///
@@ -53,7 +47,7 @@ extension DateTimeExtensions on DateTime {
   /// Get Short Day
   ///
   /// Returns short day string in the format Mon, Tue, Wed etc
-  String get getShortDay => getDay.substring(0, 3);
+  String get getShortDay => getDay.first(3);
 
   /// Get Month
   ///
@@ -63,30 +57,37 @@ extension DateTimeExtensions on DateTime {
   /// Get Short Month
   ///
   /// Returns short month string in the format Jan, Feb etc
-  String get getShortMonth => getMonth.substring(0, 3);
+  String get getShortMonth => getMonth.first(3);
 
   /// Time Ago
   ///
   /// Returns string of time difference between given DateTime and
   /// [DateTime.now()] in the format 1d, 2h, 4s or Just now
-  String get timeAgo {
+  String timeAgo({
+    string remaining = "remaining",
+    string day = "d",
+    string hour = "h",
+    string minute = "m",
+    string seconds = "s",
+    string now = "Just now",
+  }) {
     final currentTime = DateTime.now();
     final difference = currentTime.difference(this);
 
     if (difference.inDays < 0) {
-      return '${difference.inDays.abs()}d remaining';
+      return '${difference.inDays.abs()}$day $remaining';
     }
 
     if (difference.inDays >= 1) {
-      return '${difference.inDays}d';
+      return '${difference.inDays}$day';
     } else if (difference.inHours >= 1) {
-      return '${difference.inHours}h';
+      return '${difference.inHours}$hour';
     } else if (difference.inMinutes >= 1) {
-      return '${difference.inMinutes}m';
+      return '${difference.inMinutes}$minute';
     } else if (difference.inSeconds >= 1) {
-      return '${difference.inSeconds}s';
+      return '${difference.inSeconds}$second';
     } else {
-      return 'Just now';
+      return now;
     }
   }
 
@@ -207,17 +208,18 @@ extension DateTimeExtensions on DateTime {
   /// 08:00pm
   /// ```
   ///
-  String get describe {
-    final DateTime now = DateTime.now();
-    final difference = now.difference(this).inDays;
+  String describe({string yesterday = "Yesterday"}) {
+    final difference = fromNow.inDays;
     if (difference == 0) {
       return timeFormat;
     } else if (difference == 1) {
-      return 'Yesterday';
+      return yesterday;
     } else if (difference <= 7) {
       return getDay;
     } else {
       return '$day/$getMonth/$year';
     }
   }
+
+  Duration get fromNow => now.difference(this);
 }

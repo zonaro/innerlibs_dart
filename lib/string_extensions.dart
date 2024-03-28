@@ -1890,20 +1890,25 @@ extension StringExtension on String {
   String? asIf(bool Function(String?) comparison, String? trueString, String? falseString) => comparison(this) ? trueString : falseString;
 
   /// Wraps the `String` between two strings. If [before] is a wrap char and [after] is omitted, the method resolve [after] using [getOppositeChar].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String s = "esentis".wrap("AA", after: "BB"); // returns "AAesentisBB";
-  /// ```
+ 
   String wrap(String? before, [String? after]) {
+    if (before.isBlank && after.isBlank) return blankIfNull;
     before = before.ifBlank("")!;
-    if (after.isBlank) {
+
+    if (after.isBlank && before.isNotBlank) {
       if (before.isCloseWrapChar) {
         before = before.getOppositeChar;
       }
       after = before.getOppositeChar;
     }
+
+    if (after.isNotBlank && before.isBlank) {
+      if (after!.isOpenWrapChar) {
+        after = after.getOppositeChar;
+      }
+      before = after.getOppositeChar;
+    }
+
     return "$before$this${after.ifBlank(before)}";
   }
 
