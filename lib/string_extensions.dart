@@ -250,6 +250,8 @@ extension StringExtension on String {
 
   Text get asText => Text(this);
 
+  Text withStyle(TextStyle? style) => asText.textStyle(style);
+
   Color get asColor {
     if (isBlank) {
       return Colors.transparent; // Default color if the string is empty
