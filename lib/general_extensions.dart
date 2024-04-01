@@ -61,7 +61,7 @@ extension ObjectExtensions on Object? {
         return (this as Validator).validate().isBlank;
       }
 
-      return toString().isValid;
+      return toString().nullIf((s) => s == "null").isValid;
     } catch (e) {
       consoleLog("IsValid => ", error: e);
       return false;

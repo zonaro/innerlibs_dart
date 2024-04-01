@@ -92,21 +92,23 @@ class ResponsiveColumn {
 }
 
 class ResponsiveList extends StatelessWidget {
-  final double? desiredItemWidth, minSpacing;
+  final double? desiredItemWidth;
+  final double minSpacing;
   final List<Widget>? children;
   final bool squareCells, scroll;
   final MainAxisAlignment rowMainAxisAlignment;
 
-  const ResponsiveList({super.key, this.desiredItemWidth, this.minSpacing, this.squareCells = false, this.scroll = true, this.children, this.rowMainAxisAlignment = MainAxisAlignment.start});
+  const ResponsiveList({super.key, this.desiredItemWidth, this.minSpacing = 0, this.squareCells = false, this.scroll = true, this.children, this.rowMainAxisAlignment = MainAxisAlignment.start});
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (context, constraints) {
-          if (children!.isEmpty) return const SizedBox.shrink();
+          if (children?.isEmpty ?? true) return const SizedBox.shrink();
 
           double width = constraints.maxWidth;
+          var diw = desiredItemWidth ?? width;
 
-          double N = (width - minSpacing!) / (desiredItemWidth! + minSpacing!);
+          double N = (width - minSpacing) / (diw + minSpacing);
 
           int n;
           double? spacing, itemWidth;
@@ -114,13 +116,13 @@ class ResponsiveList extends StatelessWidget {
           if (N % 1 == 0) {
             n = N.floor();
             spacing = minSpacing;
-            itemWidth = desiredItemWidth;
+            itemWidth = diw;
           } else {
             n = N.floor();
 
-            double dw = width - (n * (desiredItemWidth! + minSpacing!) + minSpacing!);
+            double dw = width - (n * (diw + minSpacing) + minSpacing);
 
-            itemWidth = desiredItemWidth! + (dw / n) * (desiredItemWidth! / (desiredItemWidth! + minSpacing!));
+            itemWidth = diw + (dw / n) * (diw / (diw + minSpacing));
 
             spacing = (width - itemWidth * n) / (n + 1);
           }

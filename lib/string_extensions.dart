@@ -1779,7 +1779,7 @@ extension StringExtension on String {
       return blankIfNull;
     }
 
-    return trim().replaceAll(RegExp(' +'), ' ');
+    return trim().replaceAll(RegExp(' +'), ' ').trim();
   }
 
   /// Try parse a bool value. See [asBool] to convert strings into [bool]

@@ -247,7 +247,7 @@ extension IterableExtension<T> on Iterable<T> {
   }
 }
 
-class KeyedJsonTable {
+class KeyedJsonTable<T> extends Iterable<JsonRow> {
   final string keyName;
   final JsonTable table;
 
@@ -256,9 +256,9 @@ class KeyedJsonTable {
     required this.keyName,
   });
 
-  JsonRow? operator [](string key) => table.where((row) => row[keyName] == key).singleOrNull;
+  JsonRow? operator [](T key) => table.where((row) => (row[keyName] as T) == (key)).singleOrNull;
 
-  void operator []=(string key, JsonRow values) {
+  void operator []=(T key, JsonRow values) {
     var m = this[key];
     m = m ?? values;
     m.addAll(values);
@@ -266,20 +266,20 @@ class KeyedJsonTable {
 
   /// Add rows to this JsonTable. Only rows with valid Ids will be added. Return a list of IDs
 
-  List<string> addAll(JsonTable rows, [bool override = false]) {
-    List<string> pks = [];
+  List<T> addAll(JsonTable rows, [bool override = false]) {
+    List<T> pks = [];
     for (var newRow in rows) {
-      var pk = add(newRow, override);
-      if (pk.isNotBlank) {
-        pks.add(pk!);
+      T? pk = add(newRow, override);
+      if (pk.isValid) {
+        pks.add(pk as T);
       }
     }
     return pks;
   }
 
-  string? add(JsonRow row, [bool override = false]) {
-    string pk = "${row[keyName]}".blankIfNull;
-    if (pk.isNotBlank) {
+  T? add(JsonRow row, [bool override = false]) {
+    var pk = row[keyName] as T;
+    if (pk.isValid) {
       var exist = this[pk];
       if (exist == null || override) {
         this[pk] = row;
@@ -289,9 +289,9 @@ class KeyedJsonTable {
     return null;
   }
 
-  bool containsKey(string key) => this[key] != null;
+  bool containsKey(T key) => this[key] != null;
 
-  JsonRow? remove(string key) {
+  JsonRow? remove(T key) {
     if (containsKey(key)) {
       var t = this[key];
       table.removeWhere((e) => e[keyName] == key);
@@ -300,7 +300,8 @@ class KeyedJsonTable {
     return null;
   }
 
-  void clear() {
-    table.clear();
-  }
+  void clear() => table.clear();
+
+  @override
+  Iterator<JsonRow> get iterator => table.iterator;
 }
