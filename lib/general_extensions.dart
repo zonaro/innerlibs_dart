@@ -35,6 +35,9 @@ extension ObjectExtensions on Object? {
       if (this is String) {
         return (this as String).isNotBlank;
       }
+      if (this is bool) {
+        return (this as bool);
+      }
       if (this is num) {
         return this != 0;
       }

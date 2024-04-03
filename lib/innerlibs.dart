@@ -4,6 +4,8 @@ library innerlibs;
 
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 export 'align_extensions.dart';
 export 'alignment_extensions.dart';
 export 'boolean_extensions.dart';
@@ -64,6 +66,8 @@ typedef string = String;
 typedef strings = List<String>;
 typedef ints = List<int>;
 typedef doubles = List<double>;
+typedef bytes = Uint8List;
+typedef FileBytes = bytes;
 
 /// C# alias for [double]
 typedef decimal = double;

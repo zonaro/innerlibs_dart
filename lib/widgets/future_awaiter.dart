@@ -4,6 +4,39 @@ import 'package:innerlibs/innerlibs.dart';
 
 /// Wraps a [FutureBuilder] into a [Widget] and add some data validations, making it easier to use.
 class FutureAwaiter<T> extends StatelessWidget {
+  /// return a [FutureAwaiter] or a [Widget] based on [data.value].
+  static Widget loadOnce<T>({
+    Key? key,
+    required ValueNotifier<T?> data,
+    required Future<T> future,
+    required Widget Function(T) child,
+    Widget? emptyChild,
+    Widget? loading,
+    Widget Function(Object error)? errorChild,
+    bool validate = true,
+    bool supressError = kReleaseMode,
+    T? initialData,
+  }) {
+    
+    if (data.value ==null  || data.value.isNotValid) {
+      return FutureAwaiter<T>(
+        future: () async {
+          data.value = await future;
+          return data.value as T;
+        }(),
+        child: child,
+        emptyChild: emptyChild,
+        errorChild: errorChild,
+        initialData: initialData,
+        loading: loading,
+        supressError: supressError,
+        validate: validate,
+        key: key,
+      );
+    }
+    return child.call(data.value as T);
+  }
+
   /// The asynchronous computation to which this builder is currently connected, possibly null.
   final Future<T> future;
 
@@ -32,16 +65,16 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// Wraps a [FutureBuilder] into a more readable widget
   const FutureAwaiter({super.key, required this.future, required this.child, this.emptyChild, this.loading, this.errorChild, this.validate = true, this.supressError = kReleaseMode, this.initialData});
 
-  _error(Object e) {
+  error(Object e) {
     consoleLog("Error:", error: e);
     return errorChild != null
         ? errorChild!(e)
         : supressError
-            ? _empty()
+            ? empty()
             : ErrorWidget(e);
   }
 
-  _empty() => emptyChild ?? const SizedBox.shrink();
+  empty() => emptyChild ?? const SizedBox.shrink();
 
   @override
   Widget build(BuildContext context) => FutureBuilder<T>(
@@ -53,17 +86,17 @@ class FutureAwaiter<T> extends StatelessWidget {
               return loading ?? const Center(child: CircularProgressIndicator());
             } else {
               if (snapshot.hasError) {
-                return _error(snapshot.error!);
+                return error(snapshot.error!);
               } else if (!snapshot.hasData || snapshot.data == null) {
-                return _empty();
+                return empty();
               } else if (validate && (snapshot.data).isNotValid) {
-                return _empty();
+                return empty();
               } else {
                 return child(snapshot.data as T);
               }
             }
           } catch (e) {
-            return _error(e);
+            return error(e);
           }
         },
       );
