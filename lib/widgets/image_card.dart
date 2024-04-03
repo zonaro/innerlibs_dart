@@ -162,79 +162,82 @@ class ImageCard extends StatelessWidget {
   final string? tooltip;
 
   @override
-  Widget build(BuildContext context) => InkWell(
-        splashColor: accentColor,
-        autofocus: autofocus,
-        canRequestFocus: canRequestFocus,
-        focusColor: accentColor?.withOpacity(.7),
-        enableFeedback: enableFeedback,
-        hoverColor: accentColor?.withOpacity(.7),
-        mouseCursor: mouseCursor,
-        focusNode: focusNode,
-        hoverDuration: hoverDuration,
-        highlightColor: accentColor,
-        onTap: onTap,
-        onDoubleTap: onDoubleTap,
-        onLongPress: onLongPress,
-        onSecondaryTap: onSecondaryTap,
-        onFocusChange: onFocusChange,
-        onHighlightChanged: onHighlightChanged,
-        onHover: onHover,
-        onSecondaryTapCancel: onSecondaryTapCancel,
-        onSecondaryTapDown: onSecondaryTapDown,
-        onSecondaryTapUp: onSecondaryTapUp,
-        onTapCancel: onTapCancel,
-        onTapDown: onTapDown,
-        onTapUp: onTapUp,
-        statesController: statesController,
-        child: Card(
-          elevation: elevation,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: image,
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
-              ),
-            ),
-            // crossAxisAlignment: CrossAxisAlignment.stretch, //add this
-            child: Visibility(
-              visible: title.isNotBlank || description.isNotBlank,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: LinearGradient(
-                    transform: const GradientRotation(109),
-                    colors: [Colors.transparent, (accentColor ?? Colors.black).withOpacity(0.7)],
-                  ),
+  Widget build(BuildContext context) => Tooltip(
+        message: tooltip,
+        child: InkWell(
+          splashColor: accentColor,
+          autofocus: autofocus,
+          canRequestFocus: canRequestFocus,
+          focusColor: accentColor?.withOpacity(.7),
+          enableFeedback: enableFeedback,
+          hoverColor: accentColor?.withOpacity(.7),
+          mouseCursor: mouseCursor,
+          focusNode: focusNode,
+          hoverDuration: hoverDuration,
+          highlightColor: accentColor,
+          onTap: onTap,
+          onDoubleTap: onDoubleTap,
+          onLongPress: onLongPress,
+          onSecondaryTap: onSecondaryTap,
+          onFocusChange: onFocusChange,
+          onHighlightChanged: onHighlightChanged,
+          onHover: onHover,
+          onSecondaryTapCancel: onSecondaryTapCancel,
+          onSecondaryTapDown: onSecondaryTapDown,
+          onSecondaryTapUp: onSecondaryTapUp,
+          onTapCancel: onTapCancel,
+          onTapDown: onTapDown,
+          onTapUp: onTapUp,
+          statesController: statesController,
+          child: Card(
+            elevation: elevation,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: image,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
                 ),
+              ),
+              // crossAxisAlignment: CrossAxisAlignment.stretch, //add this
+              child: Visibility(
+                visible: title.isNotBlank || description.isNotBlank,
                 child: Container(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (title.isNotBlank)
-                        Text(
-                          title!,
-                          maxLines: 2,
-                          textAlign: TextAlign.center,
-                          style: context.headlineSmall,
-                          overflow: TextOverflow.fade,
-                          textScaler: TextScaler.linear(textScaleFactor),
-                        ).bold(),
-                      if (description.isNotBlank)
-                        Text(
-                          description!,
-                          maxLines: 2,
-                          textAlign: TextAlign.center,
-                          style: context.titleMedium,
-                          overflow: TextOverflow.ellipsis,
-                          textScaler: TextScaler.linear(textScaleFactor),
-                        ).italic(),
-                    ],
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(
+                      transform: const GradientRotation(109),
+                      colors: [Colors.transparent, (accentColor ?? Colors.black).withOpacity(0.7)],
+                    ),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (title.isNotBlank)
+                          Text(
+                            title!,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            style: context.headlineSmall,
+                            overflow: TextOverflow.fade,
+                            textScaler: TextScaler.linear(textScaleFactor),
+                          ).bold(),
+                        if (description.isNotBlank)
+                          Text(
+                            description!,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            style: context.titleMedium,
+                            overflow: TextOverflow.ellipsis,
+                            textScaler: TextScaler.linear(textScaleFactor),
+                          ).italic(),
+                      ],
+                    ),
                   ),
                 ),
               ),
