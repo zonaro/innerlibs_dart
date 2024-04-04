@@ -222,4 +222,10 @@ extension DateTimeExtensions on DateTime {
   }
 
   Duration get fromNow => now.difference(this);
+
+  Duration operator -(DateTime other) => difference(other);
+  bool operator >(DateTime other) => isAfter(other);
+  bool operator <(DateTime other) => isBefore(other);
+  bool operator >=(DateTime other) => this > other || this == other;
+  bool operator <=(DateTime other) => this < other || this == other;
 }
