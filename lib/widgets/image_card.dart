@@ -3,12 +3,12 @@ import 'package:innerlibs/innerlibs.dart';
 
 class ImageCard extends StatelessWidget {
   const ImageCard({
-    Key? key,
+    super.key,
     required this.image,
     this.title,
-    this.height = 100,
     this.textScaleFactor = 1,
-    this.accentColor,
+    this.accentColor = Colors.black,
+    this.textColor = Colors.white,
     this.description,
     this.onTap,
     this.elevation,
@@ -32,16 +32,20 @@ class ImageCard extends StatelessWidget {
     this.statesController,
     this.hoverDuration,
     this.tooltip,
-    this.textAlign = TextAlign.center,
-  }) : super(key: key);
+    this.mainAxisAlignment = MainAxisAlignment.end,
+    this.crossAxisAlignment = CrossAxisAlignment.start,
+  });
 
   final String? title;
   final ImageProvider image;
-  final Color? accentColor;
+  final Color accentColor;
+  final Color textColor;
   final String? description;
   final double? elevation;
   final double textScaleFactor;
-  final TextAlign textAlign;
+
+  final MainAxisAlignment mainAxisAlignment;
+  final CrossAxisAlignment crossAxisAlignment;
 
   /// Called when the user taps this part of the material.
   final GestureTapCallback? onTap;
@@ -157,20 +161,56 @@ class ImageCard extends StatelessWidget {
   /// The default is 50ms.
   final Duration? hoverDuration;
 
-  final double height;
-
+  /// the tooltip message
   final string? tooltip;
+
+  TextAlign get textAlign =>
+      {
+        CrossAxisAlignment.start: TextAlign.start,
+        CrossAxisAlignment.center: TextAlign.center,
+        CrossAxisAlignment.end: TextAlign.end,
+        CrossAxisAlignment.stretch: TextAlign.justify,
+      }[crossAxisAlignment] ??
+      TextAlign.start;
+
+  Alignment get begin =>
+      {
+        (MainAxisAlignment.start, CrossAxisAlignment.start): Alignment.topLeft,
+        (MainAxisAlignment.start, CrossAxisAlignment.center): Alignment.topCenter,
+        (MainAxisAlignment.start, CrossAxisAlignment.end): Alignment.topRight,
+        (MainAxisAlignment.center, CrossAxisAlignment.start): Alignment.centerLeft,
+        (MainAxisAlignment.center, CrossAxisAlignment.center): Alignment.center,
+        (MainAxisAlignment.center, CrossAxisAlignment.end): Alignment.centerRight,
+        (MainAxisAlignment.end, CrossAxisAlignment.start): Alignment.bottomLeft,
+        (MainAxisAlignment.end, CrossAxisAlignment.center): Alignment.bottomCenter,
+        (MainAxisAlignment.end, CrossAxisAlignment.end): Alignment.bottomRight,
+      }[(mainAxisAlignment, crossAxisAlignment)] ??
+      Alignment.bottomLeft;
+
+  Alignment get end =>
+      {
+        (MainAxisAlignment.start, CrossAxisAlignment.start): Alignment.bottomRight,
+        (MainAxisAlignment.start, CrossAxisAlignment.center): Alignment.bottomCenter,
+        (MainAxisAlignment.start, CrossAxisAlignment.end): Alignment.bottomRight,
+        (MainAxisAlignment.center, CrossAxisAlignment.start): Alignment.centerRight,
+        (MainAxisAlignment.center, CrossAxisAlignment.center): Alignment.center,
+        (MainAxisAlignment.center, CrossAxisAlignment.end): Alignment.centerLeft,
+        (MainAxisAlignment.end, CrossAxisAlignment.start): Alignment.topRight,
+        (MainAxisAlignment.end, CrossAxisAlignment.center): Alignment.topCenter,
+        (MainAxisAlignment.end, CrossAxisAlignment.end): Alignment.topLeft,
+      }[(mainAxisAlignment, crossAxisAlignment)] ??
+      Alignment.topRight;
 
   @override
   Widget build(BuildContext context) => Tooltip(
-        message: tooltip,
+        message: (tooltip ?? ""),
         child: InkWell(
           splashColor: accentColor,
           autofocus: autofocus,
           canRequestFocus: canRequestFocus,
-          focusColor: accentColor?.withOpacity(.7),
+          focusColor: accentColor.withOpacity(.7),
           enableFeedback: enableFeedback,
-          hoverColor: accentColor?.withOpacity(.7),
+          hoverColor: accentColor.withOpacity(.7),
           mouseCursor: mouseCursor,
           focusNode: focusNode,
           hoverDuration: hoverDuration,
@@ -189,58 +229,49 @@ class ImageCard extends StatelessWidget {
           onTapDown: onTapDown,
           onTapUp: onTapUp,
           statesController: statesController,
-          child: Card(
-            elevation: elevation,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: image,
+                fit: title.isValid || description.isValid ? BoxFit.cover : BoxFit.contain,
+              ),
+            ),
             child: Container(
+              padding: 15.asEdgeInsets,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: image,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                ),
+                gradient: title.isValid || description.isValid
+                    ? LinearGradient(
+                        colors: [accentColor, (accentColor).withOpacity(.3), Colors.transparent],
+                        begin: begin,
+                        end: end,
+                      )
+                    : null,
               ),
-              // crossAxisAlignment: CrossAxisAlignment.stretch, //add this
-              child: Visibility(
-                visible: title.isNotBlank || description.isNotBlank,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: LinearGradient(
-                      transform: const GradientRotation(109),
-                      colors: [Colors.transparent, (accentColor ?? Colors.black).withOpacity(0.7)],
-                    ),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (title.isNotBlank)
-                          Text(
-                            title!,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            style: context.headlineSmall,
-                            overflow: TextOverflow.fade,
-                            textScaler: TextScaler.linear(textScaleFactor),
-                          ).bold(),
-                        if (description.isNotBlank)
-                          Text(
-                            description!,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            style: context.titleMedium,
-                            overflow: TextOverflow.ellipsis,
-                            textScaler: TextScaler.linear(textScaleFactor),
-                          ).italic(),
-                      ],
-                    ),
-                  ),
-                ),
+              child: Column(
+                mainAxisAlignment: mainAxisAlignment,
+                crossAxisAlignment: crossAxisAlignment,
+                children: [
+                  if (title.isValid)
+                    Text(
+                      title!,
+                      style: context.headlineSmall,
+                      textAlign: textAlign,
+                    ).textColor(textColor),
+                  if (description.isValid)
+                    Text(
+                      description!,
+                      style: context.bodyLarge,
+                      textAlign: textAlign,
+                    ).textColor(Colors.white),
+                ],
               ),
+            ),
+          ).wrapIf(
+            elevation != null,
+            (wrappedChild) => Card(
+              elevation: elevation,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              child: wrappedChild,
             ),
           ),
         ),
