@@ -4,8 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
+/// Holds and validate the data loaded by a [FutureAwaiter]. Optionally expires after [expireDataAfter]
 class AwaiterData<T> extends ValueNotifier<T?> {
-  AwaiterData({this.validate = true, T? value}) : super(value);
+  AwaiterData({this.validate = true, T? value, this.expireDataAfter}) : super(value);
 
   /// return true if the last
   bool get expired {
