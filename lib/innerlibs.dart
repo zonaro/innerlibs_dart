@@ -54,6 +54,7 @@ export 'widgets/date_picker_form_field.dart';
 export 'widgets/future_awaiter.dart';
 export 'widgets/icon_card.dart';
 export 'widgets/image_card.dart';
+export 'widgets/min_size.dart';
 export 'widgets/nil.dart';
 export 'widgets/responsive.dart';
 export 'widgets/responsive_grid.dart';
