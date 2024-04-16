@@ -201,6 +201,9 @@ extension StringExtension on String {
     return query;
   }
 
+  string get urlEncode => Uri.encodeQueryComponent(this);
+  string get urlDecode => Uri.decodeQueryComponent(this);
+
   /// Return a checksum digit for a barcode
   String get generateBarcodeCheckSum {
     if (isNotNumber) {
@@ -1890,7 +1893,7 @@ extension StringExtension on String {
   String? asIf(bool Function(String?) comparison, String? trueString, String? falseString) => comparison(this) ? trueString : falseString;
 
   /// Wraps the `String` between two strings. If [before] is a wrap char and [after] is omitted, the method resolve [after] using [getOppositeChar].
- 
+
   String wrap(String? before, [String? after]) {
     if (before.isBlank && after.isBlank) return blankIfNull;
     before = before.ifBlank("")!;
