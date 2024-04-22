@@ -26,7 +26,15 @@ Brightness get brightness => SchedulerBinding.instance.platformDispatcher.platfo
 bool get isDarkMode => brightness == Brightness.dark;
 bool get isLightMode => brightness == Brightness.light;
 
+DateTime get minDate => DateTime.utc(1970, 1, 1);
+DateTime get maxDate => DateTime.utc(9999, 12, 31, 23, 59, 59);
+
 date get now => DateTime.now();
+date get today => DateTime(thisYear, now.month, now.day);
+date get tomorrow => now.add(1.days);
+date get yesterday => now.subtract(1.days);
+
+date get lastWeek => now.lastDayOfWeek - 7.days;
 int get thisYear => now.year;
 
 consoleLog(

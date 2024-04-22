@@ -1,12 +1,9 @@
 import 'package:innerlibs/innerlibs.dart';
 import 'package:innerlibs/utils/constants.dart';
+import 'package:intl/intl.dart';
 
 extension DateTimeExtensions on DateTime {
-  static DateTime get min => DateTime.utc(1970, 1, 1);
-  static DateTime get max => DateTime.utc(9999, 12, 31, 23, 59, 59);
-  static DateTime get now => DateTime.now();
-
-  DateTime findNextDate(int weekday) {
+  DateTime findNextDayOfWeek(int weekday) {
     int daysDifference = weekday - this.weekday;
     if (daysDifference <= 0) {
       daysDifference += 7;
@@ -14,22 +11,27 @@ extension DateTimeExtensions on DateTime {
     return add(Duration(days: daysDifference));
   }
 
+  DateTime get lastDayOfWeek => add((DateTime.daysPerWeek - weekday).days);
+
+  DateTime get firstDayOfWeek => subtract((weekday - 1).days);
+
   bool isSameDate(DateTime other) => year == other.year && month == other.month && day == other.day;
 
-  bool get isToday => year == now.year && month == now.month && day == now.day;
+  bool get isToday => isSameDate(now);
 
-  bool get isYesterday => now.subtract(const Duration(days: 1)).isSameDate(this);
-  bool get isTomorrow => now.add(const Duration(days: 1)).isSameDate(this);
+  bool get isYesterday => isSameDate(yesterday);
+
+  bool get isTomorrow => isSameDate(tomorrow);
 
   /// Readable Date
   ///
   /// Returns date string in the format Tuesday 1 January 2022
-  String get readableDate => '$getDay $day $getMonth $year';
+  String get readableDate => '$longWeekDay $day $monthName $year';
 
   /// Readable DateTime
   ///
   /// Returns date and time string in the format January 12, 2022 08:00:15
-  String get readableDateTime => "$getMonth $day, $year ${hour >= 10 ? hour : "0$hour"}"
+  String get readableDateTime => "$monthName $day, $year ${hour >= 10 ? hour : "0$hour"}"
       ":${minute >= 10 ? minute : "0$minute"}:${second >= 10 ? second : "0"
           "$second"}";
 
@@ -42,22 +44,22 @@ extension DateTimeExtensions on DateTime {
   /// Get Day
   ///
   /// Returns day string in the format Monday, Tuesday etc
-  String get getDay => weekday == 7 ? DateConstants.days[0].day : DateConstants.days[weekday].day;
+  String get longWeekDay => weekday == 7 ? DateConstants.days[0].day : DateConstants.days[weekday].day;
 
   /// Get Short Day
   ///
   /// Returns short day string in the format Mon, Tue, Wed etc
-  String get getShortDay => getDay.first(3);
+  String get shortWeekday => longWeekDay.first(3);
 
   /// Get Month
   ///
   /// Returns month string in the format January, February etc
-  String get getMonth => DateConstants.months[month - 1].month;
+  String get monthName => DateConstants.months[month - 1].month;
 
   /// Get Short Month
   ///
   /// Returns short month string in the format Jan, Feb etc
-  String get getShortMonth => getMonth.first(3);
+  String get shortMonthName => monthName.first(3);
 
   /// Time Ago
   ///
@@ -215,17 +217,21 @@ extension DateTimeExtensions on DateTime {
     } else if (difference == 1) {
       return yesterday;
     } else if (difference <= 7) {
-      return getDay;
+      return longWeekDay;
     } else {
-      return '$day/$getMonth/$year';
+      return '$day/$monthName/$year';
     }
   }
 
   Duration get fromNow => now.difference(this);
 
-  Duration operator -(DateTime other) => difference(other);
+  DateTime operator -(Duration other) => subtract(other);
+  DateTime operator +(Duration other) => add(other);
+
   bool operator >(DateTime other) => isAfter(other);
   bool operator <(DateTime other) => isBefore(other);
   bool operator >=(DateTime other) => this > other || this == other;
   bool operator <=(DateTime other) => this < other || this == other;
+
+  string format(string format) => DateFormat(format).format(this);
 }

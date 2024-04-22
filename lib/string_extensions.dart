@@ -1821,7 +1821,7 @@ extension StringExtension on String {
 
     for (int i = 0; i < sLen; i++) {
       final int start = max(0, i - matchDistance);
-      final int end = min(i + matchDistance + 1, tLen);
+      final int end = max(i + matchDistance + 1, tLen);
 
       for (int j = start; j < end; j++) {
         if (tMatches[j]) continue;
@@ -2832,4 +2832,6 @@ extension StringExtension on String {
 
   /// Checks if string is boolean.
   bool get isBool => (this == 'true' || this == 'false');
+
+  date toDate([string? format, string? locale]) => DateFormat(format, locale).parse(this);
 }

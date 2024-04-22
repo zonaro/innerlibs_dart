@@ -61,8 +61,8 @@ class _DateTimePickerFormFieldState extends State<DateTimePickerFormField> {
   MaskTextInputFormatter dateMaskFormatter = MaskTextInputFormatter();
   DateFormat format = DateFormat();
   void initialize() {
-    _start = widget.fromDate ?? DateTimeExtensions.min;
-    _end = widget.toDate ?? DateTimeExtensions.max;
+    _start = widget.fromDate ?? minDate;
+    _end = widget.toDate ?? maxDate;
     _initialData = widget.initialDate ?? date.now();
     _controller = widget.dateController ?? _controller;
     format = DateFormat(widget.maskFormat);
