@@ -25,15 +25,15 @@ extension NumExtensions on num {
   /// print(1.hours + 30.minutes);
   /// print(1.5.hours);
   ///```
-  Duration get milliseconds => Duration(microseconds: (this * 1000).round());
+  Duration get milliseconds => Duration(microseconds: round());
 
-  Duration get seconds => Duration(milliseconds: (this * 1000).round());
+  Duration get seconds => Duration(milliseconds: round());
 
-  Duration get minutes => Duration(seconds: (this * Duration.secondsPerMinute).round());
+  Duration get minutes => Duration(minutes: round());
 
-  Duration get hours => Duration(minutes: (this * Duration.minutesPerHour).round());
+  Duration get hours => Duration(hours: round());
 
-  Duration get days => Duration(hours: (this * Duration.hoursPerDay).round());
+  Duration get days => Duration(days: round());
 
   bool isLowerThan(num b) => this < b;
 

@@ -8,16 +8,24 @@ import 'package:innerlibs/innerlibs.dart';
 class AwaiterData<T> extends ValueNotifier<T?> {
   AwaiterData({this.validate = true, T? value, this.expireDataAfter}) : super(value);
 
-  /// return true if the last
+  /// return true if last [expireAt] is less than [now]
   bool get expired {
     if (loadedAt == null) return true;
     if (expireAt != null) return expireAt! <= now;
     return false;
   }
 
+  set expired(bool value) {
+    if (value) {
+      loadedAt = null;
+      this.value = null;
+    }
+  }
+
   date? loadedAt;
+
   Duration? expireDataAfter;
-  date? get expireAt => expireDataAfter == null || loadedAt == null ? null : loadedAt!.add(expireDataAfter!);
+  date? get expireAt => expireDataAfter != null && loadedAt != null ? loadedAt!.add(expireDataAfter!) : null;
 
   /// When true, validate the snapshot data against the [Object.IsValid] function.
   /// Empty [List] or [Map], [Map] with all values empty, [num] = 0, empty or blank [String] will be considered empty data if this is true.
@@ -134,8 +142,8 @@ class FutureAwaiter<T> extends StatelessWidget {
       );
     }
     consoleLog("Using previous loaded data...");
-    consoleLog("Date: ${data.loadedAt?.toIso8601String()}");
-    consoleLog("Expire: ${data.expireAt?.toIso8601String() ?? "never"}");
+    consoleLog("Creation date: ${data.loadedAt?.toIso8601String()}");
+    consoleLog("Expire at: ${data.expireAt?.toIso8601String() ?? "never"}");
     return _buildWidget(AsyncSnapshot.withData(ConnectionState.none, data.value as T));
   }
 }

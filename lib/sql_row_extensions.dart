@@ -29,4 +29,10 @@ extension SqlRowExtensions on JsonRow {
     String whereClause = entries.map((e) => "${e.key.wrap(quoteChar ?? defaultQuoteChar)} = ${(e.value as Object?).asSqlValue()}").join(' AND ');
     return 'DELETE FROM ${tableName.wrap(quoteChar ?? defaultQuoteChar)} WHERE $whereClause;';
   }
+
+  String asSelectWhereCommand(String tableName, [strings columns = const [], string? quoteChar]) {
+    String whereClause = entries.map((e) => "${e.key.wrap(quoteChar ?? defaultQuoteChar)} = ${(e.value as Object?).asSqlValue()}").join(' AND ');
+    string columnString = columns.map((e) => e.wrap(quoteChar ?? defaultQuoteChar)).join(", ").ifBlank("*")!;
+    return 'SELECT $columnString FROM ${tableName.wrap(quoteChar ?? defaultQuoteChar)} WHERE $whereClause;';
+  }
 }
