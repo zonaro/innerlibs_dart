@@ -45,8 +45,25 @@ extension NumExtensions on num {
 
   bool isBetweenOrEqual(num start, num end) => isBetween(start, end) || this == start || this == end;
 
-  String quantityText(String plural, [String singular = ""]) => (round() == 1 || round() == -1) ? singular.ifBlank(plural.singular)! : plural;
-  String quantityTextPt(String plural, [String singular = ""]) => (round() == 1 || round() == -1) ? singular.ifBlank(plural.singularPt)! : plural;
+  String quantityTextPt(String plural, [String singular = "", bool includeNumber = true]) {
+    var pre = (includeNumber ? toString() : "");
+    if ((round() == 1 || round() == -1)) {
+      pre = "$pre ${singular.ifBlank(plural.singularPt)!}";
+    } else {
+      pre = "$pre $plural";
+    }
+    return pre;
+  }
+
+  String quantityText(String plural, [String singular = "", bool includeNumber = true]) {
+    var pre = (includeNumber ? toString() : "");
+    if ((round() == 1 || round() == -1)) {
+      pre = "$pre ${singular.ifBlank(plural.singular)!}";
+    } else {
+      pre = "$pre $plural";
+    }
+    return pre;
+  }
 
   int findGreatestCommonDivisor(int b) {
     int a = round();

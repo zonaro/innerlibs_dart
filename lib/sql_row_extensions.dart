@@ -21,18 +21,21 @@ extension SqlRowExtensions on JsonRow {
     var upsertMap = JsonRow.from(this);
     primaryKeys.keys.forEach(upsertMap.remove);
     String updates = upsertMap.entries.map((e) => "${e.key.wrap(quoteChar ?? defaultQuoteChar)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
-    String whereClause = primaryKeys.entries.map((e) => "${e.key.wrap(quoteChar ?? defaultQuoteChar)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' AND ');
+    String whereClause = primaryKeys.asWhereClausule(nullAsBlank, quoteChar);
+
     return 'UPDATE ${tableName.wrap(quoteChar ?? defaultQuoteChar)} SET $updates WHERE $whereClause;';
   }
 
-  String asDeleteCommand(String tableName, [string? quoteChar]) {
-    String whereClause = entries.map((e) => "${e.key.wrap(quoteChar ?? defaultQuoteChar)} = ${(e.value as Object?).asSqlValue()}").join(' AND ');
+  String asDeleteCommand(String tableName, [bool nullAsBlank = false, string? quoteChar]) {
+    String whereClause = asWhereClausule(nullAsBlank, quoteChar);
     return 'DELETE FROM ${tableName.wrap(quoteChar ?? defaultQuoteChar)} WHERE $whereClause;';
   }
 
-  String asSelectWhereCommand(String tableName, [strings columns = const [], string? quoteChar]) {
-    String whereClause = entries.map((e) => "${e.key.wrap(quoteChar ?? defaultQuoteChar)} = ${(e.value as Object?).asSqlValue()}").join(' AND ');
+  String asSelectWhereCommand(String tableName, [strings columns = const [], bool nullAsBlank = false, string? quoteChar]) {
+    String whereClause = asWhereClausule(nullAsBlank, quoteChar);
     string columnString = columns.map((e) => e.wrap(quoteChar ?? defaultQuoteChar)).join(", ").ifBlank("*")!;
     return 'SELECT $columnString FROM ${tableName.wrap(quoteChar ?? defaultQuoteChar)} WHERE $whereClause;';
   }
+
+  String asWhereClausule([bool nullAsBlank = false, string? quoteChar]) => entries.map((e) => "${e.key.wrap(quoteChar ?? defaultQuoteChar)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' AND ');
 }
