@@ -66,6 +66,36 @@ extension ListExtension<T> on List<T> {
     other.addAll(i);
     return i;
   }
+
+  /// Remove the last [count] items of a list thats satisfy the [predicate]
+  List<T> removeLastWhere(bool Function(T) predicate, [int count = 1]) {
+    if (count > 0) {
+      int c = 0;
+      for (int i = length - 1; i >= 0; i--) {
+        if (predicate(this[i])) {
+          if (c >= count) break;
+          removeAt(i);
+          c++;
+        }
+      }
+    }
+    return this;
+  }
+
+  /// Remove the first [count] items of a list thats satisfy the [predicate]
+  List<T> removeFirstWhere(bool Function(T) predicate, [int count = 1]) {
+    if (count > 0) {
+      int c = 0;
+      for (int i = 0; i < length; i++) {
+        if (predicate(this[i])) {
+          if (c >= count) break;
+          removeAt(i);
+          c++;
+        }
+      }
+    }
+    return this;
+  }
 }
 
 /// Adds extensions to the `List` class
@@ -74,7 +104,7 @@ extension IterableExtension<T> on Iterable<T> {
   ///
   /// Elements with the same hashCode are considered duplicates
   /// and only the first occurrence is retained.
-  List<T> distinct() => distinctBy((x) => x.hashCode);
+  List<T> get distinct => distinctBy((x) => x.hashCode);
 
   /// Removes duplicate elements from a list based on a provided predicate.
   ///
@@ -105,38 +135,6 @@ extension IterableExtension<T> on Iterable<T> {
       }
     }
     return uniqueElements.toList();
-  }
-
-  /// Remove the last [count] items of a list thats satisfy the [predicate]
-  List<T> removeLastWhere(bool Function(T) predicate, [int count = 1]) {
-    var l = toList();
-    if (count > 0) {
-      int c = 0;
-      for (int i = l.length - 1; i >= 0; i--) {
-        if (predicate(l[i])) {
-          if (c >= count) break;
-          l.removeAt(i);
-          c++;
-        }
-      }
-    }
-    return l;
-  }
-
-  /// Remove the first [count] items of a list thats satisfy the [predicate]
-  List<T> removeFirstWhere(bool Function(T) predicate, [int count = 1]) {
-    var l = toList();
-    if (count > 0) {
-      int c = 0;
-      for (int i = 0; i < l.length; i++) {
-        if (predicate(l[i])) {
-          if (c >= count) break;
-          l.removeAt(i);
-          c++;
-        }
-      }
-    }
-    return l;
   }
 
   /// Groups the items in the list by the item returned by the lambda function.
@@ -244,6 +242,66 @@ extension IterableExtension<T> on Iterable<T> {
     }
 
     return false; // Not enough matching values
+  }
+
+  /// Returns the most frequent element in the list.
+  ///
+  /// Throws an exception if the list is empty.
+  T? get mostFrequent {
+    if (isEmpty) {
+      return null;
+    }
+
+    // Create a map to store the frequency of each element
+    final frequencyMap = <T, int>{};
+
+    // Iterate over the list and update the frequency map
+    for (final element in this) {
+      frequencyMap[element] = (frequencyMap[element] ?? 0) + 1;
+    }
+
+    // Find the element with the highest frequency
+    T? mostFrequentElement;
+    int maxFrequency = 0;
+
+    for (final entry in frequencyMap.entries) {
+      if (entry.value > maxFrequency) {
+        maxFrequency = entry.value;
+        mostFrequentElement = entry.key;
+      }
+    }
+
+    return mostFrequentElement;
+  }
+
+  /// Returns the least frequent element in the list.
+  ///
+  /// Throws an exception if the list is empty.
+  T? get leastFrequent {
+    if (isEmpty) {
+      return null;
+    }
+
+    // Create a map to store the frequency of each element
+    final frequencyMap = <T, int>{};
+
+    // Iterate over the list and update the frequency map
+    for (final element in this) {
+      frequencyMap[element] = (frequencyMap[element] ?? 0) + 1;
+    }
+
+    // Find the element with the lowest frequency
+    T? leastFrequentElement;
+    int minFrequency = length + 1;
+
+    for (final entry in frequencyMap.entries) {
+      if (entry.value < minFrequency) {
+        minFrequency = entry.value;
+        leastFrequentElement = entry.key;
+      }
+    }
+
+    return leastFrequentElement;
   }
 }
 
