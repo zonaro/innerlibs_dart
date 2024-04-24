@@ -6,6 +6,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
+export 'package:darq/darq.dart';
+
 export 'align_extensions.dart';
 export 'alignment_extensions.dart';
 export 'boolean_extensions.dart';

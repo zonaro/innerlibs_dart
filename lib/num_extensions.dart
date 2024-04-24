@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:innerlibs/string_extensions.dart';
+import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
 extension NumExtensions on num {
@@ -34,6 +34,11 @@ extension NumExtensions on num {
   Duration get hours => Duration(hours: round());
 
   Duration get days => Duration(days: round());
+
+  num lockMin(num minValue) => (<num>[this, minValue]).min();
+  num lockMax(num maxValue) => (<num>[this, maxValue]).max();
+
+  num lockBetween(num minValue, num maxValue) => lockMin(minValue).lockMax(maxValue);
 
   bool isLowerThan(num b) => this < b;
 

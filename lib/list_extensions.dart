@@ -100,12 +100,6 @@ extension ListExtension<T> on List<T> {
 
 /// Adds extensions to the `List` class
 extension IterableExtension<T> on Iterable<T> {
-  /// Removes duplicate elements from a list.
-  ///
-  /// Elements with the same hashCode are considered duplicates
-  /// and only the first occurrence is retained.
-  List<T> get distinct => distinctBy((x) => x.hashCode);
-
   /// Removes duplicate elements from a list based on a provided predicate.
   ///
   /// The [predicate] function should return a value that uniquely identifies
@@ -142,17 +136,7 @@ extension IterableExtension<T> on Iterable<T> {
   /// The lambda function takes an item of type T and returns a item of type M used as key.
   /// The function returns a Map<M,List<T>> where each key is a item of type M
   /// returned by the lambda function and each value is a list of items that have that key.
-  Map<M, List<T>> groupAndMapBy<M>(M Function(T) keyFunction) {
-    Map<M, List<T>> map = {};
-    forEach((item) {
-      M key = keyFunction(item);
-      if (!map.containsKey(key)) {
-        map[key] = [];
-      }
-      map[key]?.add(item);
-    });
-    return map;
-  }
+  Map<M, List<T>> groupAndMapBy<M>(M Function(T) keyFunction) => groupBy(keyFunction).toMap((e) => MapEntry(e.key, e.elements));
 
   /// Groups the items in the list by the item returned by the lambda function and remaps the values.
   ///
@@ -304,6 +288,35 @@ extension IterableExtension<T> on Iterable<T> {
     return leastFrequentElement;
   }
 }
+
+// extension ComparableListExtension<T extends Comparable<T>> on Iterable<T> {
+//   T? get min {
+//     if (isEmpty) {
+//       return null;
+//     }
+//     T minValue = first;
+//     for (var i in this) {
+//       if (i.compareTo(minValue) < 0) {
+//         minValue = i;
+//       }
+//     }
+//     return minValue;
+//   }
+
+//   T? get max {
+//     if (isEmpty) {
+//       return null;
+//     }
+//     T maxValue = first;
+//     for (var i in this) {
+//       if (i.compareTo(maxValue) > 0) {
+//         maxValue = i;
+//       }
+//     }
+//     return maxValue;
+//   }
+
+// }
 
 class KeyedJsonTable<T> extends Iterable<JsonRow> {
   final string keyName;
