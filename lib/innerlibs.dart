@@ -52,6 +52,7 @@ export 'utils/sql_response.dart';
 export 'utils/validation_interface.dart';
 export 'widget_ext.dart';
 export 'widgets/avatar_image.dart';
+export 'widgets/badge.dart';
 export 'widgets/date_picker_form_field.dart';
 export 'widgets/future_awaiter.dart';
 export 'widgets/icon_card.dart';

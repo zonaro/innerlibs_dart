@@ -31,4 +31,6 @@ extension AlignmentExtensions on Alignment {
     }
     return MainAxisAlignment.spaceBetween;
   }
+
+  Alignment sum({double x = 0, double y = 0}) => Alignment(this.x + x, this.y + y);
 }

@@ -136,7 +136,7 @@ extension IterableExtension<T> on Iterable<T> {
   /// The lambda function takes an item of type T and returns a item of type M used as key.
   /// The function returns a Map<M,List<T>> where each key is a item of type M
   /// returned by the lambda function and each value is a list of items that have that key.
-  Map<M, List<T>> groupAndMapBy<M>(M Function(T) keyFunction) => groupBy(keyFunction).toMap((e) => MapEntry(e.key, e.elements));
+  Map<M, List<T>> groupAndMapBy<M>(M Function(T) keyFunction) => groupBy(keyFunction).toMap((e) => MapEntry(e.key, e.elements), modifiable: true);
 
   /// Groups the items in the list by the item returned by the lambda function and remaps the values.
   ///
