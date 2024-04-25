@@ -3,9 +3,9 @@ import 'package:innerlibs/innerlibs.dart';
 extension SqlRowExtensions on JsonRow {
   static string defaultQuoteChar = '[';
 
-  String asUpsertCommand(String tableName, [Map<String, dynamic>? primaryKeys, bool nullAsBlank = false, string? quoteChar]) {
-    if (primaryKeys.isValid) {
-      return asUpdateCommand(tableName, primaryKeys!, nullAsBlank, quoteChar ?? defaultQuoteChar);
+  String asUpsertCommand(String tableName, [Map<String, dynamic>? where, bool nullAsBlank = false, string? quoteChar]) {
+    if (where.isValid) {
+      return asUpdateCommand(tableName, where!, nullAsBlank, quoteChar ?? defaultQuoteChar);
     } else {
       return asInsertCommand(tableName, nullAsBlank, quoteChar ?? defaultQuoteChar);
     }
@@ -17,11 +17,11 @@ extension SqlRowExtensions on JsonRow {
     return 'INSERT INTO ${tableName.wrap(quoteChar ?? defaultQuoteChar)} ($columns) VALUES ($values);';
   }
 
-  string asUpdateCommand(string tableName, JsonMap primaryKeys, [bool nullAsBlank = false, string? quoteChar]) {
+  string asUpdateCommand(string tableName, JsonMap where, [bool nullAsBlank = false, string? quoteChar]) {
     var upsertMap = JsonRow.from(this);
-    primaryKeys.keys.forEach(upsertMap.remove);
+    where.keys.forEach(upsertMap.remove);
     String updates = upsertMap.entries.map((e) => "${e.key.wrap(quoteChar ?? defaultQuoteChar)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
-    String whereClause = primaryKeys.asWhereClausule(nullAsBlank, quoteChar);
+    String whereClause = where.asWhereClausule(nullAsBlank, quoteChar);
 
     return 'UPDATE ${tableName.wrap(quoteChar ?? defaultQuoteChar)} SET $updates WHERE $whereClause;';
   }
