@@ -38,7 +38,7 @@ extension StringListExtensions on strings {
   /// Removes duplicate elements from a [strings].
   ///
   /// Use the [flatEqual] function to compare strings.
-  List<string> distinctFlat<E>() {
+  List<string> distinctFlat() {
     Set<string> uniqueElements = {};
     for (string element in this) {
       if (!uniqueElements.any((e) => e.flatEqual(element))) {

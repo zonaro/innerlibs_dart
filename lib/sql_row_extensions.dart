@@ -39,3 +39,23 @@ extension SqlRowExtensions on JsonRow {
 
   String asWhereClausule([bool nullAsBlank = false, string? quoteChar]) => entries.map((e) => "${e.key.wrap(quoteChar ?? defaultQuoteChar)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' AND ');
 }
+
+extension SqlTableExtensions on JsonTable {
+  JsonTable search({required strings searchTerms, strings keys = const [], int? levenshteinDistance}) {
+    if (keys.isEmpty) {
+      keys = selectMany((e, i) => e.keys).distinct().toList();
+    }
+    return where((row) {
+      var hasFlat = keys.where((e) => "${row[e]}".flatContainsAny(searchTerms)).isNotEmpty;
+      if (levenshteinDistance != null) {
+        var hasLev = keys.selectMany((e, i) {
+          var terms = "${row[e]}".getUniqueWords;
+          var levs = searchTerms.selectMany((st, i) => terms.map((t) => st.getLevenshtein(t)));
+          return levs;
+        }).any((element) => element! <= levenshteinDistance);
+        return hasFlat || hasLev;
+      }
+      return hasFlat;
+    }).toList();
+  }
+}
