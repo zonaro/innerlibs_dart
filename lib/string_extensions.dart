@@ -1314,13 +1314,15 @@ extension StringExtension on String {
   /// String foo1 = 'esentis';
   /// int dist = foo.getLevenshtein('esentis2'); // 1
   /// ```
-  int? getLevenshtein(String b) {
+  int? getLevenshtein(String b, [bool caseSensitive = true]) {
     if (isBlank) {
       return null;
     }
-
-    var a = toLowerCase();
-    b = b.toLowerCase();
+    var a = this;
+    if (!caseSensitive) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+    }
 
     List<int> costs = List<int>.filled(b.length + 1, 0);
 

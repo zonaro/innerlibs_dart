@@ -41,21 +41,27 @@ extension SqlRowExtensions on JsonRow {
 }
 
 extension SqlTableExtensions on JsonTable {
-  JsonTable search({required strings searchTerms, strings keys = const [], int? levenshteinDistance}) {
+  Iterable<JsonRow> search({required strings searchTerms, strings keys = const [], int? levenshteinDistance}) {
     if (keys.isEmpty) {
       keys = selectMany((e, i) => e.keys).distinct().toList();
     }
-    return where((row) {
-      var hasFlat = keys.where((e) => "${row[e]}".flatContainsAny(searchTerms)).isNotEmpty;
+
+    searchFunc(JsonRow row) {
+      var hasFlat = keys.where((e) => "${row[e]}".flatContainsAny(searchTerms)).length;
       if (levenshteinDistance != null) {
         var hasLev = keys.selectMany((e, i) {
           var terms = "${row[e]}".getUniqueWords;
-          var levs = searchTerms.selectMany((st, i) => terms.map((t) => st.getLevenshtein(t)));
+          var levs = searchTerms.selectMany((st, i) {
+            var lev = terms.selectMany((t, i) => st.getUniqueWords.map((stw) => t.getLevenshtein(stw, true)!));
+            return lev;
+          });
           return levs;
-        }).any((element) => element! <= levenshteinDistance);
-        return hasFlat || hasLev;
+        }).count((element) => element <= levenshteinDistance);
+        return hasFlat + hasLev;
       }
       return hasFlat;
-    }).toList();
+    }
+
+    return where((row) => searchFunc(row) > 0).orderByDescending(searchFunc);
   }
 }
