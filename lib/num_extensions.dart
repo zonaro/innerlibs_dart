@@ -25,9 +25,11 @@ extension NumExtensions<T extends num> on T {
   /// print(1.hours + 30.minutes);
   /// print(1.5.hours);
   ///```
-  Duration get milliseconds => Duration(microseconds: round());
+  Duration get milliseconds => Duration(milliseconds: round());
 
-  Duration get seconds => Duration(milliseconds: round());
+  Duration get microseconds => Duration(microseconds: round());
+
+  Duration get seconds => Duration(seconds: round());
 
   Duration get minutes => Duration(minutes: round());
 
