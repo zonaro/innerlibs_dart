@@ -111,35 +111,40 @@ extension DialogExt on BuildContext {
   ///
   /// Returns a [Future<bool>].
   Future<bool> confirm(
-    Widget? content, {
-    Widget? title,
-    Widget? textOK,
-    Widget? textCancel,
+    dynamic content, {
+    dynamic title,
+    dynamic textOK,
+    dynamic textCancel,
     bool canPop = false,
     void Function(bool)? onPopInvoked,
   }) async {
     final bool? isConfirm = await showDialog<bool>(
       context: this,
-      builder: (BuildContext context) => PopScope(
-        canPop: canPop,
-        onPopInvoked: onPopInvoked,
-        child: AlertDialog(
-          title: title,
-          content: SingleChildScrollView(
-            child: content ?? const Text('Are you sure continue?'),
+      builder: (BuildContext context) {
+        textOK ??= context.localizations.okButtonLabel;
+        textCancel ??= context.localizations.cancelButtonLabel;
+        content ??= "${context.localizations.continueButtonLabel}?";
+        return PopScope(
+          canPop: canPop,
+          onPopInvoked: onPopInvoked,
+          child: AlertDialog(
+            title: (title as Object?).asNullableText(),
+            content: SingleChildScrollView(
+              child: (content as Object?).asText(),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: (textCancel as Object?).asText(),
+                onPressed: () => context.pop(false),
+              ),
+              TextButton(
+                child: (textOK as Object?).asText(),
+                onPressed: () => context.pop(true),
+              ),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: textCancel ?? Text(MaterialLocalizations.of(context).cancelButtonLabel),
-              onPressed: () => Navigator.pop(context, false),
-            ),
-            TextButton(
-              child: textOK ?? Text(MaterialLocalizations.of(context).okButtonLabel),
-              onPressed: () => Navigator.pop(context, true),
-            ),
-          ],
-        ),
-      ),
+        );
+      },
     );
     return isConfirm ?? false;
   }
@@ -157,7 +162,7 @@ extension DialogExt on BuildContext {
           isDefaultAction: true,
           textStyle: TextStyle(color: cancelTitleColor, fontSize: fontSize),
           onPressed: () => pop(),
-          child: cancelButton!.asText,
+          child: cancelButton!.asText(),
         );
 
         arrWidget.add(action);
@@ -169,7 +174,7 @@ extension DialogExt on BuildContext {
               fontSize: fontSize,
             ),
           ),
-          child: cancelButton!.asText,
+          child: cancelButton!.asText(),
           onPressed: () => pop(),
         );
         arrWidget.add(action);
@@ -189,7 +194,7 @@ extension DialogExt on BuildContext {
             }
             pop();
           },
-          child: buttonTitle.asText,
+          child: buttonTitle.asText(),
         );
       } else {
         action = TextButton(
@@ -199,7 +204,7 @@ extension DialogExt on BuildContext {
               fontSize: fontSize,
             ),
           ),
-          child: buttonTitle.asText,
+          child: buttonTitle.asText(),
           onPressed: () {
             if (onDone != null) {
               onDone(buttonTitle);
@@ -217,14 +222,14 @@ extension DialogExt on BuildContext {
         builder: (BuildContext context) {
           if (isApple) {
             return CupertinoAlertDialog(
-              title: title?.asText,
+              title: title?.asText(),
               content: Text(message),
               actions: arrWidget,
             );
           } else {
             return AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              title: title?.asText,
+              title: title?.asText(),
               content: Text(message),
               actions: arrWidget,
             );
@@ -232,15 +237,15 @@ extension DialogExt on BuildContext {
         });
   }
 
-  Future<T?> showLoaderTask<T>({Future<T?> Function()? task, String cancelTaskButtonText = '', String? loadingText, Widget? textOK, Widget? textCancel, String? confirmationMessage}) async {
+  Future<T?> showLoaderTask<T>({Future<T?> Function()? task, dynamic cancelTaskButtonText, dynamic loadingText, dynamic textOK, dynamic textCancel, dynamic confirmationMessage}) async {
     T? result;
     CancelableOperation<T?>? operation;
 
-    bool cancellable = cancelTaskButtonText.isNotBlank && task != null;
+    bool cancellable = (cancelTaskButtonText as Object?).asNullableText() != null && task != null;
 
     cancelTask() async {
       if (cancellable) {
-        if (confirmationMessage.isBlank || await confirm(confirmationMessage!.asText, textCancel: textCancel, textOK: textOK)) {
+        if (confirmationMessage == null || await confirm(confirmationMessage, textCancel: textCancel, textOK: textOK)) {
           await operation?.cancel();
         }
         if (canPop()) {
@@ -261,7 +266,7 @@ extension DialogExt on BuildContext {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: cancelTask,
-                child: cancelTaskButtonText.asText,
+                child: (cancelTaskButtonText).asNullableText(),
               ),
             ],
           ],
@@ -273,7 +278,7 @@ extension DialogExt on BuildContext {
                 const CircularProgressIndicator(),
                 if (loadingText != null) ...[
                   const SizedBox(height: 20),
-                  Text(loadingText),
+                  (loadingText as Object?).asText(),
                 ],
               ],
             ),

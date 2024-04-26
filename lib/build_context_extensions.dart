@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 extension BuildContextExtensions on BuildContext {
+  MaterialLocalizations get localizations => MaterialLocalizations.of(this);
+
 //  THEMES
 
   /// performs a simple [Theme.of(context)] action and returns given [result]
@@ -55,7 +57,7 @@ extension BuildContextExtensions on BuildContext {
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
 
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(SnackBar snackBar) => scaffoldMessenger.showSnackBar(snackBar);
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBarMessage(string snackBar) => showSnackBar(SnackBar(content: snackBar.asText));
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBarMessage(string message) => showSnackBar(SnackBar(content: message.asText()));
 
   /// The color of [Divider]s and [PopupMenuDivider]s, also used
   /// between [ListTile]s, between rows in [DataTable]s, and so forth.
@@ -289,6 +291,23 @@ extension BuildContextExtensions on BuildContext {
         1600: ScreenTier.xl,
         double.infinity: ScreenTier.xxl,
       });
+
+  /// a font size computed by [ScreenTier]
+
+  double adaptativeSize([double? fontSize, double factor = .1]) {
+    fontSize ??= textTheme.bodyMedium?.fontSize ?? 14;
+    fontSize = fontSize.forcePositive;
+    factor = factor.forcePositive;
+    return valueByTier(
+      xxs: fontSize * (1 - factor * 3),
+      xs: fontSize * (1 - factor * 2),
+      sm: fontSize * (1 - factor * 1),
+      md: fontSize,
+      lg: fontSize * (1 + factor * 1),
+      xl: fontSize * (1 + factor * 2),
+      xxl: fontSize * (1 + factor * 3),
+    );
+  }
 
   MediaQueryData get mediaQuery => MediaQuery.of(this);
 

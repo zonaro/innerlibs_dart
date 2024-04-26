@@ -5,19 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
-extension NumExtensions on num {
+extension NumExtensions<T extends num> on T {
   Widget get widthBox => SizedBox(width: double.tryParse(toString()));
 
   Widget get heightBox => SizedBox(height: double.tryParse(toString()));
 
   ///   print('+ wait for 2 seconds');
-  ///   await 2.delay();
+  ///   await 2000.delay();
   ///   print('- 2 seconds completed');
   ///   print('+ callback in 1.2sec');
-  ///   1.delay(() => print('- 1.2sec callback called'));
+  ///   1000.delay(() => print('- 1.2sec callback called'));
   ///   print('currently running callback 1.2sec');
   Future delay([FutureOr Function()? callback]) async => Future.delayed(
-        Duration(milliseconds: (this * 1000).round()),
+        Duration(milliseconds: round()),
         callback,
       );
 
@@ -35,10 +35,13 @@ extension NumExtensions on num {
 
   Duration get days => Duration(days: round());
 
-  num lockMin(num minValue) => (<num>[this, minValue]).min();
-  num lockMax(num maxValue) => (<num>[this, maxValue]).max();
+  T get forcePositive => this < 0 ? -this as T : this;
+  T get forceNegative => (-1 * this.forcePositive) as T;
 
-  num lockBetween(num minValue, num maxValue) => lockMin(minValue).lockMax(maxValue);
+  T lockMin(T minValue) => ([this, minValue]).max();
+  T lockMax(T maxValue) => ([this, maxValue]).min();
+
+  T lockBetween(T minValue, T maxValue) => lockMin(minValue).lockMax(maxValue);
 
   bool isLowerThan(num b) => this < b;
 
@@ -119,16 +122,16 @@ extension NumExtensions on num {
   }
 
   /// Transform number of days into hours
-  num get daysToHours {
+  double get daysToHours {
     if (isNullOrZero) {
       return -1;
     } else {
-      return this * Duration.hoursPerDay;
+      return (this * Duration.hoursPerDay).toDouble();
     }
   }
 
   /// Transform number of minutes into hours
-  num get minutesToHours {
+  double get minutesToHours {
     if (isNullOrZero) {
       return -1;
     } else {
@@ -137,7 +140,7 @@ extension NumExtensions on num {
   }
 
   /// Transform number of seconds into hours
-  num get secondsToHours {
+  double get secondsToHours {
     // 3600 seconds = 1 hour
     if (isNullOrZero) {
       return -1;
@@ -147,17 +150,17 @@ extension NumExtensions on num {
   }
 
   /// Transform number of hours into days
-  num get hoursToDays {
+  double get hoursToDays {
     // 24 hours = 1 day
     if (isNullOrZero) {
       return -1;
     } else {
-      return this * Duration.hoursPerDay;
+      return (this * Duration.hoursPerDay).toDouble();
     }
   }
 
   /// Transform number of seconds into minutes
-  num get secondsToMinutes {
+  double get secondsToMinutes {
     // 60 seconds = 1 minute
     if (isNullOrZero) {
       return -1;
@@ -167,12 +170,12 @@ extension NumExtensions on num {
   }
 
   /// Transform number of hours into minutes
-  num get hoursToMinutes {
+  double get hoursToMinutes {
     // 60 seconds = 1 minute
     if (isNullOrZero) {
       return -1;
     } else {
-      return this * Duration.minutesPerHour;
+      return (this * Duration.minutesPerHour).toDouble();
     }
   }
 

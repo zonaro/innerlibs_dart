@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 extension StyledText<T extends Text> on T {
   Text copyWith({
     String? data,
@@ -130,8 +128,7 @@ extension StyledText<T extends Text> on T {
 
   T textAlignment(TextAlign align) => copyWith(textAlign: align) as T;
 
-  T textDirection(TextDirection direction) =>
-      copyWith(textDirection: direction) as T;
+  T textDirection(TextDirection direction) => copyWith(textDirection: direction) as T;
 
   T textBaseline(TextBaseline textBaseline) => copyWith(
         style: (style ?? const TextStyle()).copyWith(
@@ -139,10 +136,7 @@ extension StyledText<T extends Text> on T {
         ),
       ) as T;
 
-  T textWidthBasis(TextWidthBasis textWidthBasis) =>
-      copyWith(textWidthBasis: textWidthBasis) as T;
+  T textWidthBasis(TextWidthBasis textWidthBasis) => copyWith(textWidthBasis: textWidthBasis) as T;
 
-  T withUnderLine() => copyWith(
-      style: (style ?? const TextStyle())
-          .copyWith(decoration: TextDecoration.underline)) as T;
+  T withUnderLine() => copyWith(style: (style ?? const TextStyle()).copyWith(decoration: TextDecoration.underline)) as T;
 }

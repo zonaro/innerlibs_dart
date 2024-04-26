@@ -41,27 +41,24 @@ extension SqlRowExtensions on JsonRow {
 }
 
 extension SqlTableExtensions on JsonTable {
-  Iterable<JsonRow> search({required strings searchTerms, strings keys = const [], int? levenshteinDistance}) {
+  /// Perform a search into a [JsonTable] comparing each term in [searchTerms] against each [JsonRow] entry value using [string.flatContains].
+  /// Optionally use a max [levenshteinDistance] if the first comparison wont find nothing
+  Iterable<JsonRow> search({required string searchTerm, strings keys = const [], int levenshteinDistance = 0}) {
     if (keys.isEmpty) {
       keys = selectMany((e, i) => e.keys).distinct().toList();
     }
 
-    searchFunc(JsonRow row) {
-      var hasFlat = keys.where((e) => "${row[e]}".flatContainsAny(searchTerms)).length;
-      if (levenshteinDistance != null) {
-        var hasLev = keys.selectMany((e, i) {
-          var terms = "${row[e]}".getUniqueWords;
-          var levs = searchTerms.selectMany((st, i) {
-            var lev = terms.selectMany((t, i) => st.getUniqueWords.map((stw) => t.getLevenshtein(stw, true)!));
-            return lev;
-          });
-          return levs;
-        }).count((element) => element <= levenshteinDistance);
-        return hasFlat + hasLev;
-      }
-      return hasFlat;
+    searchFunc(JsonRow row) => keys.where((k) => "${row[k]}".flatContains(searchTerm)).length;
+
+    levFunc(JsonRow row) => levenshteinDistance <= 0 ? 0 : keys.selectMany((e, i) => "${row[e]}".getUniqueWords.map((t) => searchTerm.getLevenshtein(t, true)!)).count((e) => e <= levenshteinDistance.lockMin(1));
+
+    var l = where((row) => searchFunc(row) > 0);
+    if (l.isEmpty && levenshteinDistance > 0) {
+      l = where((row) => levFunc(row) > 0);
     }
 
-    return where((row) => searchFunc(row) > 0).orderByDescending(searchFunc);
+    return l.orderByDescending(searchFunc).thenByDescending(levFunc);
   }
+
+  Iterable<JsonRow> searchMany({required strings searchTerms, strings keys = const [], int levenshteinDistance = 0}) => searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance));
 }

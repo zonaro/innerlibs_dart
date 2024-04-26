@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 extension ObjectExtensions on Object? {
@@ -24,7 +25,7 @@ extension ObjectExtensions on Object? {
   bool isIn(List items) => this != null && items.contains(this);
 
   /// Checks if [this] is a Blank value:
-  /// Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isValid] recursively on [List] items or [Map] values.
+  /// Null, empty or only white spaces for [String], 0 for [num] , [minDate] for [DateTime], Call [isValid] recursively on [List] items or [Map] values.
   /// class thats implements [Validator] will be checked using [Validator.validate] function.
   /// Other class types, this method  call [ToString()] and check the result string against [isValid].
   bool get isValid {
@@ -33,7 +34,7 @@ extension ObjectExtensions on Object? {
         return false;
       }
       if (this is String) {
-        return (this as String).isNotBlank;
+        return (this as String).nullIf((s) => s == null || s.flatEqual("null")).isNotBlank;
       }
       if (this is bool) {
         return (this as bool);
@@ -42,7 +43,7 @@ extension ObjectExtensions on Object? {
         return this != 0;
       }
       if (this is DateTime) {
-        return (this as DateTime) != minDate;
+        return (this as DateTime) > minDate;
       }
 
       if (this is Iterable) {
@@ -64,7 +65,7 @@ extension ObjectExtensions on Object? {
         return (this as Validator).validate().isBlank;
       }
 
-      return toString().nullIf((s) => s == "null").isValid;
+      return toString().isValid;
     } catch (e) {
       consoleLog("IsValid => ", error: e);
       return false;
@@ -162,5 +163,33 @@ extension ObjectExtensions on Object? {
       default:
         return everythingIsTrue ? true : throw ArgumentError('The object does not represent a valid option and the EverythingIsTrue flag is set to false.');
     }
+  }
+
+  /// Call [toString] on object and wraps it into [Text]
+  Text asText({TextStyle? style, string defaultText = ""}) => asNullableText(style) ?? Text(defaultText.trimAll, style: style);
+
+  /// Call [toString] on object and wraps it into [Text]. return null if string fails against [isValid]
+  Text? asNullableText([TextStyle? style]) {
+    if (this == null) return null;
+    if (this is Text) {
+      return this as Text;
+    }
+    var s = "$this";
+    if (s.isValid) {
+      return Text(s, style: style);
+    }
+    return null;
+  }
+
+  /// Return [this] if [this] is a  [Widget] otherwise call [ToString()] and return a [Text] with this string. Return null if  [this] is null or [this].isValid return false;
+  Widget? get forceWidget {
+    if (this == null) {
+      return null;
+    }
+    if (this is Widget) {
+      return this as Widget;
+    }
+
+    return asText();
   }
 }
