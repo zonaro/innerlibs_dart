@@ -318,12 +318,12 @@ extension IterableExtension<T> on Iterable<T> {
 
 // }
 
-class KeyedJsonTable<T> extends Iterable<JsonRow> {
+class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
   final string keyName;
-  final JsonTable table;
+  JsonTable table;
 
   KeyedJsonTable({
-    required this.table,
+    this.table = const [],
     required this.keyName,
   });
 
@@ -362,14 +362,7 @@ class KeyedJsonTable<T> extends Iterable<JsonRow> {
 
   bool containsKey(T key) => this[key] != null;
 
-  JsonRow? remove(T key) {
-    if (containsKey(key)) {
-      var t = this[key];
-      table.removeWhere((e) => e[keyName] == key);
-      return t;
-    }
-    return null;
-  }
+  JsonRow? remove(T key) => table.detachItems((e) => e[keyName] == key).singleOrNull;
 
   void clear() => table.clear();
 

@@ -76,7 +76,7 @@ extension ObjectExtensions on Object? {
   ///(Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
   bool get isNotValid => !isValid;
 
-  /// Converts the current object to a nullable boolean value.
+  /// Converts the current object to a boolean value.
   ///
   /// Recognized keywords (case-insensitive):
   /// - 'NULL', 'CANCEL', 'CANCELAR', '', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N': Returns `false`.

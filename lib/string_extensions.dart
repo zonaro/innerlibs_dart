@@ -1779,8 +1779,7 @@ extension StringExtension on String {
     if (isBlank) {
       return blankIfNull;
     }
-
-    return trim().replaceAll(RegExp(' +'), ' ').trim();
+    return splitLines.where((x) => x.isNotBlank).join("\r\n").replaceAll(RegExp(' +'), ' ').trim();
   }
 
   /// Try parse a bool value. See [asBool] to convert strings into [bool]
@@ -1876,7 +1875,7 @@ extension StringExtension on String {
 
   String? nullIf(bool Function(String? s) fn) => asIf(fn, null, this);
 
-  String? blankIf(bool Function(String? s) fn) => asIf(fn, "", this);
+  String blankIf(bool Function(String? s) fn) => asIf(fn, "", this) ?? "";
 
   /// Return [this] if not blank. Otherwise return [newString].
   String? ifBlank(String? newString) => asIf((s) => s.isNotBlank, this, newString);
@@ -1890,24 +1889,24 @@ extension StringExtension on String {
   /// ```
   String? asIf(bool Function(String?) comparison, String? trueString, String? falseString) => comparison(this) ? trueString : falseString;
 
-  /// Wraps the `String` between two strings. If [before] is a wrap char and [after] is omitted, the method resolve [after] using [getOppositeChar].
+  /// Wraps the `String` between two strings. If [before] is a wrap char and [after] is omitted, the method resolve [after] using [getOppositeWrap].
 
   String wrap(String? before, [String? after]) {
     if (before.isBlank && after.isBlank) return blankIfNull;
     before = before.ifBlank("")!;
 
     if (after.isBlank && before.isNotBlank) {
-      if (before.isCloseWrapChar) {
-        before = before.getOppositeChar;
+      if (before.isCloseWrap) {
+        before = before.getOppositeWrap;
       }
-      after = before.getOppositeChar;
+      after = before.getOppositeWrap;
     }
 
     if (after.isNotBlank && before.isBlank) {
-      if (after!.isOpenWrapChar) {
-        after = after.getOppositeChar;
+      if (after!.isOpenWrap) {
+        after = after.getOppositeWrap;
       }
-      before = after.getOppositeChar;
+      before = after.getOppositeWrap;
     }
 
     return "$before$this${after.ifBlank(before)}";
@@ -1921,7 +1920,7 @@ extension StringExtension on String {
   /// String foo = '(';
   /// String oppositeFood = foo.getOppositeChar(); // returns ')';
   /// ```
-  String get getOppositeChar {
+  String get getOppositeWrap {
     switch (this) {
       case "(":
         return ")";
@@ -1943,6 +1942,10 @@ extension StringExtension on String {
         return "/";
       case "/":
         return "\\";
+      case "/*":
+        return "*/";
+      case "*/":
+        return "/*";
       case "¿":
         return "?";
       case "?":
@@ -1962,7 +1965,7 @@ extension StringExtension on String {
   /// ```dart
   /// bool isOpenWrap = "(".isOpenWrapChar(); // returns true;
   /// ```
-  bool get isOpenWrapChar => isNotNull && StringHelpers.openWrappers.contains(this);
+  bool get isOpenWrap => isNotNull && StringHelpers.openWrappers.contains(this);
 
   /// Check if the `String` is a close wrap char: `>`, `}`, `]`, `"`, `'`.
   ///
@@ -1971,7 +1974,7 @@ extension StringExtension on String {
   /// ```dart
   /// bool isCloseWrap = ")".isCloseWrapChar(); // returns true;
   /// ```
-  bool get isCloseWrapChar => isNotNull && StringHelpers.closeWrappers.contains(this);
+  bool get isCloseWrap => isNotNull && StringHelpers.closeWrappers.contains(this);
 
   /// Continuously removes from the beginning of the `String` any match in [patterns].
   ///
