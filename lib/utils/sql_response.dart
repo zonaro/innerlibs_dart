@@ -13,6 +13,11 @@ class SQLResponse {
   final String message;
   final String dataSetType;
 
+  string get error {
+    if (hasError) return message;
+    return "";
+  }
+
   SQLResponse({
     required this.hasData,
     required this.sql,
