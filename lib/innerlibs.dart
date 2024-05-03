@@ -91,6 +91,10 @@ typedef DirectoryInfo = Directory;
 /// Alias for [Map<String, dynamic>], used in most Json serializations
 typedef JsonMap = Map<String, dynamic>;
 
+/// C# Alias for [Map<K, V>]
+
+typedef Dictionary<K, V> = Map<K, V>;
+
 /// Alias for [Map<String, dynamic>], used to represent a row in a data table
 typedef JsonRow = JsonMap;
 

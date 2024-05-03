@@ -71,10 +71,10 @@ extension DateTimeExtensions on DateTime {
     string hour = "h",
     string minute = "m",
     string seconds = "s",
-    string now = "Just now",
+    string justNow = "Just now",
+    date? until,
   }) {
-    final currentTime = DateTime.now();
-    final difference = currentTime.difference(this);
+    final difference = (until ?? now).difference(this);
 
     if (difference.inDays < 0) {
       return '${difference.inDays.abs()}$day $remaining';
@@ -89,7 +89,7 @@ extension DateTimeExtensions on DateTime {
     } else if (difference.inSeconds >= 1) {
       return '${difference.inSeconds}$second';
     } else {
-      return now;
+      return justNow;
     }
   }
 
