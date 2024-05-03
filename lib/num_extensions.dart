@@ -57,20 +57,24 @@ extension NumExtensions<T extends num> on T {
 
   String quantityTextPt(String plural, [String singular = "", bool includeNumber = true]) {
     var pre = (includeNumber ? toString() : "");
-    if ((round() == 1 || round() == -1)) {
-      pre = "$pre ${singular.ifBlank(plural.singularPt)!}";
-    } else {
-      pre = "$pre $plural";
+    if (plural.length > 1) {
+      if ((round() == 1 || round() == -1)) {
+        pre = "$pre ${singular.ifBlank(plural.singularPt)!}";
+      } else {
+        pre = "$pre $plural";
+      }
     }
     return pre;
   }
 
   String quantityText(String plural, [String singular = "", bool includeNumber = true]) {
     var pre = (includeNumber ? toString() : "");
-    if ((round() == 1 || round() == -1)) {
-      pre = "$pre ${singular.ifBlank(plural.singular)!}";
-    } else {
-      pre = "$pre $plural";
+    if (plural.length > 1) {
+      if ((round() == 1 || round() == -1)) {
+        pre = "$pre ${singular.ifBlank(plural.singular)!}";
+      } else {
+        pre = "$pre $plural";
+      }
     }
     return pre;
   }

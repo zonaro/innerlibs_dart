@@ -23,6 +23,9 @@ extension DateTimeExtensions on DateTime {
 
   bool get isTomorrow => isSameDate(tomorrow);
 
+  date get beginOfDay => date(year, month, day);
+  date get endOfDay => date(year, month, day, 23, 59, 59, 999, 999);
+
   /// Readable Date
   ///
   /// Returns date string in the format Tuesday 1 January 2022
@@ -81,13 +84,13 @@ extension DateTimeExtensions on DateTime {
     }
 
     if (difference.inDays >= 1) {
-      return '${difference.inDays}$day';
+      return difference.inDays.quantityText(day);
     } else if (difference.inHours >= 1) {
-      return '${difference.inHours}$hour';
+      return difference.inHours.quantityText(hour);
     } else if (difference.inMinutes >= 1) {
-      return '${difference.inMinutes}$minute';
+      return difference.inMinutes.quantityText(minute);
     } else if (difference.inSeconds >= 1) {
-      return '${difference.inSeconds}$second';
+      return difference.inSeconds.quantityText(seconds);
     } else {
       return justNow;
     }
