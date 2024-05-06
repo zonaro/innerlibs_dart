@@ -184,13 +184,18 @@ extension NumExtensions<T extends num> on T {
       return (this * Duration.minutesPerHour).toDouble();
     }
   }
+}
 
+extension NumNullExtensions<T extends num?> on T {
   /// Checks whether number is 0 or null
   bool get isNullOrZero {
-    if (this == 0) {
+    if (this == null || this == 0) {
       return true;
     } else {
       return false;
     }
   }
+
+  bool get isNonZeroPositive => this != null && this! > 0;
+  bool get isNonZeroNegative => this != null && this! < 0;
 }

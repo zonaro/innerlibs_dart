@@ -459,6 +459,8 @@ extension StringExtension on String {
 
   strings slice(int chunkSize) => this / chunkSize;
 
+  string operator *(string otherString) => ifBlank(otherString) ?? "";
+
   /// Returns the average read time duration of the given `String` in seconds.
   ///
   /// The default calculation is based on 200 words per minute.

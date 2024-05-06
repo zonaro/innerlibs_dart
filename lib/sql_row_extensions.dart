@@ -43,7 +43,15 @@ extension SqlRowExtensions on JsonRow {
 extension SqlTableExtensions on JsonTable {
   /// Perform a search into a [JsonTable] comparing each term in [searchTerms] against each [JsonRow] entry value using [string.flatContains].
   /// Optionally use a max [levenshteinDistance] if the first comparison wont find nothing
-  Iterable<JsonRow> search({required string searchTerm, strings keys = const [], int levenshteinDistance = 0}) {
+  Iterable<JsonRow> search({required string searchTerm, strings keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
+    if (searchTerm.isBlank) {
+      if (allIfEmpty) {
+        return orderBy((e) => true);
+      } else {
+        return <JsonRow>[].orderBy((e) => true);
+      }
+    }
+
     if (keys.isEmpty) {
       keys = selectMany((e, i) => e.keys).distinct().toList();
     }
@@ -60,5 +68,5 @@ extension SqlTableExtensions on JsonTable {
     return l.orderByDescending(searchFunc).thenByDescending(levFunc);
   }
 
-  Iterable<JsonRow> searchMany({required strings searchTerms, strings keys = const [], int levenshteinDistance = 0}) => searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance));
+  Iterable<JsonRow> searchMany({required strings searchTerms, strings keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) => searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));
 }
