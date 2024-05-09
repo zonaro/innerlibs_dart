@@ -24,7 +24,15 @@ extension DateTimeExtensions on DateTime {
   bool get isTomorrow => isSameDate(tomorrow);
 
   date get beginOfDay => date(year, month, day);
-  date get endOfDay => date(year, month, day, 23, 59, 59, 999, 999);
+  date get endOfDay => date(
+        year,
+        month,
+        day,
+        23,
+        59,
+        59,
+        999,
+      );
 
   /// Readable Date
   ///

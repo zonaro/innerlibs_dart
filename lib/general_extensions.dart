@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-extension ObjectExtensions on Object? {
+extension ObjectExtensions<T extends Object?> on T {
   // return a string of this object as a SQL Value
   String asSqlValue([bool nullAsBlank = false]) {
     if (this == null) {
       return nullAsBlank ? "''" : "NULL";
+    } else if (this is Map) {
+      return jsonEncode(this).asSqlValue(nullAsBlank);
+    } else if (this is Iterable) {
+      return (this as Iterable).map((e) => (e as Object?).asSqlValue(nullAsBlank)).join(",").wrap("(");
     } else if (this is num) {
       return toString();
     } else if (this is bool) {
@@ -172,7 +178,11 @@ extension ObjectExtensions on Object? {
   Text? asNullableText([TextStyle? style]) {
     if (this == null) return null;
     if (this is Text) {
-      return this as Text;
+      if (style != null) {
+        return (this as Text).textStyle(style);
+      } else {
+        return (this as Text);
+      }
     }
     var s = "$this";
     if (s.isValid) {

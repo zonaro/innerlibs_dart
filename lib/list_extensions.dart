@@ -96,6 +96,32 @@ extension ListExtension<T> on List<T> {
     }
     return this;
   }
+
+  /// Inserts the same element of type `T` between each element in a `List<T>`.
+  ///
+  /// This function takes a list and an element as input. It modifies the original list
+  /// and adds the given element after each element, except after the last element of the list.
+  /// Finally, it returns the modified list.
+  ///
+  /// Usage:
+  /// ```dart
+  /// void main() {
+  ///   List<int> numbers = [1, 2, 3, 4, 5];
+  ///   int element = 0;
+  ///   numbers.insertBetween(element);
+  ///   print(result);  // prints: [1, 0, 2, 0, 3, 0, 4, 0, 5]
+  /// }
+  /// ```
+  ///
+  /// @param list The original list of elements of type `T`.
+  /// @param element The element of type `T` to be inserted between each element in the list.
+  /// @return The modified list with the element inserted between each element.
+  List<T> insertBetween(T element) {
+    for (int i = length - 1; i > 0; i--) {
+      insert(i, element);
+    }
+    return this;
+  }
 }
 
 /// Adds extensions to the `List` class
@@ -288,35 +314,6 @@ extension IterableExtension<T> on Iterable<T> {
     return leastFrequentElement;
   }
 }
-
-// extension ComparableListExtension<T extends Comparable<T>> on Iterable<T> {
-//   T? get min {
-//     if (isEmpty) {
-//       return null;
-//     }
-//     T minValue = first;
-//     for (var i in this) {
-//       if (i.compareTo(minValue) < 0) {
-//         minValue = i;
-//       }
-//     }
-//     return minValue;
-//   }
-
-//   T? get max {
-//     if (isEmpty) {
-//       return null;
-//     }
-//     T maxValue = first;
-//     for (var i in this) {
-//       if (i.compareTo(maxValue) > 0) {
-//         maxValue = i;
-//       }
-//     }
-//     return maxValue;
-//   }
-
-// }
 
 class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
   final string keyName;

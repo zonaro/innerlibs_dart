@@ -292,20 +292,20 @@ extension BuildContextExtensions on BuildContext {
         double.infinity: ScreenTier.xxl,
       });
 
-  /// a font size computed by [ScreenTier]
+  /// a size computed by [ScreenTier]
 
-  double adaptativeSize([double? fontSize, double factor = .1]) {
-    fontSize ??= textTheme.bodyMedium?.fontSize ?? 14;
-    fontSize = fontSize.forcePositive;
+  double adaptativeSize([double? size, double factor = .1]) {
+    size ??= textTheme.bodyMedium?.fontSize ?? 14;
+    size = size.forcePositive;
     factor = factor.forcePositive;
     return valueByTier(
-      xxs: fontSize * (1 - factor * 3),
-      xs: fontSize * (1 - factor * 2),
-      sm: fontSize * (1 - factor * 1),
-      md: fontSize,
-      lg: fontSize * (1 + factor * 1),
-      xl: fontSize * (1 + factor * 2),
-      xxl: fontSize * (1 + factor * 3),
+      xxs: size * (1 - factor * 3),
+      xs: size * (1 - factor * 2),
+      sm: size * (1 - factor * 1),
+      md: size,
+      lg: size * (1 + factor * 1),
+      xl: size * (1 + factor * 2),
+      xxl: size * (1 + factor * 3),
     );
   }
 
