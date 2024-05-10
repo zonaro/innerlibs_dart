@@ -55,7 +55,7 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// non-null [future] has completed.
   ///
   /// If the future completes with an error, the data in the [AsyncSnapshot]
-  /// provided to the [child] will become null, regardless of [initialData].
+  /// provided to the [builder] will become null, regardless of [initialData].
   /// (The error itself will be available in [AsyncSnapshot.error], and
   /// [AsyncSnapshot.hasError] will be true.)
   final T? initialData;
@@ -68,7 +68,7 @@ class FutureAwaiter<T> extends StatelessWidget {
   final bool supressError;
 
   /// Function thats receive a non-null [T] data returned by [future] and return a [Widget].
-  final Widget Function(T data) child;
+  final Widget Function(T data) builder;
 
   /// A [Widget] to return if [T] is null (or invalid if [data.validate] is true). If not specified return a shrink [SizedBox]
   final Widget? emptyChild;
@@ -83,7 +83,7 @@ class FutureAwaiter<T> extends StatelessWidget {
   FutureAwaiter({
     super.key,
     required this.future,
-    required this.child,
+    required this.builder,
     this.emptyChild,
     this.loading,
     this.errorChild,
@@ -117,7 +117,7 @@ class FutureAwaiter<T> extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           data.loadedAt = now;
         }
-        return child(snapshot.data as T);
+        return builder(snapshot.data as T);
       }
     } catch (e) {
       data.error = e;

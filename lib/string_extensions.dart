@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 
 extension NullStringExtension on String? {
   String get blankIfNull => this ?? "";
+  String get zeroIfBlank => ifBlank("0")!;
   String? get nullIfBlank => ifBlank(null);
 
   bool get isBlank => this == null || this!.isBlank;

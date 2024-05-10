@@ -47,7 +47,7 @@ export 'utils/day.dart';
 export 'utils/format_time.dart';
 export 'utils/haptic_feedback_type.dart';
 export 'utils/month.dart';
-export 'utils/percent_formatter.dart';
+export 'utils/formatters.dart';
 export 'utils/sql_response.dart';
 export 'utils/validation_interface.dart';
 export 'widget_ext.dart';
@@ -104,5 +104,5 @@ typedef JsonTable = List<JsonRow>;
 /// Alias for [List<List<Map<String, dynamic>>>], used to represent a set of data tables
 typedef JsonTableSet = List<JsonTable>;
 
-/// alias for [Map<string, List<Map<String, dynamic>>>], used to group data tables
+/// Alias for [Map<string, List<Map<String, dynamic>>>], used to group data tables
 typedef GroupedJsonTable = Map<string, JsonTable>;
