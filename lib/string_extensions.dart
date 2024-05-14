@@ -2837,5 +2837,11 @@ extension StringExtension on String {
   /// Checks if string is boolean.
   bool get isBool => (this == 'true' || this == 'false');
 
-  date toDate([string? format, string? locale]) => DateFormat(format, locale).parse(this);
+  date toDate([string? format, string? locale]) {
+    try {
+      return DateFormat(format, locale).parse(this);
+    } catch (e) {
+      return date.parse(this);
+    }
+  }
 }
