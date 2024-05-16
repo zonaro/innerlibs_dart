@@ -48,7 +48,7 @@ extension NullStringExtension on String? {
 
   String blankCoalesce(List<string?> newString) {
     var x = [blankIfNull, ...newString];
-    return x.where((e) => e.isNotBlank).firstOrNull.blankIfNull;
+    return x.firstWhere((e) => e.isNotBlank).blankIfNull;
   }
 }
 
@@ -2780,12 +2780,12 @@ extension StringExtension on String {
   /// Example: your name => Your Name, your name => Your name
   String get capitalize {
     if (isEmpty) return blankIfNull;
-    return split(' ').map((e) => e.capitalize).join(' ');
+    return split(' ').map((e) => e.capitalizeFirst).join(' ');
   }
 
   /// Uppercase first letter inside string and let the others lowercase
   /// Example: your name => Your name
-  String capitalizeFirst() {
+  String get capitalizeFirst {
     if (isEmpty) return blankIfNull;
     return this[0].toUpperCase() + substring(1).toLowerCase();
   }
@@ -2816,7 +2816,8 @@ extension StringExtension on String {
     return replaceAllMapped(_mustacheregex, (match) {
       String key = match.group(1) ?? "";
       if (params.containsKey(key)) {
-        return params[key].toString();
+        if (params[key] != null) return "${params[key]}";
+        return "";
       }
       return match.group(0) ?? "";
     });
@@ -2837,6 +2838,7 @@ extension StringExtension on String {
   /// Checks if string is boolean.
   bool get isBool => (this == 'true' || this == 'false');
 
+  /// return a date from string
   date toDate([string? format, string? locale]) {
     try {
       return DateFormat(format, locale).parse(this);
@@ -2844,4 +2846,7 @@ extension StringExtension on String {
       return date.parse(this);
     }
   }
+
+  /// change a date string from a format to another format
+  string changeDateFormat(string toFormat, [string? fromFormat, string? locale]) => toDate(fromFormat, locale).format(toFormat);
 }

@@ -65,7 +65,7 @@ extension SqlTableExtensions on JsonTable {
       l = where((row) => levFunc(row) > 0);
     }
 
-    return l.orderByDescending(searchFunc).thenByDescending(levFunc);
+    return l.orderByDescending(searchFunc).thenBy(levFunc);
   }
 
   Iterable<JsonRow> searchMany({required strings searchTerms, strings keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) => searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));

@@ -211,7 +211,7 @@ extension BuildContextExtensions on BuildContext {
 
   string? get modalRouteName => modalRoute?.settings.name;
 
-  restartApp() => RestartWidget.restartApp(this);
+  void restartApp() => RestartWidget.restartApp(this);
 
   ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
   bool canPop() => Navigator.canPop(this);
