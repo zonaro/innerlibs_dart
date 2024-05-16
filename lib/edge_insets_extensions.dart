@@ -12,5 +12,5 @@ extension EdgeInsetsExtensionsForNum on num {
   EdgeInsets get fromBottom => EdgeInsets.only(bottom: toDouble());
   EdgeInsets get fromLeft => EdgeInsets.only(left: toDouble());
   EdgeInsets get fromRight => EdgeInsets.only(right: toDouble());
-  EdgeInsets get asEdgeInsets => EdgeInsets.all(toDouble());
+  EdgeInsets get allAround => EdgeInsets.all(toDouble());
 }

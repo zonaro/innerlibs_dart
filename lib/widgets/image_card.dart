@@ -237,7 +237,7 @@ class ImageCard extends StatelessWidget {
               ),
             ),
             child: Container(
-              padding: 15.asEdgeInsets,
+              padding: 15.allAround,
               decoration: BoxDecoration(
                 gradient: title.isValid || description.isValid
                     ? LinearGradient(
