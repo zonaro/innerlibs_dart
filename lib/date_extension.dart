@@ -15,6 +15,40 @@ extension DateTimeExtensions on DateTime {
 
   DateTime get firstDayOfWeek => subtract((weekday - 1).days);
 
+  DateTime get firstDayOfMonth => DateTime(year, month, 1);
+
+  DateTime get lastDayOfMonth => DateTime(year, month + 1, 0);
+
+  DateTime get firstDayOfYear => DateTime(year, 1, 1);
+
+  DateTime get lastDayOfYear => DateTime(year, 12, 31);
+
+  date get firstDayOfFortnight => day <= 15 ? firstDayOfMonth : date(year, month, 16);
+  date get lastDayOfFortnight => day <= 15 ? date(year, month, 15) : lastDayOfMonth;
+  int get fortnightNumber => day <= 15 ? 1 : 2;
+
+  DateTime get firstDayOfQuarter => firstDayOfMonthGroup(3);
+  DateTime get lastDayOfQuarter => lastDayOfMonthGroup(3);
+  int get quarterNumber => monthGroupNumber(3);
+
+  DateTime get firstDayOfBimester => firstDayOfMonthGroup(2);
+  DateTime get lastDayOfBimester => lastDayOfMonthGroup(2);
+  int get bimesterNumber => monthGroupNumber(2);
+
+  DateTime get firstDayOfSemester => firstDayOfMonthGroup(6);
+  DateTime get lastDayOfSemester => lastDayOfMonthGroup(6);
+  int get semesterNumber => monthGroupNumber(6);
+
+  int firstMonthOfGroup(int group) => ((month - 1) ~/ group) * group + 1;
+
+  int lastMonthOfGroup(int group) => (firstMonthOfGroup(group) + group) - 1;
+
+  date firstDayOfMonthGroup(int group) => DateTime(year, firstMonthOfGroup(group), 1);
+
+  date lastDayOfMonthGroup(int group) => DateTime(year, lastMonthOfGroup(group) + 1, 0);
+
+  int monthGroupNumber(int group) => ((month - 1) ~/ group) + 1;
+
   bool isSameDate(DateTime other) => year == other.year && month == other.month && day == other.day;
 
   bool get isToday => isSameDate(now);
@@ -24,15 +58,7 @@ extension DateTimeExtensions on DateTime {
   bool get isTomorrow => isSameDate(tomorrow);
 
   date get beginOfDay => date(year, month, day);
-  date get endOfDay => date(
-        year,
-        month,
-        day,
-        23,
-        59,
-        59,
-        999,
-      );
+  date get endOfDay => date(year, month, day, 23, 59, 59, 999);
 
   /// Readable Date
   ///
