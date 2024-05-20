@@ -30,9 +30,9 @@ extension ObjectExtensions<T extends Object?> on T {
 
   bool isIn(List items) => this != null && items.contains(this);
 
-  /// Checks if [this] is a Blank value:
-  /// Null, empty or only white spaces for [String], 0 for [num] , [minDate] for [DateTime], Call [isValid] recursively on [List] items or [Map] values.
-  /// class thats implements [Validator] will be checked using [Validator.validate] function.
+  /// Checks if [this] is a valid value. The following values are considered invalid:
+  /// Null, empty or only white spaces for [String], 0 for [num] , [minDate] for [DateTime]. Call [isValid] recursively on [List] items or [Map] values.
+  /// Class thats implements [Validator] will be checked using [Validator.validate] function.
   /// Other class types, this method  call [ToString()] and check the result string against [isValid].
   bool get isValid {
     try {
@@ -52,6 +52,10 @@ extension ObjectExtensions<T extends Object?> on T {
         return (this as DateTime) > minDate;
       }
 
+      if (this is Validator) {
+        return (this as Validator).validate().isEmpty;
+      }
+
       if (this is Iterable) {
         var l = (this as Iterable);
         if (l.isEmpty) return false;
@@ -65,10 +69,6 @@ extension ObjectExtensions<T extends Object?> on T {
       if (this is Map) {
         var m = (this as Map);
         return m.isNotEmpty && m.values.isValid;
-      }
-
-      if (this is Validator) {
-        return (this as Validator).validate().isBlank;
       }
 
       return toString().isValid;

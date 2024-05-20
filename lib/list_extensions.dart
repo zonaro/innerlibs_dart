@@ -47,6 +47,21 @@ extension StringListExtensions on strings {
     }
     return uniqueElements.toList();
   }
+
+  String generateSQLSearch(List<String> columns, [string? quoteChar]) {
+    var whereClause = "";
+
+    for (string column in columns.whereValid) {
+      for (string value in whereValid) {
+        if (whereClause.isNotEmpty) {
+          whereClause += ' OR ';
+        }
+        whereClause += "${column.wrap(quoteChar ?? SqlRowExtensions.defaultQuoteChar)} LIKE ${value.wrap("%").asSqlValue()}";
+      }
+    }
+
+    return whereClause.wrap("(");
+  }
 }
 
 extension ListExtension<T> on List<T> {

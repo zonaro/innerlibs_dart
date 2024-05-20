@@ -50,6 +50,9 @@ extension NullStringExtension on String? {
     var x = [blankIfNull, ...newString];
     return x.firstWhere((e) => e.isNotBlank).blankIfNull;
   }
+
+  /// Return left string if not blank. Otherwise return right string.
+  String operator |(string? s) => ifBlank(s) ?? "";
 }
 
 extension StringExtension on String {
@@ -448,6 +451,10 @@ extension StringExtension on String {
     return replaceAll(s!, '');
   }
 
+  ///Repeats the String [i] times.
+  String operator *(int i) => repeat(i);
+
+  /// slice a string into chunks
   strings operator /(int chunkSize) {
     List<String> chunks = [];
     if (isNotBlank) {
@@ -458,9 +465,8 @@ extension StringExtension on String {
     return chunks;
   }
 
+  /// slice a string into chunks
   strings slice(int chunkSize) => this / chunkSize;
-
-  string operator *(string otherString) => ifBlank(otherString) ?? "";
 
   /// Returns the average read time duration of the given `String` in seconds.
   ///

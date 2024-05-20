@@ -642,41 +642,97 @@ abstract interface class Brasil {
   static String formataTelefone(dynamic numero) => Telefone(numero).toString();
 }
 
-class Endereco {
-  final String cep;
-  final String logradouro;
-  String numero = "";
+class InfoUsuario implements Validator {
+  string nome = "";
+  string sobrenome = "";
+  string cpfCnpj = "";
+  string rg = "";
+  string cnh = "";
+  string pis = "";
+  List<string> emails = [];
+  List<Telefone> telefones = [];
+  List<Endereco> enderecos = [];
+  @override
+  int get hashCode => Object.hash(cpfCnpj, 1);
+
+  @override
+  bool operator ==(Object other) => hashCode == other.hashCode;
+
+  @override
+  strings validate() {
+    return [];
+  }
+}
+
+class Endereco implements Comparable<Endereco> {
+  String cep;
+  String logradouro;
+  String numero;
   String complemento;
-  final String bairro;
-  final String ibge;
-  final String gia;
-  final String ddd;
-  final String siafi;
+  String bairro;
+  String ibge;
+  String gia;
+  String ddd;
+  String siafi;
 
   Endereco({
-    required this.cep,
-    required this.logradouro,
-    required this.complemento,
-    required this.bairro,
-    required this.ibge,
-    required this.gia,
-    required this.ddd,
-    required this.siafi,
+    this.cep = "",
+    this.logradouro = "",
+    this.numero = "",
+    this.complemento = "",
+    this.bairro = "",
+    this.ibge = "",
+    this.gia = "",
+    this.ddd = "",
+    this.siafi = "",
   });
 
   Future<Cidade?> get cidade async => await Brasil.pegarCidade(ibge);
   Future<Estado?> get estado async => ((await cidade)?.estado) ?? await Brasil.pegarEstado(ibge);
 
   factory Endereco.fromJson(Map<String, dynamic> json) => Endereco(
-        cep: json['cep'],
-        logradouro: json['logradouro'],
-        complemento: json['complemento'],
-        bairro: json['bairro'],
-        ibge: json['ibge'],
-        gia: json['gia'],
-        ddd: json['ddd'],
-        siafi: json['siafi'],
+        cep: json['cep'] ?? "",
+        logradouro: json['logradouro'] ?? "",
+        complemento: json['complemento'] ?? "",
+        bairro: json['bairro'] ?? "",
+        ibge: json['ibge'] ?? "",
+        gia: json['gia'] ?? "",
+        ddd: json['ddd'] ?? "",
+        siafi: json['siafi'] ?? "",
       );
+
+  @override
+  int get hashCode => Object.hash(cep, numero, complemento);
+
+  @override
+  int compareTo(Endereco other) {
+    if (cep == other.cep) {
+      if (numero == other.numero) {
+        return complemento.compareTo(other.complemento);
+      } else {
+        return numero.compareTo(other.numero);
+      }
+    } else {
+      return cep.compareTo(other.cep);
+    }
+  }
+
+  @override
+  bool operator ==(Object other) => hashCode == other.hashCode;
+
+  Future<String> get fullAddress async => [
+        [logradouro, numero, complemento].whereValid.join(", ").trim(),
+        bairro,
+        (await cidade)?.nome ?? "",
+        (await estado)?.uf ?? "",
+        cep,
+      ].whereValid.join(" - ").trim();
+
+  @override
+  String toString() => [
+        [logradouro, numero, complemento].whereValid.join(", ").trim(),
+        bairro,
+      ].whereValid.join(" - ").trim();
 }
 
 class Estado implements Comparable<Estado> {
