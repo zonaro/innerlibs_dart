@@ -126,7 +126,9 @@ extension StyledText<T extends Text> on T {
         ),
       ) as T;
 
-  T textAlignment(TextAlign align) => copyWith(textAlign: align) as T;
+  T textAlign(TextAlign align) => copyWith(textAlign: align) as T;
+
+  T centerText() => textAlign(TextAlign.center);
 
   T textDirection(TextDirection direction) => copyWith(textDirection: direction) as T;
 

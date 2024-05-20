@@ -67,7 +67,7 @@ export 'widgets/shimmer.dart';
 
 typedef date = DateTime;
 
-/// C# alias for [String] (in C#, string is a class but works like a primitive type)
+/// C# alias for [String]
 typedef string = String;
 typedef strings = List<String>;
 typedef ints = List<int>;

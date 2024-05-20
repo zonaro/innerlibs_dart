@@ -29,8 +29,8 @@ extension BuildContextExtensions on BuildContext {
 
   // COLOR
 
-  /// performs a simple [Theme.of(context).backgroundColor] action and returns given [backgroundColor]
-  Color get backgroundColor => theme.colorScheme.background;
+  /// performs a simple [Theme.of(context).backgroundColor] action and returns given [surfaceColor]
+  Color get surfaceColor => theme.colorScheme.surface;
 
   /// performs a simple [Theme.of(context).primaryColor] action and returns given [primaryColor]
   Color get primaryColor => theme.primaryColor;

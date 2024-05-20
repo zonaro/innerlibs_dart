@@ -107,13 +107,13 @@ class ImageCard extends StatelessWidget {
   /// widget.
   ///
   /// If [mouseCursor] is a [MaterialStateProperty<MouseCursor>],
-  /// [MaterialStateProperty.resolve] is used for the following [MaterialState]s:
+  /// [WidgetStateProperty.resolve] is used for the following [WidgetState]s:
   ///
-  ///  * [MaterialState.hovered].
-  ///  * [MaterialState.focused].
-  ///  * [MaterialState.disabled].
+  ///  * [WidgetState.hovered].
+  ///  * [WidgetState.focused].
+  ///  * [WidgetState.disabled].
   ///
-  /// If this property is null, [MaterialStateMouseCursor.clickable] will be used.
+  /// If this property is null, [WidgetStateMouseCursor.clickable] will be used.
   final MouseCursor? mouseCursor;
 
   /// Whether detected gestures should provide acoustic and/or haptic feedback.
@@ -145,16 +145,16 @@ class ImageCard extends StatelessWidget {
 
   /// {@template flutter.material.inkwell.statesController}
   /// Represents the interactive "state" of this widget in terms of
-  /// a set of [MaterialState]s, like [MaterialState.pressed] and
-  /// [MaterialState.focused].
+  /// a set of [WidgetState]s, like [WidgetState.pressed] and
+  /// [WidgetState.focused].
   ///
   /// Classes based on this one can provide their own
-  /// [MaterialStatesController] to which they've added listeners.
-  /// They can also update the controller's [MaterialStatesController.value]
+  /// [WidgetStatesController] to which they've added listeners.
+  /// They can also update the controller's [WidgetStatesController.value]
   /// however, this may only be done when it's safe to call
   /// [State.setState], like in an event handler.
   /// {@endtemplate}
-  final MaterialStatesController? statesController;
+  final WidgetStatesController? statesController;
 
   /// The duration of the animation that animates the hover effect.
   ///
