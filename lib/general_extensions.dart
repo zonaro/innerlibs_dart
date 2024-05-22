@@ -3,6 +3,18 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
+extension CompareAndSwap<T extends Comparable> on T {
+  (T, T) compareAndSwap(T other) {
+    T a = this;
+    if (a.compareTo(other) > 0) {
+      var temp = a;
+      a = other;
+      other = temp;
+    }
+    return (a, other);
+  }
+}
+
 extension ObjectExtensions<T extends Object?> on T {
   // return a string of this object as a SQL Value
   String asSqlValue([bool nullAsBlank = false]) {
@@ -85,8 +97,8 @@ extension ObjectExtensions<T extends Object?> on T {
   /// Converts the current object to a boolean value.
   ///
   /// Recognized keywords (case-insensitive):
-  /// - 'NULL', 'CANCEL', 'CANCELAR', '', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N': Returns `false`.
-  /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO': Returns `true`.
+  /// - 'NULL', 'CANCEL', 'CANCELAR', '', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N', 'X': Returns `false`.
+  /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO', 'OK', 'C': Returns `true`.
   ///
   /// If the object doesn't match any of the recognized keywords:
   /// - If [everythingIsTrue] is `true`, returns `true`.
@@ -110,8 +122,8 @@ extension ObjectExtensions<T extends Object?> on T {
   /// If the object is null, this function returns `null`.///
   /// Recognized keywords (case-insensitive):
   /// - 'NULL', 'CANCEL', 'CANCELAR': Returns `null`.
-  /// - '', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N': Returns `false`.
-  /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO': Returns `true`.
+  /// - '', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N','X': Returns `false`.
+  /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO', 'OK','C': Returns `true`.
   ///
   /// If the object doesn't match any of the recognized keywords:
   /// - If [everythingIsTrue] is `true`, returns `true`.
@@ -151,6 +163,7 @@ extension ObjectExtensions<T extends Object?> on T {
       case 'DESATIVAR':
       case 'DESATIVO':
       case 'N':
+      case 'X':
         return false;
       case '1':
       case 'S':
@@ -165,6 +178,8 @@ extension ObjectExtensions<T extends Object?> on T {
       case 'ATIVO':
       case 'ATIVAR':
       case 'ATIVADO':
+      case 'OK':
+      case 'C':
         return true;
       default:
         return everythingIsTrue ? true : throw ArgumentError('The object does not represent a valid option and the EverythingIsTrue flag is set to false.');

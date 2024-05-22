@@ -2,6 +2,33 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:innerlibs/utils/constants.dart';
 import 'package:intl/intl.dart';
 
+class DateRange {
+  DateRange(date startDate, date endDate) {
+    var r = startDate.compareAndSwap(endDate);
+    _startDate = r.$1;
+    _endDate = r.$2;
+  }
+
+  factory DateRange.today() => DateRange(today, today.endOfDay);
+
+  date get startDate => _startDate;
+  set startDate(date value) {
+    var r = value.compareAndSwap(endDate);
+    _startDate = r.$1;
+    _endDate = r.$2;
+  }
+
+  date get endDate => _endDate;
+  set endDate(date value) {
+    var r = startDate.compareAndSwap(value);
+    _startDate = r.$1;
+    _endDate = r.$2;
+  }
+
+  late date _startDate;
+  late date _endDate;
+}
+
 extension DateTimeExtensions on DateTime {
   DateTime findNextDayOfWeek(int weekday) {
     int daysDifference = weekday - this.weekday;
@@ -270,5 +297,5 @@ extension DateTimeExtensions on DateTime {
   bool operator >=(DateTime other) => this > other || this == other;
   bool operator <=(DateTime other) => this < other || this == other;
 
-  string format(string format) => DateFormat(format).format(this);
+  string format(string format, [string? locale]) => DateFormat(format, locale).format(this);
 }

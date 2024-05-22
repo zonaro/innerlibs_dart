@@ -8,17 +8,20 @@ class LabeledCheckbox extends StatelessWidget {
     required this.value,
     this.tristate = false,
     required this.onChanged,
+    this.onLongPress,
   }) : super(key: key);
 
   final dynamic label;
   final bool value;
   final bool tristate;
   final void Function(bool? value) onChanged;
+  final void Function()? onLongPress;
 
   @override
   Widget build(BuildContext context) {
     var item = (label as Object?).forceWidget;
     return InkWell(
+      onLongPress: onLongPress,
       onTap: () => onChanged(!value),
       child: Row(
         mainAxisSize: MainAxisSize.min,

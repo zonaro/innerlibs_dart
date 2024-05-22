@@ -10,6 +10,7 @@ class AwaiterData<T> extends ValueNotifier<T?> {
 
   /// return true if last [expireAt] is less than [now]
   bool get expired {
+    if (value == null) return true;
     if (loadedAt == null) return true;
     if (expireAt != null) return expireAt! <= now;
     return false;
@@ -90,6 +91,8 @@ class FutureAwaiter<T> extends StatelessWidget {
     this.supressError = kReleaseMode,
     this.initialData,
     AwaiterData<T>? data,
+    this.afterLoad,
+    this.beforeLoad,
   }) {
     this.data = data ?? AwaiterData();
   }
@@ -109,14 +112,13 @@ class FutureAwaiter<T> extends StatelessWidget {
     try {
       data.value = snapshot.data;
       data.error = snapshot.error;
+      data.loadedAt ??= now;
+
       if (data.hasError) {
         return error(snapshot.error!);
       } else if (!data.hasData) {
         return empty();
       } else {
-        if (snapshot.connectionState == ConnectionState.done) {
-          data.loadedAt = now;
-        }
         return builder(snapshot.data as T);
       }
     } catch (e) {
@@ -125,25 +127,43 @@ class FutureAwaiter<T> extends StatelessWidget {
     }
   }
 
+  final void Function()? afterLoad;
+  final void Function()? beforeLoad;
+
   @override
   Widget build(BuildContext context) {
-    if (data.expired || data.hasData == false) {
+    if (beforeLoad != null) {
+      beforeLoad!();
+    }
+    late Widget rt;
+    if (data.expired) {
+      data.loadedAt = null;
       consoleLog("Loading data...");
       return FutureBuilder<T>(
         future: future.call(),
         initialData: initialData,
         builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return loading ?? const Center(child: CircularProgressIndicator());
+            rt = loading ?? const Center(child: CircularProgressIndicator());
           } else {
-            return _buildWidget(snapshot);
+            rt = _buildWidget(snapshot);
           }
+          if (afterLoad != null) {
+            afterLoad!();
+          }
+          return rt;
         },
       );
+    } else {
+      consoleLog("Using previous loaded data...");
+      consoleLog("Creation date: ${data.loadedAt?.toIso8601String()}");
+      consoleLog("Expire at: ${data.expireAt?.toIso8601String() ?? "never"}");
+      rt = _buildWidget(AsyncSnapshot.withData(ConnectionState.none, data.value as T));
+
+      if (afterLoad != null) {
+        afterLoad!();
+      }
+      return rt;
     }
-    consoleLog("Using previous loaded data...");
-    consoleLog("Creation date: ${data.loadedAt?.toIso8601String()}");
-    consoleLog("Expire at: ${data.expireAt?.toIso8601String() ?? "never"}");
-    return _buildWidget(AsyncSnapshot.withData(ConnectionState.none, data.value as T));
   }
 }
