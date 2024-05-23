@@ -151,20 +151,24 @@ extension StringExtension on String {
 
   String? get asNullable => this;
 
-  String replaceSQLParameters(JsonRow params, [bool nullAsBlank = false, string parameterPlaceholder = ":"]) {
+  String replaceSQLParameters(JsonRow params, [bool nullAsBlank = true, string parameterMatch = ":"]) {
+    return replaceParameters(params.map((k, v) => MapEntry(k, (v as Object?).asSqlValue(nullAsBlank))), parameterMatch);
+  }
+
+  String replaceParameters(JsonRow params, string parameterMatch) {
     String query = this;
 
-    if (parameterPlaceholder.isBlank) throw ArgumentError.value(parameterPlaceholder, "parameterMatch", "parameterMatch cannot be blank");
+    if (parameterMatch.isBlank) throw ArgumentError.value(parameterMatch, "parameterMatch", "parameterMatch cannot be blank");
 
     // convert params to string
     Map<String, dynamic> convertedParams = {};
 
     for (final param in params.entries) {
-      convertedParams[param.key] = (param.value as Object?).asSqlValue(nullAsBlank);
+      convertedParams[param.key] = (param.value as Object?).toString();
     }
 
     // find all :placeholders, which can be substituted
-    final pattern = RegExp("$parameterPlaceholder(\\w+)");
+    final pattern = RegExp("$parameterMatch(\\w+)");
 
     final matches = pattern.allMatches(query).where((match) {
       final subString = query.substring(0, match.start);
@@ -189,7 +193,7 @@ extension StringExtension on String {
 
       // check param exists
       if (false == convertedParams.containsKey(paramName)) {
-        convertedParams[paramName!] = nullAsBlank ? "''" : "NULL";
+        convertedParams[paramName!] = "";
       }
 
       final newQuery = query.replaceFirst(
@@ -1900,7 +1904,7 @@ extension StringExtension on String {
 
   /// Wraps the `String` between two strings. If [before] is a wrap char and [after] is omitted, the method resolve [after] using [getOppositeWrap].
 
-  String wrap(String? before, [String? after]) {
+  String wrap(String? before, [String? after, int count = 1]) {
     if (before.isBlank && after.isBlank) return blankIfNull;
     before = before.ifBlank("")!;
 
@@ -1918,7 +1922,7 @@ extension StringExtension on String {
       before = after.getOppositeWrap;
     }
 
-    return "$before$this${after.ifBlank(before)}";
+    return "${before.repeat(count)}$this${after.ifBlank(before)!.repeat(count)}";
   }
 
   /// Returns the opposite wrap char of the `String` if possible, otherwise returns the same `String`.
@@ -2800,11 +2804,11 @@ extension StringExtension on String {
   /// Example: your name => yourname
   String removeAllWhitespace() => replaceAll(' ', '');
 
-  static final RegExp _mustacheregex = RegExp(r'\{\{([a-zA-Z0-9_]+)\}\}');
+  static RegExp get mustacheregex => RegExp(r'\{\{([a-zA-Z0-9_]+)\}\}');
 
-  String replaceMustachesWithList(List<dynamic> params) {
+  String replaceMustachesWithList(List<dynamic> params, [string wrapChar = "{"]) {
     if (isBlank) return blankIfNull;
-    return replaceAllMapped(_mustacheregex, (match) {
+    return replaceAllMapped(mustacheregex, (match) {
       if (match.group(1) != null) {
         int? index = int.tryParse(match.group(1)!);
         if (index != null) {
@@ -2817,9 +2821,18 @@ extension StringExtension on String {
     });
   }
 
-  String replaceMustachesWithMap(Map<String, dynamic> params) {
+  String replaceWrapped({required Map<String, dynamic> values, required String openWrapChar, String? closeWrapChar, int wrapLenght = 1}) {
+    string text = this;
+    values.forEach((key, value) {
+      String wrappedKey = key.wrap(openWrapChar, closeWrapChar, wrapLenght);
+      text = text.replaceAll(wrappedKey, value?.toString() ?? "");
+    });
+    return text;
+  }
+
+  String replaceMustachesWithMap(Map<String, dynamic> params, [string wrapChar = "{"]) {
     if (isBlank) return blankIfNull;
-    return replaceAllMapped(_mustacheregex, (match) {
+    return replaceAllMapped(mustacheregex, (match) {
       String key = match.group(1) ?? "";
       if (params.containsKey(key)) {
         if (params[key] != null) return "${params[key]}";
