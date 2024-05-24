@@ -16,6 +16,21 @@ extension CompareAndSwap<T extends Comparable> on T {
 }
 
 extension ObjectExtensions<T extends Object?> on T {
+  R convertStringToType<R>() {
+    // You can handle different types here based on the generic parameter T
+    if (T == int) {
+      return int.tryParse("$this") as R;
+    } else if (T == double) {
+      return double.tryParse("$this") as R;
+    } else if (T == num) {
+      return num.tryParse("$this") as R;
+    } else if (T == bool) {
+      return this.asBool() as R;
+    } else {
+      return "$this" as R;
+    }
+  }
+
   // return a string of this object as a SQL Value
   String asSqlValue([bool nullAsBlank = false]) {
     if (this == null) {
