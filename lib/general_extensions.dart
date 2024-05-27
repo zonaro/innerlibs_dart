@@ -16,18 +16,40 @@ extension CompareAndSwap<T extends Comparable> on T {
 }
 
 extension ObjectExtensions<T extends Object?> on T {
-  R convertStringToType<R>() {
-    // You can handle different types here based on the generic parameter T
-    if (T == int) {
-      return int.tryParse("$this") as R;
-    } else if (T == double) {
-      return double.tryParse("$this") as R;
-    } else if (T == num) {
-      return num.tryParse("$this") as R;
-    } else if (T == bool) {
-      return this.asBool() as R;
-    } else {
+  /// Converts a value of type `Object` to a specified type `T`.
+  ///
+  /// This function can convert between `DateTime`, `num`, `int`, `double`, and `String` types.
+  /// It assumes that the input is in a format that can be parsed to the desired type.
+  ///
+  /// Throws an `ArgumentError` if the conversion is not possible.
+  ///
+  /// Usage:
+  /// ```dart
+  /// print(parseTo<int>('123')); // prints: 123
+  /// print(parseTo<double>('123.45')); // prints: 123.45
+  /// print(parseTo<DateTime>('2024-05-27 13:18:56')); // prints: 2024-05-27 13:18:56.000
+  /// print(parseTo<String>(123)); // prints: '123'
+  /// ```
+  ///
+  /// [T] The type to convert the value to.
+  /// [value] The value to convert.
+  ///
+  /// Returns the converted value of type `T`.
+  R parseTo<R>() {
+    if (this == null || T == R) {
+      return this as R;
+    } else if (R == DateTime) {
+      return "$this".toDate() as R;
+    } else if (R == num) {
+      return "$this".toNum as R;
+    } else if (R == int) {
+      return "$this".toInt as R;
+    } else if (R == double) {
+      return "$this".toDouble as R;
+    } else if (R == String) {
       return "$this" as R;
+    } else {
+      throw ArgumentError('Cannot convert $T to $R');
     }
   }
 

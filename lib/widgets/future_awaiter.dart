@@ -115,7 +115,7 @@ class FutureAwaiter<T> extends StatelessWidget {
       data.loadedAt ??= now;
 
       if (data.hasError) {
-        return error(snapshot.error!);
+        throw snapshot.error!;
       } else if (!data.hasData) {
         return empty();
       } else {
