@@ -52,7 +52,9 @@ extension NullStringExtension on String? {
   }
 
   /// Return left string if not blank. Otherwise return right string.
-  String operator |(string? s) => ifBlank(s) ?? "";
+  String operator |(Object? s) => ifBlank("$s") ?? "";
+
+   
 }
 
 extension StringExtension on String {
