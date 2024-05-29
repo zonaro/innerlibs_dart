@@ -583,7 +583,14 @@ abstract interface class Brasil {
   static bool validarTelefone(dynamic telefone) {
     try {
       // Remove todos os caracteres não numéricos
+
+      telefone = "$telefone";
+
       String apenasNumeros = "$telefone".onlyNumbers;
+
+      if (apenasNumeros.length == 13 && apenasNumeros.startsWith("55")) {
+        apenasNumeros = apenasNumeros.removeFirst(2);
+      }
 
       // Verifica se o número tem o tamanho correto (8 ou 9 dígitos locais + 0 ou 2 dígitos DDD)
       if (apenasNumeros.length < 8 || apenasNumeros.length > 11) {

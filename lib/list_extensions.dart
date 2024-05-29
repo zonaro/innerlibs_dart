@@ -56,7 +56,7 @@ extension StringListExtensions on strings {
         if (whereClause.isNotEmpty) {
           whereClause += ' OR ';
         }
-        whereClause += "${column.wrap(quoteChar ?? SqlRowExtensions.defaultQuoteChar)} LIKE ${value.wrap("%").asSqlValue()}";
+        whereClause += "${column.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} LIKE ${value.wrap("%").asSqlValue()}";
       }
     }
 

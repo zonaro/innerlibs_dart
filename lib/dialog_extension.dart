@@ -100,7 +100,7 @@ extension DialogExt on BuildContext {
     );
   }
 
-  Future<void> alert(String message, [String? title]) async => await dialog(message, title: title, cancelButton: "OK");
+  Future<void> alert(String message, [String? title]) async => await dialog(message, title: title);
 
   /// The `title` argument is used to title of alert dialog.
   /// The `content` argument is used to content of alert dialog.
@@ -149,7 +149,7 @@ extension DialogExt on BuildContext {
     return isConfirm ?? false;
   }
 
-  Future<void> dialog(String message, {String? title, List<String> buttons = const [], String? cancelButton, Function(String)? onDone, Color? positiveTitleColor, Color? cancelTitleColor, double? fontSize, bool barrierDismissible = true}) async {
+  Future<void> dialog(dynamic content, {String? title, List<String> buttons = const [], String? cancelButton, Function(String)? onDone, Color? positiveTitleColor, Color? cancelTitleColor, double? fontSize, bool barrierDismissible = true}) async {
     List<Widget> arrWidget = [];
 
     if (buttons.isEmpty) {
@@ -161,7 +161,7 @@ extension DialogExt on BuildContext {
         CupertinoDialogAction action = CupertinoDialogAction(
           isDefaultAction: true,
           textStyle: TextStyle(color: cancelTitleColor, fontSize: fontSize),
-          onPressed: () => pop(),
+          onPressed: pop,
           child: cancelButton!.asText(),
         );
 
@@ -174,8 +174,8 @@ extension DialogExt on BuildContext {
               fontSize: fontSize,
             ),
           ),
+          onPressed: pop,
           child: cancelButton!.asText(),
-          onPressed: () => pop(),
         );
         arrWidget.add(action);
       }
@@ -223,21 +223,20 @@ extension DialogExt on BuildContext {
           if (isApple) {
             return CupertinoAlertDialog(
               title: title?.asText(),
-              content: Text(message),
+              content: (content as Object?).forceWidget,
               actions: arrWidget,
             );
           } else {
             return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               title: title?.asText(),
-              content: Text(message),
+              content: (content as Object?).forceWidget,
               actions: arrWidget,
             );
           }
         });
   }
 
-  Future<T?> showLoaderTask<T>({Future<T?> Function()? task, dynamic cancelTaskButtonText, dynamic loadingText, dynamic textOK, dynamic textCancel, dynamic confirmationMessage}) async {
+  Future<T?> showTaskLoader<T>({Future<T?> Function()? task, dynamic cancelTaskButtonText, dynamic loadingText, dynamic textOK, dynamic textCancel, dynamic confirmationMessage}) async {
     T? result;
     CancelableOperation<T?>? operation;
 
