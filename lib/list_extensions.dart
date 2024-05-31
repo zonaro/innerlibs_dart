@@ -194,7 +194,7 @@ extension IterableExtension<T> on Iterable<T> {
       });
 
   /// Checks if this list contains all elements from [otherList].
-  bool containsAll(List<T> otherList) {
+  bool containsAll(Iterable<T> otherList) {
     for (final element in otherList) {
       if (!contains(element)) {
         return false;

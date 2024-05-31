@@ -53,8 +53,6 @@ extension NullStringExtension on String? {
 
   /// Return left string if not blank. Otherwise return right string.
   String operator |(Object? s) => ifBlank("$s") ?? "";
-
-   
 }
 
 extension StringExtension on String {
@@ -2789,7 +2787,7 @@ extension StringExtension on String {
   }
 
   /// Capitalize each word inside string
-  /// Example: your name => Your Name, your name => Your name
+  /// Example: your name => Your Name 
   String get capitalize {
     if (isEmpty) return blankIfNull;
     return split(' ').map((e) => e.capitalizeFirst).join(' ');
@@ -2806,24 +2804,13 @@ extension StringExtension on String {
   /// Example: your name => yourname
   String removeAllWhitespace() => replaceAll(' ', '');
 
-  static RegExp get mustacheregex => RegExp(r'\{\{([a-zA-Z0-9_]+)\}\}');
+  String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{', wrapLenght: 2);
 
-  String replaceMustachesWithList(List<dynamic> params, [string wrapChar = "{"]) {
+  String replaceMustachesWithMap(Map<String, dynamic> params) => replaceWrappedWithMap(values: params, openWrapChar: "{", wrapLenght: 2);
+
+  String replaceWrappedWithMap({required Map<String, dynamic> values, required String openWrapChar, String? closeWrapChar, int wrapLenght = 1}) {
     if (isBlank) return blankIfNull;
-    return replaceAllMapped(mustacheregex, (match) {
-      if (match.group(1) != null) {
-        int? index = int.tryParse(match.group(1)!);
-        if (index != null) {
-          if (index < params.length) {
-            return params[index].toString();
-          }
-        }
-      }
-      return match.group(0) ?? "";
-    });
-  }
 
-  String replaceWrapped({required Map<String, dynamic> values, required String openWrapChar, String? closeWrapChar, int wrapLenght = 1}) {
     string text = this;
     values.forEach((key, value) {
       String wrappedKey = key.wrap(openWrapChar, closeWrapChar, wrapLenght);
@@ -2832,16 +2819,9 @@ extension StringExtension on String {
     return text;
   }
 
-  String replaceMustachesWithMap(Map<String, dynamic> params, [string wrapChar = "{"]) {
+  String replaceWrappedWithList({required List<dynamic> values, required String openWrapChar, String? closeWrapChar, int wrapLenght = 1}) {
     if (isBlank) return blankIfNull;
-    return replaceAllMapped(mustacheregex, (match) {
-      String key = match.group(1) ?? "";
-      if (params.containsKey(key)) {
-        if (params[key] != null) return "${params[key]}";
-        return "";
-      }
-      return match.group(0) ?? "";
-    });
+    return replaceWrappedWithMap(values: values.toMap((x) => MapEntry(values.indexOf(x).toString(), x)), openWrapChar: openWrapChar, closeWrapChar: closeWrapChar, wrapLenght: wrapLenght);
   }
 
   bool hasMatch(String pattern) => RegExp(pattern).hasMatch(this);
