@@ -13,12 +13,11 @@ extension BooleanExtensions on bool? {
 
   /// Returns [true] if the value is null and true.
   /// Otherwise [false] is returned.
-  bool get isNotFalse => this == true;
-  
+  bool get isNotFalse => this == null || this == true;
 
   bool? get toNullableBool => this;
 
-  /// Returns `1` if the value is `false`
+  /// Returns `1` if the value is `true`
   /// otherwise `0` is returned.
   int get toInt => toNullableInt ?? 0;
 

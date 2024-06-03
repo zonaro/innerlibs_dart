@@ -332,13 +332,14 @@ extension IterableExtension<T> on Iterable<T> {
 
 class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
   final string keyName;
-  JsonTable table;
+  late JsonTable table;
 
   KeyedJsonTable({
-    this.table = const [],
     required this.keyName,
-  });
-
+    JsonTable items = const [],
+  }) {
+    table = items.toList(growable: true);
+  }
   JsonRow? operator [](T key) => table.where((row) => (row[keyName] as T) == (key)).singleOrNull;
 
   void operator []=(T key, JsonRow values) {
