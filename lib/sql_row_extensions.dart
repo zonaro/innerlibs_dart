@@ -31,7 +31,7 @@ extension SqlRowExtensions on JsonRow {
 
   String asSelectWhereCommand(String tableName, [strings columns = const [], bool nullAsBlank = false, string? quoteChar, bool and = true]) {
     String whereClause = asWhereClausule(nullAsBlank, quoteChar, and);
-    string columnString = SqlUtil.columnsFromList(columns, quoteChar).ifBlank("*")!;
+    string columnString = SqlUtil.columnsFromList(columns, quoteChar).ifBlank("*");
     return 'SELECT $columnString FROM ${tableName.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} WHERE $whereClause;';
   }
 
@@ -56,7 +56,7 @@ extension SqlTableExtensions on JsonTable {
 
     searchFunc(JsonRow row) => keys.where((k) => "${row[k]}".flatContains(searchTerm)).length;
 
-    levFunc(JsonRow row) => levenshteinDistance <= 0 ? 0 : keys.selectMany((e, i) => "${row[e]}".getUniqueWords.map((t) => searchTerm.getLevenshtein(t, true)!)).count((e) => e <= levenshteinDistance.lockMin(1));
+    levFunc(JsonRow row) => levenshteinDistance <= 0 ? 0 : keys.selectMany((e, i) => "${row[e]}".asFlat.getUniqueWords.map((t) => searchTerm.asFlat.getLevenshtein(t, true)!)).count((e) => e <= levenshteinDistance.lockMin(1));
 
     var l = where((row) => searchFunc(row) > 0);
     if (l.isEmpty && levenshteinDistance > 0) {

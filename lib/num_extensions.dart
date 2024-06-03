@@ -59,7 +59,7 @@ extension NumExtensions<T extends num> on T {
     var pre = (includeNumber ? toString() : "");
     if (plural.length > 1) {
       if ((round() == 1 || round() == -1)) {
-        pre = "$pre ${singular.ifBlank(plural.singularPt)!}";
+        pre = "$pre ${singular.ifBlank(plural.singularPt)}";
       } else {
         pre = "$pre $plural";
       }
@@ -71,7 +71,7 @@ extension NumExtensions<T extends num> on T {
     var pre = (includeNumber ? toString() : "");
     if (plural.length > 1) {
       if ((round() == 1 || round() == -1)) {
-        pre = "$pre ${singular.ifBlank(plural.singular)!}";
+        pre = "$pre ${singular.ifBlank(plural.singular)}";
       } else {
         pre = "$pre $plural";
       }

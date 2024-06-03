@@ -1891,7 +1891,7 @@ extension StringExtension on String {
   String blankIf(bool Function(String? s) fn) => asIf(fn, "", this) ?? "";
 
   /// Return [this] if not blank. Otherwise return [newString].
-  String? ifBlank(String? newString) => asIf((s) => s.isNotBlank, this, newString);
+  S ifBlank<S extends string>(S newString) => asIf((s) => (s ?? "").isNotBlank, this, newString) as S;
 
   /// Compares [this] using [comparison] and returns [trueString] if true, otherwise return [falseString].
   ///
@@ -2787,7 +2787,7 @@ extension StringExtension on String {
   }
 
   /// Capitalize each word inside string
-  /// Example: your name => Your Name 
+  /// Example: your name => Your Name
   String get capitalize {
     if (isEmpty) return blankIfNull;
     return split(' ').map((e) => e.capitalizeFirst).join(' ');
