@@ -54,8 +54,8 @@ class SQLResponse {
 
   factory SQLResponse.fromJson(JsonMap json) => SQLResponse(
         hasData: json['HasData'] as bool,
-        sql: json['SQL'] as String,
-        status: json['Status'] as String,
+        sql: json['SQL'] as String? ??"",
+        status: json['Status'] as String? ?? "",
         data: json['Data'],
         hasError: json['HasError'] as bool,
         message: json['Message'] as String? ?? "",

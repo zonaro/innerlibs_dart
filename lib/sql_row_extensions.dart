@@ -1,6 +1,58 @@
 import 'package:innerlibs/innerlibs.dart';
 
 extension SqlRowExtensions on JsonRow {
+  /// Generates a SQL call string for a given stored procedure and database provider.
+  ///
+  /// This function constructs a SQL call command by wrapping the procedure name with
+  /// the appropriate quote character and appending the necessary syntax based on the
+  /// database provider. It extends `Map<String, dynamic>` to include the parameters
+  /// for the SQL call.
+  ///
+  /// CAUTION: if yor [dataBaseProvider] is MySQL or MariaDB, the syntax will not include
+  /// parameter names and the values will be concatenated in order
+  ///
+  /// [procedureName] is the name of the stored procedure to be called.
+  /// [dataBaseProvider] is a string that specifies the database provider. It supports
+  /// 'mysql', 'mariadb', 'mssql', and 'sqlserver'.
+  /// [nullAsBlank] is an optional boolean flag that, when set to true, will treat null
+  /// values as blank strings in the SQL call. Defaults to false.
+  /// [quoteChar] is an optional string that specifies the character to use for quoting
+  /// SQL identifiers. If not provided, it defaults to the value of `SqlUtil.defaultQuoteChar`.
+  ///
+  /// Throws an [ArgumentError] if the database provider is not recognized.
+  ///
+  /// Returns a [String] containing the SQL call command.
+  String generateSqlCall(String procedureName, String dataBaseProvider, [bool nullAsBlank = false, string? quoteChar]) {
+    var sqlCall = '';
+
+    bool isMySql = dataBaseProvider.flatEqualAny(["mysql", "mariadb"]);
+    bool isSqlServer = dataBaseProvider.flatEqualAny(["mssql", "sqlserver"]);
+    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
+    procedureName = procedureName.wrap(quoteChar);
+
+    if (isMySql) {
+      sqlCall += 'CALL $procedureName(';
+    } else if (isSqlServer) {
+      sqlCall += 'EXEC $procedureName ';
+    } else {
+      throw ArgumentError("Cannot identify database provider: $dataBaseProvider", "dataBaseProvider");
+    }
+
+    sqlCall += entries.map((e) {
+      if (isMySql) {
+        return (e.value as Object?).asSqlValue(nullAsBlank);
+      } else if (isSqlServer) {
+        return '@${e.key} = ${(e.value as Object?).asSqlValue(nullAsBlank)}';
+      }
+    }).join(", ");
+
+    if (isMySql) {
+      sqlCall += ');';
+    }
+
+    return sqlCall;
+  }
+
   String asUpsertCommand(String tableName, [Map<String, dynamic>? where, bool nullAsBlank = false, string? quoteChar]) {
     if (where.isValid) {
       return asUpdateCommand(tableName, where!, nullAsBlank, quoteChar ?? SqlUtil.defaultQuoteChar);
@@ -67,4 +119,38 @@ extension SqlTableExtensions on JsonTable {
   }
 
   Iterable<JsonRow> searchMany({required strings searchTerms, strings keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) => searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));
+}
+
+mixin SqlUtil {
+  static string defaultQuoteChar = '[';
+
+  static string quoteCharFromProvider(string dataBaseProvider) {
+    dataBaseProvider = dataBaseProvider - " ";
+    if (dataBaseProvider.flatEqualAny(["mssql", "sqlserver"])) {
+      return "[";
+    }
+    if (dataBaseProvider.flatEqualAny(["mysql", "mariadb"])) {
+      return "`";
+    }
+    return defaultQuoteChar;
+  }
+
+  static string columnsFromList(strings items, [string? quoteChar]) => items.map((e) => e.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)).join(",");
+
+  static string columnsFromMap(Map items, [string? quoteChar]) => columnsFromList(items.keys.map((x) => "$x").toList(), quoteChar);
+
+  static string valuesFromList(Iterable items, [bool nullAsBlank = false]) => items.map((e) => (e as Object?).asSqlValue(nullAsBlank)).join(", ");
+
+  static string valuesFromMap(Map items, [bool nullAsBlank = false]) => valuesFromList(items.values, nullAsBlank);
+
+  static string getIdentity(string dataBaseProvider) {
+    dataBaseProvider = dataBaseProvider - " ";
+    if (dataBaseProvider.flatEqualAny(["mssql", "sqlserver"])) {
+      return "SCOPE_IDENTITY()";
+    }
+    if (dataBaseProvider.flatEqualAny(["mysql", "mariadb"])) {
+      return "LAST_INSERT_ID()";
+    }
+    throw ArgumentError("Cannot identify database provider: $dataBaseProvider", "dataBaseProvider");
+  }
 }
