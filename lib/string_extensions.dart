@@ -490,6 +490,34 @@ extension StringExtension on String {
     return (magicalNumber * 100).round();
   }
 
+  /// Counts the occurrences of a substring within a string.
+  ///
+  /// This function searches through the provided [String] for instances
+  /// of the [subString] and returns the total number of occurrences found.
+  ///
+  /// Parameters:
+  ///   [subString] - The substring to count within the [String].
+  ///
+  /// Returns the number of times [subString] appears in [String].
+  int count([String subString = ""]) {
+    if (subString.isBlank) {
+      return length;
+    }
+    int count = 0;
+    int startIndex = 0;
+
+    // Use indexOf to find the substring in the string
+    // Loop until the substring is not found
+    while ((startIndex = indexOf(subString, startIndex)) != -1) {
+      // Increment the count for each occurrence
+      count++;
+      // Move past the last found substring
+      startIndex += subString.length;
+    }
+
+    return count;
+  }
+
   /// Returns the word count in the given `String`.
   ///
   /// The pattern is based on spaces.
@@ -844,20 +872,6 @@ extension StringExtension on String {
       }
     }
     return occurrences;
-  }
-
-  /// Finds a specific's character occurrence in the `String`.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'foo';
-  /// int occ = foo.charCount('o'); // returns 2
-  /// ```
-  int charCount(String char) {
-    if (isBlank) {
-      return 0;
-    }
-    return split('').fold<int>(0, (previousValue, ch) => previousValue + (ch == char ? 1 : 0));
   }
 
   /// Finds the most frequent character in the `String`.
