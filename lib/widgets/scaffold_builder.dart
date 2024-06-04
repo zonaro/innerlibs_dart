@@ -4,40 +4,53 @@ import 'package:innerlibs/innerlibs.dart';
 class ScaffoldParts {
   final List<MenuEntry> items;
 
-  final ValueNotifier<int> currentIndex;
+  final ValueNotifier<int> _currentIndex = ValueNotifier(0);
 
-  ScaffoldParts({required this.items, required this.currentIndex});
+  final void Function(int oldIndex, int newIndex)? onIndexChange;
 
-  Widget get page => items[currentIndex.value].page;
-  string get title => items[currentIndex.value].title;
-  IconData get icon => items[currentIndex.value].icon;
-  IconData get actionIcon => items[currentIndex.value].actionIcon ?? activeIcon;
-  IconData get activeIcon => items[currentIndex.value].activeIcon ?? icon;
-  string get actionTitle => items[currentIndex.value].actionTitle | title;
+  ScaffoldParts({
+    required this.items,
+    int currentIndex = 0,
+    this.onIndexChange,
+  }) {
+    _currentIndex.value = currentIndex;
+  }
+
+  Widget get page => items[_currentIndex.value].page;
+  int get currentIndex => _currentIndex.value;
+  string get title => items[_currentIndex.value].title;
+  IconData get icon => items[_currentIndex.value].icon;
+  IconData get actionIcon => items[_currentIndex.value].actionIcon ?? activeIcon;
+  IconData get activeIcon => items[_currentIndex.value].activeIcon ?? icon;
+  string get actionTitle => items[_currentIndex.value].actionTitle | title;
 
   void Function(int) get onNavigationTap {
     return (int value) {
-      if (currentIndex.value == value) {
-        var funcs = items[currentIndex.value].action;
+      if (_currentIndex.value == value) {
+        var funcs = items[_currentIndex.value].action;
         if (funcs != null) {
           (funcs)();
         }
       } else {
-        currentIndex.value = value;
+        int old = _currentIndex.value;
+        _currentIndex.value = value;
+        if (onIndexChange != null) {
+          (onIndexChange)!(old, value);
+        }
       }
     };
   }
 
-  Widget? get floatingActionButton => items[currentIndex.value].floatingActionButton;
-  FloatingActionButtonLocation? get floatingActionButtonLocation => items[currentIndex.value].floatingActionButtonLocation;
+  Widget? get floatingActionButton => items[_currentIndex.value].floatingActionButton;
+  FloatingActionButtonLocation? get floatingActionButtonLocation => items[_currentIndex.value].floatingActionButtonLocation;
 
   List<BottomNavigationBarItem> get bottomNavigationBarItems => [
         for (var entry in items)
           BottomNavigationBarItem(
             icon: Icon(entry.icon),
             activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon),
-            label: currentIndex.value == items.indexOf(entry) ? (entry.action == null ? null : entry.actionTitle) | entry.title : entry.title,
-            tooltip: currentIndex.value == items.indexOf(entry) ? (entry.action == null ? null : entry.actionTooltip) | entry.tooltip : entry.tooltip,
+            label: _currentIndex.value == items.indexOf(entry) ? (entry.action == null ? null : entry.actionTitle) | entry.title : entry.title,
+            tooltip: _currentIndex.value == items.indexOf(entry) ? (entry.action == null ? null : entry.actionTooltip) | entry.tooltip : entry.tooltip,
             backgroundColor: entry.backgroundColor,
           ),
       ];
