@@ -153,6 +153,7 @@ extension SqlTableExtensions on JsonTable {
 }
 
 mixin SqlUtil {
+  
   static string defaultQuoteChar = '[';
 
   static string quoteCharFromProvider(string dataBaseProvider) {
