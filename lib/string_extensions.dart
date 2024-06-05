@@ -1918,25 +1918,25 @@ extension StringExtension on String {
 
   /// Wraps the `String` between two strings. If [before] is a wrap char and [after] is omitted, the method resolve [after] using [getOppositeWrap].
 
-  String wrap(String? before, [String? after, int count = 1]) {
+  String wrap(String? before, [String? after]) {
     if (before.isBlank && after.isBlank) return blankIfNull;
     before = before.ifBlank("")!;
 
     if (after.isBlank && before.isNotBlank) {
-      if (before.isCloseWrap) {
+      if (before.isMultipleCloseWrap) {
         before = before.getOppositeWrap;
       }
       after = before.getOppositeWrap;
     }
 
     if (after.isNotBlank && before.isBlank) {
-      if (after!.isOpenWrap) {
+      if (after!.isMultipleOpenWrap) {
         after = after.getOppositeWrap;
       }
       before = after.getOppositeWrap;
     }
 
-    return "${before.repeat(count)}$this${after.ifBlank(before)!.repeat(count)}";
+    return "$before $this${after.ifBlank(before)!}";
   }
 
   /// Returns the opposite wrap char of the `String` if possible, otherwise returns the same `String`.
@@ -1948,6 +1948,10 @@ extension StringExtension on String {
   /// String oppositeFood = foo.getOppositeChar(); // returns ')';
   /// ```
   String get getOppositeWrap {
+    if (length > 1 && (toArray.all((x) => x.isOpenWrap) || toArray.all((x) => x.isCloseWrap))) {
+      return toArray.map((x) => x.getOppositeWrap).join();
+    }
+
     switch (this) {
       case "(":
         return ")";
@@ -1994,6 +1998,8 @@ extension StringExtension on String {
   /// ```
   bool get isOpenWrap => isNotNull && StringHelpers.openWrappers.contains(this);
 
+  bool get isMultipleOpenWrap => (length > 1 && (toArray.all((x) => x.isOpenWrap)));
+
   /// Check if the `String` is a close wrap char: `>`, `}`, `]`, `"`, `'`.
   ///
   /// ### Example
@@ -2002,6 +2008,8 @@ extension StringExtension on String {
   /// bool isCloseWrap = ")".isCloseWrapChar(); // returns true;
   /// ```
   bool get isCloseWrap => isNotNull && StringHelpers.closeWrappers.contains(this);
+
+  bool get isMultipleCloseWrap => (length > 1 && (toArray.all((x) => x.isCloseWrap)));
 
   /// Continuously removes from the beginning of the `String` any match in [patterns].
   ///
@@ -2827,7 +2835,7 @@ extension StringExtension on String {
 
     string text = this;
     values.forEach((key, value) {
-      String wrappedKey = key.wrap(openWrapChar, closeWrapChar, wrapLenght);
+      String wrappedKey = key.wrap(openWrapChar, closeWrapChar);
       text = text.replaceAll(wrappedKey, value?.toString() ?? "");
     });
     return text;

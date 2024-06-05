@@ -53,41 +53,72 @@ extension SqlRowExtensions on JsonRow {
     return sqlCall;
   }
 
-  String asUpsertCommand(String tableName, [Map<String, dynamic>? where, bool nullAsBlank = false, string? quoteChar]) {
+  String asUpsertCommand({required String tableName, Map<String, dynamic>? where, bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = ""}) {
+    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     if (where.isValid) {
-      return asUpdateCommand(tableName, where!, nullAsBlank, quoteChar ?? SqlUtil.defaultQuoteChar);
+      return asUpdateCommand(
+        tableName: tableName,
+        where: where!,
+        nullAsBlank: nullAsBlank,
+        quoteChar: quoteChar,
+        dataBaseProvider: dataBaseProvider,
+      );
     } else {
-      return asInsertCommand(tableName, nullAsBlank, quoteChar ?? SqlUtil.defaultQuoteChar);
+      return asInsertCommand(
+        tableName: tableName,
+        nullAsBlank: nullAsBlank,
+        quoteChar: quoteChar,
+        dataBaseProvider: dataBaseProvider,
+      );
     }
   }
 
-  string asInsertCommand(string tableName, [bool nullAsBlank = false, string? quoteChar]) {
+  string asInsertCommand({required string tableName, bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = ""}) {
+    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     String columns = SqlUtil.columnsFromMap(this, quoteChar);
     String values = SqlUtil.valuesFromMap(this, nullAsBlank);
-    return 'INSERT INTO ${tableName.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} ($columns) VALUES ($values);';
+    return 'INSERT INTO ${tableName.wrap(quoteChar)} ($columns) VALUES ($values);';
   }
 
-  string asUpdateCommand(string tableName, JsonMap where, [bool nullAsBlank = false, string? quoteChar]) {
+  string asUpdateCommand({required string tableName, required JsonMap where, bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = ""}) {
+    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     var upsertMap = JsonRow.from(this);
     where.keys.forEach(upsertMap.remove);
     String updates = upsertMap.entries.map((e) => "${e.key.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
-    String whereClause = where.asWhereClausule(nullAsBlank, quoteChar);
+    String whereClause = where.asWhereClausule(nullAsBlank, quoteChar, dataBaseProvider);
 
-    return 'UPDATE ${tableName.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} SET $updates WHERE $whereClause;';
+    return 'UPDATE ${tableName.wrap(quoteChar)} SET $updates WHERE $whereClause;';
   }
 
-  String asDeleteCommand(String tableName, [bool nullAsBlank = false, string? quoteChar]) {
-    String whereClause = asWhereClausule(nullAsBlank, quoteChar);
-    return 'DELETE FROM ${tableName.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} WHERE $whereClause;';
+  String asDeleteCommand({required String tableName, bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = ""}) {
+    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
+    String whereClause = asWhereClausule(nullAsBlank, quoteChar, dataBaseProvider);
+    return 'DELETE FROM ${tableName.wrap(quoteChar)} WHERE $whereClause;';
   }
 
-  String asSelectWhereCommand(String tableName, [strings columns = const [], bool nullAsBlank = false, string? quoteChar, bool and = true]) {
-    String whereClause = asWhereClausule(nullAsBlank, quoteChar, and);
+  String asDeleteTopCommand(String tableName, int count, string idColumn, bool asc, string dataBaseProvider, [bool nullAsBlank = false, string? quoteChar]) {
+    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
+    String whereClause = asWhereClausule(nullAsBlank, quoteChar, dataBaseProvider);
+
+    return """DELETE FROM $tableName WHERE $idColumn in (
+              SELECT ${SqlUtil.isSqlServer(dataBaseProvider) ? "TOP($count)" : ""} $idColumn
+              FROM ItensPedido
+              WHERE $whereClause
+              ORDER BY $idColumn ${asc ? "ASC" : "DESC"} ${SqlUtil.isMySql(dataBaseProvider) ? "LIMIT $count" : ""}
+            );""";
+  }
+
+  String asSelectWhereCommand(String tableName, [strings columns = const [], bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = "", bool and = true]) {
+    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
+    String whereClause = asWhereClausule(nullAsBlank, quoteChar, dataBaseProvider, and);
     string columnString = SqlUtil.columnsFromList(columns, quoteChar).ifBlank("*");
-    return 'SELECT $columnString FROM ${tableName.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} WHERE $whereClause;';
+    return 'SELECT $columnString FROM ${tableName.wrap(quoteChar)} WHERE $whereClause;';
   }
 
-  String asWhereClausule([bool nullAsBlank = false, string? quoteChar, bool and = true]) => entries.map((e) => "${e.key.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' ${and ? "AND" : "OR"} ');
+  String asWhereClausule([bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = "", bool and = true]) {
+    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
+    return entries.map((e) => "${e.key.wrap(quoteChar)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' ${and ? "AND" : "OR"} ');
+  }
 }
 
 extension SqlTableExtensions on JsonTable {
@@ -126,13 +157,23 @@ mixin SqlUtil {
 
   static string quoteCharFromProvider(string dataBaseProvider) {
     dataBaseProvider = dataBaseProvider - " ";
-    if (dataBaseProvider.flatEqualAny(["mssql", "sqlserver"])) {
+    if (isSqlServer(dataBaseProvider)) {
       return "[";
     }
-    if (dataBaseProvider.flatEqualAny(["mysql", "mariadb"])) {
+    if (isMySql(dataBaseProvider)) {
       return "`";
     }
     return defaultQuoteChar;
+  }
+
+  static bool isSqlServer(string dataBaseProvider) {
+    dataBaseProvider = dataBaseProvider - " ";
+    return dataBaseProvider.flatEqualAny(["sqlserver", "mssql", "microsoftsqlserver", "sqlclient", "ms"]);
+  }
+
+  static bool isMySql(string dataBaseProvider) {
+    dataBaseProvider = dataBaseProvider - " ";
+    return dataBaseProvider.flatEqualAny(["mysql", "maria", "mariadb", "my", "mysqlconnector"]);
   }
 
   static string columnsFromList(strings items, [string? quoteChar]) => items.map((e) => e.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)).join(",");
@@ -144,13 +185,24 @@ mixin SqlUtil {
   static string valuesFromMap(Map items, [bool nullAsBlank = false]) => valuesFromList(items.values, nullAsBlank);
 
   static string getIdentity(string dataBaseProvider) {
-    dataBaseProvider = dataBaseProvider - " ";
-    if (dataBaseProvider.flatEqualAny(["mssql", "sqlserver"])) {
+    if (isSqlServer(dataBaseProvider)) {
       return "SCOPE_IDENTITY()";
     }
-    if (dataBaseProvider.flatEqualAny(["mysql", "mariadb"])) {
+    if (isMySql(dataBaseProvider)) {
       return "LAST_INSERT_ID()";
     }
     throw ArgumentError("Cannot identify database provider: $dataBaseProvider", "dataBaseProvider");
+  }
+
+  static string topOrLimit(string dataBaseProvider, int? count) {
+    if (count != null) {
+      if (isSqlServer(dataBaseProvider)) {
+        return "TOP($count)";
+      }
+      if (isMySql(dataBaseProvider)) {
+        return "LIMIT $count";
+      }
+    }
+    return "";
   }
 }
