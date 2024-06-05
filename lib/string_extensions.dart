@@ -1923,20 +1923,20 @@ extension StringExtension on String {
     before = before.ifBlank("")!;
 
     if (after.isBlank && before.isNotBlank) {
-      if (before.isMultipleCloseWrap) {
+      if (before.isMultipleCloseWrap || before.isCloseWrap) {
         before = before.getOppositeWrap;
       }
       after = before.getOppositeWrap;
     }
 
     if (after.isNotBlank && before.isBlank) {
-      if (after!.isMultipleOpenWrap) {
+      if (after!.isMultipleOpenWrap || after.isOpenWrap) {
         after = after.getOppositeWrap;
       }
       before = after.getOppositeWrap;
     }
 
-    return "$before $this${after.ifBlank(before)!}";
+    return "$before$this${after.ifBlank(before)!}";
   }
 
   /// Returns the opposite wrap char of the `String` if possible, otherwise returns the same `String`.
@@ -2826,11 +2826,11 @@ extension StringExtension on String {
   /// Example: your name => yourname
   String removeAllWhitespace() => replaceAll(' ', '');
 
-  String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{', wrapLenght: 2);
+  String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{{');
 
-  String replaceMustachesWithMap(Map<String, dynamic> params) => replaceWrappedWithMap(values: params, openWrapChar: "{", wrapLenght: 2);
+  String replaceMustachesWithMap(Map<String, dynamic> params) => replaceWrappedWithMap(values: params, openWrapChar: "{{");
 
-  String replaceWrappedWithMap({required Map<String, dynamic> values, required String openWrapChar, String? closeWrapChar, int wrapLenght = 1}) {
+  String replaceWrappedWithMap({required Map<String, dynamic> values, required String openWrapChar, String? closeWrapChar}) {
     if (isBlank) return blankIfNull;
 
     string text = this;
@@ -2841,9 +2841,9 @@ extension StringExtension on String {
     return text;
   }
 
-  String replaceWrappedWithList({required List<dynamic> values, required String openWrapChar, String? closeWrapChar, int wrapLenght = 1}) {
+  String replaceWrappedWithList({required List<dynamic> values, required String openWrapChar, String? closeWrapChar}) {
     if (isBlank) return blankIfNull;
-    return replaceWrappedWithMap(values: values.toMap((x) => MapEntry(values.indexOf(x).toString(), x)), openWrapChar: openWrapChar, closeWrapChar: closeWrapChar, wrapLenght: wrapLenght);
+    return replaceWrappedWithMap(values: values.toMap((x) => MapEntry(values.indexOf(x).toString(), x)), openWrapChar: openWrapChar, closeWrapChar: closeWrapChar);
   }
 
   bool hasMatch(String pattern) => RegExp(pattern).hasMatch(this);

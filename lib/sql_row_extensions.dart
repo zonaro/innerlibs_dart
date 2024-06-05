@@ -75,8 +75,8 @@ extension SqlRowExtensions on JsonRow {
 
   string asInsertCommand({required string tableName, bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = ""}) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
-    String columns = SqlUtil.columnsFromMap(this, quoteChar);
-    String values = SqlUtil.valuesFromMap(this, nullAsBlank);
+    String columns = SqlUtil.columnsFromMap(items: this, quoteChar: quoteChar, dataBaseProvider: dataBaseProvider);
+    String values = SqlUtil.valuesFromMap(items: this, nullAsBlank: nullAsBlank);
     return 'INSERT INTO ${tableName.wrap(quoteChar)} ($columns) VALUES ($values);';
   }
 
@@ -85,20 +85,20 @@ extension SqlRowExtensions on JsonRow {
     var upsertMap = JsonRow.from(this);
     where.keys.forEach(upsertMap.remove);
     String updates = upsertMap.entries.map((e) => "${e.key.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
-    String whereClause = where.asWhereClausule(nullAsBlank, quoteChar, dataBaseProvider);
+    String whereClause = where.asWhereClausule(nullAsBlank: nullAsBlank, quoteChar: quoteChar, dataBaseProvider: dataBaseProvider);
 
     return 'UPDATE ${tableName.wrap(quoteChar)} SET $updates WHERE $whereClause;';
   }
 
   String asDeleteCommand({required String tableName, bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = ""}) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
-    String whereClause = asWhereClausule(nullAsBlank, quoteChar, dataBaseProvider);
+    String whereClause = asWhereClausule(nullAsBlank: nullAsBlank, quoteChar: quoteChar, dataBaseProvider: dataBaseProvider);
     return 'DELETE FROM ${tableName.wrap(quoteChar)} WHERE $whereClause;';
   }
 
   String asDeleteTopCommand(String tableName, int count, string idColumn, bool asc, string dataBaseProvider, [bool nullAsBlank = false, string? quoteChar]) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
-    String whereClause = asWhereClausule(nullAsBlank, quoteChar, dataBaseProvider);
+    String whereClause = asWhereClausule(nullAsBlank: nullAsBlank, quoteChar: quoteChar, dataBaseProvider: dataBaseProvider);
 
     return """DELETE FROM $tableName WHERE $idColumn in (
               SELECT ${SqlUtil.isSqlServer(dataBaseProvider) ? "TOP($count)" : ""} $idColumn
@@ -108,14 +108,14 @@ extension SqlRowExtensions on JsonRow {
             );""";
   }
 
-  String asSelectWhereCommand(String tableName, [strings columns = const [], bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = "", bool and = true]) {
+  String asSelectWhereCommand({required String tableName, strings columns = const [], bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = "", bool and = true}) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
-    String whereClause = asWhereClausule(nullAsBlank, quoteChar, dataBaseProvider, and);
-    string columnString = SqlUtil.columnsFromList(columns, quoteChar).ifBlank("*");
+    String whereClause = asWhereClausule(nullAsBlank: nullAsBlank, quoteChar: quoteChar, dataBaseProvider: dataBaseProvider, and: and);
+    string columnString = SqlUtil.columnsFromList(items: columns, quoteChar: quoteChar, dataBaseProvider: dataBaseProvider).ifBlank("*");
     return 'SELECT $columnString FROM ${tableName.wrap(quoteChar)} WHERE $whereClause;';
   }
 
-  String asWhereClausule([bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = "", bool and = true]) {
+  String asWhereClausule({bool nullAsBlank = false, string? quoteChar, string dataBaseProvider = "", bool and = true}) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     return entries.map((e) => "${e.key.wrap(quoteChar)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' ${and ? "AND" : "OR"} ');
   }
@@ -153,7 +153,6 @@ extension SqlTableExtensions on JsonTable {
 }
 
 mixin SqlUtil {
-  
   static string defaultQuoteChar = '[';
 
   static string quoteCharFromProvider(string dataBaseProvider) {
@@ -177,13 +176,13 @@ mixin SqlUtil {
     return dataBaseProvider.flatEqualAny(["mysql", "maria", "mariadb", "my", "mysqlconnector"]);
   }
 
-  static string columnsFromList(strings items, [string? quoteChar]) => items.map((e) => e.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)).join(",");
+  static string columnsFromList({required strings items, string? quoteChar, string dataBaseProvider = ""}) => items.map((e) => e.wrap(quoteChar ?? SqlUtil.quoteCharFromProvider(dataBaseProvider))).join(", ");
 
-  static string columnsFromMap(Map items, [string? quoteChar]) => columnsFromList(items.keys.map((x) => "$x").toList(), quoteChar);
+  static string columnsFromMap({required Map items, string? quoteChar, string dataBaseProvider = ""}) => columnsFromList(items: items.keys.map((x) => "$x").toList(), quoteChar: quoteChar, dataBaseProvider: dataBaseProvider);
 
-  static string valuesFromList(Iterable items, [bool nullAsBlank = false]) => items.map((e) => (e as Object?).asSqlValue(nullAsBlank)).join(", ");
+  static string valuesFromList({required Iterable items, bool nullAsBlank = false}) => items.map((e) => (e as Object?).asSqlValue(nullAsBlank)).join(", ");
 
-  static string valuesFromMap(Map items, [bool nullAsBlank = false]) => valuesFromList(items.values, nullAsBlank);
+  static string valuesFromMap({required Map items, bool nullAsBlank = false}) => valuesFromList(items: items.values, nullAsBlank: nullAsBlank);
 
   static string getIdentity(string dataBaseProvider) {
     if (isSqlServer(dataBaseProvider)) {
