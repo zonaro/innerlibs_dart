@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-class ScaffoldParts extends StatefulWidget {
+class ScaffoldBuilder extends StatefulWidget {
   final List<MenuEntry> items;
 
   final void Function(int oldIndex, int newIndex)? onIndexChange;
@@ -9,7 +9,7 @@ class ScaffoldParts extends StatefulWidget {
 
   final Widget Function(BuildContext context, int currentIndex, MenuEntry entry, void Function(int value) onNavigationTap, List<BottomNavigationBarItem> bottomNavigationItems) builder;
 
-  const ScaffoldParts({
+  const ScaffoldBuilder({
     super.key,
     required this.items,
     this.onIndexChange,
@@ -18,12 +18,10 @@ class ScaffoldParts extends StatefulWidget {
   });
 
   @override
-  State<ScaffoldParts> createState() => _ScaffoldPartsState();
+  State<ScaffoldBuilder> createState() => _ScaffoldBuilderState();
 }
 
-class _ScaffoldPartsState extends State<ScaffoldParts> {
-  
-
+class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
   Widget get page => widget.items[widget.currentIndex.value].page;
 
   int get currentIndex => widget.currentIndex.value;
@@ -48,6 +46,7 @@ class _ScaffoldPartsState extends State<ScaffoldParts> {
       } else {
         int old = widget.currentIndex.value;
         widget.currentIndex.value = value;
+        setState(() {});
         if (widget.onIndexChange != null) {
           (widget.onIndexChange)!(old, value);
         }
@@ -64,8 +63,8 @@ class _ScaffoldPartsState extends State<ScaffoldParts> {
           BottomNavigationBarItem(
             icon: Icon(entry.icon),
             activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon),
-            label: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action == null ? null : entry.actionTitle) | entry.title : entry.title,
-            tooltip: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action == null ? null : entry.actionTooltip) | entry.tooltip : entry.tooltip,
+            label: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.title : entry.title,
+            tooltip: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip,
             backgroundColor: entry.backgroundColor,
           ),
       ];
