@@ -233,7 +233,7 @@ extension IterableExtension<T> on Iterable<T> {
   }
 
   /// return only valid items (see [Object.isValid])
-  Iterable<T> get whereValid => where((e) => e.isValid);
+  Iterable<T> get whereValid => where((e) => (e as Object?).isValid);
 
   /// Checks if a list contains at least [count] values from [values].
   ///
@@ -270,8 +270,6 @@ extension IterableExtension<T> on Iterable<T> {
   }
 
   /// Returns the most frequent element in the list.
-  ///
-  /// Throws an exception if the list is empty.
   T? get mostFrequent {
     if (isEmpty) {
       return null;
@@ -300,8 +298,7 @@ extension IterableExtension<T> on Iterable<T> {
   }
 
   /// Returns the least frequent element in the list.
-  ///
-  /// Throws an exception if the list is empty.
+
   T? get leastFrequent {
     if (isEmpty) {
       return null;
@@ -329,6 +326,44 @@ extension IterableExtension<T> on Iterable<T> {
     return leastFrequentElement;
   }
 }
+
+/// A class representing a keyed JSON table.
+///
+/// This class extends the `Iterable` class and provides functionality for working with a table of JSON rows.
+/// Each row in the table is associated with a unique key value.
+///
+/// The `KeyedJsonTable` class has the following properties and methods:
+/// - `keyName`: The name of the key field in each JSON row.
+/// - `table`: The underlying `JsonTable` that holds the JSON rows.
+/// - `operator []`: Retrieves the JSON row with the specified key.
+/// - `operator []=`: Sets the JSON row with the specified key.
+/// - `addAll`: Adds multiple JSON rows to the table.
+/// - `add`: Adds a single JSON row to the table.
+/// - `containsKey`: Checks if a JSON row with the specified key exists in the table.
+/// - `remove`: Removes the JSON row with the specified key from the table.
+/// - `clear`: Clears all the JSON rows from the table.
+///
+/// Example usage:
+/// ```dart
+/// var table = KeyedJsonTable<int>(keyName: 'id');
+/// table.addAll(JsonTable.fromList([
+///   {'id': 1, 'name': 'John'},
+///   {'id': 2, 'name': 'Jane'},
+/// ]));
+///
+/// var row = table[1];
+/// print(row); // {'id': 1, 'name': 'John'}
+///
+/// table[2] = {'id': 2, 'name': 'Jane Doe'};
+///
+/// print(table.containsKey(2)); // true
+///
+/// table.remove(1);
+/// print(table.length); // 1
+///
+/// table.clear();
+/// print(table.isEmpty); // true
+/// ```
 
 class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
   final string keyName;
@@ -381,4 +416,9 @@ class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
 
   @override
   Iterator<JsonRow> get iterator => table.iterator;
+}
+
+extension ListMapExtension<K, V> on JsonTable {
+  /// Converts a list of maps to a keyed JSON table.
+  KeyedJsonTable<T> toKeyedTable<T extends Comparable>(String keyName) => KeyedJsonTable<T>(keyName: keyName, items: this);
 }
