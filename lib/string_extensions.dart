@@ -455,9 +455,6 @@ extension StringExtension on String {
     return replaceAll(s!, '');
   }
 
-  ///Repeats the String [i] times.
-  String operator *(int i) => repeat(i);
-
   /// slice a string into chunks
   strings operator /(int chunkSize) {
     List<String> chunks = [];
@@ -726,7 +723,7 @@ extension StringExtension on String {
     if (isBlank) {
       return false;
     }
-    var regex = RegExp(r'^(?=.*([A-Z]){1,})(?=.*[!@#$&*]{1,})(?=.*[0-9]{1,})(?=.*[a-z]{1,}).{8,100}$');
+    var regex = RegExp(r'^(?=.*([A-Z]){1,})(?=.*[!@#$&*,;.?]{1,})(?=.*[0-9]{1,})(?=.*[a-z]{1,}).{8,100}$');
     return regex.hasMatch(this);
   }
 
