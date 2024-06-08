@@ -6,6 +6,22 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
 extension NumExtensions<T extends num> on T {
+  string get formatFileSize {
+    if (this < 1024) {
+      return "$this bytes";
+    } else if (this < pow(1024, 2)) {
+      return "${(this / 1024).toStringAsFixed(2)} KB";
+    } else if (this < pow(1024, 3)) {
+      return "${(this / pow(1024, 2)).toStringAsFixed(2)} MB";
+    } else if (this < pow(1024, 4)) {
+      return "${(this / pow(1024, 3)).toStringAsFixed(2)} GB";
+    } else if (this < pow(1024, 5)) {
+      return "${(this / pow(1024, 4)).toStringAsFixed(2)} TB";
+    } else {
+      return "${(this / pow(1024, 5)).toStringAsFixed(2)} PB";
+    }
+  }
+
   Widget get widthBox => SizedBox(width: double.tryParse(toString()));
 
   Widget get heightBox => SizedBox(height: double.tryParse(toString()));
