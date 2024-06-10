@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:innerlibs/brazil/brazil_tools.dart';
-import 'package:innerlibs/global.dart';
-import 'package:innerlibs/size_extensions.dart';
+import 'package:innerlibs/innerlibs.dart';
 import 'package:innerlibs/utils/constants.dart';
 
 void main() {
+  
+  test(' ', () {
+    "a,b c;d".splitAny([",", ";", " "]).forEach((x) => consoleLog(x));
+  });
+
   test(' ', () {
     var t = const Size(1920, 1080).getAspectRatioString();
     consoleLog(t);

@@ -209,8 +209,42 @@ extension StringExtension on String {
     return query;
   }
 
-  string get urlEncode => Uri.encodeQueryComponent(this);
-  string get urlDecode => Uri.decodeQueryComponent(this);
+  /// Splits the string into multiple substrings using any of the specified delimiters.
+  ///
+  /// The `delimiters` parameter is a list of strings that represent the delimiters to use for splitting the string.
+  ///
+  /// Returns a list of strings that are the result of splitting the original string using the specified delimiters.
+  List<String> splitAny(List<String> delimiters) {
+    List<String> result = [this];
+    for (String delimiter in delimiters) {
+      List<String> temp = [];
+      for (String str in result) {
+        temp.addAll(str.split(delimiter));
+      }
+      result = temp;
+    }
+    return result;
+  }
+
+  /// Returns the URL-encoded version of the string.
+  ///
+  /// Example:
+  /// ```dart
+  /// String url = 'https://example.com/?q=hello world';
+  /// String encodedUrl = url.urlEncode;
+  /// print(encodedUrl); // Output: https%3A%2F%2Fexample.com%2F%3Fq%3Dhello%20world
+  /// ```
+  String get urlEncode => Uri.encodeQueryComponent(this);
+
+  /// Returns the URL-decoded version of the string.
+  ///
+  /// Example:
+  /// ```dart
+  /// String encodedUrl = 'https%3A%2F%2Fexample.com%2F%3Fq%3Dhello%20world';
+  /// String decodedUrl = encodedUrl.urlDecode;
+  /// print(decodedUrl); // Output: https://example.com/?q=hello world
+  /// ```
+  String get urlDecode => Uri.decodeQueryComponent(this);
 
   /// Return a checksum digit for a barcode
   String get generateBarcodeCheckSum {
@@ -243,6 +277,24 @@ extension StringExtension on String {
     return t.toString();
   }
 
+  /// Checks if the string is a valid EAN (European Article Number) barcode.
+  ///
+  /// Returns `true` if the string is a valid EAN barcode, `false` otherwise.
+  /// A valid EAN barcode must meet the following conditions:
+  /// - It must not be blank.
+  /// - It must consist of only numeric characters.
+  /// - It must have a length greater than 3.
+  /// - The last character of the barcode must be the correct checksum digit.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// var barcode = '1234567890123';
+  /// if (barcode.isValidEAN) {
+  ///   print('Valid EAN barcode');
+  /// } else {
+  ///   print('Invalid EAN barcode');
+  /// }
+  /// ```
   bool get isValidEAN {
     if (isBlank || isNotNumber || length <= 3) {
       return false;
@@ -291,14 +343,17 @@ extension StringExtension on String {
         }
       }
     }
-
     return replaceAllMapped(_diacriticsRegExp, (a) => _diacriticsMap[a.group(0)] ?? a.group(0));
   }
 
-  /// Splits a camel case string
+  /// Returns a string with camel case split into separate words.
+  ///
+  /// The camel case string is split into separate words using a space as the separator.
+  /// For example, "camelSplitString" will be converted to "camel Split String".
   String get camelSplitString => camelSplit.join(" ");
 
-  /// Splits a camel case string into a list of words.
+  /// Splits a camel case string into individual words.
+  /// Returns a list of strings representing the words in the camel case string.
   List<String> get camelSplit {
     List<String> words = [];
     String word = '';
@@ -322,8 +377,15 @@ extension StringExtension on String {
     return words;
   }
 
+  /// Checks if the current string is equal to the given [text] when both are flattened.
+  /// Returns `true` if they are equal, `false` otherwise.
   bool flatEqual(String? text) => asFlat == text?.asFlat;
 
+  /// Checks if the current string contains the given [text] when both are flattened.
+  /// If the current string is blank, it returns `true` only if the [text] is also blank.
+  /// If the [text] is blank, it returns `true`.
+  /// Otherwise, it checks if the current string contains the [text] when both are flattened.
+  /// Returns `true` if the current string contains the [text], `false` otherwise.
   bool flatContains(String? text) {
     if (isBlank) return text.isBlank;
 
@@ -333,9 +395,11 @@ extension StringExtension on String {
     return asFlat.contains(text!.asFlat);
   }
 
-  /// Remove accents, trim white spaces and set all characters as lowercase
+  /// Returns the string as a flat representation by removing diacritics, converting to lowercase, and trimming all whitespace.
   string get asFlat => removeDiacritics.toLowerCase().trimAll;
 
+  /// Checks if any of the strings in the given [texts] iterable is equal to the current string.
+  /// Returns `true` if any string is equal, otherwise returns `false`.
   bool flatEqualAny(Iterable<String> texts) {
     for (var t in texts) {
       if (flatEqual(t)) {
@@ -345,6 +409,10 @@ extension StringExtension on String {
     return false;
   }
 
+  /// Checks if the string contains any of the specified texts.
+  ///
+  /// Returns `true` if the string contains any of the texts in the [texts] iterable,
+  /// otherwise returns `false`.
   bool flatContainsAny(Iterable<String> texts) {
     for (var t in texts) {
       if (flatContains(t)) {
@@ -387,15 +455,11 @@ extension StringExtension on String {
   /// bool isMore = foo > 'Hi'; // returns true.
   /// ```
   bool operator >(String s) {
-    if (isBlank) {
-      return false;
-    }
     return length > s.length;
   }
 
   /// Checks if the [length!] of the `String` is more or equal than the length of [s].
-  ///
-  /// If the `String` is null or empty, it returns false.
+
   ///
   /// ### Example
   ///
@@ -404,15 +468,10 @@ extension StringExtension on String {
   /// bool isMoreOrEqual = foo >= 'Hi'; // returns true.
   /// ```
   bool operator >=(String s) {
-    if (isBlank) {
-      return false;
-    }
     return length >= s.length;
   }
 
   /// Checks if the [length!] of the `String` is less than the length of [s].
-  ///
-  /// If the `String` is null or empty, it returns false.
   ///
   /// ### Example
   ///
@@ -421,9 +480,6 @@ extension StringExtension on String {
   /// bool isLess = foo < 'Hi'; // returns false.
   /// ```
   bool operator <(String s) {
-    if (isBlank) {
-      return false;
-    }
     return length < s.length;
   }
 
@@ -438,9 +494,6 @@ extension StringExtension on String {
   /// bool isLessOrEqual = foo <= 'Hi'; // returns false.
   /// ```
   bool operator <=(String s) {
-    if (isBlank) {
-      return false;
-    }
     return length <= s.length;
   }
 
@@ -450,7 +503,7 @@ extension StringExtension on String {
       return '';
     }
     if (s.isBlank) {
-      return blankIfNull;
+      return this;
     }
     return replaceAll(s!, '');
   }
@@ -483,7 +536,7 @@ extension StringExtension on String {
     if (isBlank) {
       return 0;
     }
-    var magicalNumber = getWords.length / wordsPerMinute;
+    var magicalNumber = getWords.length / wordsPerMinute.lockMin(1);
     return (magicalNumber * 100).round();
   }
 
