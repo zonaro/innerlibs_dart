@@ -140,11 +140,11 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
                 }).toList())
             : null,
       ),
-      body: (entry.pages.length == 1
-              ? entry.pages.first.child
-              : TabBarView(
+      body: (entry.pages.length > 1
+              ? TabBarView(
                   children: entry.pages.map((x) => x.child).toList(),
-                ))
+                )
+              : entry.pages.firstOrNull?.child ?? Container())
           .wrapIf(widget.wrapper != null, widget.wrapper ?? (x) => x),
       floatingActionButton: floatingActionButton ?? widget.floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
