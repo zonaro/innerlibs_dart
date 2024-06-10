@@ -6,8 +6,8 @@ class ScaffoldBuilder extends StatefulWidget {
   const ScaffoldBuilder({
     super.key,
     required this.items,
-    this.onIndexChange,
     required this.currentIndex,
+    this.onIndexChange,
     this.drawer,
     this.endDrawer,
     this.bottomSheet,
@@ -31,8 +31,12 @@ class ScaffoldBuilder extends StatefulWidget {
     this.iconColor,
     this.activeIconColor,
     this.bottomNavigationBarType,
+    this.scrollableTabs,
+    this.labelColor,
   });
 
+  final bool? scrollableTabs;
+  final Color? labelColor;
   final Widget? drawer;
   final Widget? endDrawer;
   final Widget? bottomSheet;
@@ -126,12 +130,14 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
         actions: entry.toolbarItems ?? widget.actions,
         bottom: entry.pages.length > 1
             ? TabBar(
-                tabs: entry.pages
-                    .map((x) => Tab(
-                          icon: Icon(x.icon),
-                          child: (x.title as Object?).forceWidget ?? Text("Tab ${entry.pages.indexOf(x) + 1}"),
-                        ))
-                    .toList())
+                labelColor: widget.labelColor,
+                isScrollable: widget.scrollableTabs ?? false,
+                tabs: entry.pages.map((x) {
+                  return Tab(
+                    icon: Icon(x.icon),
+                    child: (x.title as Object?).forceWidget ?? Text("Tab ${entry.pages.indexOf(x) + 1}"),
+                  );
+                }).toList())
             : null,
       ),
       body: (entry.pages.length == 1
