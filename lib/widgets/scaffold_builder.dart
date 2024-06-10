@@ -22,6 +22,15 @@ class ScaffoldBuilder extends StatefulWidget {
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
     this.restorationId,
+    this.floatingActionButton,
+    this.title,
+    this.appBarBackgroundColor,
+    this.leading,
+    this.actions,
+    this.wrapper,
+    this.iconColor,
+    this.activeIconColor,
+    this.bottomNavigationBarType,
   });
 
   final Widget? drawer;
@@ -38,6 +47,16 @@ class ScaffoldBuilder extends StatefulWidget {
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
   final String? restorationId;
+  final Widget? floatingActionButton;
+  final dynamic title;
+  final Color? appBarBackgroundColor;
+  final Color? iconColor;
+  final Color? activeIconColor;
+  final Widget? leading;
+  final List<Widget>? actions;
+  final BottomNavigationBarType? bottomNavigationBarType;
+
+  final Widget Function(Widget)? wrapper;
 
   final List<MenuEntry> items;
 
@@ -53,7 +72,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
 
   int get currentIndex => widget.currentIndex.value;
 
-  string get title => entry.title;
+  Widget get title => (entry.title as Object?).forceWidget ?? (widget.title as Object?).forceWidget ?? Text(currentIndex.toString());
 
   IconData get icon => entry.icon;
 
@@ -101,33 +120,40 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
     return Scaffold(
       key: widget.key,
       appBar: AppBar(
-        title: (entry.title as Object?).forceWidget,
-        actions: entry.toolbarItems,
+        title: title,
+        leading: widget.leading,
+        backgroundColor: widget.appBarBackgroundColor,
+        actions: entry.toolbarItems ?? widget.actions,
         bottom: entry.pages.length > 1
             ? TabBar(
                 tabs: entry.pages
                     .map((x) => Tab(
                           icon: Icon(x.icon),
-                          text: x.title,
+                          child: (x.title as Object?).forceWidget ?? Text("Tab ${entry.pages.indexOf(x) + 1}"),
                         ))
                     .toList())
             : null,
       ),
-      body: entry.pages.length == 1
-          ? entry.pages.first.page
-          : TabBarView(
-              children: entry.pages.map((x) => x.page).toList(),
-            ),
-      floatingActionButton: floatingActionButton,
+      body: (entry.pages.length == 1
+              ? entry.pages.first.child
+              : TabBarView(
+                  children: entry.pages.map((x) => x.child).toList(),
+                ))
+          .wrapIf(widget.wrapper != null, widget.wrapper ?? (x) => x),
+      floatingActionButton: floatingActionButton ?? widget.floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
       persistentFooterButtons: entry.persistentFooterButtons,
       drawer: widget.drawer,
       endDrawer: widget.endDrawer,
       bottomNavigationBar: bottomNavigationBarItems.length > 1
           ? BottomNavigationBar(
+              unselectedItemColor: widget.iconColor,
+              selectedItemColor: widget.activeIconColor,
               onTap: onNavigationTap,
               currentIndex: currentIndex,
               items: bottomNavigationBarItems,
+              type: widget.bottomNavigationBarType,
+              showUnselectedLabels: true,
             )
           : null,
       bottomSheet: widget.bottomSheet,
@@ -153,12 +179,12 @@ typedef MenuEntries = List<MenuEntry>;
 class PageEntry {
   final dynamic title;
   final IconData? icon;
-  final Widget page;
+  final Widget child;
 
   PageEntry({
-    required this.title,
+    this.title,
     this.icon,
-    required this.page,
+    required this.child,
   });
 }
 
