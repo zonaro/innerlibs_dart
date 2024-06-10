@@ -578,6 +578,28 @@ abstract interface class Brasil {
     return "$n1$n2.$n3$n4$n5.$n6$n7$n8/$n9$n10$n11$n12-$d1$d2";
   }
 
+  static String gerarPISFake() {
+    Random random = Random();
+    int n = 9;
+    int n1 = random.nextInt(n);
+    int n2 = random.nextInt(n);
+    int n3 = random.nextInt(n);
+    int n4 = random.nextInt(n);
+    int n5 = random.nextInt(n);
+    int n6 = random.nextInt(n);
+    int n7 = random.nextInt(n);
+    int n8 = random.nextInt(n);
+    int n9 = random.nextInt(n);
+    int n10 = random.nextInt(n);
+    int n11 = random.nextInt(n);
+    int d1 = n11 * 3 + n10 * 2 + n9 * 9 + n8 * 8 + n7 * 7 + n6 * 6 + n5 * 5 + n4 * 4 + n3 * 3 + n2 * 2 + n1 * 1;
+    d1 = 11 - (d1 % 11);
+    if (d1 >= 10) d1 = 0;
+    return "$n1$n2$n3$n4$n5$n6$n7$n8$n9$n10$n11$d1";
+  }
+
+  
+
   static Telefone separarTelefone(dynamic telefone) => Telefone(telefone);
 
   static bool validarTelefone(dynamic telefone) {
