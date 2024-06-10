@@ -209,7 +209,7 @@ class MenuEntry {
   final IconData? actionIcon;
   final List<Widget>? persistentFooterButtons;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final FloatingActionButton? floatingActionButton;
+  final Widget? floatingActionButton;
   final Color? backgroundColor;
 
   MenuEntry({
