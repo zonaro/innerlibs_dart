@@ -4,10 +4,24 @@ import 'dart:collection';
 
 import 'package:innerlibs/innerlibs.dart';
 
-class SQLResponse {
+class SQLResponse extends SQLResponseOf<dynamic> {
+  SQLResponse({required super.hasData, required super.sql, required super.status, required super.data, required super.hasError, required super.dataSetType, super.message});
+
+  factory SQLResponse.fromJson(JsonMap json) => SQLResponse(
+        hasData: json['HasData'] as bool,
+        sql: json['SQL'] as String? ?? "",
+        status: json['Status'] as String? ?? "",
+        data: json['Data'],
+        hasError: json['HasError'] as bool,
+        message: json['Message'] as String? ?? "",
+        dataSetType: json['DataSetType'] as String? ?? "",
+      );
+}
+
+class SQLResponseOf<T extends Object?> {
   final String sql;
   final String status;
-  final dynamic data;
+  final T? data;
   final bool hasData;
   final bool hasError;
   final String message;
@@ -18,7 +32,7 @@ class SQLResponse {
     return "";
   }
 
-  SQLResponse({
+  SQLResponseOf({
     required this.hasData,
     required this.sql,
     required this.status,
@@ -28,7 +42,7 @@ class SQLResponse {
     this.message = "",
   });
 
-  factory SQLResponse.fromData(dynamic data, {string sql = "", string dataSetType = "table"}) {
+  factory SQLResponseOf.fromData(T data, {string sql = "", string dataSetType = "table"}) {
     bool haserror = false;
     string message = "";
     bool hasdata = false;
@@ -47,14 +61,14 @@ class SQLResponse {
       status = "error";
     }
 
-    return SQLResponse(hasData: hasdata, sql: sql, status: status, data: data, hasError: haserror, dataSetType: dataSetType, message: message);
+    return SQLResponseOf<T>(hasData: hasdata, sql: sql, status: status, data: data, hasError: haserror, dataSetType: dataSetType, message: message);
   }
-  factory SQLResponse.empty() => SQLResponse(hasData: false, sql: "", status: "empty", data: [], hasError: false, message: "empty data placeholder", dataSetType: "table");
-  factory SQLResponse.error() => SQLResponse(hasData: false, sql: "", status: "error", data: [], hasError: true, message: "error placeholder", dataSetType: "table");
+  factory SQLResponseOf.empty({string? message, string dataSetType = "table", string? sql}) => SQLResponseOf<T>(hasData: false, sql: sql ?? "", status: "empty", hasError: false, message: message ?? "response is empty", dataSetType: dataSetType, data: null);
+  factory SQLResponseOf.error({string? message, string dataSetType = "table", string? sql}) => SQLResponseOf<T>(hasData: false, sql: sql ?? "", status: "error", hasError: true, message: message ?? "error", dataSetType: dataSetType, data: null);
 
-  factory SQLResponse.fromJson(JsonMap json) => SQLResponse(
+  factory SQLResponseOf.fromJson(JsonMap json) => SQLResponseOf(
         hasData: json['HasData'] as bool,
-        sql: json['SQL'] as String? ??"",
+        sql: json['SQL'] as String? ?? "",
         status: json['Status'] as String? ?? "",
         data: json['Data'],
         hasError: json['HasError'] as bool,

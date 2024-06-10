@@ -598,7 +598,11 @@ abstract interface class Brasil {
     return "$n1$n2$n3$n4$n5$n6$n7$n8$n9$n10$n11$d1";
   }
 
-  
+  /// Gera um CPF ou CNPJ falso de forma aleatória.
+  ///
+  /// Retorna uma string contendo um CPF falso se o valor aleatório gerado for verdadeiro,
+  /// caso contrário, retorna uma string contendo um CNPJ falso.
+  static String gerarCPFouCNPJFake() => Random().nextBool() ? gerarCPFFake() : gerarCNPJFake();
 
   static Telefone separarTelefone(dynamic telefone) => Telefone(telefone);
 
@@ -875,13 +879,23 @@ class Cidade implements Comparable<Cidade> {
   int compareTo(other) => nome.compareTo(other.nome);
 }
 
+/// Classe que representa um número de telefone.
 class Telefone {
+  late String ddd;
+  late String prefixo;
+  late String sufixo;
+
+  /// Construtor da classe Telefone.
+  ///
+  /// [numero] é um parâmetro (int ou string) que representa o número de telefone.
+  /// Se [numero] for fornecido e for válido, o número será formatado e
+  /// atribuído às propriedades [ddd], [prefixo] e [sufixo].
   Telefone([dynamic numero]) {
     ddd = "";
     prefixo = "";
     sufixo = "";
     if (Brasil.validarTelefone(numero)) {
-      string t = "$numero".onlyNumbers;
+      String t = "$numero".onlyNumbers;
       if (t.length > 11) {
         t = t.substring(0, 11);
       }
@@ -904,14 +918,36 @@ class Telefone {
     }
   }
 
-  late string ddd;
-  late string prefixo;
-  late string sufixo;
-  string get numero => "$prefixo$sufixo";
-  string get numeroMascara => "$prefixo-$sufixo".nullIf((s) => s == "-").blankIfNull;
-  string get completo => "$ddd$numero";
-  string get completoMascara => "${ddd.isNotBlank ? "($ddd) " : ""}$numeroMascara".nullIf((s) => s == "-").blankIfNull;
+  /// Retorna o número de telefone.
+  String get numero => "$prefixo$sufixo";
+
+  /// Retorna o número de telefone formatado com máscara.
+  String get numeroMascara => "$prefixo-$sufixo".nullIf((s) => s == "-").blankIfNull;
+
+  /// Retorna o número de telefone completo, incluindo o DDD.
+  String get completo => "$ddd$numero";
+
+  /// Retorna o número de telefone completo, incluindo o DDD, formatado com máscara.
+  String get completoMascara => "${ddd.isNotBlank ? "($ddd) " : ""}$numeroMascara".nullIf((s) => s == "-").blankIfNull;
+
+  @override
+  int get hashCode => Object.hash(ddd, prefixo, sufixo);
 
   @override
   String toString() => completoMascara;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is Telefone) {
+      return hashCode == other.hashCode;
+    }
+    if (other is string) {
+      return completo == other;
+    }
+    if (other is num) {
+      return completo == "$other";
+    }
+
+    return false;
+  }
 }
