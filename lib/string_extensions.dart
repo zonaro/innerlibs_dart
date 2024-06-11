@@ -522,6 +522,38 @@ extension StringExtension on String {
   /// slice a string into chunks
   strings slice(int chunkSize) => this / chunkSize;
 
+  /// Splits the string into chunks based on the provided chunk sizes.
+  ///
+  /// The [chunkSizes] parameter is a list of integers representing the sizes of each chunk.
+  /// If the list is empty, the entire string will be considered as a single chunk.
+  ///
+  /// Returns a list of strings, where each string represents a chunk of the original string.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// var input = 'Hello, world!';
+  /// var chunkSizes = [5, 2, 6];
+  /// var chunks = input.splitChunk(chunkSizes);
+  /// print(chunks); // Output: ['Hello', ', ', 'world!']
+  /// ```
+  List<String> splitChunk(List<int> chunkSizes) {
+    List<String> chunks = [];
+    var input = this;
+    while (input.isNotEmpty) {
+      var size = chunkSizes.isNotEmpty ? chunkSizes.first : input.length;
+      if (size <= 0) size = input.length;
+      var chunk = input.substring(0, size);
+      if (chunk.isEmpty) {
+        if (input.isNotEmpty) chunks.add(input);
+        break;
+      }
+      chunks.add(chunk);
+      input = input.substring(size);
+      chunkSizes = chunkSizes.skip(1).toList();
+    }
+    return chunks;
+  }
+
   /// Returns the average read time duration of the given `String` in seconds.
   ///
   /// The default calculation is based on 200 words per minute.
@@ -671,7 +703,8 @@ extension StringExtension on String {
       return false;
     }
     substring(0, 1);
-    var regex = RegExp(r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
+    var regex = RegExp(
+        r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
     return regex.hasMatch(this);
   }
 

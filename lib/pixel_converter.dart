@@ -5,8 +5,11 @@ extension PixelConverter on num {
   /// The respective value in centimeters
   double get pxToCentimeter => this * 37.8;
 
-  /// The respective value millimeters
+  /// The respective value in millimeters
   double get pixelToMillimeter => this * 3.78;
+
+  /// The respective value in millimeters
+  double get millimeterToPixel => this / 3.78;
 
   /// The respective value in quarter-millimeters
   double get pixelToQuarterMillimeter => this * 0.945;

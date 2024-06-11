@@ -346,18 +346,19 @@ abstract interface class Brasil {
   }
 
   static bool validarPIS(dynamic numero) {
-    if (numero.isNotValid) {
+    string text = "$numero";
+    if (text.isNotValid) {
       return false;
     }
 
-    numero = numero.replaceAll(RegExp(r'[^0-9]'), '');
+    text = text.replaceAll(RegExp(r'[^0-9]'), '');
 
-    if (numero.length != 11) {
+    if (text.length != 11) {
       return false;
     }
 
-    var count = numero[0];
-    if (numero.split('').where((w) => w == count).length == numero.length) {
+    var count = text[0];
+    if (text.split('').where((w) => w == count).length == text.length) {
       return false;
     }
 
@@ -366,14 +367,14 @@ abstract interface class Brasil {
     int resto;
 
     for (var i = 0; i < 10; i++) {
-      soma += int.parse(numero[i]) * multiplicador[i];
+      soma += int.parse(text[i]) * multiplicador[i];
     }
 
     resto = soma % 11;
 
     resto = resto < 2 ? 0 : 11 - resto;
 
-    return numero.toLowerCase().endsWith(resto.toString().toLowerCase());
+    return text.toLowerCase().endsWith(resto.toString().toLowerCase());
   }
 
   static string pegarRotuloDocumento({dynamic documento, string rotuloPadrao = ""}) {
