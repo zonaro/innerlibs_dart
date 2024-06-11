@@ -12,6 +12,7 @@ export 'align_extensions.dart';
 export 'alignment_extensions.dart';
 export 'boolean_extensions.dart';
 export 'brazil/brazil_tools.dart';
+export 'brazil/chave_nfe.dart';
 export 'build_context_extensions.dart';
 export 'center_extensions.dart';
 export 'color_extensions.dart';
