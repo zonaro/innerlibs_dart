@@ -219,7 +219,7 @@ extension StringExtension on String {
     for (String delimiter in delimiters) {
       List<String> temp = [];
       for (String str in result) {
-        temp.addAll(str.split(delimiter));
+        temp.addAll(str.split(delimiter).where((x) => x.isNotEmpty));
       }
       result = temp;
     }
