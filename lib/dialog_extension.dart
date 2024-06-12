@@ -149,6 +149,55 @@ extension DialogExt on BuildContext {
     return isConfirm ?? false;
   }
 
+  /// Displays a confirmation dialog and shows a loader if the user confirms.
+  ///
+  /// The [content] parameter represents the content of the confirmation dialog.
+  /// The [title] parameter represents the title of the confirmation dialog.
+  /// The [textOK] parameter represents the text for the OK button in the confirmation dialog.
+  /// The [textCancel] parameter represents the text for the Cancel button in the confirmation dialog.
+  /// The [canPop] parameter determines whether the dialog can be dismissed by popping the route.
+  /// The [onPopInvoked] parameter is a callback function that is invoked when the dialog is popped.
+  /// The [task] parameter is a function that returns a future representing the task to be performed.
+  /// The [cancelTaskButtonText] parameter represents the text for the Cancel button in the loader.
+  /// The [loadingText] parameter represents the text to be displayed while the task is loading.
+  /// The [confirmationMessage] parameter represents the message to be displayed in the confirmation dialog.
+  ///
+  /// Returns the result of the task if the user confirms, otherwise returns null.
+  Future<T?> confirmTask<T>({
+    dynamic content,
+    dynamic title,
+    dynamic textOK,
+    dynamic textCancel,
+    bool canPop = false,
+    void Function(bool)? onPopInvoked,
+    Future<T?> Function()? task,
+    dynamic cancelTaskButtonText,
+    dynamic loadingText,
+    dynamic confirmationMessage,
+    void Function(Object?)? onError,
+  }) async {
+    bool isConfirmed = await confirm(
+      content,
+      title: title,
+      textOK: textOK,
+      textCancel: textCancel,
+      canPop: canPop,
+      onPopInvoked: onPopInvoked,
+    );
+    if (isConfirmed) {
+      return await showTaskLoader(
+        task: task,
+        cancelTaskButtonText: cancelTaskButtonText,
+        loadingText: loadingText,
+        textOK: textOK,
+        textCancel: textCancel,
+        confirmationMessage: confirmationMessage,
+        onError: onError,
+      );
+    }
+    return null;
+  }
+
   Future<void> dialog(dynamic content, {String? title, List<String> buttons = const [], String? cancelButton, Function(String)? onDone, Color? positiveTitleColor, Color? cancelTitleColor, double? fontSize, bool barrierDismissible = true}) async {
     List<Widget> arrWidget = [];
 
@@ -236,7 +285,49 @@ extension DialogExt on BuildContext {
         });
   }
 
-  Future<T?> showTaskLoader<T>({Future<T?> Function()? task, dynamic cancelTaskButtonText, dynamic loadingText, dynamic textOK, dynamic textCancel, dynamic confirmationMessage}) async {
+  /// Shows a task loader dialog and executes a task asynchronously.
+  ///
+  /// The [showTaskLoader] function displays a dialog with a circular progress indicator and an optional loading text.
+  /// It also provides an option to cancel the task by showing a cancel button.
+  ///
+  /// The [task] parameter is a function that represents the task to be executed. It should return a future that resolves to a value of type [T].
+  ///
+  /// The [cancelTaskButtonText] parameter is the text to be displayed on the cancel button. It can be of any type and will be converted to a string.
+  ///
+  /// The [loadingText] parameter is the text to be displayed below the progress indicator. It can be of any type and will be converted to a string.
+  ///
+  /// The [textOK] parameter is the text to be displayed on the OK button. It can be of any type and will be converted to a string.
+  ///
+  /// The [textCancel] parameter is the text to be displayed on the cancel button. It can be of any type and will be converted to a string.
+  ///
+  /// The [confirmationMessage] parameter is an optional message to be displayed before canceling the task. If provided, the user will be prompted to confirm the cancellation.
+  ///
+  /// The function returns a future that resolves to the result of the task execution, or `null` if the task was canceled.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final result = await showTaskLoader(
+  ///   task: () async {
+  ///     // Perform some asynchronous task
+  ///     return await fetchData();
+  ///   },
+  ///   cancelTaskButtonText: 'Cancel',
+  ///   loadingText: 'Loading...',
+  ///   textOK: 'OK',
+  ///   textCancel: 'Cancel',
+  ///   confirmationMessage: 'Are you sure you want to cancel the task?',
+  /// );
+  /// ```
+
+  Future<T?> showTaskLoader<T>({
+    Future<T?> Function()? task,
+    dynamic cancelTaskButtonText,
+    dynamic loadingText,
+    dynamic textOK,
+    dynamic textCancel,
+    dynamic confirmationMessage,
+    void Function(Object?)? onError,
+  }) async {
     T? result;
     CancelableOperation<T?>? operation;
 
@@ -292,6 +383,9 @@ extension DialogExt on BuildContext {
         try {
           r = await task();
         } catch (e) {
+          if (onError != null) {
+            (onError).call(e); // Call onError function if provided
+          }
           await operation?.cancel();
           r = null;
         }
