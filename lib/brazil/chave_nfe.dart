@@ -29,17 +29,31 @@ class ChaveNFe {
   /// Tamanho da forma de emissão na chave da NFe.
   static const int tamanhoFormaEmissao = 1;
 
-  int? ano; // Ano de emissão da NF-e.
-  int? formaEmissao; // Forma de emissão da NF-e.
-  int? cnpj; // CNPJ do emitente da NF-e.
-  int? codigo; // Código do município do emitente da NF-e.
-  int? digito; // Dígito verificador da chave da NF-e.
-  int? mes; // Mês de emissão da NF-e.
-  int? modelo; // Modelo da NF-e.
-  DateTime? mesEmissao; // Data de emissão da NF-e.
-  int? nota; // Número da NF-e.
-  int? serie; // Série da NF-e.
-  int? uf; // UF do emitente da NF-e.
+  // Ano de emissão da NF-e.
+  final int ano;
+  // Forma de emissão da NF-e.
+  final int formaEmissao;
+  // CNPJ do emitente da NF-e.
+  final int cnpj;
+  // Código do município do emitente da NF-e.
+  final int codigo;
+  // Dígito verificador da chave da NF-e.
+  int digito;
+
+  // Mês de emissão da NF-e.
+  final int mes;
+  // Modelo da NF-e.
+  final int modelo;
+
+  DateTime get mesEmissao => DateTime(ano, mes);
+
+  // Número da NF-e.
+  final int nota;
+
+  // Série da NF-e.
+  final int serie;
+  // UF do emitente da NF-e.
+  final int uf;
 
   /// Obtém o tipo da NFe com base no modelo fixo.
   ///
@@ -63,45 +77,47 @@ class ChaveNFe {
     }
   }
 
-  /// Define o tipo da NFe com base no valor fornecido.
-  ///
-  /// O valor deve ser "55", "57" ou "65" para definir o modelo fixo corretamente.
-  /// Caso contrário, o modelo fixo será definido como "0".
-  set tipo(String? value) => modeloFixo = value?.nullIf((x) => !["55", "57", "65"].contains(x)) ?? "0";
-
   /// Construtor padrão da classe ChaveNFe.
-  ChaveNFe();
+  ChaveNFe({
+    required this.ano,
+    required this.formaEmissao,
+    required this.cnpj,
+    required this.codigo,
+    required this.mes,
+    required this.modelo,
+    required this.nota,
+    required this.serie,
+    required this.uf,
+    this.digito = 0,
+  });
 
   /// Construtor que inicializa a ChaveNFe com base nos componentes fornecidos.
   ///
   /// Os componentes são: UF, ano, mês, CNPJ, modelo, série, nota, forma de emissão e código.
-  ChaveNFe.fromComponents({
+  static fromComponents({
     required String uf,
-    required int this.ano,
-    required int this.mes,
     required String cnpj,
-    required int this.modelo,
-    required int this.serie,
-    required int this.nota,
-    required int this.formaEmissao,
-    required int this.codigo,
-  }) {
-    this.uf = int.tryParse(uf);
-    this.cnpj = int.tryParse(cnpj);
-  }
-
-  /// Construtor que inicializa a ChaveNFe com base em uma data e nos componentes fornecidos.
-  ///
-  /// Os componentes são: UF, data de emissão, CNPJ, modelo, série, nota, forma de emissão e código.
-  ChaveNFe.fromDateAndComponents(String uf, DateTime emissao, String cnpj, int modelo, int serie, int nota, int formaEmissao, int codigo) {
-    // Implementar inicialização conforme necessário
-  }
-
-  /// Construtor que inicializa a ChaveNFe com base em uma string de chave.
-  ///
-  /// A string de chave deve conter apenas números.
-  ChaveNFe.fromString(String chave) {
-    this.chave = chave.onlyNumbers;
+    required int ano,
+    required int mes,
+    required int modelo,
+    required int serie,
+    required int nota,
+    required int formaEmissao,
+    required int codigo,
+  }) async {
+    final int ufCode = (await Brasil.pegarEstado(uf))?.ibge ?? 0;
+    final int cnpjNumber = int.tryParse(cnpj.onlyNumbers) ?? 0;
+    return ChaveNFe(
+      uf: ufCode,
+      ano: ano,
+      mes: mes,
+      cnpj: cnpjNumber,
+      modelo: modelo,
+      serie: serie,
+      nota: nota,
+      formaEmissao: formaEmissao,
+      codigo: codigo,
+    );
   }
 
   /// Obtém a chave da NFe formatada sem traços.
@@ -112,7 +128,7 @@ class ChaveNFe {
   /// A chave deve conter apenas números.
   /// Se a chave tiver 43 caracteres, o dígito verificador será calculado e adicionado automaticamente.
   /// Se a chave não tiver 44 caracteres após a formatação, será preenchida com zeros à esquerda.
-  set chave(String value) {
+  factory ChaveNFe.fromString(String value) {
     var c = value.zeroIfBlank.onlyNumbers;
     if (c.length == 43) {
       c += calcularDigitoChave(c).toString();
@@ -124,135 +140,76 @@ class ChaveNFe {
 
     var parts = c.splitChunk([tamanhoUF, tamanhoMesAno - 2, tamanhoMesAno - 2, tamanhoCNPJ, tamanhoModelo, tamanhoSerie, tamanhoNota, tamanhoFormaEmissao, tamanhoCodigo, tamanhoDigito]);
 
-    uf = parts[0].toInt;
-    ano = parts[1].toInt;
-    mes = parts[2].toInt;
-    cnpj = parts[3].toInt;
-    modelo = parts[4].toInt;
-    serie = parts[5].toInt;
-    nota = parts[6].toInt;
-    formaEmissao = parts[7].toInt;
-    codigo = parts[8].toInt;
-    digito = parts[9].toInt;
+    return ChaveNFe(
+      uf: parts[0].toInt!,
+      ano: parts[1].toInt!,
+      mes: parts[2].toInt!,
+      cnpj: parts[3].toInt!,
+      modelo: parts[4].toInt!,
+      serie: parts[5].toInt!,
+      nota: parts[6].toInt!,
+      formaEmissao: parts[7].toInt!,
+      codigo: parts[8].toInt!,
+      digito: parts[9].toInt!,
+    );
   }
 
   /// Obtém a chave da NFe formatada com traços.
   ///
   /// Retorna a chave formatada com traços entre os componentes.
   /// Se algum componente fixo for nulo, retorna "null".
-  String get chaveFormatadaTraco {
-    if (ufFixo != null && mesAno != null && cnpjFixo != null && modeloFixo != null && serieFixo != null && notaFixo != null && formaEmissaoFixo != null && codigoFixo != null && digitoFixo != null) {
-      return "$ufFixo-$mesAno-$cnpjFixo-$modeloFixo-$serieFixo-$notaFixo-$formaEmissaoFixo-$codigoFixo-$digitoFixo";
-    }
-    return "null";
-  }
+  String get chaveFormatadaTraco => "$ufFixo-$mesAno-$cnpjFixo-$modeloFixo-$serieFixo-$notaFixo-$formaEmissaoFixo-$codigoFixo-$digitoFixo";
 
   /// Obtém a chave da NFe formatada com espaços.
   ///
   /// Retorna a chave formatada com espaços a cada 4 caracteres.
-  String? get chaveFormatadaComEspacos => chave.replaceAllMapped(RegExp(r".{4}"), (match) => "${match.group(0)} ").trimRight();
+  String get chaveFormatadaComEspacos => chave.replaceAllMapped(RegExp(r".{4}"), (match) => "${match.group(0)} ").trimRight();
 
   /// Obtém o mês e ano da NFe formatado.
   ///
   /// Retorna uma string com o mês e ano formatados no padrão "MMYY".
   /// Se o ano ou o mês forem nulos, retorna null.
-  String? get mesAno {
-    if (ano != null && mes != null) {
-      return "${ano.toString().padLeft(tamanhoMesAno - 2, '0')}${mes.toString().padLeft(tamanhoMesAno - 2, '0')}";
-    }
-    return null;
-  }
-
-  /// Define o mês e ano da NFe com base na string fornecida.
-  ///
-  /// A string deve conter apenas números e ter 4 caracteres.
-  /// Os dois primeiros caracteres representam o mês e os dois últimos representam o ano.
-  set mesAno(String? value) {
-    if (value != null && value.isNotEmpty && value.onlyNumbers.length == 4) {
-      mes = int.tryParse(value.substring(0, 2));
-      ano = int.tryParse(value.substring(2, 4));
-    }
-  }
+  String get mesAno => "${ano.toString().padLeft(tamanhoMesAno - 2, '0')}${mes.toString().padLeft(tamanhoMesAno - 2, '0')}";
 
   /// Obtém o modelo fixo da NFe formatado.
   ///
   /// Retorna uma string com o modelo fixo formatado com zeros à esquerda.
-  String? get modeloFixo => modelo?.toString().padLeft(tamanhoModelo, '0');
-
-  /// Define o modelo fixo da NFe com base na string fornecida.
-  ///
-  /// A string deve conter apenas números.
-  set modeloFixo(String? value) => modelo = value != null ? int.tryParse(value) : null;
+  String get modeloFixo => modelo.toString().padLeft(tamanhoModelo, '0');
 
   /// Obtém a nota fixa da NFe formatada.
   ///
   /// Retorna uma string com a nota fixa formatada com zeros à esquerda.
-  String? get notaFixo => nota?.toString().padLeft(tamanhoNota, '0');
-
-  /// Define a nota fixa da NFe com base na string fornecida.
-  ///
-  /// A string deve conter apenas números.
-  set notaFixo(String? value) => nota = value != null ? int.tryParse(value) : null;
+  String get notaFixo => nota.toString().padLeft(tamanhoNota, '0');
 
   /// Obtém a série fixa da NFe formatada.
   ///
   /// Retorna uma string com a série fixa formatada com zeros à esquerda.
-  String? get serieFixo => serie?.toString().padLeft(tamanhoSerie, '0');
-
-  /// Define a série fixa da NFe com base na string fornecida.
-  ///
-  /// A string deve conter apenas números.
-  set serieFixo(String? value) => serie = value != null ? int.tryParse(value) : null;
+  String get serieFixo => serie.toString().padLeft(tamanhoSerie, '0');
 
   /// Obtém a UF fixa da NFe formatada.
   ///
   /// Retorna uma string com a UF fixa formatada com zeros à esquerda.
-  String? get ufFixo => uf?.toString().padLeft(tamanhoUF, '0');
-
-  /// Define a UF fixa da NFe com base na string fornecida.
-  ///
-  /// A string deve conter apenas números.
-  set ufFixo(String? value) => uf = value != null ? int.tryParse(value) : null;
+  String get ufFixo => uf.toString().padLeft(tamanhoUF, '0');
 
   /// Obtém a forma de emissão fixa da NFe formatada.
   ///
   /// Retorna uma string com a forma de emissão fixa formatada com zeros à esquerda.
-  String? get formaEmissaoFixo => formaEmissao?.toString().padLeft(tamanhoFormaEmissao, '0');
-
-  /// Define a forma de emissão fixa da NFe com base na string fornecida.
-  ///
-  /// A string deve conter apenas números.
-  set formaEmissaoFixo(String? value) => formaEmissao = value != null ? int.tryParse(value) : null;
+  String get formaEmissaoFixo => formaEmissao.toString().padLeft(tamanhoFormaEmissao, '0');
 
   /// Obtém o CNPJ fixo da NFe formatado.
   ///
   /// Retorna uma string com o CNPJ fixo formatado com zeros à esquerda.
-  String? get cnpjFixo => cnpj?.toString().padLeft(tamanhoCNPJ, '0');
-
-  /// Define o CNPJ fixo da NFe com base na string fornecida.
-  ///
-  /// A string deve conter apenas números.
-  set cnpjFixo(String? value) => cnpj = value != null ? int.tryParse(value) : null;
+  String get cnpjFixo => cnpj.toString().padLeft(tamanhoCNPJ, '0');
 
   /// Obtém o código fixo da NFe formatado.
   ///
   /// Retorna uma string com o código fixo formatado com zeros à esquerda.
-  String? get codigoFixo => codigo?.toString().padLeft(tamanhoCodigo, '0');
-
-  /// Define o código fixo da NFe com base na string fornecida.
-  ///
-  /// A string deve conter apenas números.
-  set codigoFixo(String? value) => codigo = value != null ? int.tryParse(value) : null;
+  String get codigoFixo => codigo.toString().padLeft(tamanhoCodigo, '0');
 
   /// Obtém o dígito fixo da NFe formatado.
   ///
   /// Retorna uma string com o dígito fixo formatado com zeros à esquerda.
-  String? get digitoFixo => digito?.toString().padLeft(tamanhoDigito, '0');
-
-  /// Define o dígito fixo da NFe com base na string fornecida.
-  ///
-  /// A string deve conter apenas números.
-  set digitoFixo(String? value) => digito = value != null ? int.tryParse(value) : null;
+  String get digitoFixo => digito.toString().padLeft(tamanhoDigito, '0');
 
   /// Calcula o dígito verificador da chave da NFe.
   ///

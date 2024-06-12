@@ -242,12 +242,12 @@ abstract interface class Brasil {
   static Future<List<Cidade>> get cidades async => (await estados).expand((e) => e.cidades).toList()..sort();
 
   /// pega um estado a partir do nome, UF ou IBGE
-  static Future<Estado?> pegarEstado(String nomeOuUFOuIBGE) async => (await pesquisarEstado(nomeOuUFOuIBGE)).singleOrNull;
+  static Future<Estado?> pegarEstado(dynamic nomeOuUFOuIBGE) async => (await pesquisarEstado(nomeOuUFOuIBGE)).singleOrNull;
 
   /// Pesquisa um estado
-  static Future<List<Estado>> pesquisarEstado(String nomeOuUFOuIBGE) async {
+  static Future<List<Estado>> pesquisarEstado(dynamic nomeOuUFOuIBGE) async {
     try {
-      nomeOuUFOuIBGE = nomeOuUFOuIBGE.toLowerCase().trim();
+      nomeOuUFOuIBGE = "$nomeOuUFOuIBGE".toLowerCase().trim();
       var est = await estados;
       var l = est.where((e) => e.nome.flatContains(nomeOuUFOuIBGE) || e.uf.flatEqual(nomeOuUFOuIBGE) || e.ibge.toString() == nomeOuUFOuIBGE.trim().substring(0, 2)).toList(growable: false);
       if (l.isEmpty) {
@@ -260,15 +260,15 @@ abstract interface class Brasil {
   }
 
   /// Pega uma cidade a partir do nome, UF ou IBGE e estado
-  static Future<Cidade?> pegarCidade(String nomeCidadeOuIBGE, [String nomeOuUFOuIBGE = ""]) async => (await pesquisarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE)).singleOrNull;
+  static Future<Cidade?> pegarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeOuUFOuIBGE]) async => (await pesquisarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE)).singleOrNull;
 
   /// Pesquisa uma cidade no Brasil todo ou em algum estado especifico se [nomeOuUFOuIBGE] for especificado
-  static Future<List<Cidade>> pesquisarCidade(String nomeCidadeOuIBGE, [String? nomeOuUFOuIBGE]) async {
+  static Future<List<Cidade>> pesquisarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeOuUFOuIBGE]) async {
     try {
-      nomeCidadeOuIBGE = nomeCidadeOuIBGE.toLowerCase().removeDiacritics.trim();
+      nomeCidadeOuIBGE = "$nomeCidadeOuIBGE".toLowerCase().removeDiacritics.trim();
       Estado? e = await pegarEstado(nomeCidadeOuIBGE);
-      if (e == null && nomeOuUFOuIBGE.isNotBlank) {
-        e = await pegarEstado(nomeOuUFOuIBGE!);
+      if (e == null && "${nomeOuUFOuIBGE ?? ""}".isNotBlank) {
+        e = await pegarEstado(nomeOuUFOuIBGE);
       }
       return (e?.cidades ?? (await cidades)).where((c) => c.nome.flatContains(nomeCidadeOuIBGE) || c.ibge.toString().startsWith(nomeCidadeOuIBGE)).toList(growable: false);
     } catch (e) {
