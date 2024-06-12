@@ -38,13 +38,17 @@ class ChaveNFe {
   // Código do município do emitente da NF-e.
   final int codigo;
   // Dígito verificador da chave da NF-e.
-  int digito;
-
+  int get digito => _digito;
+  int _digito;
   // Mês de emissão da NF-e.
   final int mes;
   // Modelo da NF-e.
   final int modelo;
 
+  /// Retorna o mês de emissão da chave NFe.
+  ///
+  /// A chave NFe é composta pelo ano e mês de emissão da nota fiscal eletrônica.
+  /// Este método retorna um objeto [DateTime] representando o mês de emissão.
   DateTime get mesEmissao => DateTime(ano, mes);
 
   // Número da NF-e.
@@ -62,14 +66,14 @@ class ChaveNFe {
   /// "NFC-e" para modelo fixo "65",
   /// ou "DF-e Desconhecido" para outros modelos fixos.
   String? get tipo {
-    switch (modeloFixo) {
-      case "55":
+    switch (modelo) {
+      case 55:
         return "NF-e";
 
-      case "57":
+      case 57:
         return "CT-e";
 
-      case "65":
+      case 65:
         return "NFC-e";
 
       default:
@@ -79,24 +83,44 @@ class ChaveNFe {
 
   /// Construtor padrão da classe ChaveNFe.
   ChaveNFe({
-    required this.ano,
-    required this.formaEmissao,
-    required this.cnpj,
-    required this.codigo,
-    required this.mes,
-    required this.modelo,
-    required this.nota,
-    required this.serie,
     required this.uf,
-    this.digito = 0,
-  });
+    required this.ano,
+    required this.mes,
+    required this.cnpj,
+    required this.modelo,
+    required this.serie,
+    required this.codigo,
+    required this.formaEmissao,
+    required this.nota,
+    int digito = -1,
+  }) : _digito = digito {
+    if (Brasil.validarCNPJ(cnpj) == false) {
+      throw const FormatException("CNPJ inválido");
+    }
+    if (Brasil.validarCodigoUF(uf) == false) {
+      throw const FormatException("UF inválida");
+    }
+    if ([57, 57, 65].contains(modelo) == false) {
+      throw const FormatException("Modelo inválido");
+    }
+    if (_digito < 0) {
+      _digito = calcularDigitoChave(chave);
+    } else {
+      String chaveSemDigito = chave.first(43);
+      int digitoVerificador = int.parse(chave.last(1));
+      int digitoCalculado = ChaveNFe.calcularDigitoChave(chaveSemDigito);
+      if (digitoVerificador == digitoCalculado) {
+        throw const FormatException("Digito verificador inválido");
+      }
+    }
+  }
 
   /// Construtor que inicializa a ChaveNFe com base nos componentes fornecidos.
   ///
   /// Os componentes são: UF, ano, mês, CNPJ, modelo, série, nota, forma de emissão e código.
   static fromComponents({
     required String uf,
-    required String cnpj,
+    required dynamic cnpj,
     required int ano,
     required int mes,
     required int modelo,
@@ -106,7 +130,11 @@ class ChaveNFe {
     required int codigo,
   }) async {
     final int ufCode = (await Brasil.pegarEstado(uf))?.ibge ?? 0;
-    final int cnpjNumber = int.tryParse(cnpj.onlyNumbers) ?? 0;
+    if (ufCode == 0) {
+      throw const FormatException("UF inválida");
+    }
+    final int cnpjNumber = int.tryParse("$cnpj".onlyNumbers) ?? 0;
+
     return ChaveNFe(
       uf: ufCode,
       ano: ano,
@@ -154,10 +182,23 @@ class ChaveNFe {
     );
   }
 
+  /// Verifica se umaa chave da NFe é válida.
+  ///
+  /// Retorna true se a chave da NFe for válida, caso contrário retorna false.
+  static bool validar(dynamic chave) {
+    try {
+      chave = "$chave";
+      if (chave.onlyNumbers != chave) throw const FormatException("Chave NFe inválida");
+      ChaveNFe.fromString(chave);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /// Obtém a chave da NFe formatada com traços.
   ///
   /// Retorna a chave formatada com traços entre os componentes.
-  /// Se algum componente fixo for nulo, retorna "null".
   String get chaveFormatadaTraco => "$ufFixo-$mesAno-$cnpjFixo-$modeloFixo-$serieFixo-$notaFixo-$formaEmissaoFixo-$codigoFixo-$digitoFixo";
 
   /// Obtém a chave da NFe formatada com espaços.
@@ -169,7 +210,7 @@ class ChaveNFe {
   ///
   /// Retorna uma string com o mês e ano formatados no padrão "MMYY".
   /// Se o ano ou o mês forem nulos, retorna null.
-  String get mesAno => "${ano.toString().padLeft(tamanhoMesAno - 2, '0')}${mes.toString().padLeft(tamanhoMesAno - 2, '0')}";
+  String get mesAno => "${ano.toString().last(2).padLeft(tamanhoMesAno - 2, '0')}${mes.toString().padLeft(tamanhoMesAno - 2, '0')}";
 
   /// Obtém o modelo fixo da NFe formatado.
   ///
@@ -209,35 +250,36 @@ class ChaveNFe {
   /// Obtém o dígito fixo da NFe formatado.
   ///
   /// Retorna uma string com o dígito fixo formatado com zeros à esquerda.
-  String get digitoFixo => digito.toString().padLeft(tamanhoDigito, '0');
+  String get digitoFixo => _digito.toString().padLeft(tamanhoDigito, '0');
 
   /// Calcula o dígito verificador da chave da NFe.
   ///
   /// Retorna o dígito verificador calculado com base na chave fornecida.
   /// A chave deve ter 43 ou 44 caracteres.
-  static int calcularDigitoChave(String chave) {
-    if (chave.length == 43 || chave.length == 44) {
-      chave = chave.first(43);
-
-      // Cálculo do dígito verificador
-      int peso = 2;
-      int soma = 0;
-      for (int i = chave.length - 1; i >= 0; i--) {
-        int algarismo = chave.substring(i, 1).toInt!;
-        soma += algarismo * peso;
-        peso++;
-        if (peso == 10) {
-          peso = 2;
-        }
-      }
-      int resto = soma % 11;
-      int dv = 11 - resto;
-      if (dv == 10 || dv == 11) {
-        dv = 0;
-      }
-      return dv;
+  static int calcularDigitoChave(dynamic chave) {
+    int soma = 0;
+    int peso = 2;
+    string c = "$chave";
+    if (c.length != 43 && c.length != 44) {
+      throw const FormatException("Chave inválida");
     }
-    throw const FormatException("Chave NFe inválida");
+    for (int i = c.length - 1; i >= 0; i--) {
+      int digito = int.parse(c[i]);
+      soma += digito * peso;
+      peso++;
+      if (peso > 9) {
+        peso = 2;
+      }
+    }
+
+    int resto = soma % 11;
+    int digitoVerificador = 11 - resto;
+
+    if (digitoVerificador >= 10) {
+      digitoVerificador = 0;
+    }
+
+    return digitoVerificador;
   }
 
   @override

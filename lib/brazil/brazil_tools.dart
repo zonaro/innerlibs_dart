@@ -259,18 +259,20 @@ abstract interface class Brasil {
     }
   }
 
+  static bool validarCodigoUF(int uf) => [12, 27, 16, 13, 29, 23, 53, 32, 52, 21, 51, 50, 31, 15, 25, 41, 26, 22, 24, 43, 33, 11, 14, 42, 35, 28, 17].contains(uf);
+
   /// Pega uma cidade a partir do nome, UF ou IBGE e estado
   static Future<Cidade?> pegarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeOuUFOuIBGE]) async => (await pesquisarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE)).singleOrNull;
 
   /// Pesquisa uma cidade no Brasil todo ou em algum estado especifico se [nomeOuUFOuIBGE] for especificado
-  static Future<List<Cidade>> pesquisarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeOuUFOuIBGE]) async {
+  static Future<Iterable<Cidade>> pesquisarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeOuUFOuIBGE]) async {
     try {
       nomeCidadeOuIBGE = "$nomeCidadeOuIBGE".toLowerCase().removeDiacritics.trim();
-      Estado? e = await pegarEstado(nomeCidadeOuIBGE);
-      if (e == null && "${nomeOuUFOuIBGE ?? ""}".isNotBlank) {
-        e = await pegarEstado(nomeOuUFOuIBGE);
+      Estado? est = await pegarEstado(nomeCidadeOuIBGE);
+      if (est == null && "${nomeOuUFOuIBGE ?? ""}".isNotBlank) {
+        est = await pegarEstado(nomeOuUFOuIBGE);
       }
-      return (e?.cidades ?? (await cidades)).where((c) => c.nome.flatContains(nomeCidadeOuIBGE) || c.ibge.toString().startsWith(nomeCidadeOuIBGE)).toList(growable: false);
+      return (est?.cidades ?? (await cidades)).where((c) => c.nome.flatContains(nomeCidadeOuIBGE) || c.ibge.toString().startsWith(nomeCidadeOuIBGE));
     } catch (e) {
       return [];
     }
@@ -842,7 +844,7 @@ class Cidade implements Comparable<Cidade> {
   static Future<Cidade?> pegar(String nomeCidadeOuIBGE, [String nomeOuUFOuIBGE = ""]) async => await Brasil.pegarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE);
 
   /// Pesquisa uma cidade no Brasil todo ou em algum estado especifico se [nomeOuUFOuIBGE] for especificado
-  static Future<List<Cidade>> pesquisar(String nomeCidadeOuIBGE, [String nomeOuUFOuIBGE = ""]) async => await Brasil.pesquisarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE);
+  static Future<Iterable<Cidade>> pesquisar(String nomeCidadeOuIBGE, [String nomeOuUFOuIBGE = ""]) async => await Brasil.pesquisarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE);
 
   @override
   String toString() => nome;

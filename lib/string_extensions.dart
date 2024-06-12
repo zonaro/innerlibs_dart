@@ -655,6 +655,10 @@ extension StringExtension on String {
     return replaceAll(regex, '');
   }
 
+  /// Returns the integer representation of the string, considering only the numeric characters.
+  /// If the string does not contain any numeric characters, it returns null.
+  int? get onlyNumbersInt => onlyNumbers.toInt;
+
   /// Returns only the Latin OR Greek characters from the `String`.
   /// ### Example
   /// ```dart
