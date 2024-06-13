@@ -8,12 +8,12 @@ class NFeProc {
 
   NFeProc.parse(String xml) : document = XmlDocument.parse(xml);
 
-  NFe? get nFe => NFe(document.findAllElements('NFe').single);
+  NFe? get nFe => NFe(document.findAllElements('NFe').singleOrNull);
 
   String? get versao => nFe?.node.getAttribute('versao') ?? "";
   String? get id => nFe?.node.getAttribute('Id') ?? "";
 
-  ProtNFe? get protNFe => ProtNFe(document.findAllElements('protNFe').single);
+  ProtNFe? get protNFe => ProtNFe(document.findAllElements('protNFe').singleOrNull);
 
   ChaveNFe? get chaveNota => id != null && id!.onlyNumbers.isNumber ? ChaveNFe.fromString(id!.onlyNumbers) : null;
 }
@@ -23,21 +23,51 @@ class NFe {
 
   NFe(this.node);
 
-  Ide? get ide => Ide(node.findAllElements('ide').single);
+  Ide? get ide {
+    var n = node.findAllElements('ide').singleOrNull;
+    if (n != null) return Ide(n);
+    return null;
+  }
 
-  Emit? get emit => Emit(node.findAllElements('emit').single);
+  Emit? get emit {
+    var n = node.findAllElements('emit').singleOrNull;
+    if (n != null) return Emit(n);
+    return null;
+  }
 
-  Dest? get dest => Dest(node.findAllElements('dest').single);
+  Dest? get dest {
+    var n = node.findAllElements('dest').singleOrNull;
+    if (n != null) return Dest(n);
+    return null;
+  }
 
-  List<Det> get det => node.findAllElements('det').map((element) => Det(element)).toList();
+  List<Det> get det {
+    return node.findAllElements('det').map((element) => Det(element)).toList();
+  }
 
-  Total? get total => Total(node.findAllElements('total').single);
+  Total? get total {
+    var n = node.findAllElements('total').singleOrNull;
+    if (n != null) return Total(n);
+    return null;
+  }
 
-  Transp? get transp => Transp(node.findAllElements('transp').single);
+  Transp? get transp {
+    var n = node.findAllElements('transp').singleOrNull;
+    if (n != null) return Transp(n);
+    return null;
+  }
 
-  Cobr? get cobr => Cobr(node.findAllElements('cobr').single);
+  Cobr? get cobr {
+    var n = node.findAllElements('cobr').singleOrNull;
+    if (n != null) return Cobr(n);
+    return null;
+  }
 
-  Pag? get pag => Pag(node.findAllElements('pag').single);
+  Pag? get pag {
+    var n = node.findAllElements('pag').singleOrNull;
+    if (n != null) return Pag(n);
+    return null;
+  }
 }
 
 class Ide {
@@ -189,9 +219,17 @@ class Det {
 
   String? get nItem => node.getAttribute('nItem') ?? "";
 
-  Prod get prod => Prod(node.findAllElements('prod').single);
+  Prod? get prod {
+    var n = node.findAllElements('prod').singleOrNull;
+    if (n != null) return Prod(n);
+    return null;
+  }
 
-  Imposto get imposto => Imposto(node.findAllElements('imposto').single);
+  Imposto? get imposto {
+    var n = node.findAllElements('imposto').singleOrNull;
+    if (n != null) return Imposto(n);
+    return null;
+  }
 }
 
 class Prod {
@@ -233,11 +271,23 @@ class Imposto {
 
   Imposto(this.node);
 
-  ICMS get icms => ICMS(node.findAllElements('ICMS').single);
+  ICMS? get icms {
+    var n = node.findAllElements('ICMS').singleOrNull;
+    if (n != null) return ICMS(n);
+    return null;
+  }
 
-  PIS get pis => PIS(node.findAllElements('PIS').single);
+  PIS? get pis {
+    var n = node.findAllElements('PIS').singleOrNull;
+    if (n != null) return PIS(n);
+    return null;
+  }
 
-  COFINS get cofins => COFINS(node.findAllElements('COFINS').single);
+  COFINS? get cofins {
+    var n = node.findAllElements('COFINS').singleOrNull;
+    if (n != null) return COFINS(n);
+    return null;
+  }
 }
 
 class ICMS {
@@ -245,7 +295,11 @@ class ICMS {
 
   ICMS(this.node);
 
-  ICMS00 get icms00 => ICMS00(node.findAllElements('ICMS00').single);
+  ICMS00? get icms00 {
+    var n = node.findAllElements('ICMS00').singleOrNull;
+    if (n != null) return ICMS00(n);
+    return null;
+  }
 }
 
 class ICMS00 {
@@ -271,7 +325,11 @@ class PIS {
 
   PIS(this.node);
 
-  PISNT get pisnt => PISNT(node.findAllElements('PISNT').single);
+  PISNT? get pisnt {
+    var n = node.findAllElements('PISNT').singleOrNull;
+    if (n != null) return PISNT(n);
+    return null;
+  }
 }
 
 class PISNT {
@@ -287,7 +345,11 @@ class COFINS {
 
   COFINS(this.node);
 
-  COFINSNT get cofinsnt => COFINSNT(node.findAllElements('COFINSNT').single);
+  COFINSNT? get cofinsnt {
+    var n = node.findAllElements('COFINSNT').singleOrNull;
+    if (n != null) return COFINSNT(n);
+    return null;
+  }
 }
 
 class COFINSNT {
@@ -303,7 +365,11 @@ class Total {
 
   Total(this.node);
 
-  ICMSTot get icmsTot => ICMSTot(node.findAllElements('ICMSTot').single);
+  ICMSTot? get icmsTot {
+    var n = node.findAllElements('ICMSTot').singleOrNull;
+    if (n != null) return ICMSTot(n);
+    return null;
+  }
 }
 
 class ICMSTot {
@@ -363,7 +429,11 @@ class Cobr {
 
   Cobr(this.node);
 
-  Fat get fat => Fat(node.findAllElements('fat').single);
+  Fat? get fat {
+    var n = node.findAllElements('fat').singleOrNull;
+    if (n != null) return Fat(n);
+    return null;
+  }
 
   List<Dup> get dup => node.findAllElements('dup').map((element) => Dup(element)).toList();
 }
@@ -399,7 +469,11 @@ class Pag {
 
   Pag(this.node);
 
-  DetPag get detPag => DetPag(node.findAllElements('detPag').single);
+  DetPag? get detPag {
+    var n = node.findAllElements('detPag').singleOrNull;
+    if (n != null) return DetPag(n);
+    return null;
+  }
 }
 
 class DetPag {
@@ -419,7 +493,11 @@ class ProtNFe {
 
   ProtNFe(this.node);
 
-  InfProt get infProt => InfProt(node.findAllElements('infProt').single);
+  InfProt? get infProt {
+    var n = node.findAllElements('infProt').singleOrNull;
+    if (n != null) return InfProt(n);
+    return null;
+  }
 }
 
 class InfProt {
