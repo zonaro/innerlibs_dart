@@ -33,7 +33,7 @@ class NFeProc {
     return null;
   }
 
-  Uri get uriNFCe {
+  Uri? get uriNFCe {
     var chave = chaveNota;
     if (chave != null) {
       return gerarUriNFCe(
@@ -48,7 +48,7 @@ class NFeProc {
         cHashQRCode: "",
       );
     }
-    return Uri();
+    return null;
   }
 
   static Uri gerarUriNFCe({
