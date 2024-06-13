@@ -62,17 +62,20 @@ class NFeProc {
     required String cIdToken,
     required String cHashQRCode,
   }) {
-    return Uri.parse(
-      'https://www.homologacao.nfce.fazenda.sp.gov.br/NFCeConsultaPublica/Paginas/ConsultaQRCode.aspx'
-      '?chNFe=$chNFe'
-      '&nVersao=$nVersao'
-      '&tpAmb=$tpAmb'
-      '&dhEmi=${Uri.encodeComponent(dhEmi)}'
-      '&vNF=$vNF'
-      '&vICMS=$vICMS'
-      '&digVal=${Uri.encodeComponent(digVal)}'
-      '&cIdToken=$cIdToken'
-      '&cHashQRCode=$cHashQRCode',
+    return Uri.http(
+      'www.homologacao.nfce.fazenda.sp.gov.br',
+      '/NFCeConsultaPublica/Paginas/ConsultaQRCode.aspx',
+      {
+        'chNFe': chNFe,
+        'nVersao': nVersao,
+        'tpAmb': tpAmb,
+        'dhEmi': dhEmi,
+        'vNF': vNF,
+        'vICMS': vICMS,
+        'digVal': digVal,
+        'cIdToken': cIdToken,
+        'cHashQRCode': cHashQRCode,
+      },
     );
   }
 
