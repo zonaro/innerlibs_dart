@@ -25,6 +25,57 @@ class NFeProc {
 
   ChaveNFe? get chaveNota => id != null && id!.onlyNumbers.isNumber ? ChaveNFe.fromString(id!.onlyNumbers) : null;
 
+  Map<string, List<double>> get pagamentos => nfe?.pag?.pagamentos ?? {};
+
+  InfAdic? get infAdic {
+    var n = document.findAllElements('infAdic').singleOrNull;
+    if (n != null) return InfAdic(n);
+    return null;
+  }
+
+  Uri get uriNFCe {
+    var chave = chaveNota;
+    if (chave != null) {
+      return gerarUriNFCe(
+        chNFe: chave.chave,
+        nVersao: versao ?? "",
+        tpAmb: nfe?.ide?.tpAmb ?? "",
+        dhEmi: nfe?.ide?.dhEmi ?? "",
+        vNF: nfe?.total?.icmsTot?.vNF ?? "",
+        vICMS: nfe?.total?.icmsTot?.vICMS ?? "",
+        digVal: protNFe?.infProt?.digVal ?? "",
+        cIdToken: "",
+        cHashQRCode: "",
+      );
+    }
+    return Uri();
+  }
+
+  static Uri gerarUriNFCe({
+    required String chNFe,
+    required String nVersao,
+    required String tpAmb,
+    required String dhEmi,
+    required String vNF,
+    required String vICMS,
+    required String digVal,
+    required String cIdToken,
+    required String cHashQRCode,
+  }) {
+    return Uri.parse(
+      'https://www.homologacao.nfce.fazenda.sp.gov.br/NFCeConsultaPublica/Paginas/ConsultaQRCode.aspx'
+      '?chNFe=$chNFe'
+      '&nVersao=$nVersao'
+      '&tpAmb=$tpAmb'
+      '&dhEmi=${Uri.encodeComponent(dhEmi)}'
+      '&vNF=$vNF'
+      '&vICMS=$vICMS'
+      '&digVal=${Uri.encodeComponent(digVal)}'
+      '&cIdToken=$cIdToken'
+      '&cHashQRCode=$cHashQRCode',
+    );
+  }
+
   @override
   String toString() => document.outerXml;
 }
@@ -33,6 +84,10 @@ class NFe {
   final XmlNode node;
 
   NFe(this.node);
+
+  double get valorTotal => total?.icmsTot?.vNF.toDouble ?? 0;
+  double get desconto => total?.icmsTot?.vDesc.toDouble ?? 0;
+  double get totalPago => detPag.sum((x) => x.valorPago);
 
   Ide? get ide {
     var n = node.findAllElements('ide').singleOrNull;
@@ -53,6 +108,8 @@ class NFe {
   }
 
   Iterable<Det> get det => node.findAllElements('det').map((element) => Det(element));
+
+  Iterable<DetPag> get detPag => pag?.detPag ?? [];
 
   Total? get total {
     var n = node.findAllElements('total').singleOrNull;
@@ -152,25 +209,85 @@ class EnderEmit {
 
   EnderEmit(this.node);
 
-  String? get xLgr => node.findAllElements('xLgr').singleOrNull?.innerText;
+  String get xLgr {
+    return node.findAllElements('xLgr').singleOrNull?.innerText ?? "";
+  }
 
-  String? get nro => node.findAllElements('nro').singleOrNull?.innerText;
+  set xLgr(String? value) {
+    node.findAllElements('xLgr').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get xBairro => node.findAllElements('xBairro').singleOrNull?.innerText;
+  String get nro {
+    return node.findAllElements('nro').singleOrNull?.innerText ?? "";
+  }
 
-  String? get cMun => node.findAllElements('cMun').singleOrNull?.innerText;
+  set nro(String? value) {
+    node.findAllElements('nro').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get xMun => node.findAllElements('xMun').singleOrNull?.innerText;
+  String get xBairro {
+    return node.findAllElements('xBairro').singleOrNull?.innerText ?? "";
+  }
 
-  String? get uf => node.findAllElements('UF').singleOrNull?.innerText;
+  set xBairro(String? value) {
+    node.findAllElements('xBairro').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get cep => node.findAllElements('CEP').singleOrNull?.innerText;
+  String get cMun {
+    return node.findAllElements('cMun').singleOrNull?.innerText ?? "";
+  }
 
-  String? get cPais => node.findAllElements('cPais').singleOrNull?.innerText;
+  set cMun(String? value) {
+    node.findAllElements('cMun').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get xPais => node.findAllElements('xPais').singleOrNull?.innerText;
+  String get xMun {
+    return node.findAllElements('xMun').singleOrNull?.innerText ?? "";
+  }
 
-  String? get fone => node.findAllElements('fone').singleOrNull?.innerText;
+  set xMun(String? value) {
+    node.findAllElements('xMun').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get uf {
+    return node.findAllElements('UF').singleOrNull?.innerText ?? "";
+  }
+
+  set uf(String? value) {
+    node.findAllElements('UF').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get cep {
+    return node.findAllElements('CEP').singleOrNull?.innerText ?? "";
+  }
+
+  set cep(String? value) {
+    node.findAllElements('CEP').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get cPais {
+    return node.findAllElements('cPais').singleOrNull?.innerText ?? "";
+  }
+
+  set cPais(String? value) {
+    node.findAllElements('cPais').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get xPais {
+    return node.findAllElements('xPais').singleOrNull?.innerText ?? "";
+  }
+
+  set xPais(String? value) {
+    node.findAllElements('xPais').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get fone {
+    return node.findAllElements('fone').singleOrNull?.innerText ?? "";
+  }
+
+  set fone(String? value) {
+    node.findAllElements('fone').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class Dest {
@@ -200,25 +317,85 @@ class EnderDest {
 
   EnderDest(this.node);
 
-  String? get xLgr => node.findAllElements('xLgr').singleOrNull?.innerText;
+  String get xLgr {
+    return node.findAllElements('xLgr').singleOrNull?.innerText ?? "";
+  }
 
-  String? get nro => node.findAllElements('nro').singleOrNull?.innerText;
+  set xLgr(String? value) {
+    node.findAllElements('xLgr').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get xBairro => node.findAllElements('xBairro').singleOrNull?.innerText;
+  String get nro {
+    return node.findAllElements('nro').singleOrNull?.innerText ?? "";
+  }
 
-  String? get cMun => node.findAllElements('cMun').singleOrNull?.innerText;
+  set nro(String? value) {
+    node.findAllElements('nro').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get xMun => node.findAllElements('xMun').singleOrNull?.innerText;
+  String get xBairro {
+    return node.findAllElements('xBairro').singleOrNull?.innerText ?? "";
+  }
 
-  String? get uf => node.findAllElements('UF').singleOrNull?.innerText;
+  set xBairro(String? value) {
+    node.findAllElements('xBairro').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get cep => node.findAllElements('CEP').singleOrNull?.innerText;
+  String get cMun {
+    return node.findAllElements('cMun').singleOrNull?.innerText ?? "";
+  }
 
-  String? get cPais => node.findAllElements('cPais').singleOrNull?.innerText;
+  set cMun(String? value) {
+    node.findAllElements('cMun').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get xPais => node.findAllElements('xPais').singleOrNull?.innerText;
+  String get xMun {
+    return node.findAllElements('xMun').singleOrNull?.innerText ?? "";
+  }
 
-  String? get fone => node.findAllElements('fone').singleOrNull?.innerText;
+  set xMun(String? value) {
+    node.findAllElements('xMun').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get uf {
+    return node.findAllElements('UF').singleOrNull?.innerText ?? "";
+  }
+
+  set uf(String? value) {
+    node.findAllElements('UF').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get cep {
+    return node.findAllElements('CEP').singleOrNull?.innerText ?? "";
+  }
+
+  set cep(String? value) {
+    node.findAllElements('CEP').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get cPais {
+    return node.findAllElements('cPais').singleOrNull?.innerText ?? "";
+  }
+
+  set cPais(String? value) {
+    node.findAllElements('cPais').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get xPais {
+    return node.findAllElements('xPais').singleOrNull?.innerText ?? "";
+  }
+
+  set xPais(String? value) {
+    node.findAllElements('xPais').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get fone {
+    return node.findAllElements('fone').singleOrNull?.innerText ?? "";
+  }
+
+  set fone(String? value) {
+    node.findAllElements('fone').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class Det {
@@ -246,33 +423,119 @@ class Prod {
 
   Prod(this.node);
 
-  String? get cProd => node.findAllElements('cProd').singleOrNull?.innerText;
+  double get valorProduto => vProd.toDouble ?? 0.0;
 
-  String? get cEAN => node.findAllElements('cEAN').singleOrNull?.innerText;
+  String get cProd {
+    return node.findAllElements('cProd').singleOrNull?.innerText ?? "";
+  }
 
-  String? get xProd => node.findAllElements('xProd').singleOrNull?.innerText;
+  set cProd(String? value) {
+    node.findAllElements('cProd').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get nCM => node.findAllElements('NCM').singleOrNull?.innerText;
+  String get cEAN {
+    return node.findAllElements('cEAN').singleOrNull?.innerText ?? "";
+  }
 
-  String? get cFOP => node.findAllElements('CFOP').singleOrNull?.innerText;
+  set cEAN(String? value) {
+    node.findAllElements('cEAN').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get uCom => node.findAllElements('uCom').singleOrNull?.innerText;
+  String get xProd {
+    return node.findAllElements('xProd').singleOrNull?.innerText ?? "";
+  }
 
-  String? get qCom => node.findAllElements('qCom').singleOrNull?.innerText;
+  set xProd(String? value) {
+    node.findAllElements('xProd').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vUnCom => node.findAllElements('vUnCom').singleOrNull?.innerText;
+  String get nCM {
+    return node.findAllElements('NCM').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vProd => node.findAllElements('vProd').singleOrNull?.innerText;
+  set nCM(String? value) {
+    node.findAllElements('NCM').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get cEANTrib => node.findAllElements('cEANTrib').singleOrNull?.innerText;
+  String get cFOP {
+    return node.findAllElements('CFOP').singleOrNull?.innerText ?? "";
+  }
 
-  String? get uTrib => node.findAllElements('uTrib').singleOrNull?.innerText;
+  set cFOP(String? value) {
+    node.findAllElements('CFOP').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get qTrib => node.findAllElements('qTrib').singleOrNull?.innerText;
+  String get uCom {
+    return node.findAllElements('uCom').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vUnTrib => node.findAllElements('vUnTrib').singleOrNull?.innerText;
+  set uCom(String? value) {
+    node.findAllElements('uCom').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get indTot => node.findAllElements('indTot').singleOrNull?.innerText;
+  String get qCom {
+    return node.findAllElements('qCom').singleOrNull?.innerText ?? "";
+  }
+
+  set qCom(String? value) {
+    node.findAllElements('qCom').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vUnCom {
+    return node.findAllElements('vUnCom').singleOrNull?.innerText ?? "";
+  }
+
+  set vUnCom(String? value) {
+    node.findAllElements('vUnCom').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vProd {
+    return node.findAllElements('vProd').singleOrNull?.innerText ?? "";
+  }
+
+  set vProd(String? value) {
+    node.findAllElements('vProd').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get cEANTrib {
+    return node.findAllElements('cEANTrib').singleOrNull?.innerText ?? "";
+  }
+
+  set cEANTrib(String? value) {
+    node.findAllElements('cEANTrib').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get uTrib {
+    return node.findAllElements('uTrib').singleOrNull?.innerText ?? "";
+  }
+
+  set uTrib(String? value) {
+    node.findAllElements('uTrib').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get qTrib {
+    return node.findAllElements('qTrib').singleOrNull?.innerText ?? "";
+  }
+
+  set qTrib(String? value) {
+    node.findAllElements('qTrib').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vUnTrib {
+    return node.findAllElements('vUnTrib').singleOrNull?.innerText ?? "";
+  }
+
+  set vUnTrib(String? value) {
+    node.findAllElements('vUnTrib').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get indTot {
+    return node.findAllElements('indTot').singleOrNull?.innerText ?? "";
+  }
+
+  set indTot(String? value) {
+    node.findAllElements('indTot').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class Imposto {
@@ -316,17 +579,53 @@ class ICMS00 {
 
   ICMS00(this.node);
 
-  String? get orig => node.findAllElements('orig').singleOrNull?.innerText;
+  String get orig {
+    return node.findAllElements('orig').singleOrNull?.innerText ?? "";
+  }
 
-  String? get cST => node.findAllElements('CST').singleOrNull?.innerText;
+  set orig(String value) {
+    node.findAllElements('orig').singleOrNull?.innerText = value;
+  }
 
-  String? get modBC => node.findAllElements('modBC').singleOrNull?.innerText;
+  String get cST {
+    return node.findAllElements('CST').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vBC => node.findAllElements('vBC').singleOrNull?.innerText;
+  set cST(String value) {
+    node.findAllElements('CST').singleOrNull?.innerText = value;
+  }
 
-  String? get pICMS => node.findAllElements('pICMS').singleOrNull?.innerText;
+  String get modBC {
+    return node.findAllElements('modBC').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vICMS => node.findAllElements('vICMS').singleOrNull?.innerText;
+  set modBC(String value) {
+    node.findAllElements('modBC').singleOrNull?.innerText = value;
+  }
+
+  String get vBC {
+    return node.findAllElements('vBC').singleOrNull?.innerText ?? "";
+  }
+
+  set vBC(String value) {
+    node.findAllElements('vBC').singleOrNull?.innerText = value;
+  }
+
+  String get pICMS {
+    return node.findAllElements('pICMS').singleOrNull?.innerText ?? "";
+  }
+
+  set pICMS(String value) {
+    node.findAllElements('pICMS').singleOrNull?.innerText = value;
+  }
+
+  String get vICMS {
+    return node.findAllElements('vICMS').singleOrNull?.innerText ?? "";
+  }
+
+  set vICMS(String value) {
+    node.findAllElements('vICMS').singleOrNull?.innerText = value;
+  }
 }
 
 class PIS {
@@ -346,7 +645,13 @@ class PISNT {
 
   PISNT(this.node);
 
-  String? get cST => node.findAllElements('CST').singleOrNull?.innerText;
+  String get cST {
+    return node.findAllElements('CST').singleOrNull?.innerText ?? "";
+  }
+
+  set cST(String? value) {
+    node.findAllElements('CST').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class COFINS {
@@ -366,7 +671,13 @@ class COFINSNT {
 
   COFINSNT(this.node);
 
-  String? get cST => node.findAllElements('CST').singleOrNull?.innerText;
+  String get cST {
+    return node.findAllElements('CST').singleOrNull?.innerText ?? "";
+  }
+
+  set cST(String? value) {
+    node.findAllElements('CST').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class Total {
@@ -386,43 +697,157 @@ class ICMSTot {
 
   ICMSTot(this.node);
 
-  String? get vBC => node.findAllElements('vBC').singleOrNull?.innerText;
+  String get vBC {
+    return node.findAllElements('vBC').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vICMS => node.findAllElements('vICMS').singleOrNull?.innerText;
+  set vBC(String? value) {
+    node.findAllElements('vBC').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vICMSDeson => node.findAllElements('vICMSDeson').singleOrNull?.innerText;
+  String get vICMS {
+    return node.findAllElements('vICMS').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vFCP => node.findAllElements('vFCP').singleOrNull?.innerText;
+  set vICMS(String? value) {
+    node.findAllElements('vICMS').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vBCST => node.findAllElements('vBCST').singleOrNull?.innerText;
+  String get vICMSDeson {
+    return node.findAllElements('vICMSDeson').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vST => node.findAllElements('vST').singleOrNull?.innerText;
+  set vICMSDeson(String? value) {
+    node.findAllElements('vICMSDeson').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vFCPST => node.findAllElements('vFCPST').singleOrNull?.innerText;
+  String get vFCP {
+    return node.findAllElements('vFCP').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vFCPSTRet => node.findAllElements('vFCPSTRet').singleOrNull?.innerText;
+  set vFCP(String? value) {
+    node.findAllElements('vFCP').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vProd => node.findAllElements('vProd').singleOrNull?.innerText;
+  String get vBCST {
+    return node.findAllElements('vBCST').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vFrete => node.findAllElements('vFrete').singleOrNull?.innerText;
+  set vBCST(String? value) {
+    node.findAllElements('vBCST').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vSeg => node.findAllElements('vSeg').singleOrNull?.innerText;
+  String get vST {
+    return node.findAllElements('vST').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vDesc => node.findAllElements('vDesc').singleOrNull?.innerText;
+  set vST(String? value) {
+    node.findAllElements('vST').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vII => node.findAllElements('vII').singleOrNull?.innerText;
+  String get vFCPST {
+    return node.findAllElements('vFCPST').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vIPI => node.findAllElements('vIPI').singleOrNull?.innerText;
+  set vFCPST(String? value) {
+    node.findAllElements('vFCPST').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vIPIDevol => node.findAllElements('vIPIDevol').singleOrNull?.innerText;
+  String get vFCPSTRet {
+    return node.findAllElements('vFCPSTRet').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vPIS => node.findAllElements('vPIS').singleOrNull?.innerText;
+  set vFCPSTRet(String? value) {
+    node.findAllElements('vFCPSTRet').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vCOFINS => node.findAllElements('vCOFINS').singleOrNull?.innerText;
+  String get vProd {
+    return node.findAllElements('vProd').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vOutro => node.findAllElements('vOutro').singleOrNull?.innerText;
+  set vProd(String? value) {
+    node.findAllElements('vProd').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vNF => node.findAllElements('vNF').singleOrNull?.innerText;
+  String get vFrete {
+    return node.findAllElements('vFrete').singleOrNull?.innerText ?? "";
+  }
+
+  set vFrete(String? value) {
+    node.findAllElements('vFrete').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vSeg {
+    return node.findAllElements('vSeg').singleOrNull?.innerText ?? "";
+  }
+
+  set vSeg(String? value) {
+    node.findAllElements('vSeg').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vDesc {
+    return node.findAllElements('vDesc').singleOrNull?.innerText ?? "";
+  }
+
+  set vDesc(String? value) {
+    node.findAllElements('vDesc').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vII {
+    return node.findAllElements('vII').singleOrNull?.innerText ?? "";
+  }
+
+  set vII(String? value) {
+    node.findAllElements('vII').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vIPI {
+    return node.findAllElements('vIPI').singleOrNull?.innerText ?? "";
+  }
+
+  set vIPI(String? value) {
+    node.findAllElements('vIPI').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vIPIDevol {
+    return node.findAllElements('vIPIDevol').singleOrNull?.innerText ?? "";
+  }
+
+  set vIPIDevol(String? value) {
+    node.findAllElements('vIPIDevol').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vPIS {
+    return node.findAllElements('vPIS').singleOrNull?.innerText ?? "";
+  }
+
+  set vPIS(String? value) {
+    node.findAllElements('vPIS').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vCOFINS {
+    return node.findAllElements('vCOFINS').singleOrNull?.innerText ?? "";
+  }
+
+  set vCOFINS(String? value) {
+    node.findAllElements('vCOFINS').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vOutro {
+    return node.findAllElements('vOutro').singleOrNull?.innerText ?? "";
+  }
+
+  set vOutro(String? value) {
+    node.findAllElements('vOutro').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vNF {
+    return node.findAllElements('vNF').singleOrNull?.innerText ?? "";
+  }
+
+  set vNF(String? value) {
+    node.findAllElements('vNF').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class Transp {
@@ -430,7 +855,13 @@ class Transp {
 
   Transp(this.node);
 
-  String? get modFrete => node.findAllElements('modFrete').singleOrNull?.innerText;
+  String get modFrete {
+    return node.findAllElements('modFrete').singleOrNull?.innerText ?? "";
+  }
+
+  set modFrete(String? value) {
+    node.findAllElements('modFrete').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class Cobr {
@@ -452,13 +883,37 @@ class Fat {
 
   Fat(this.node);
 
-  String? get nFat => node.findAllElements('nFat').singleOrNull?.innerText;
+  String get nFat {
+    return node.findAllElements('nFat').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vOrig => node.findAllElements('vOrig').singleOrNull?.innerText;
+  set nFat(String? value) {
+    node.findAllElements('nFat').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vDesc => node.findAllElements('vDesc').singleOrNull?.innerText;
+  String get vOrig {
+    return node.findAllElements('vOrig').singleOrNull?.innerText ?? "";
+  }
 
-  String? get vLiq => node.findAllElements('vLiq').singleOrNull?.innerText;
+  set vOrig(String? value) {
+    node.findAllElements('vOrig').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vDesc {
+    return node.findAllElements('vDesc').singleOrNull?.innerText ?? "";
+  }
+
+  set vDesc(String? value) {
+    node.findAllElements('vDesc').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vLiq {
+    return node.findAllElements('vLiq').singleOrNull?.innerText ?? "";
+  }
+
+  set vLiq(String? value) {
+    node.findAllElements('vLiq').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class Dup {
@@ -466,11 +921,29 @@ class Dup {
 
   Dup(this.node);
 
-  String? get nDup => node.findAllElements('nDup').singleOrNull?.innerText;
+  String get nDup {
+    return node.findAllElements('nDup').singleOrNull?.innerText ?? "";
+  }
 
-  String? get dVenc => node.findAllElements('dVenc').singleOrNull?.innerText;
+  set nDup(String? value) {
+    node.findAllElements('nDup').singleOrNull?.innerText = value ?? "";
+  }
 
-  String? get vDup => node.findAllElements('vDup').singleOrNull?.innerText;
+  String get dVenc {
+    return node.findAllElements('dVenc').singleOrNull?.innerText ?? "";
+  }
+
+  set dVenc(String? value) {
+    node.findAllElements('dVenc').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vDup {
+    return node.findAllElements('vDup').singleOrNull?.innerText ?? "";
+  }
+
+  set vDup(String? value) {
+    node.findAllElements('vDup').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class Pag {
@@ -478,11 +951,29 @@ class Pag {
 
   Pag(this.node);
 
-  DetPag? get detPag {
-    var n = node.findAllElements('detPag').singleOrNull;
-    if (n != null) return DetPag(n);
-    return null;
-  }
+  Map<string, List<double>> get pagamentos => detPag.groupAndRemapValuesBy((e) => e.formaPagamento, (x) => x.vPag.toDouble ?? 0.0);
+
+  static Map<String, dynamic> get formasPagamento => {
+        "01": "Dinheiro",
+        "02": "Cheque",
+        "03": "Cartao de Credito",
+        "04": "Cartao de Debito",
+        "05": "Credito Loja",
+        "10": "Vale Alimentacao",
+        "11": "Vale Refeicao",
+        "12": "Vale Presente",
+        "13": "Vale Combustivel",
+        "14": "Duplicata Mercantil",
+        "15": "Boleto Bancario",
+        "16": "Depósito Bancário",
+        "17": "PIX",
+        "18": "Transferência bancária, Carteira Digital",
+        "19": "Cashback, Cartão Fidelidade",
+        "90": "Sem Pagamento",
+        "99": "Outros",
+      };
+
+  Iterable<DetPag> get detPag => node.findAllElements('detPag').map((element) => DetPag(element));
 }
 
 class DetPag {
@@ -490,11 +981,33 @@ class DetPag {
 
   DetPag(this.node);
 
-  String? get indPag => node.findAllElements('indPag').singleOrNull?.innerText;
+  double get valorPago => vPag.toDouble ?? 0.0;
 
-  String? get tPag => node.findAllElements('tPag').singleOrNull?.innerText;
+  string get formaPagamento => Pag.formasPagamento[tPag] ?? "Outros";
 
-  String? get vPag => node.findAllElements('vPag').singleOrNull?.innerText;
+  String get indPag {
+    return node.findAllElements('indPag').singleOrNull?.innerText ?? "";
+  }
+
+  set indPag(String? value) {
+    node.findAllElements('indPag').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get tPag {
+    return node.findAllElements('tPag').singleOrNull?.innerText ?? "";
+  }
+
+  set tPag(String? value) {
+    node.findAllElements('tPag').singleOrNull?.innerText = value ?? "";
+  }
+
+  String get vPag {
+    return node.findAllElements('vPag').singleOrNull?.innerText ?? "";
+  }
+
+  set vPag(String? value) {
+    node.findAllElements('vPag').singleOrNull?.innerText = value ?? "";
+  }
 }
 
 class ProtNFe {
@@ -514,19 +1027,91 @@ class InfProt {
 
   InfProt(this.node);
 
-  String? get tpAmb => node.findAllElements('tpAmb').singleOrNull?.innerText;
+  date? get dataRecebimento => dhRecbto.toDate();
 
-  String? get verAplic => node.findAllElements('verAplic').singleOrNull?.innerText;
+  String get tpAmb {
+    return node.findAllElements('tpAmb').singleOrNull?.innerText ?? "";
+  }
 
-  String? get chNFe => node.findAllElements('chNFe').singleOrNull?.innerText;
+  set tpAmb(String value) {
+    node.findAllElements('tpAmb').singleOrNull?.innerText = value;
+  }
 
-  String? get dhRecbto => node.findAllElements('dhRecbto').singleOrNull?.innerText;
+  String get verAplic {
+    return node.findAllElements('verAplic').singleOrNull?.innerText ?? "";
+  }
 
-  String? get nProt => node.findAllElements('nProt').singleOrNull?.innerText;
+  set verAplic(String value) {
+    node.findAllElements('verAplic').singleOrNull?.innerText = value;
+  }
 
-  String? get digVal => node.findAllElements('digVal').singleOrNull?.innerText;
+  String get chNFe {
+    return node.findAllElements('chNFe').singleOrNull?.innerText ?? "";
+  }
 
-  String? get cStat => node.findAllElements('cStat').singleOrNull?.innerText;
+  set chNFe(String value) {
+    node.findAllElements('chNFe').singleOrNull?.innerText = value;
+  }
 
-  String? get xMotivo => node.findAllElements('xMotivo').singleOrNull?.innerText;
+  String get dhRecbto {
+    return node.findAllElements('dhRecbto').singleOrNull?.innerText ?? "";
+  }
+
+  set dhRecbto(String value) {
+    node.findAllElements('dhRecbto').singleOrNull?.innerText = value;
+  }
+
+  String get nProt {
+    return node.findAllElements('nProt').singleOrNull?.innerText ?? "";
+  }
+
+  set nProt(String value) {
+    node.findAllElements('nProt').singleOrNull?.innerText = value;
+  }
+
+  String get digVal {
+    return node.findAllElements('digVal').singleOrNull?.innerText ?? "";
+  }
+
+  set digVal(String value) {
+    node.findAllElements('digVal').singleOrNull?.innerText = value;
+  }
+
+  String get cStat {
+    return node.findAllElements('cStat').singleOrNull?.innerText ?? "";
+  }
+
+  set cStat(String value) {
+    node.findAllElements('cStat').singleOrNull?.innerText = value;
+  }
+
+  String get xMotivo {
+    return node.findAllElements('xMotivo').singleOrNull?.innerText ?? "";
+  }
+
+  set xMotivo(String value) {
+    node.findAllElements('xMotivo').singleOrNull?.innerText = value;
+  }
+}
+
+class InfAdic {
+  final XmlNode node;
+
+  InfAdic(this.node);
+
+  String get infCpl {
+    return node.findAllElements('infCpl').singleOrNull?.innerText ?? "";
+  }
+
+  set infCpl(String value) {
+    final element = node.findAllElements('infCpl').singleOrNull;
+    if (element == null) {
+      // Se o elemento não existir, cria um novo com o valor fornecido
+      final newNode = XmlElement(XmlName('infCpl'));
+      newNode.innerText = value;
+      node.children.add(newNode);
+    } else {
+      element.innerText = value;
+    }
+  }
 }

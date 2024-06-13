@@ -185,6 +185,7 @@ extension IterableExtension<T> on Iterable<T> {
   /// The function returns a Map<M,V> where each key is a item of type M
   /// returned by the lambda function and each value is a List<T> that have that key remmaped as V.
   Map<M, V> groupAndRemapBy<M, V>(M Function(T) keyFunction, V Function(List<T>) valueFunction) => groupAndMapBy(keyFunction).map((key, value) => MapEntry(key, valueFunction(value)));
+  Map<M, List<V>> groupAndRemapValuesBy<M, V>(M Function(T) keyFunction, V Function(T) onValueFunction) => groupAndRemapBy(keyFunction, (l) => l.map(onValueFunction).toList());
 
   /// Group the itens of a list
   List<List<T>> groupInPage(int pageSize) => List.generate((length / pageSize).ceil(), (index) {
