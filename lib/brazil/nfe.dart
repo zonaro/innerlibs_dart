@@ -24,6 +24,9 @@ class NFeProc {
   }
 
   ChaveNFe? get chaveNota => id != null && id!.onlyNumbers.isNumber ? ChaveNFe.fromString(id!.onlyNumbers) : null;
+
+  @override
+  String toString() => document.outerXml;
 }
 
 class NFe {
