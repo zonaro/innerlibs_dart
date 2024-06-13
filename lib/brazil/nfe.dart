@@ -8,12 +8,20 @@ class NFeProc {
 
   NFeProc.parse(String xml) : document = XmlDocument.parse(xml);
 
-  NFe? get nFe => NFe(document.findAllElements('NFe').singleOrNull);
+  NFe? get nfe {
+    var n = document.findAllElements('NFe').singleOrNull;
+    if (n != null) return NFe(n);
+    return null;
+  }
 
-  String? get versao => nFe?.node.getAttribute('versao') ?? "";
-  String? get id => nFe?.node.getAttribute('Id') ?? "";
+  String? get versao => nfe?.node.getAttribute('versao') ?? "";
+  String? get id => nfe?.node.getAttribute('Id') ?? "";
 
-  ProtNFe? get protNFe => ProtNFe(document.findAllElements('protNFe').singleOrNull);
+  ProtNFe? get protNFe {
+    var n = document.findAllElements('protNFe').singleOrNull;
+    if (n != null) return ProtNFe(n);
+    return null;
+  }
 
   ChaveNFe? get chaveNota => id != null && id!.onlyNumbers.isNumber ? ChaveNFe.fromString(id!.onlyNumbers) : null;
 }
@@ -41,9 +49,7 @@ class NFe {
     return null;
   }
 
-  List<Det> get det {
-    return node.findAllElements('det').map((element) => Det(element)).toList();
-  }
+  Iterable<Det> get det => node.findAllElements('det').map((element) => Det(element));
 
   Total? get total {
     var n = node.findAllElements('total').singleOrNull;
@@ -435,7 +441,7 @@ class Cobr {
     return null;
   }
 
-  List<Dup> get dup => node.findAllElements('dup').map((element) => Dup(element)).toList();
+  Iterable<Dup> get dup => node.findAllElements('dup').map((element) => Dup(element));
 }
 
 class Fat {
