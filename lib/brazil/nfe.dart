@@ -1,12 +1,12 @@
 import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 
-class NFeProc extends _Nodeable {
-  NFeProc(XmlDocument document) : super(document);
+class NFeProc extends TagXml {
+  NFeProc(XmlDocument super.document);
 
   NFeProc.fromXmlString(String xml) : this(XmlDocument.parse(xml));
 
-  NFe? get nfe => getTagAs<NFe>(node, 'NFe');
+  NFe? get nfe => getTagAs(node, 'NFe');
   set nfe(NFe? value) => setTagFrom(node, 'NFe', value);
 
   string? get versao => nfe?.versao;
@@ -69,7 +69,7 @@ class NFeProc extends _Nodeable {
   }
 }
 
-class NFe extends _Nodeable {
+class NFe extends TagXml {
   NFe(super.node);
 
   double get valorTotal => total?.icmsTot?.vNF?.toDouble ?? 0;
@@ -101,7 +101,7 @@ class NFe extends _Nodeable {
   Pag? get pag => getTagAs(node, "pag");
 }
 
-class Ide extends _Nodeable {
+class Ide extends TagXml {
   Ide(super.node);
 
   date? get dataEmissao => dhEmi.nullIfBlank?.toDate();
@@ -167,7 +167,7 @@ class Ide extends _Nodeable {
   set verProc(String? value) => setTextValueForNode(node, 'verProc', value);
 }
 
-class Emit extends _Nodeable {
+class Emit extends TagXml {
   Emit(super.node);
 
   EnderEmit? get enderEmit => getTagAs(node, "enderEmit");
@@ -189,7 +189,7 @@ class Emit extends _Nodeable {
   set crt(String? value) => setTextValueForNode(node, 'CRT', value);
 }
 
-class EnderEmit extends _Nodeable {
+class EnderEmit extends TagXml {
   EnderEmit(super.node);
   string? get xLgr => getTextValueFromNode(node, 'xLgr');
   set xLgr(String? value) => setTextValueForNode(node, 'xLgr', value);
@@ -222,7 +222,7 @@ class EnderEmit extends _Nodeable {
   set fone(String? value) => setTextValueForNode(node, 'fone', value);
 }
 
-class Dest extends _Nodeable {
+class Dest extends TagXml {
   Dest(super.node);
 
   EnderDest? get enderDest => getTagAs(node, 'enderDest');
@@ -244,7 +244,7 @@ class Dest extends _Nodeable {
   set ie(String? value) => setTextValueForNode(node, 'IE', value);
 }
 
-class EnderDest extends _Nodeable {
+class EnderDest extends TagXml {
   EnderDest(super.node);
 
   string? get xLgr => getTextValueFromNode(node, 'xLgr');
@@ -278,7 +278,7 @@ class EnderDest extends _Nodeable {
   set fone(String? value) => setTextValueForNode(node, 'fone', value);
 }
 
-class Det extends _Nodeable {
+class Det extends TagXml {
   Det(super.node);
 
   string? get nItem => node.getAttribute('nItem');
@@ -291,7 +291,7 @@ class Det extends _Nodeable {
   set imposto(Imposto? value) => setTagFrom(node, 'imposto', value);
 }
 
-class Prod extends _Nodeable {
+class Prod extends TagXml {
   Prod(super.node);
 
   double get valorProduto => vProd?.toDouble ?? 0.0;
@@ -342,7 +342,7 @@ class Prod extends _Nodeable {
   set indTot(String? value) => setTextValueForNode(node, 'indTot', value);
 }
 
-class Imposto extends _Nodeable {
+class Imposto extends TagXml {
   Imposto(super.node);
 
   ICMS? get icms => getTagAs<ICMS>(node, 'ICMS');
@@ -355,14 +355,14 @@ class Imposto extends _Nodeable {
   set cofins(COFINS? value) => setTagFrom<COFINS>(node, 'COFINS', value);
 }
 
-class ICMS extends _Nodeable {
+class ICMS extends TagXml {
   ICMS(super.node);
 
   ICMS00? get icms00 => getTagAs<ICMS00>(node, 'ICMS00');
   set icms00(ICMS00? value) => setTagFrom<ICMS00>(node, 'ICMS00', value);
 }
 
-class ICMS00 extends _Nodeable {
+class ICMS00 extends TagXml {
   ICMS00(super.node);
 
   string? get orig => getTextValueFromNode(node, 'orig');
@@ -384,41 +384,41 @@ class ICMS00 extends _Nodeable {
   set vICMS(String? value) => setTextValueForNode(node, 'vICMS', value);
 }
 
-class PIS extends _Nodeable {
+class PIS extends TagXml {
   PIS(super.node);
 
   PISNT? get pisnt => getTagAs(node, 'PISNT');
   set pisnt(PISNT? value) => setTagFrom(node, 'PISNT', value);
 }
 
-class PISNT extends _Nodeable {
+class PISNT extends TagXml {
   PISNT(super.node);
 
   string? get cST => getTextValueFromNode(node, 'CST');
   set cST(String? value) => setTextValueForNode(node, 'CST', value);
 }
 
-class COFINS extends _Nodeable {
+class COFINS extends TagXml {
   COFINS(super.node);
 
   COFINSNT? get cofinsnt => getTagAs(node, 'COFINSNT');
   set cofinsnt(COFINSNT? value) => setTagFrom(node, 'COFINSNT', value);
 }
 
-class COFINSNT extends _Nodeable {
+class COFINSNT extends TagXml {
   COFINSNT(super.node);
 
   string? get cst => getTextValueFromNode(node, "CST");
   set cst(string? value) => setTextValueForNode(node, "CST", value);
 }
 
-class Total extends _Nodeable {
+class Total extends TagXml {
   Total(super.node);
 
   ICMSTot? get icmsTot => getTagAs(node, 'ICMSTot');
 }
 
-class ICMSTot extends _Nodeable {
+class ICMSTot extends TagXml {
   ICMSTot(super.node);
 
   string? get vBC => getTextValueFromNode(node, 'vBC');
@@ -479,14 +479,14 @@ class ICMSTot extends _Nodeable {
   set vNF(String? value) => setTextValueForNode(node, 'vNF', value);
 }
 
-class Transp extends _Nodeable {
+class Transp extends TagXml {
   Transp(super.node);
 
   string? get modFrete => getTextValueFromNode(node, 'modFrete');
   set modFrete(String? value) => setTextValueForNode(node, 'modFrete', value);
 }
 
-class Cobr extends _Nodeable {
+class Cobr extends TagXml {
   Cobr(super.node);
 
   Fat? get fat => getTagAs(node, "fat");
@@ -495,7 +495,7 @@ class Cobr extends _Nodeable {
   Iterable<Dup> get dup => getTagsFrom(node, 'dup');
 }
 
-class Fat extends _Nodeable {
+class Fat extends TagXml {
   Fat(super.node);
 
   string? get nFat => getTextValueFromNode(node, 'nFat');
@@ -511,7 +511,7 @@ class Fat extends _Nodeable {
   set vLiq(String? value) => setTextValueForNode(node, 'vLiq', value);
 }
 
-class Dup extends _Nodeable {
+class Dup extends TagXml {
   Dup(super.node);
 
   string? get nDup => getTextValueFromNode(node, 'nDup');
@@ -524,7 +524,7 @@ class Dup extends _Nodeable {
   set vDup(String? value) => setTextValueForNode(node, 'vDup', value);
 }
 
-class Pag extends _Nodeable {
+class Pag extends TagXml {
   Pag(super.node);
 
   Map<string, List<double>> get pagamentos => detPag.groupAndRemapValuesBy((e) => e.formaPagamento, (x) => x.valorPago);
@@ -552,7 +552,7 @@ class Pag extends _Nodeable {
   Iterable<DetPag> get detPag => getTagsFrom(node, 'detPag');
 }
 
-class DetPag extends _Nodeable {
+class DetPag extends TagXml {
   DetPag(super.node);
 
   double get valorPago => vPag?.toDouble ?? 0.0;
@@ -569,14 +569,14 @@ class DetPag extends _Nodeable {
   set vPag(String? value) => setTextValueForNode(node, 'vPag', value);
 }
 
-class ProtNFe extends _Nodeable {
+class ProtNFe extends TagXml {
   ProtNFe(super.node);
 
   InfProt? get infProt => getTagAs(node, 'infProt');
   set infProt(InfProt? value) => setTagFrom(node, "infProt", value);
 }
 
-class InfProt extends _Nodeable {
+class InfProt extends TagXml {
   InfProt(super.node);
 
   date? get dataRecebimento => dhRecbto.nullIfBlank?.toDate();
@@ -606,16 +606,16 @@ class InfProt extends _Nodeable {
   set xMotivo(String? value) => setTextValueForNode(node, 'xMotivo', value);
 }
 
-class InfAdic extends _Nodeable {
+class InfAdic extends TagXml {
   InfAdic(super.node);
 
   string? get infCpl => getTextValueFromNode(node, "infCpl");
   set infCpl(String? value) => setTextValueForNode(node, "infCpl", value);
 }
 
-class _Nodeable {
+class TagXml {
   XmlNode node;
-  _Nodeable(this.node);
+  TagXml(this.node);
 
   @override
   String toString() => node.outerXml;
@@ -643,13 +643,13 @@ class _Nodeable {
   }
 
 // do dat shit
-  T? getTagAs<T extends _Nodeable>(XmlNode node, String tag) {
+  T? getTagAs<T extends TagXml>(XmlNode node, String tag) {
     var n = node.findAllElements(tag).singleOrNull;
     if (n != null) return n as T;
     return null;
   }
 
-  void setTagFrom<T extends _Nodeable>(XmlNode node, String tag, T? value) {
+  void setTagFrom<T extends TagXml>(XmlNode node, String tag, T? value) {
     var n = node.findAllElements(tag).singleOrNull;
     if (value != null) {
       if (n == null) {
@@ -667,7 +667,7 @@ class _Nodeable {
     }
   }
 
-  Iterable<T> getTagsFrom<T extends _Nodeable>(XmlNode node, string tag) {
-    return node.findAllElements(tag).map((element) => _Nodeable(element) as T);
+  Iterable<T> getTagsFrom<T extends TagXml>(XmlNode node, string tag) {
+    return node.findAllElements(tag).map((element) => TagXml(element) as T);
   }
 }
