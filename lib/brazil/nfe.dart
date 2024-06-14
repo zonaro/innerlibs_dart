@@ -12,14 +12,14 @@ class NFeProc extends _Nodeable {
   string get versao => nfe?.node.getAttribute('versao') ?? "";
   string get id => nfe?.node.getAttribute('Id') ?? "";
 
-  ProtNFe? get protNFe => getTagAs<ProtNFe>(node, 'protNFe');
+  ProtNFe? get protNFe => getTagAs(node, 'protNFe');
   set protNFe(ProtNFe? value) => setTagFrom(node, 'protNFe', value);
 
   ChaveNFe? get chaveNota => id.onlyNumbers.isNumber ? ChaveNFe.fromString(id.onlyNumbers) : null;
 
   Map<string, List<double>> get pagamentos => nfe?.pag?.pagamentos ?? {};
 
-  InfAdic? get infAdic => getTagAs<InfAdic>(node, 'infAdic');
+  InfAdic? get infAdic => getTagAs(node, 'infAdic');
   set infAdic(InfAdic? value) => setTagFrom(node, 'infAdic', value);
 
   Uri? get uriNFCe {
