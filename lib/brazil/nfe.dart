@@ -67,9 +67,6 @@ class NFeProc extends _Nodeable {
       },
     );
   }
-
-  @override
-  String toString() => node.outerXml;
 }
 
 class NFe extends _Nodeable {
@@ -619,6 +616,9 @@ class InfAdic extends _Nodeable {
 class _Nodeable {
   XmlNode node;
   _Nodeable(this.node);
+
+  @override
+  String toString() => node.outerXml;
 
   /// return the text value from specific child node
   string? getTextValueFromNode(XmlNode node, String tag) => node.findAllElements(tag).singleOrNull?.innerText;
