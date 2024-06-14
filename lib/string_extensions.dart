@@ -317,10 +317,12 @@ extension StringExtension on String {
     }
 
     // Check if the string is a valid hexadecimal color
-    final hexColorRegex = RegExp(r'^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$');
+    final hexColorRegex = RegExp(r'^#?([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})$');
     if (hexColorRegex.hasMatch(this)) {
       final hexColor = replaceFirst('#', ''); // Remove any leading '#'
-      return Color(int.parse('0xFF$hexColor', radix: 16));
+      final alpha = hexColor.length == 8 ? hexColor.substring(0, 2) : 'FF'; // Extract alpha value or use default 'FF'
+      final color = hexColor.substring(hexColor.length - 6); // Extract RGB value
+      return Color(int.parse('$alpha$color', radix: 16));
     }
 
     // If not a valid hexadecimal color, compute a hash value
