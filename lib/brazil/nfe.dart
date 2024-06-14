@@ -1,44 +1,33 @@
 import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 
-class NFeProc {
-  final XmlDocument document;
+class NFeProc extends _Nodeable {
+  NFeProc(XmlDocument document) : super(document);
 
-  NFeProc(this.document);
+  NFeProc.fromXmlString(String xml) : this(XmlDocument.parse(xml));
 
-  NFeProc.parse(String xml) : document = XmlDocument.parse(xml);
+  NFe? get nfe => getTagAs<NFe>(node, 'NFe');
+  set nfe(NFe? value) => setTagFrom(node, 'NFe', value);
 
-  NFe? get nfe {
-    var n = document.findAllElements('NFe').singleOrNull;
-    if (n != null) return NFe(n);
-    return null;
-  }
+  string get versao => nfe?.node.getAttribute('versao') ?? "";
+  string get id => nfe?.node.getAttribute('Id') ?? "";
 
-  String? get versao => nfe?.node.getAttribute('versao') ?? "";
-  String? get id => nfe?.node.getAttribute('Id') ?? "";
+  ProtNFe? get protNFe => getTagAs<ProtNFe>(node, 'protNFe');
+  set protNFe(ProtNFe? value) => setTagFrom(node, 'protNFe', value);
 
-  ProtNFe? get protNFe {
-    var n = document.findAllElements('protNFe').singleOrNull;
-    if (n != null) return ProtNFe(n);
-    return null;
-  }
-
-  ChaveNFe? get chaveNota => id != null && id!.onlyNumbers.isNumber ? ChaveNFe.fromString(id!.onlyNumbers) : null;
+  ChaveNFe? get chaveNota => id.onlyNumbers.isNumber ? ChaveNFe.fromString(id.onlyNumbers) : null;
 
   Map<string, List<double>> get pagamentos => nfe?.pag?.pagamentos ?? {};
 
-  InfAdic? get infAdic {
-    var n = document.findAllElements('infAdic').singleOrNull;
-    if (n != null) return InfAdic(n);
-    return null;
-  }
+  InfAdic? get infAdic => getTagAs<InfAdic>(node, 'infAdic');
+  set infAdic(InfAdic? value) => setTagFrom(node, 'infAdic', value);
 
   Uri? get uriNFCe {
     var chave = chaveNota;
     if (chave != null) {
       return gerarUriNFCe(
         chNFe: chave.chave,
-        nVersao: versao ?? "",
+        nVersao: versao,
         tpAmb: nfe?.ide?.tpAmb ?? "",
         dhEmi: nfe?.ide?.dhEmi ?? "",
         vNF: nfe?.total?.icmsTot?.vNF ?? "",
@@ -80,561 +69,311 @@ class NFeProc {
   }
 
   @override
-  String toString() => document.outerXml;
+  String toString() => node.outerXml;
 }
 
-class NFe {
-  final XmlNode node;
-
-  NFe(this.node);
+class NFe extends _Nodeable {
+  NFe(super.node);
 
   double get valorTotal => total?.icmsTot?.vNF.toDouble ?? 0;
   double get desconto => total?.icmsTot?.vDesc.toDouble ?? 0;
   double get totalPago => detPag.sum((x) => x.valorPago);
 
-  Ide? get ide {
-    var n = node.findAllElements('ide').singleOrNull;
-    if (n != null) return Ide(n);
-    return null;
-  }
+  Ide? get ide => getTagAs(node, 'ide');
 
-  Emit? get emit {
-    var n = node.findAllElements('emit').singleOrNull;
-    if (n != null) return Emit(n);
-    return null;
-  }
+  Emit? get emit => getTagAs(node, 'emit');
 
-  Dest? get dest {
-    var n = node.findAllElements('dest').singleOrNull;
-    if (n != null) return Dest(n);
-    return null;
-  }
+  Dest? get dest => getTagAs(node, 'dest');
 
   Iterable<Det> get det => node.findAllElements('det').map((element) => Det(element));
 
   Iterable<DetPag> get detPag => pag?.detPag ?? [];
 
-  Total? get total {
-    var n = node.findAllElements('total').singleOrNull;
-    if (n != null) return Total(n);
-    return null;
-  }
+  Total? get total => getTagAs<Total>(node, 'total');
 
-  Transp? get transp {
-    var n = node.findAllElements('transp').singleOrNull;
-    if (n != null) return Transp(n);
-    return null;
-  }
+  Transp? get transp => getTagAs(node, "transp");
 
-  Cobr? get cobr {
-    var n = node.findAllElements('cobr').singleOrNull;
-    if (n != null) return Cobr(n);
-    return null;
-  }
+  Cobr? get cobr => getTagAs(node, "cobr");
 
-  Pag? get pag {
-    var n = node.findAllElements('pag').singleOrNull;
-    if (n != null) return Pag(n);
-    return null;
-  }
+  Pag? get pag => getTagAs(node, "pag");
 }
 
-class Ide {
-  final XmlNode node;
+class Ide extends _Nodeable {
+  Ide(super.node);
 
-  Ide(this.node);
+  String get cDV => getTextValueFromNode(node, 'cDV');
+  set cDV(String? value) => setTextValueForNode(node, 'cDV', value);
 
-  String? get cUF => node.findAllElements('cUF').singleOrNull?.innerText;
+  String get cMunFG => getTextValueFromNode(node, 'cMunFG');
+  set cMunFG(String? value) => setTextValueForNode(node, 'cMunFG', value);
 
-  String? get cNF => node.findAllElements('cNF').singleOrNull?.innerText;
+  String get cNF => getTextValueFromNode(node, 'cNF');
+  set cNF(String? value) => setTextValueForNode(node, 'cNF', value);
 
-  String? get natOp => node.findAllElements('natOp').singleOrNull?.innerText;
+  String get cUF => getTextValueFromNode(node, 'cUF');
+  set cUF(String? value) => setTextValueForNode(node, 'cUF', value);
 
-  String? get mod => node.findAllElements('mod').singleOrNull?.innerText;
+  String get dhEmi => getTextValueFromNode(node, 'dhEmi');
+  set dhEmi(String? value) => setTextValueForNode(node, 'dhEmi', value);
 
-  String? get serie => node.findAllElements('serie').singleOrNull?.innerText;
+  String get finNFe => getTextValueFromNode(node, 'finNFe');
+  set finNFe(String? value) => setTextValueForNode(node, 'finNFe', value);
 
-  String? get nNF => node.findAllElements('nNF').singleOrNull?.innerText;
+  String get idDest => getTextValueFromNode(node, 'idDest');
+  set idDest(String? value) => setTextValueForNode(node, 'idDest', value);
 
-  String? get dhEmi => node.findAllElements('dhEmi').singleOrNull?.innerText;
+  String get indFinal => getTextValueFromNode(node, 'indFinal');
+  set indFinal(String? value) => setTextValueForNode(node, 'indFinal', value);
 
-  String? get tpNF => node.findAllElements('tpNF').singleOrNull?.innerText;
+  String get indIntermed => getTextValueFromNode(node, 'indIntermed');
+  set indIntermed(String? value) => setTextValueForNode(node, 'indIntermed', value);
 
-  String? get idDest => node.findAllElements('idDest').singleOrNull?.innerText;
+  String get indPres => getTextValueFromNode(node, 'indPres');
+  set indPres(String? value) => setTextValueForNode(node, 'indPres', value);
 
-  String? get cMunFG => node.findAllElements('cMunFG').singleOrNull?.innerText;
+  String get mod => getTextValueFromNode(node, 'mod');
+  set mod(String? value) => setTextValueForNode(node, 'mod', value);
 
-  String? get tpImp => node.findAllElements('tpImp').singleOrNull?.innerText;
+  String get nNF => getTextValueFromNode(node, 'nNF');
+  set nNF(String? value) => setTextValueForNode(node, 'nNF', value);
 
-  String? get tpEmis => node.findAllElements('tpEmis').singleOrNull?.innerText;
+  String get natOp => getTextValueFromNode(node, 'natOp');
+  set natOp(String? value) => setTextValueForNode(node, 'natOp', value);
 
-  String? get cDV => node.findAllElements('cDV').singleOrNull?.innerText;
+  String get procEmi => getTextValueFromNode(node, 'procEmi');
+  set procEmi(String? value) => setTextValueForNode(node, 'procEmi', value);
 
-  String? get tpAmb => node.findAllElements('tpAmb').singleOrNull?.innerText;
+  String get serie => getTextValueFromNode(node, 'serie');
+  set serie(String? value) => setTextValueForNode(node, 'serie', value);
 
-  String? get finNFe => node.findAllElements('finNFe').singleOrNull?.innerText;
+  String get tpAmb => getTextValueFromNode(node, 'tpAmb');
+  set tpAmb(String? value) => setTextValueForNode(node, 'tpAmb', value);
 
-  String? get indFinal => node.findAllElements('indFinal').singleOrNull?.innerText;
+  String get tpEmis => getTextValueFromNode(node, 'tpEmis');
+  set tpEmis(String? value) => setTextValueForNode(node, 'tpEmis', value);
 
-  String? get indPres => node.findAllElements('indPres').singleOrNull?.innerText;
+  String get tpImp => getTextValueFromNode(node, 'tpImp');
+  set tpImp(String? value) => setTextValueForNode(node, 'tpImp', value);
 
-  String? get indIntermed => node.findAllElements('indIntermed').singleOrNull?.innerText;
+  String get tpNF => getTextValueFromNode(node, 'tpNF');
+  set tpNF(String? value) => setTextValueForNode(node, 'tpNF', value);
 
-  String? get procEmi => node.findAllElements('procEmi').singleOrNull?.innerText;
-
-  String? get verProc => node.findAllElements('verProc').singleOrNull?.innerText;
+  String get verProc => getTextValueFromNode(node, 'verProc');
+  set verProc(String? value) => setTextValueForNode(node, 'verProc', value);
 }
 
-class Emit {
-  final XmlNode node;
+class Emit extends _Nodeable {
+  Emit(super.node);
 
-  Emit(this.node);
+  EnderEmit? get enderEmit => getTagAs(node, "enderEmit");
 
-  String? get cnpj => node.findAllElements('CNPJ').singleOrNull?.innerText;
+  String get cnpj => getTextValueFromNode(node, 'CNPJ');
+  set cnpj(String? value) => setTextValueForNode(node, 'CNPJ', value);
 
-  String? get xNome => node.findAllElements('xNome').singleOrNull?.innerText;
+  String get xNome => getTextValueFromNode(node, 'xNome');
+  set xNome(String? value) => setTextValueForNode(node, 'xNome', value);
 
-  String? get xFant => node.findAllElements('xFant').singleOrNull?.innerText;
+  String get xFant => getTextValueFromNode(node, 'xFant');
+  set xFant(String? value) => setTextValueForNode(node, 'xFant', value);
 
-  EnderEmit? get enderEmit {
-    var n = node.findAllElements('enderEmit').singleOrNull;
-    if (n != null) return EnderEmit(n);
-    return null;
-  }
+  String get ie => getTextValueFromNode(node, 'IE');
+  set ie(String? value) => setTextValueForNode(node, 'IE', value);
 
-  String? get ie => node.findAllElements('IE').singleOrNull?.innerText;
-
-  String? get crt => node.findAllElements('CRT').singleOrNull?.innerText;
+  String get crt => getTextValueFromNode(node, 'CRT');
+  set crt(String? value) => setTextValueForNode(node, 'CRT', value);
 }
 
-class EnderEmit {
-  final XmlNode node;
+class EnderEmit extends _Nodeable {
+  EnderEmit(super.node);
+  String get xLgr => getTextValueFromNode(node, 'xLgr');
+  set xLgr(String? value) => setTextValueForNode(node, 'xLgr', value);
 
-  EnderEmit(this.node);
+  String get nro => getTextValueFromNode(node, 'nro');
+  set nro(String? value) => setTextValueForNode(node, 'nro', value);
 
-  String get xLgr {
-    return node.findAllElements('xLgr').singleOrNull?.innerText ?? "";
-  }
+  String get xBairro => getTextValueFromNode(node, 'xBairro');
+  set xBairro(String? value) => setTextValueForNode(node, 'xBairro', value);
 
-  set xLgr(String? value) {
-    node.findAllElements('xLgr').singleOrNull?.innerText = value ?? "";
-  }
+  String get cMun => getTextValueFromNode(node, 'cMun');
+  set cMun(String? value) => setTextValueForNode(node, 'cMun', value);
 
-  String get nro {
-    return node.findAllElements('nro').singleOrNull?.innerText ?? "";
-  }
+  String get xMun => getTextValueFromNode(node, 'xMun');
+  set xMun(String? value) => setTextValueForNode(node, 'xMun', value);
 
-  set nro(String? value) {
-    node.findAllElements('nro').singleOrNull?.innerText = value ?? "";
-  }
+  String get uf => getTextValueFromNode(node, 'UF');
+  set uf(String? value) => setTextValueForNode(node, 'UF', value);
 
-  String get xBairro {
-    return node.findAllElements('xBairro').singleOrNull?.innerText ?? "";
-  }
+  String get cep => getTextValueFromNode(node, 'CEP');
+  set cep(String? value) => setTextValueForNode(node, 'CEP', value);
 
-  set xBairro(String? value) {
-    node.findAllElements('xBairro').singleOrNull?.innerText = value ?? "";
-  }
+  String get cPais => getTextValueFromNode(node, 'cPais');
+  set cPais(String? value) => setTextValueForNode(node, 'cPais', value);
 
-  String get cMun {
-    return node.findAllElements('cMun').singleOrNull?.innerText ?? "";
-  }
+  String get xPais => getTextValueFromNode(node, 'xPais');
+  set xPais(String? value) => setTextValueForNode(node, 'xPais', value);
 
-  set cMun(String? value) {
-    node.findAllElements('cMun').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get xMun {
-    return node.findAllElements('xMun').singleOrNull?.innerText ?? "";
-  }
-
-  set xMun(String? value) {
-    node.findAllElements('xMun').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get uf {
-    return node.findAllElements('UF').singleOrNull?.innerText ?? "";
-  }
-
-  set uf(String? value) {
-    node.findAllElements('UF').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get cep {
-    return node.findAllElements('CEP').singleOrNull?.innerText ?? "";
-  }
-
-  set cep(String? value) {
-    node.findAllElements('CEP').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get cPais {
-    return node.findAllElements('cPais').singleOrNull?.innerText ?? "";
-  }
-
-  set cPais(String? value) {
-    node.findAllElements('cPais').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get xPais {
-    return node.findAllElements('xPais').singleOrNull?.innerText ?? "";
-  }
-
-  set xPais(String? value) {
-    node.findAllElements('xPais').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get fone {
-    return node.findAllElements('fone').singleOrNull?.innerText ?? "";
-  }
-
-  set fone(String? value) {
-    node.findAllElements('fone').singleOrNull?.innerText = value ?? "";
-  }
+  String get fone => getTextValueFromNode(node, 'fone');
+  set fone(String? value) => setTextValueForNode(node, 'fone', value);
 }
 
-class Dest {
-  final XmlNode node;
+class Dest extends _Nodeable {
+  Dest(super.node);
 
-  Dest(this.node);
+  EnderDest? get enderDest => getTagAs(node, 'enderDest');
+  set enderDest(EnderDest? value) => setTagFrom(node, 'enderDest', value);
 
-  String? get cnpj => node.findAllElements('CNPJ').singleOrNull?.innerText;
+  String get cnpj => getTextValueFromNode(node, 'CNPJ');
+  set cpf(String? value) => setTextValueForNode(node, 'CPF', value);
 
-  String? get cpf => node.findAllElements('CPF').singleOrNull?.innerText;
+  String get cpf => getTextValueFromNode(node, 'CPF');
+  set cnpj(String? value) => setTextValueForNode(node, 'CNPJ', value);
 
-  String? get xNome => node.findAllElements('xNome').singleOrNull?.innerText;
+  String get xNome => getTextValueFromNode(node, 'xNome');
+  set xNome(String? value) => setTextValueForNode(node, 'xNome', value);
 
-  EnderDest? get enderDest {
-    var n = node.findAllElements('enderDest').singleOrNull;
-    if (n != null) return EnderDest(n);
-    return null;
-  }
+  String get indIEDest => getTextValueFromNode(node, 'indIEDest');
+  set indIEDest(String? value) => setTextValueForNode(node, 'indIEDest', value);
 
-  String? get indIEDest => node.findAllElements('indIEDest').singleOrNull?.innerText;
-
-  String? get ie => node.findAllElements('IE').singleOrNull?.innerText;
+  String get ie => getTextValueFromNode(node, 'IE');
+  set ie(String? value) => setTextValueForNode(node, 'IE', value);
 }
 
-class EnderDest {
-  final XmlNode node;
+class EnderDest extends _Nodeable {
+  EnderDest(super.node);
 
-  EnderDest(this.node);
+  String get xLgr => getTextValueFromNode(node, 'xLgr');
+  set xLgr(String? value) => setTextValueForNode(node, 'xLgr', value);
 
-  String get xLgr {
-    return node.findAllElements('xLgr').singleOrNull?.innerText ?? "";
-  }
+  String get nro => getTextValueFromNode(node, 'nro');
+  set nro(String? value) => setTextValueForNode(node, 'nro', value);
 
-  set xLgr(String? value) {
-    node.findAllElements('xLgr').singleOrNull?.innerText = value ?? "";
-  }
+  String get xBairro => getTextValueFromNode(node, 'xBairro');
+  set xBairro(String? value) => setTextValueForNode(node, 'xBairro', value);
 
-  String get nro {
-    return node.findAllElements('nro').singleOrNull?.innerText ?? "";
-  }
+  String get cMun => getTextValueFromNode(node, 'cMun');
+  set cMun(String? value) => setTextValueForNode(node, 'cMun', value);
 
-  set nro(String? value) {
-    node.findAllElements('nro').singleOrNull?.innerText = value ?? "";
-  }
+  String get xMun => getTextValueFromNode(node, 'xMun');
+  set xMun(String? value) => setTextValueForNode(node, 'xMun', value);
 
-  String get xBairro {
-    return node.findAllElements('xBairro').singleOrNull?.innerText ?? "";
-  }
+  String get uf => getTextValueFromNode(node, 'UF');
+  set uf(String? value) => setTextValueForNode(node, 'UF', value);
 
-  set xBairro(String? value) {
-    node.findAllElements('xBairro').singleOrNull?.innerText = value ?? "";
-  }
+  String get cep => getTextValueFromNode(node, 'CEP');
+  set cep(String? value) => setTextValueForNode(node, 'CEP', value);
 
-  String get cMun {
-    return node.findAllElements('cMun').singleOrNull?.innerText ?? "";
-  }
+  String get cPais => getTextValueFromNode(node, 'cPais');
+  set cPais(String? value) => setTextValueForNode(node, 'cPais', value);
 
-  set cMun(String? value) {
-    node.findAllElements('cMun').singleOrNull?.innerText = value ?? "";
-  }
+  String get xPais => getTextValueFromNode(node, 'xPais');
+  set xPais(String? value) => setTextValueForNode(node, 'xPais', value);
 
-  String get xMun {
-    return node.findAllElements('xMun').singleOrNull?.innerText ?? "";
-  }
-
-  set xMun(String? value) {
-    node.findAllElements('xMun').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get uf {
-    return node.findAllElements('UF').singleOrNull?.innerText ?? "";
-  }
-
-  set uf(String? value) {
-    node.findAllElements('UF').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get cep {
-    return node.findAllElements('CEP').singleOrNull?.innerText ?? "";
-  }
-
-  set cep(String? value) {
-    node.findAllElements('CEP').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get cPais {
-    return node.findAllElements('cPais').singleOrNull?.innerText ?? "";
-  }
-
-  set cPais(String? value) {
-    node.findAllElements('cPais').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get xPais {
-    return node.findAllElements('xPais').singleOrNull?.innerText ?? "";
-  }
-
-  set xPais(String? value) {
-    node.findAllElements('xPais').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get fone {
-    return node.findAllElements('fone').singleOrNull?.innerText ?? "";
-  }
-
-  set fone(String? value) {
-    node.findAllElements('fone').singleOrNull?.innerText = value ?? "";
-  }
+  String get fone => getTextValueFromNode(node, 'fone');
+  set fone(String? value) => setTextValueForNode(node, 'fone', value);
 }
 
-class Det {
-  final XmlNode node;
+class Det extends _Nodeable {
+  Det(super.node);
 
-  Det(this.node);
+  String get nItem => node.getAttribute('nItem') ?? "";
 
-  String? get nItem => node.getAttribute('nItem') ?? "";
+  Prod? get prod => getTagAs(node, 'prod');
 
-  Prod? get prod {
-    var n = node.findAllElements('prod').singleOrNull;
-    if (n != null) return Prod(n);
-    return null;
-  }
-
-  Imposto? get imposto {
-    var n = node.findAllElements('imposto').singleOrNull;
-    if (n != null) return Imposto(n);
-    return null;
-  }
+  Imposto? get imposto => getTagAs(node, 'imposto');
 }
 
-class Prod {
-  final XmlNode node;
-
-  Prod(this.node);
+class Prod extends _Nodeable {
+  Prod(super.node);
 
   double get valorProduto => vProd.toDouble ?? 0.0;
 
-  String get cProd {
-    return node.findAllElements('cProd').singleOrNull?.innerText ?? "";
-  }
+  String get cProd => getTextValueFromNode(node, 'cProd');
+  set cProd(String? value) => setTextValueForNode(node, 'cProd', value);
 
-  set cProd(String? value) {
-    node.findAllElements('cProd').singleOrNull?.innerText = value ?? "";
-  }
+  String get cEAN => getTextValueFromNode(node, 'cEAN');
+  set cEAN(String? value) => setTextValueForNode(node, 'cEAN', value);
 
-  String get cEAN {
-    return node.findAllElements('cEAN').singleOrNull?.innerText ?? "";
-  }
+  String get xProd => getTextValueFromNode(node, 'xProd');
+  set xProd(String? value) => setTextValueForNode(node, 'xProd', value);
 
-  set cEAN(String? value) {
-    node.findAllElements('cEAN').singleOrNull?.innerText = value ?? "";
-  }
+  String get nCM => getTextValueFromNode(node, 'NCM');
+  set nCM(String? value) => setTextValueForNode(node, 'NCM', value);
 
-  String get xProd {
-    return node.findAllElements('xProd').singleOrNull?.innerText ?? "";
-  }
+  String get cFOP => getTextValueFromNode(node, 'CFOP');
+  set cFOP(String? value) => setTextValueForNode(node, 'CFOP', value);
 
-  set xProd(String? value) {
-    node.findAllElements('xProd').singleOrNull?.innerText = value ?? "";
-  }
+  String get uCom => getTextValueFromNode(node, 'uCom');
+  set uCom(String? value) => setTextValueForNode(node, 'uCom', value);
 
-  String get nCM {
-    return node.findAllElements('NCM').singleOrNull?.innerText ?? "";
-  }
+  String get qCom => getTextValueFromNode(node, 'qCom');
+  set qCom(String? value) => setTextValueForNode(node, 'qCom', value);
 
-  set nCM(String? value) {
-    node.findAllElements('NCM').singleOrNull?.innerText = value ?? "";
-  }
+  String get vUnCom => getTextValueFromNode(node, 'vUnCom');
+  set vUnCom(String? value) => setTextValueForNode(node, 'vUnCom', value);
 
-  String get cFOP {
-    return node.findAllElements('CFOP').singleOrNull?.innerText ?? "";
-  }
+  String get vProd => getTextValueFromNode(node, 'vProd');
+  set vProd(String? value) => setTextValueForNode(node, 'vProd', value);
 
-  set cFOP(String? value) {
-    node.findAllElements('CFOP').singleOrNull?.innerText = value ?? "";
-  }
+  String get cEANTrib => getTextValueFromNode(node, 'cEANTrib');
+  set cEANTrib(String? value) => setTextValueForNode(node, 'cEANTrib', value);
 
-  String get uCom {
-    return node.findAllElements('uCom').singleOrNull?.innerText ?? "";
-  }
+  String get uTrib => getTextValueFromNode(node, 'uTrib');
+  set uTrib(String? value) => setTextValueForNode(node, 'uTrib', value);
 
-  set uCom(String? value) {
-    node.findAllElements('uCom').singleOrNull?.innerText = value ?? "";
-  }
+  String get qTrib => getTextValueFromNode(node, 'qTrib');
+  set qTrib(String? value) => setTextValueForNode(node, 'qTrib', value);
 
-  String get qCom {
-    return node.findAllElements('qCom').singleOrNull?.innerText ?? "";
-  }
+  String get vUnTrib => getTextValueFromNode(node, 'vUnTrib');
+  set vUnTrib(String? value) => setTextValueForNode(node, 'vUnTrib', value);
 
-  set qCom(String? value) {
-    node.findAllElements('qCom').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vUnCom {
-    return node.findAllElements('vUnCom').singleOrNull?.innerText ?? "";
-  }
-
-  set vUnCom(String? value) {
-    node.findAllElements('vUnCom').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vProd {
-    return node.findAllElements('vProd').singleOrNull?.innerText ?? "";
-  }
-
-  set vProd(String? value) {
-    node.findAllElements('vProd').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get cEANTrib {
-    return node.findAllElements('cEANTrib').singleOrNull?.innerText ?? "";
-  }
-
-  set cEANTrib(String? value) {
-    node.findAllElements('cEANTrib').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get uTrib {
-    return node.findAllElements('uTrib').singleOrNull?.innerText ?? "";
-  }
-
-  set uTrib(String? value) {
-    node.findAllElements('uTrib').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get qTrib {
-    return node.findAllElements('qTrib').singleOrNull?.innerText ?? "";
-  }
-
-  set qTrib(String? value) {
-    node.findAllElements('qTrib').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vUnTrib {
-    return node.findAllElements('vUnTrib').singleOrNull?.innerText ?? "";
-  }
-
-  set vUnTrib(String? value) {
-    node.findAllElements('vUnTrib').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get indTot {
-    return node.findAllElements('indTot').singleOrNull?.innerText ?? "";
-  }
-
-  set indTot(String? value) {
-    node.findAllElements('indTot').singleOrNull?.innerText = value ?? "";
-  }
+  String get indTot => getTextValueFromNode(node, 'indTot');
+  set indTot(String? value) => setTextValueForNode(node, 'indTot', value);
 }
 
-class Imposto {
-  final XmlNode node;
+class Imposto extends _Nodeable {
+  Imposto(super.node);
 
-  Imposto(this.node);
+  ICMS? get icms => getTagAs<ICMS>(node, 'ICMS');
+  set icms(ICMS? value) => setTagFrom<ICMS>(node, 'ICMS', value);
 
-  ICMS? get icms {
-    var n = node.findAllElements('ICMS').singleOrNull;
-    if (n != null) return ICMS(n);
-    return null;
-  }
+  PIS? get pis => getTagAs<PIS>(node, 'PIS');
+  set pis(PIS? value) => setTagFrom<PIS>(node, 'PIS', value);
 
-  PIS? get pis {
-    var n = node.findAllElements('PIS').singleOrNull;
-    if (n != null) return PIS(n);
-    return null;
-  }
-
-  COFINS? get cofins {
-    var n = node.findAllElements('COFINS').singleOrNull;
-    if (n != null) return COFINS(n);
-    return null;
-  }
+  COFINS? get cofins => getTagAs<COFINS>(node, 'COFINS');
+  set cofins(COFINS? value) => setTagFrom<COFINS>(node, 'COFINS', value);
 }
 
-class ICMS {
-  final XmlNode node;
+class ICMS extends _Nodeable {
+  ICMS(super.node);
 
-  ICMS(this.node);
-
-  ICMS00? get icms00 {
-    var n = node.findAllElements('ICMS00').singleOrNull;
-    if (n != null) return ICMS00(n);
-    return null;
-  }
+  ICMS00? get icms00 => getTagAs<ICMS00>(node, 'ICMS00');
+  set icms00(ICMS00? value) => setTagFrom<ICMS00>(node, 'ICMS00', value);
 }
 
-class ICMS00 {
-  final XmlNode node;
+class ICMS00 extends _Nodeable {
+  ICMS00(super.node);
 
-  ICMS00(this.node);
+  String get orig => getTextValueFromNode(node, 'orig');
+  set orig(String? value) => setTextValueForNode(node, 'orig', value);
 
-  String get orig {
-    return node.findAllElements('orig').singleOrNull?.innerText ?? "";
-  }
+  String get cST => getTextValueFromNode(node, 'CST');
+  set cST(String? value) => setTextValueForNode(node, 'CST', value);
 
-  set orig(String value) {
-    node.findAllElements('orig').singleOrNull?.innerText = value;
-  }
+  String get modBC => getTextValueFromNode(node, 'modBC');
+  set modBC(String? value) => setTextValueForNode(node, 'modBC', value);
 
-  String get cST {
-    return node.findAllElements('CST').singleOrNull?.innerText ?? "";
-  }
+  String get vBC => getTextValueFromNode(node, 'vBC');
+  set vBC(String? value) => setTextValueForNode(node, 'vBC', value);
 
-  set cST(String value) {
-    node.findAllElements('CST').singleOrNull?.innerText = value;
-  }
+  String get pICMS => getTextValueFromNode(node, 'pICMS');
+  set pICMS(String? value) => setTextValueForNode(node, 'pICMS', value);
 
-  String get modBC {
-    return node.findAllElements('modBC').singleOrNull?.innerText ?? "";
-  }
-
-  set modBC(String value) {
-    node.findAllElements('modBC').singleOrNull?.innerText = value;
-  }
-
-  String get vBC {
-    return node.findAllElements('vBC').singleOrNull?.innerText ?? "";
-  }
-
-  set vBC(String value) {
-    node.findAllElements('vBC').singleOrNull?.innerText = value;
-  }
-
-  String get pICMS {
-    return node.findAllElements('pICMS').singleOrNull?.innerText ?? "";
-  }
-
-  set pICMS(String value) {
-    node.findAllElements('pICMS').singleOrNull?.innerText = value;
-  }
-
-  String get vICMS {
-    return node.findAllElements('vICMS').singleOrNull?.innerText ?? "";
-  }
-
-  set vICMS(String value) {
-    node.findAllElements('vICMS').singleOrNull?.innerText = value;
-  }
+  String get vICMS => getTextValueFromNode(node, 'vICMS');
+  set vICMS(String? value) => setTextValueForNode(node, 'vICMS', value);
 }
 
-class PIS {
-  final XmlNode node;
-
-  PIS(this.node);
+class PIS extends _Nodeable {
+  PIS(super.node);
 
   PISNT? get pisnt {
     var n = node.findAllElements('PISNT').singleOrNull;
@@ -643,316 +382,140 @@ class PIS {
   }
 }
 
-class PISNT {
-  final XmlNode node;
+class PISNT extends _Nodeable {
+  PISNT(super.node);
 
-  PISNT(this.node);
-
-  String get cST {
-    return node.findAllElements('CST').singleOrNull?.innerText ?? "";
-  }
-
-  set cST(String? value) {
-    node.findAllElements('CST').singleOrNull?.innerText = value ?? "";
-  }
+  String get cST => getTextValueFromNode(node, 'CST');
+  set cST(String? value) => setTextValueForNode(node, 'CST', value);
 }
 
-class COFINS {
-  final XmlNode node;
+class COFINS extends _Nodeable {
+  COFINS(super.node);
 
-  COFINS(this.node);
-
-  COFINSNT? get cofinsnt {
-    var n = node.findAllElements('COFINSNT').singleOrNull;
-    if (n != null) return COFINSNT(n);
-    return null;
-  }
+  COFINSNT? get cofinsnt => getTagAs(node, 'COFINSNT');
+  set cofinsnt(COFINSNT? value) => setTagFrom<COFINSNT>(node, 'COFINSNT', value);
 }
 
-class COFINSNT {
-  final XmlNode node;
+class COFINSNT extends _Nodeable {
+  COFINSNT(super.node);
 
-  COFINSNT(this.node);
-
-  String get cST {
-    return node.findAllElements('CST').singleOrNull?.innerText ?? "";
-  }
-
-  set cST(String? value) {
-    node.findAllElements('CST').singleOrNull?.innerText = value ?? "";
-  }
+  String get cst => getTextValueFromNode(node, "CST");
+  set cst(string? value) => setTextValueForNode(node, "CST", value);
 }
 
-class Total {
-  final XmlNode node;
+class Total extends _Nodeable {
+  Total(super.node);
 
-  Total(this.node);
-
-  ICMSTot? get icmsTot {
-    var n = node.findAllElements('ICMSTot').singleOrNull;
-    if (n != null) return ICMSTot(n);
-    return null;
-  }
+  ICMSTot? get icmsTot => getTagAs<ICMSTot>(node, 'ICMSTot');
 }
 
-class ICMSTot {
-  final XmlNode node;
+class ICMSTot extends _Nodeable {
+  ICMSTot(super.node);
 
-  ICMSTot(this.node);
+  String get vBC => getTextValueFromNode(node, 'vBC');
+  set vBC(String? value) => setTextValueForNode(node, 'vBC', value);
 
-  String get vBC {
-    return node.findAllElements('vBC').singleOrNull?.innerText ?? "";
-  }
+  String get vICMS => getTextValueFromNode(node, 'vICMS');
+  set vICMS(String? value) => setTextValueForNode(node, 'vICMS', value);
 
-  set vBC(String? value) {
-    node.findAllElements('vBC').singleOrNull?.innerText = value ?? "";
-  }
+  String get vICMSDeson => getTextValueFromNode(node, 'vICMSDeson');
+  set vICMSDeson(String? value) => setTextValueForNode(node, 'vICMSDeson', value);
 
-  String get vICMS {
-    return node.findAllElements('vICMS').singleOrNull?.innerText ?? "";
-  }
+  String get vFCP => getTextValueFromNode(node, 'vFCP');
+  set vFCP(String? value) => setTextValueForNode(node, 'vFCP', value);
 
-  set vICMS(String? value) {
-    node.findAllElements('vICMS').singleOrNull?.innerText = value ?? "";
-  }
+  String get vBCST => getTextValueFromNode(node, 'vBCST');
+  set vBCST(String? value) => setTextValueForNode(node, 'vBCST', value);
 
-  String get vICMSDeson {
-    return node.findAllElements('vICMSDeson').singleOrNull?.innerText ?? "";
-  }
+  String get vST => getTextValueFromNode(node, 'vST');
+  set vST(String? value) => setTextValueForNode(node, 'vST', value ?? "");
 
-  set vICMSDeson(String? value) {
-    node.findAllElements('vICMSDeson').singleOrNull?.innerText = value ?? "";
-  }
+  String get vFCPST => getTextValueFromNode(node, 'vFCPST');
+  set vFCPST(String? value) => setTextValueForNode(node, 'vFCPST', value ?? "");
 
-  String get vFCP {
-    return node.findAllElements('vFCP').singleOrNull?.innerText ?? "";
-  }
+  String get vFCPSTRet => getTextValueFromNode(node, 'vFCPSTRet');
+  set vFCPSTRet(String? value) => setTextValueForNode(node, 'vFCPSTRet', value ?? "");
 
-  set vFCP(String? value) {
-    node.findAllElements('vFCP').singleOrNull?.innerText = value ?? "";
-  }
+  String get vProd => getTextValueFromNode(node, 'vProd');
+  set vProd(String? value) => setTextValueForNode(node, 'vProd', value ?? "");
 
-  String get vBCST {
-    return node.findAllElements('vBCST').singleOrNull?.innerText ?? "";
-  }
+  String get vFrete => getTextValueFromNode(node, 'vFrete');
+  set vFrete(String? value) => setTextValueForNode(node, 'vFrete', value ?? "");
 
-  set vBCST(String? value) {
-    node.findAllElements('vBCST').singleOrNull?.innerText = value ?? "";
-  }
+  String get vSeg => getTextValueFromNode(node, 'vSeg');
+  set vSeg(String? value) => setTextValueForNode(node, 'vSeg', value ?? "");
 
-  String get vST {
-    return node.findAllElements('vST').singleOrNull?.innerText ?? "";
-  }
+  String get vDesc => getTextValueFromNode(node, 'vDesc');
+  set vDesc(String? value) => setTextValueForNode(node, 'vDesc', value ?? "");
 
-  set vST(String? value) {
-    node.findAllElements('vST').singleOrNull?.innerText = value ?? "";
-  }
+  String get vII => getTextValueFromNode(node, 'vII');
+  set vII(String? value) => setTextValueForNode(node, 'vII', value ?? "");
 
-  String get vFCPST {
-    return node.findAllElements('vFCPST').singleOrNull?.innerText ?? "";
-  }
+  String get vIPI => getTextValueFromNode(node, 'vIPI');
+  set vIPI(String? value) => setTextValueForNode(node, 'vIPI', value ?? "");
 
-  set vFCPST(String? value) {
-    node.findAllElements('vFCPST').singleOrNull?.innerText = value ?? "";
-  }
+  String get vIPIDevol => getTextValueFromNode(node, 'vIPIDevol');
+  set vIPIDevol(String? value) => setTextValueForNode(node, 'vIPIDevol', value ?? "");
 
-  String get vFCPSTRet {
-    return node.findAllElements('vFCPSTRet').singleOrNull?.innerText ?? "";
-  }
+  String get vPIS => getTextValueFromNode(node, 'vPIS');
+  set vPIS(String? value) => setTextValueForNode(node, 'vPIS', value ?? "");
 
-  set vFCPSTRet(String? value) {
-    node.findAllElements('vFCPSTRet').singleOrNull?.innerText = value ?? "";
-  }
+  String get vCOFINS => getTextValueFromNode(node, 'vCOFINS');
+  set vCOFINS(String? value) => setTextValueForNode(node, 'vCOFINS', value ?? "");
 
-  String get vProd {
-    return node.findAllElements('vProd').singleOrNull?.innerText ?? "";
-  }
+  String get vOutro => getTextValueFromNode(node, 'vOutro');
+  set vOutro(String? value) => setTextValueForNode(node, 'vOutro', value ?? "");
 
-  set vProd(String? value) {
-    node.findAllElements('vProd').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vFrete {
-    return node.findAllElements('vFrete').singleOrNull?.innerText ?? "";
-  }
-
-  set vFrete(String? value) {
-    node.findAllElements('vFrete').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vSeg {
-    return node.findAllElements('vSeg').singleOrNull?.innerText ?? "";
-  }
-
-  set vSeg(String? value) {
-    node.findAllElements('vSeg').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vDesc {
-    return node.findAllElements('vDesc').singleOrNull?.innerText ?? "";
-  }
-
-  set vDesc(String? value) {
-    node.findAllElements('vDesc').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vII {
-    return node.findAllElements('vII').singleOrNull?.innerText ?? "";
-  }
-
-  set vII(String? value) {
-    node.findAllElements('vII').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vIPI {
-    return node.findAllElements('vIPI').singleOrNull?.innerText ?? "";
-  }
-
-  set vIPI(String? value) {
-    node.findAllElements('vIPI').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vIPIDevol {
-    return node.findAllElements('vIPIDevol').singleOrNull?.innerText ?? "";
-  }
-
-  set vIPIDevol(String? value) {
-    node.findAllElements('vIPIDevol').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vPIS {
-    return node.findAllElements('vPIS').singleOrNull?.innerText ?? "";
-  }
-
-  set vPIS(String? value) {
-    node.findAllElements('vPIS').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vCOFINS {
-    return node.findAllElements('vCOFINS').singleOrNull?.innerText ?? "";
-  }
-
-  set vCOFINS(String? value) {
-    node.findAllElements('vCOFINS').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vOutro {
-    return node.findAllElements('vOutro').singleOrNull?.innerText ?? "";
-  }
-
-  set vOutro(String? value) {
-    node.findAllElements('vOutro').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vNF {
-    return node.findAllElements('vNF').singleOrNull?.innerText ?? "";
-  }
-
-  set vNF(String? value) {
-    node.findAllElements('vNF').singleOrNull?.innerText = value ?? "";
-  }
+  String get vNF => getTextValueFromNode(node, 'vNF');
+  set vNF(String? value) => setTextValueForNode(node, 'vNF', value ?? "");
 }
 
-class Transp {
-  final XmlNode node;
+class Transp extends _Nodeable {
+  Transp(super.node);
 
-  Transp(this.node);
-
-  String get modFrete {
-    return node.findAllElements('modFrete').singleOrNull?.innerText ?? "";
-  }
-
-  set modFrete(String? value) {
-    node.findAllElements('modFrete').singleOrNull?.innerText = value ?? "";
-  }
+  String get modFrete => getTextValueFromNode(node, 'modFrete');
+  set modFrete(String? value) => setTextValueForNode(node, 'modFrete', value);
 }
 
-class Cobr {
-  final XmlNode node;
+class Cobr extends _Nodeable {
+  Cobr(super.node);
 
-  Cobr(this.node);
-
-  Fat? get fat {
-    var n = node.findAllElements('fat').singleOrNull;
-    if (n != null) return Fat(n);
-    return null;
-  }
+  Fat? get fat => getTagAs(node, "fat");
 
   Iterable<Dup> get dup => node.findAllElements('dup').map((element) => Dup(element));
 }
 
-class Fat {
-  final XmlNode node;
+class Fat extends _Nodeable {
+  Fat(super.node);
 
-  Fat(this.node);
+  String get nFat => getTextValueFromNode(node, 'nFat');
+  set nFat(String? value) => setTextValueForNode(node, 'nFat', value);
 
-  String get nFat {
-    return node.findAllElements('nFat').singleOrNull?.innerText ?? "";
-  }
+  String get vOrig => getTextValueFromNode(node, 'vOrig');
+  set vOrig(String? value) => setTextValueForNode(node, 'vOrig', value);
 
-  set nFat(String? value) {
-    node.findAllElements('nFat').singleOrNull?.innerText = value ?? "";
-  }
+  String get vDesc => getTextValueFromNode(node, 'vDesc');
+  set vDesc(String? value) => setTextValueForNode(node, 'vDesc', value);
 
-  String get vOrig {
-    return node.findAllElements('vOrig').singleOrNull?.innerText ?? "";
-  }
-
-  set vOrig(String? value) {
-    node.findAllElements('vOrig').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vDesc {
-    return node.findAllElements('vDesc').singleOrNull?.innerText ?? "";
-  }
-
-  set vDesc(String? value) {
-    node.findAllElements('vDesc').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vLiq {
-    return node.findAllElements('vLiq').singleOrNull?.innerText ?? "";
-  }
-
-  set vLiq(String? value) {
-    node.findAllElements('vLiq').singleOrNull?.innerText = value ?? "";
-  }
+  String get vLiq => getTextValueFromNode(node, 'vLiq');
+  set vLiq(String? value) => setTextValueForNode(node, 'vLiq', value);
 }
 
-class Dup {
-  final XmlNode node;
+class Dup extends _Nodeable {
+  Dup(super.node);
 
-  Dup(this.node);
+  String get nDup => getTextValueFromNode(node, 'nDup');
+  set nDup(String? value) => setTextValueForNode(node, 'nDup', value);
 
-  String get nDup {
-    return node.findAllElements('nDup').singleOrNull?.innerText ?? "";
-  }
+  String get dVenc => getTextValueFromNode(node, 'dVenc');
+  set dVenc(String? value) => setTextValueForNode(node, 'dVenc', value);
 
-  set nDup(String? value) {
-    node.findAllElements('nDup').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get dVenc {
-    return node.findAllElements('dVenc').singleOrNull?.innerText ?? "";
-  }
-
-  set dVenc(String? value) {
-    node.findAllElements('dVenc').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vDup {
-    return node.findAllElements('vDup').singleOrNull?.innerText ?? "";
-  }
-
-  set vDup(String? value) {
-    node.findAllElements('vDup').singleOrNull?.innerText = value ?? "";
-  }
+  String get vDup => getTextValueFromNode(node, 'vDup');
+  set vDup(String? value) => setTextValueForNode(node, 'vDup', value);
 }
 
-class Pag {
-  final XmlNode node;
-
-  Pag(this.node);
+class Pag extends _Nodeable {
+  Pag(super.node);
 
   Map<string, List<double>> get pagamentos => detPag.groupAndRemapValuesBy((e) => e.formaPagamento, (x) => x.vPag.toDouble ?? 0.0);
 
@@ -979,142 +542,115 @@ class Pag {
   Iterable<DetPag> get detPag => node.findAllElements('detPag').map((element) => DetPag(element));
 }
 
-class DetPag {
-  final XmlNode node;
-
-  DetPag(this.node);
+class DetPag extends _Nodeable {
+  DetPag(super.node);
 
   double get valorPago => vPag.toDouble ?? 0.0;
 
-  string get formaPagamento => Pag.formasPagamento[tPag] ?? "Outros";
+  String get formaPagamento => Pag.formasPagamento[tPag] ?? "Outros";
 
-  String get indPag {
-    return node.findAllElements('indPag').singleOrNull?.innerText ?? "";
-  }
+  String get indPag => getTextValueFromNode(node, 'indPag');
+  set indPag(String? value) => setTextValueForNode(node, 'indPag', value);
 
-  set indPag(String? value) {
-    node.findAllElements('indPag').singleOrNull?.innerText = value ?? "";
-  }
+  String get tPag => getTextValueFromNode(node, 'tPag');
+  set tPag(String? value) => setTextValueForNode(node, 'tPag', value);
 
-  String get tPag {
-    return node.findAllElements('tPag').singleOrNull?.innerText ?? "";
-  }
-
-  set tPag(String? value) {
-    node.findAllElements('tPag').singleOrNull?.innerText = value ?? "";
-  }
-
-  String get vPag {
-    return node.findAllElements('vPag').singleOrNull?.innerText ?? "";
-  }
-
-  set vPag(String? value) {
-    node.findAllElements('vPag').singleOrNull?.innerText = value ?? "";
-  }
+  String get vPag => getTextValueFromNode(node, 'vPag');
+  set vPag(String? value) => setTextValueForNode(node, 'vPag', value);
 }
 
-class ProtNFe {
-  final XmlNode node;
+class ProtNFe extends _Nodeable {
+  ProtNFe(super.node);
 
-  ProtNFe(this.node);
-
-  InfProt? get infProt {
-    var n = node.findAllElements('infProt').singleOrNull;
-    if (n != null) return InfProt(n);
-    return null;
-  }
+  InfProt? get infProt => getTagAs(node, 'infProt');
+  set infProt(InfProt? value) => setTagFrom(node, "infProt", value);
 }
 
-class InfProt {
-  final XmlNode node;
-
-  InfProt(this.node);
+class InfProt extends _Nodeable {
+  InfProt(super.node);
 
   date? get dataRecebimento => dhRecbto.toDate();
 
-  String get tpAmb {
-    return node.findAllElements('tpAmb').singleOrNull?.innerText ?? "";
-  }
+  String get tpAmb => getTextValueFromNode(node, 'tpAmb');
+  set tpAmb(String? value) => setTextValueForNode(node, 'tpAmb', value);
 
-  set tpAmb(String value) {
-    node.findAllElements('tpAmb').singleOrNull?.innerText = value;
-  }
+  String get verAplic => getTextValueFromNode(node, 'verAplic');
+  set verAplic(String? value) => setTextValueForNode(node, 'verAplic', value);
 
-  String get verAplic {
-    return node.findAllElements('verAplic').singleOrNull?.innerText ?? "";
-  }
+  String get chNFe => getTextValueFromNode(node, 'chNFe');
+  set chNFe(String? value) => setTextValueForNode(node, 'chNFe', value);
 
-  set verAplic(String value) {
-    node.findAllElements('verAplic').singleOrNull?.innerText = value;
-  }
+  String get dhRecbto => getTextValueFromNode(node, 'dhRecbto');
+  set dhRecbto(String? value) => setTextValueForNode(node, 'dhRecbto', value);
 
-  String get chNFe {
-    return node.findAllElements('chNFe').singleOrNull?.innerText ?? "";
-  }
+  String get nProt => getTextValueFromNode(node, 'nProt');
+  set nProt(String? value) => setTextValueForNode(node, 'nProt', value);
 
-  set chNFe(String value) {
-    node.findAllElements('chNFe').singleOrNull?.innerText = value;
-  }
+  String get digVal => getTextValueFromNode(node, 'digVal');
+  set digVal(String? value) => setTextValueForNode(node, 'digVal', value);
 
-  String get dhRecbto {
-    return node.findAllElements('dhRecbto').singleOrNull?.innerText ?? "";
-  }
+  String get cStat => getTextValueFromNode(node, 'cStat');
+  set cStat(String? value) => setTextValueForNode(node, 'cStat', value);
 
-  set dhRecbto(String value) {
-    node.findAllElements('dhRecbto').singleOrNull?.innerText = value;
-  }
-
-  String get nProt {
-    return node.findAllElements('nProt').singleOrNull?.innerText ?? "";
-  }
-
-  set nProt(String value) {
-    node.findAllElements('nProt').singleOrNull?.innerText = value;
-  }
-
-  String get digVal {
-    return node.findAllElements('digVal').singleOrNull?.innerText ?? "";
-  }
-
-  set digVal(String value) {
-    node.findAllElements('digVal').singleOrNull?.innerText = value;
-  }
-
-  String get cStat {
-    return node.findAllElements('cStat').singleOrNull?.innerText ?? "";
-  }
-
-  set cStat(String value) {
-    node.findAllElements('cStat').singleOrNull?.innerText = value;
-  }
-
-  String get xMotivo {
-    return node.findAllElements('xMotivo').singleOrNull?.innerText ?? "";
-  }
-
-  set xMotivo(String value) {
-    node.findAllElements('xMotivo').singleOrNull?.innerText = value;
-  }
+  String get xMotivo => getTextValueFromNode(node, 'xMotivo');
+  set xMotivo(String? value) => setTextValueForNode(node, 'xMotivo', value);
 }
 
-class InfAdic {
-  final XmlNode node;
+class InfAdic extends _Nodeable {
+  InfAdic(super.node);
 
-  InfAdic(this.node);
+  String get infCpl => getTextValueFromNode(node, "infCpl");
+  set infCpl(String? value) => setTextValueForNode(node, "infCpl", value);
+}
 
-  String get infCpl {
-    return node.findAllElements('infCpl').singleOrNull?.innerText ?? "";
+class _Nodeable {
+  XmlNode node;
+  _Nodeable(this.node);
+
+  /// return the text value from specific child node
+  string getTextValueFromNode(XmlNode node, String tag) => node.findAllElements(tag).singleOrNull?.innerText ?? "";
+
+  /// set  the text value for specific child node. if tag wont exist, it will be created. if value is null, the node will be removed if exists
+  void setTextValueForNode(XmlNode node, string tag, string? value) {
+    final element = node.findAllElements(tag).singleOrNull;
+    if (value == null) {
+      if (element != null) {
+        element.remove();
+      }
+    } else {
+      if (element == null) {
+        // Se o elemento não existir, cria um novo com o valor fornecido
+        final newNode = XmlElement(XmlName(tag));
+        newNode.innerText = value;
+        node.children.add(newNode);
+      } else {
+        element.innerText = value;
+      }
+    }
   }
 
-  set infCpl(String value) {
-    final element = node.findAllElements('infCpl').singleOrNull;
-    if (element == null) {
-      // Se o elemento não existir, cria um novo com o valor fornecido
-      final newNode = XmlElement(XmlName('infCpl'));
-      newNode.innerText = value;
-      node.children.add(newNode);
+// do dat shit
+  T? getTagAs<T extends _Nodeable>(XmlNode node, String tag) {
+    var n = node.findAllElements(tag).singleOrNull;
+    if (n != null) return n as T;
+    return null;
+  }
+
+  void setTagFrom<T extends _Nodeable>(XmlNode node, String tag, T? value) {
+    var n = node.findAllElements(tag).singleOrNull;
+    if (value != null) {
+      if (n == null) {
+        final newNode = XmlElement(XmlName(tag));
+        newNode.children.add(value.node);
+        node.children.add(newNode);
+      } else {
+        n.children.clear();
+        n.children.add(value.node);
+      }
     } else {
-      element.innerText = value;
+      if (n != null) {
+        n.remove();
+      }
     }
   }
 }
