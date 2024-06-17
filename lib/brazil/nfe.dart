@@ -41,12 +41,12 @@ class NFeProc extends TagXml {
       case 301: //Uso Denegado: Irregularidade fiscal do emitente
       case 302: //Uso Denegado: Irregularidade fiscal do destinatário
       case 303: //Uso Denegado: Destinatário não habilitado a operar na UF
-        return "${protNFe?.infProt?.chNFe}-den.xml";
+        return "${protNFe?.infProt?.chNFe??"sem-chave"}-den.xml";
 
       case 100: //Autorizado o uso da NF-e
       case 150: //Autorizado o uso da NF-e, autorização fora de prazo
       default:
-        return "${protNFe?.infProt?.chNFe}-procnfe.xml";
+        return "${protNFe?.infProt?.chNFe??"sem-chave"}-procnfe.xml";
     }
   }
 
