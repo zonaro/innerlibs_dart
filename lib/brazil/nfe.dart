@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 
@@ -15,7 +17,22 @@ class NFeProc extends TagXml {
   ProtNFe? get protNFe => getTagAs(node, 'protNFe', (n) => ProtNFe(n));
   set protNFe(ProtNFe? value) => setTagFrom(node, 'protNFe', value);
 
-  ChaveNFe? get chaveNota => id?.onlyNumbers.isNumber ?? false ? ChaveNFe.fromString(id!.onlyNumbers) : null;
+  ChaveNFe? get chaveNota => (protNFe?.infProt?.chNFe).isNotBlank ? ChaveNFe.fromString(protNFe!.infProt!.chNFe!.onlyNumbers) : null;
+  set chaveNota(ChaveNFe? value) {
+    protNFe ??= ProtNFe(XmlElement.tag('protNFe'));
+    protNFe!.infProt ??= InfProt(XmlElement.tag('infProt'));
+    if (value != null) {
+      protNFe?.infProt?.chNFe = value.toString();
+    } else {
+      protNFe?.infProt?.chNFe = null;
+    }
+  }
+
+  void salvar(Directory directory) {
+    String fileName = nomeArquivoDistribuicao;
+    File file = File('${directory.path}/$fileName');
+    file.writeAsString(toString());
+  }
 
   string get nomeArquivoDistribuicao {
     switch (protNFe?.infProt?.cStat?.toInt ?? 0) {
@@ -39,10 +56,10 @@ class NFeProc extends TagXml {
   set infAdic(InfAdic? value) => setTagFrom(node, 'infAdic', value);
 
   Uri? get uriNFCe {
-    var chave = chaveNota;
-    if (chave != null) {
+    var c = chaveNota;
+    if (c != null) {
       return gerarUriNFCe(
-        chNFe: chave.chave,
+        chNFe: c.chave,
         nVersao: versao ?? "",
         tpAmb: nfe?.ide?.tpAmb,
         dhEmi: nfe?.ide?.dhEmi,
@@ -186,8 +203,8 @@ class Ide extends TagXml {
 class Emit extends TagXml {
   Emit(super.node);
 
-  EnderEmit? get enderEmit => getTagAs(node, "enderEmit", (n) => EnderEmit(n));
-  set enderEmit(EnderEmit? value) => setTagFrom(node, "enderEmit", value);
+  Ender? get enderEmit => getTagAs(node, "enderEmit", (n) => Ender(n));
+  set enderEmit(Ender? value) => setTagFrom(node, "enderEmit", value);
 
   string? get cnpj => getTextValueFromNode(node, 'CNPJ');
   set cnpj(String? value) => setTextValueForNode(node, 'CNPJ', value);
@@ -205,8 +222,29 @@ class Emit extends TagXml {
   set crt(String? value) => setTextValueForNode(node, 'CRT', value);
 }
 
-class EnderEmit extends TagXml {
-  EnderEmit(super.node);
+typedef EnderEmit = Ender;
+typedef EnderDest = Ender;
+
+class Ender extends TagXml {
+  Ender(super.node);
+
+  static Future<Ender> peloCEP(string tag, dynamic cep, dynamic numero) async {
+    var e = await Brasil.pesquisarCEP(cep);
+    var cid = await e!.cidade;
+    var est = await e.estado;
+    var ender = Ender(XmlElement.tag(tag));
+    ender.cMun = cid!.ibge.toString();
+    ender.cPais = "1058";
+    ender.nro = "$numero".asFlat.toUpperCase();
+    ender.xPais = "BRASIL";
+    ender.uf = est!.uf.asFlat.toUpperCase();
+    ender.cep = e.cep.onlyNumbers;
+    ender.xBairro = e.bairro.asFlat.toUpperCase();
+    ender.xLgr = e.logradouro.asFlat.toUpperCase();
+    ender.xMun = cid.nome.asFlat.toUpperCase();
+    return ender;
+  }
+
   string? get xLgr => getTextValueFromNode(node, 'xLgr');
   set xLgr(String? value) => setTextValueForNode(node, 'xLgr', value);
 
@@ -241,8 +279,8 @@ class EnderEmit extends TagXml {
 class Dest extends TagXml {
   Dest(super.node);
 
-  EnderDest? get enderDest => getTagAs(node, 'enderDest', (n) => EnderDest(n));
-  set enderDest(EnderDest? value) => setTagFrom(node, 'enderDest', value);
+  Ender? get enderDest => getTagAs(node, 'enderDest', (n) => Ender(n));
+  set enderDest(Ender? value) => setTagFrom(node, 'enderDest', value);
 
   string? get cnpj => getTextValueFromNode(node, 'CNPJ');
   set cpf(String? value) => setTextValueForNode(node, 'CPF', value);
@@ -258,40 +296,6 @@ class Dest extends TagXml {
 
   string? get ie => getTextValueFromNode(node, 'IE');
   set ie(String? value) => setTextValueForNode(node, 'IE', value);
-}
-
-class EnderDest extends TagXml {
-  EnderDest(super.node);
-
-  string? get xLgr => getTextValueFromNode(node, 'xLgr');
-  set xLgr(String? value) => setTextValueForNode(node, 'xLgr', value);
-
-  string? get nro => getTextValueFromNode(node, 'nro');
-  set nro(String? value) => setTextValueForNode(node, 'nro', value);
-
-  string? get xBairro => getTextValueFromNode(node, 'xBairro');
-  set xBairro(String? value) => setTextValueForNode(node, 'xBairro', value);
-
-  string? get cMun => getTextValueFromNode(node, 'cMun');
-  set cMun(String? value) => setTextValueForNode(node, 'cMun', value);
-
-  string? get xMun => getTextValueFromNode(node, 'xMun');
-  set xMun(String? value) => setTextValueForNode(node, 'xMun', value);
-
-  string? get uf => getTextValueFromNode(node, 'UF');
-  set uf(String? value) => setTextValueForNode(node, 'UF', value);
-
-  string? get cep => getTextValueFromNode(node, 'CEP');
-  set cep(String? value) => setTextValueForNode(node, 'CEP', value);
-
-  string? get cPais => getTextValueFromNode(node, 'cPais');
-  set cPais(String? value) => setTextValueForNode(node, 'cPais', value);
-
-  string? get xPais => getTextValueFromNode(node, 'xPais');
-  set xPais(String? value) => setTextValueForNode(node, 'xPais', value);
-
-  string? get fone => getTextValueFromNode(node, 'fone');
-  set fone(String? value) => setTextValueForNode(node, 'fone', value);
 }
 
 class Det extends TagXml {
@@ -543,7 +547,22 @@ class Dup extends TagXml {
 class Pag extends TagXml {
   Pag(super.node);
 
-  Map<string, List<double>> get pagamentos => detPag.groupAndRemapValuesBy((e) => e.formaPagamento, (x) => x.valorPago);
+  Map<String, List<double>> get pagamentos => detPag.groupAndRemapValuesBy((e) => e.formaPagamento, (x) => x.valorPago);
+
+  set pagamentos(Map<String, List<double>> value) {
+    detPag = [];
+    value.forEach((formaPagamento, valores) {
+      for (var valor in valores) {
+        final detPagNode = XmlElement(XmlName('detPag'));
+        final formaPagamentoNode = XmlElement(XmlName('tPag'));
+        formaPagamentoNode.innerText = Pag.formasPagamento.keys.firstWhere((key) => Pag.formasPagamento[key] == formaPagamento, orElse: () => '99');
+        final valorPagoNode = XmlElement(XmlName('vPag'));
+        valorPagoNode.innerText = valor.toString();
+        detPagNode.children.addAll([formaPagamentoNode, valorPagoNode]);
+        node.children.add(detPagNode);
+      }
+    });
+  }
 
   static Map<String, dynamic> get formasPagamento => {
         "01": "Dinheiro",
@@ -566,6 +585,16 @@ class Pag extends TagXml {
       };
 
   Iterable<DetPag> get detPag => getTagsFrom(node, 'detPag', (n) => DetPag(n));
+  set detPag(Iterable<DetPag> value) {
+    node.findAllElements('detPag').forEach((element) {
+      element.remove();
+    });
+    for (var detPag in value) {
+      final detPagNode = XmlElement(XmlName('detPag'));
+      detPagNode.children.add(detPag.node);
+      node.children.add(detPagNode);
+    }
+  }
 }
 
 class DetPag extends TagXml {
@@ -632,6 +661,8 @@ class InfAdic extends TagXml {
 class TagXml {
   XmlNode node;
   TagXml(this.node);
+
+  TagXml.tag(string name) : this(XmlElement(XmlName(name)));
 
   @override
   String toString() => node.outerXml;

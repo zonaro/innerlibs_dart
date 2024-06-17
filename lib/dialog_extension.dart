@@ -151,7 +151,7 @@ extension DialogExt on BuildContext {
 
   /// Displays a confirmation dialog and shows a loader if the user confirms.
   ///
-  /// The [content] parameter represents the content of the confirmation dialog.
+  /// The [confirmTaskMessage] parameter represents the content of the confirmation dialog.
   /// The [title] parameter represents the title of the confirmation dialog.
   /// The [textOK] parameter represents the text for the OK button in the confirmation dialog.
   /// The [textCancel] parameter represents the text for the Cancel button in the confirmation dialog.
@@ -160,11 +160,11 @@ extension DialogExt on BuildContext {
   /// The [task] parameter is a function that returns a future representing the task to be performed.
   /// The [cancelTaskButtonText] parameter represents the text for the Cancel button in the loader.
   /// The [loadingText] parameter represents the text to be displayed while the task is loading.
-  /// The [confirmationMessage] parameter represents the message to be displayed in the confirmation dialog.
+  /// The [cancelConfirmationMessage] parameter represents the message to be displayed in the confirmation dialog.
   ///
   /// Returns the result of the task if the user confirms, otherwise returns null.
   Future<T?> confirmTask<T>({
-    dynamic content,
+    dynamic confirmTaskMessage,
     dynamic title,
     dynamic textOK,
     dynamic textCancel,
@@ -173,11 +173,11 @@ extension DialogExt on BuildContext {
     Future<T?> Function()? task,
     dynamic cancelTaskButtonText,
     dynamic loadingText,
-    dynamic confirmationMessage,
+    dynamic cancelConfirmationMessage,
     void Function(Object?)? onError,
   }) async {
     bool isConfirmed = await confirm(
-      content,
+      confirmTaskMessage,
       title: title,
       textOK: textOK,
       textCancel: textCancel,
@@ -191,7 +191,7 @@ extension DialogExt on BuildContext {
         loadingText: loadingText,
         textOK: textOK,
         textCancel: textCancel,
-        confirmationMessage: confirmationMessage,
+        confirmationMessage: cancelConfirmationMessage,
         onError: onError,
       );
     }

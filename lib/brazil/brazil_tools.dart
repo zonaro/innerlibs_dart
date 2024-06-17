@@ -727,14 +727,14 @@ class Endereco implements Comparable<Endereco> {
   Future<Estado?> get estado async => ((await cidade)?.estado) ?? await Brasil.pegarEstado(ibge);
 
   factory Endereco.fromJson(Map<String, dynamic> json) => Endereco(
-        cep: json['cep'] ?? "",
-        logradouro: json['logradouro'] ?? "",
-        complemento: json['complemento'] ?? "",
-        bairro: json['bairro'] ?? "",
-        ibge: json['ibge'] ?? "",
-        gia: json['gia'] ?? "",
-        ddd: json['ddd'] ?? "",
-        siafi: json['siafi'] ?? "",
+        cep: (json['cep'] ?? "").toString(),
+        logradouro: (json['logradouro'] ?? "").toString(),
+        complemento: (json['complemento'] ?? "").toString(),
+        bairro: (json['bairro'] ?? "").toString(),
+        ibge: (json['ibge'] ?? "").toString(),
+        gia: (json['gia'] ?? "").toString(),
+        ddd: (json['ddd'] ?? "").toString(),
+        siafi: (json['siafi'] ?? "".toString()),
       );
 
   @override
