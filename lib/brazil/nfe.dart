@@ -17,6 +17,22 @@ class NFeProc extends TagXml {
 
   ChaveNFe? get chaveNota => id?.onlyNumbers.isNumber ?? false ? ChaveNFe.fromString(id!.onlyNumbers) : null;
 
+  string get nomeArquivoDistribuicao {
+    switch (protNFe?.infProt?.cStat?.toInt ?? 0) {
+      case 110: //Uso Denegado
+      case 205: //NF-e está denegada na base de dados da SEFAZ [nRec:999999999999999]
+      case 301: //Uso Denegado: Irregularidade fiscal do emitente
+      case 302: //Uso Denegado: Irregularidade fiscal do destinatário
+      case 303: //Uso Denegado: Destinatário não habilitado a operar na UF
+        return "${protNFe?.infProt?.chNFe}-den.xml";
+
+      case 100: //Autorizado o uso da NF-e
+      case 150: //Autorizado o uso da NF-e, autorização fora de prazo
+      default:
+        return "${protNFe?.infProt?.chNFe}-procnfe.xml";
+    }
+  }
+
   Map<string, List<double>> get pagamentos => nfe?.pag?.pagamentos ?? {};
 
   InfAdic? get infAdic => getTagAs(node, 'infAdic', (n) => InfAdic(n));
