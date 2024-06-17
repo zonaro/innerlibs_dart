@@ -6,20 +6,20 @@ class NFeProc extends TagXml {
 
   NFeProc.fromXmlString(String xml) : this(XmlDocument.parse(xml));
 
-  NFe? get nfe => getTagAs(node, 'NFe');
+  NFe? get nfe => getTagAs(node, 'NFe', (n) => NFe(n));
   set nfe(NFe? value) => setTagFrom(node, 'NFe', value);
 
   string? get versao => nfe?.versao;
   string? get id => nfe?.id;
 
-  ProtNFe? get protNFe => getTagAs(node, 'protNFe');
+  ProtNFe? get protNFe => getTagAs(node, 'protNFe', (n) => ProtNFe(n));
   set protNFe(ProtNFe? value) => setTagFrom(node, 'protNFe', value);
 
   ChaveNFe? get chaveNota => id?.onlyNumbers.isNumber ?? false ? ChaveNFe.fromString(id!.onlyNumbers) : null;
 
   Map<string, List<double>> get pagamentos => nfe?.pag?.pagamentos ?? {};
 
-  InfAdic? get infAdic => getTagAs(node, 'infAdic');
+  InfAdic? get infAdic => getTagAs(node, 'infAdic', (n) => InfAdic(n));
   set infAdic(InfAdic? value) => setTagFrom(node, 'infAdic', value);
 
   Uri? get uriNFCe {
@@ -82,23 +82,23 @@ class NFe extends TagXml {
   string? get id => node.getAttribute('Id');
   set id(String? value) => node.setAttribute('Id', value);
 
-  Ide? get ide => getTagAs(node, 'ide');
+  Ide? get ide => getTagAs(node, 'ide', (n) => Ide(n));
 
-  Emit? get emit => getTagAs(node, 'emit');
+  Emit? get emit => getTagAs(node, 'emit', (n) => Emit(n));
 
-  Dest? get dest => getTagAs(node, 'dest');
+  Dest? get dest => getTagAs(node, 'dest', (n) => Dest(n));
 
-  Iterable<Det> get det => getTagsFrom(node, 'det');
+  Iterable<Det> get det => getTagsFrom(node, 'det', (n) => Det(n));
 
   Iterable<DetPag> get detPag => pag?.detPag ?? [];
 
-  Total? get total => getTagAs(node, 'total');
+  Total? get total => getTagAs(node, 'total', (n) => Total(n));
 
-  Transp? get transp => getTagAs(node, "transp");
+  Transp? get transp => getTagAs(node, "transp", (n) => Transp(n));
 
-  Cobr? get cobr => getTagAs(node, "cobr");
+  Cobr? get cobr => getTagAs(node, "cobr", (n) => Cobr(n));
 
-  Pag? get pag => getTagAs(node, "pag");
+  Pag? get pag => getTagAs(node, "pag", (n) => Pag(n));
 }
 
 class Ide extends TagXml {
@@ -170,7 +170,7 @@ class Ide extends TagXml {
 class Emit extends TagXml {
   Emit(super.node);
 
-  EnderEmit? get enderEmit => getTagAs(node, "enderEmit");
+  EnderEmit? get enderEmit => getTagAs(node, "enderEmit", (n) => EnderEmit(n));
   set enderEmit(EnderEmit? value) => setTagFrom(node, "enderEmit", value);
 
   string? get cnpj => getTextValueFromNode(node, 'CNPJ');
@@ -225,7 +225,7 @@ class EnderEmit extends TagXml {
 class Dest extends TagXml {
   Dest(super.node);
 
-  EnderDest? get enderDest => getTagAs(node, 'enderDest');
+  EnderDest? get enderDest => getTagAs(node, 'enderDest', (n) => EnderDest(n));
   set enderDest(EnderDest? value) => setTagFrom(node, 'enderDest', value);
 
   string? get cnpj => getTextValueFromNode(node, 'CNPJ');
@@ -284,10 +284,10 @@ class Det extends TagXml {
   string? get nItem => node.getAttribute('nItem');
   set nItem(String? value) => node.setAttribute('nItem', value);
 
-  Prod? get prod => getTagAs(node, 'prod');
+  Prod? get prod => getTagAs(node, 'prod', (n) => Prod(n));
   set prod(Prod? value) => setTagFrom(node, 'prod', value);
 
-  Imposto? get imposto => getTagAs(node, 'imposto');
+  Imposto? get imposto => getTagAs(node, 'imposto', (n) => Imposto(n));
   set imposto(Imposto? value) => setTagFrom(node, 'imposto', value);
 }
 
@@ -345,20 +345,20 @@ class Prod extends TagXml {
 class Imposto extends TagXml {
   Imposto(super.node);
 
-  ICMS? get icms => getTagAs<ICMS>(node, 'ICMS');
+  ICMS? get icms => getTagAs<ICMS>(node, 'ICMS', (n) => ICMS(n));
   set icms(ICMS? value) => setTagFrom<ICMS>(node, 'ICMS', value);
 
-  PIS? get pis => getTagAs<PIS>(node, 'PIS');
+  PIS? get pis => getTagAs<PIS>(node, 'PIS', (n) => PIS(n));
   set pis(PIS? value) => setTagFrom<PIS>(node, 'PIS', value);
 
-  COFINS? get cofins => getTagAs<COFINS>(node, 'COFINS');
+  COFINS? get cofins => getTagAs<COFINS>(node, 'COFINS', (n) => COFINS(n));
   set cofins(COFINS? value) => setTagFrom<COFINS>(node, 'COFINS', value);
 }
 
 class ICMS extends TagXml {
   ICMS(super.node);
 
-  ICMS00? get icms00 => getTagAs<ICMS00>(node, 'ICMS00');
+  ICMS00? get icms00 => getTagAs<ICMS00>(node, 'ICMS00', (n) => ICMS00(n));
   set icms00(ICMS00? value) => setTagFrom<ICMS00>(node, 'ICMS00', value);
 }
 
@@ -387,7 +387,7 @@ class ICMS00 extends TagXml {
 class PIS extends TagXml {
   PIS(super.node);
 
-  PISNT? get pisnt => getTagAs(node, 'PISNT');
+  PISNT? get pisnt => getTagAs(node, 'PISNT', (n) => PISNT(n));
   set pisnt(PISNT? value) => setTagFrom(node, 'PISNT', value);
 }
 
@@ -401,7 +401,7 @@ class PISNT extends TagXml {
 class COFINS extends TagXml {
   COFINS(super.node);
 
-  COFINSNT? get cofinsnt => getTagAs(node, 'COFINSNT');
+  COFINSNT? get cofinsnt => getTagAs(node, 'COFINSNT', (n) => COFINSNT(n));
   set cofinsnt(COFINSNT? value) => setTagFrom(node, 'COFINSNT', value);
 }
 
@@ -415,7 +415,7 @@ class COFINSNT extends TagXml {
 class Total extends TagXml {
   Total(super.node);
 
-  ICMSTot? get icmsTot => getTagAs(node, 'ICMSTot');
+  ICMSTot? get icmsTot => getTagAs(node, 'ICMSTot', (n) => ICMSTot(n));
 }
 
 class ICMSTot extends TagXml {
@@ -489,10 +489,10 @@ class Transp extends TagXml {
 class Cobr extends TagXml {
   Cobr(super.node);
 
-  Fat? get fat => getTagAs(node, "fat");
+  Fat? get fat => getTagAs(node, "fat", (n) => Fat(n));
   set fat(Fat? value) => setTagFrom(node, "fat", value);
 
-  Iterable<Dup> get dup => getTagsFrom(node, 'dup');
+  Iterable<Dup> get dup => getTagsFrom(node, 'dup', (n) => Dup(n));
 }
 
 class Fat extends TagXml {
@@ -549,7 +549,7 @@ class Pag extends TagXml {
         "99": "Outros",
       };
 
-  Iterable<DetPag> get detPag => getTagsFrom(node, 'detPag');
+  Iterable<DetPag> get detPag => getTagsFrom(node, 'detPag', (n) => DetPag(n));
 }
 
 class DetPag extends TagXml {
@@ -572,7 +572,7 @@ class DetPag extends TagXml {
 class ProtNFe extends TagXml {
   ProtNFe(super.node);
 
-  InfProt? get infProt => getTagAs(node, 'infProt');
+  InfProt? get infProt => getTagAs(node, 'infProt', (n) => InfProt(n));
   set infProt(InfProt? value) => setTagFrom(node, "infProt", value);
 }
 
@@ -642,10 +642,9 @@ class TagXml {
     }
   }
 
-// do dat shit
-  T? getTagAs<T extends TagXml>(XmlNode node, String tag) {
+  T? getTagAs<T extends TagXml>(XmlNode node, String tag, T Function(XmlNode) constructor) {
     var n = node.findAllElements(tag).singleOrNull;
-    if (n != null) return n as T;
+    if (n != null) return constructor(n);
     return null;
   }
 
@@ -667,7 +666,5 @@ class TagXml {
     }
   }
 
-  Iterable<T> getTagsFrom<T extends TagXml>(XmlNode node, string tag) {
-    return node.findAllElements(tag).map((element) => TagXml(element) as T);
-  }
+  Iterable<T> getTagsFrom<T extends TagXml>(XmlNode node, string tag, T Function(XmlNode) constructor) => node.findAllElements(tag).map((element) => constructor(element));
 }
