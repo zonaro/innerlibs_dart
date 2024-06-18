@@ -30,6 +30,4 @@ dev_dependencies:
  
 
 
-flutter:
-  assets:
-    - lib/brazil/brazil.json 
+
