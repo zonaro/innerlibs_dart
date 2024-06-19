@@ -56,8 +56,16 @@ extension BuildContextExtensions on BuildContext {
 
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(SnackBar snackBar) => scaffoldMessenger.showSnackBar(snackBar);
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBarMessage(string message) => showSnackBar(SnackBar(content: message.asText()));
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(dynamic content) {
+    if (content is String) content = content.asText();
+    if ((content is SnackBar == false) && content is Widget) {
+      content = SnackBar(content: content);
+    }
+    if (content is SnackBar) {
+      return scaffoldMessenger.showSnackBar(content);
+    }
+    return showSnackBar("$content");
+  }
 
   /// The color of [Divider]s and [PopupMenuDivider]s, also used
   /// between [ListTile]s, between rows in [DataTable]s, and so forth.
