@@ -139,7 +139,7 @@ extension SqlTableExtensions on JsonTable {
 
     searchFunc(JsonRow row) => keys.where((k) => "${row[k]}".flatContains(searchTerm)).length;
 
-    levFunc(JsonRow row) => levenshteinDistance <= 0 ? 0 : keys.selectMany((e, i) => "${row[e]}".asFlat.getUniqueWords.map((t) => searchTerm.asFlat.getLevenshtein(t, true)!)).count((e) => e <= levenshteinDistance.lockMin(1));
+    levFunc(JsonRow row) => levenshteinDistance <= 0 ? 0 : keys.selectMany((e, i) => "${row[e]}".asFlat.getUniqueWords.map((t) => searchTerm.asFlat.getLevenshtein(t, true))).count((e) => e <= levenshteinDistance.lockMin(1));
 
     var l = where((row) => searchFunc(row) > 0);
     if (l.isEmpty && levenshteinDistance > 0) {
