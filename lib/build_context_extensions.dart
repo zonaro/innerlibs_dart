@@ -56,6 +56,16 @@ extension BuildContextExtensions on BuildContext {
 
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
 
+  /// Shows a [SnackBar] with the given [content] in the current [Scaffold].
+  ///
+  /// If the [content] is a [String], it will be converted to a [Text] widget.
+  /// If the [content] is not a [SnackBar] and is a [Widget], it will be wrapped
+  /// in a [SnackBar] widget.
+  /// If the [content] is a [SnackBar], it will be shown using the [scaffoldMessenger].
+  /// If none of the above conditions are met, the [content] will be converted to
+  /// a [String] and shown as a [SnackBar].
+  ///
+  /// Returns the [ScaffoldFeatureController] for the shown [SnackBar].
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(dynamic content) {
     if (content is String) content = content.asText();
     if ((content is SnackBar == false) && content is Widget) {
@@ -213,12 +223,24 @@ extension BuildContextExtensions on BuildContext {
   /// content body, like captions
   TextStyle? get labelSmall => textTheme.labelSmall;
 
+  /// Returns the [ModalRoute] associated with this [BuildContext].
+  ///
+  /// If there is no [ModalRoute] associated with this [BuildContext],
+  /// it returns `null`.
   ModalRoute? get modalRoute => ModalRoute.of(this);
 
+  /// Returns the [RouteSettings] of the current modal route, or `null` if there is no modal route.
   RouteSettings? get modalRouteSettings => modalRoute?.settings;
 
-  string? get modalRouteName => modalRoute?.settings.name;
+  /// Returns the name of the modal route, if available.
+  /// If the modal route is null or the settings name is null, it returns null.
+  String? get modalRouteName => modalRoute?.settings.name;
 
+  /// Restarts the app.
+  ///
+  /// This method restarts the app by using the [RestartWidget] class.
+  /// It takes the current build context as a parameter and calls the
+  /// `restartApp` method of [RestartWidget] to restart the app.
   void restartApp() => RestartWidget.restartApp(this);
 
   ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
