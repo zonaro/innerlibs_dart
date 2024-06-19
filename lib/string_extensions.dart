@@ -1430,9 +1430,9 @@ extension StringExtension on String {
   /// String foo1 = 'esentis';
   /// int dist = foo.getLevenshtein('esentis2'); // 1
   /// ```
-  int? getLevenshtein(String b, [bool caseSensitive = true]) {
+  int getLevenshtein(String b, [bool caseSensitive = true]) {
     if (isBlank) {
-      return null;
+      return b.length;
     }
     var a = this;
     if (!caseSensitive) {
