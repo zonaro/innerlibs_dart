@@ -354,6 +354,12 @@ extension StringExtension on String {
   /// For example, "camelSplitString" will be converted to "camel Split String".
   String get camelSplitString => camelSplit.join(" ");
 
+  /// Returns a string with pascal case split into separate words.
+  ///
+  /// The pascal case string is split into separate words using a space as the separator.
+  /// For example, "PascalSplitString" will be converted to "Pascal Split String".
+  String get pascalSplitString => pascalSplit.join(" ");
+
   /// Splits a camel case string into individual words.
   /// Returns a list of strings representing the words in the camel case string.
   List<String> get camelSplit {
@@ -376,8 +382,12 @@ extension StringExtension on String {
       }
     }
 
-    return words;
+    return words.select((w, i) => i == 0 ? w.toLowerCase() : w.capitalizeFirst).toList();
   }
+
+  /// Splits a pascal case string into individual words.
+  /// Returns a list of strings representing the words in the pascal case string.
+  List<String> get pascalSplit => camelSplit.map((w) => w.capitalizeFirst).toList();
 
   /// Checks if the current string is equal to the given [text] when both are flattened.
   /// Returns `true` if they are equal, `false` otherwise.
@@ -469,9 +479,7 @@ extension StringExtension on String {
   /// String foo = 'Hello';
   /// bool isMoreOrEqual = foo >= 'Hi'; // returns true.
   /// ```
-  bool operator >=(String s) {
-    return length >= s.length;
-  }
+  bool operator >=(String s) => length >= s.length;
 
   /// Checks if the [length!] of the `String` is less than the length of [s].
   ///
@@ -481,9 +489,7 @@ extension StringExtension on String {
   /// String foo = 'Hello';
   /// bool isLess = foo < 'Hi'; // returns false.
   /// ```
-  bool operator <(String s) {
-    return length < s.length;
-  }
+  bool operator <(String s) => length < s.length;
 
   /// Checks if the [length!] of the `String` is less or equal than the length of [s].
   ///
@@ -495,9 +501,7 @@ extension StringExtension on String {
   /// String foo = 'Hello';
   /// bool isLessOrEqual = foo <= 'Hi'; // returns false.
   /// ```
-  bool operator <=(String s) {
-    return length <= s.length;
-  }
+  bool operator <=(String s) => length <= s.length;
 
   /// Removes a text from the `String`.
   String operator -(String? s) {
@@ -709,7 +713,8 @@ extension StringExtension on String {
       return false;
     }
     substring(0, 1);
-    var regex = RegExp(r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
+    var regex = RegExp(
+        r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
     return regex.hasMatch(this);
   }
 
@@ -917,9 +922,9 @@ extension StringExtension on String {
     return replaceAll(regex, '');
   }
 
-  String removeAny(List<Pattern> texts) => replaceMany(texts, "");
+  String removeAny(List<Pattern> texts) => replaceMany(texts);
 
-  String replaceMany(List<Pattern> from, String to) {
+  String replaceMany(List<Pattern> from, [String to = ""]) {
     String result = this;
     for (var pattern in from) {
       result = result.replaceAll(pattern, to);
@@ -1825,25 +1830,17 @@ extension StringExtension on String {
     return substring(index + char.length, length);
   }
 
-  /// Truncates the `String` when more than `length` characters exist.
+  /// Returns the text between [before] and [after] strings.
   ///
-  /// [length] must be more than 0.
-  ///
-  /// If [length] > String.length the same `String` is returned without truncation.
+  /// If [before] or [after] are not found, an empty string is returned.
   ///
   /// ### Example
   ///
   /// ```dart
-  /// String f = 'congratulations';
-  /// String truncated = f.truncate(3); // Returns 'con...'
+  /// String text = 'Hello [world]!';
+  /// String result = text.between('[', ']'); // returns 'world'
   /// ```
-  String truncate(int length) {
-    if (isBlank || length <= 0 || length >= this.length) {
-      return blankIfNull;
-    }
-
-    return '${substring(0, length)}...';
-  }
+  String between(String before, String after) => this.before(before).after(after);
 
   /// Truncates a long `String` in the middle while retaining the beginning and the end.
   ///
@@ -2953,6 +2950,95 @@ extension StringExtension on String {
     }
   }
 
+  /// Checks if a given [value] matches a [mask] pattern.
+  ///
+  /// The [mask] pattern can contain wildcard characters:
+  /// - `*` matches any sequence of characters (including an empty sequence).
+  /// - `?` matches any single character.
+  ///
+  /// Returns `true` if the [value] matches the [mask] pattern, `false` otherwise.
+  bool isLike(string mask) => RegExp('^${RegExp.escape(mask).replaceAll('\\*', '.*').replaceAll('\\?', '.').toString()}\$', multiLine: true).hasMatch(this);
+
   /// change a date string from a format to another format
   string changeDateFormat(string toFormat, [string? fromFormat, string? locale]) => toDate(fromFormat, locale).format(toFormat);
+
+  /// Interprets a string in various ways and transforms it into a `Size` object.
+  ///
+  /// Returns a `Size` object.
+  Size get toSize {
+    var text = this;
+    text = text.replaceMany(["px", ";"], " ").toLowerCase().trimAll;
+    text = text.replaceMany(["largura", "width", "a "], "w ");
+    text = text.replaceMany(["altura", "height", "l "], "h ");
+
+    try {
+      if (text.isNumericOnly) {
+        return Size(text.trimAll.toDoubleOrZero, text.trimAll.toDoubleOrZero);
+      } else if (text.isLike("width*") && !text.isLike("*height*")) {
+        return Size(text.after("width").trimAll.toDoubleOrZero, text.after("width").trimAll.toDoubleOrZero);
+      } else if (text.isLike("height*") && !text.isLike("*width*")) {
+        return Size(text.after("height").trimAll.toDoubleOrZero, text.after("height").trimAll.toDoubleOrZero);
+      } else if (text.isLike("w*") && !text.isLike("*h*")) {
+        return Size(text.after("w").trimAll.toDoubleOrZero, text.after("w").trimAll.toDoubleOrZero);
+      } else if (text.isLike("h*") && !text.isLike("*w*")) {
+        return Size(text.after("h").trimAll.toDoubleOrZero, text.after("h").trimAll.toDoubleOrZero);
+      } else if (text.isLike("width*height*")) {
+        return Size(text.between("width", "height").trimAll.toDoubleOrZero, text.after("height").trimAll.toDoubleOrZero);
+      } else if (text.isLike("height*width*")) {
+        return Size(text.between("height", "width").trimAll.toDoubleOrZero, text.after("width").trimAll.toDoubleOrZero);
+      } else if (text.isLike("w*h*")) {
+        return Size(text.between("w", "h").trimAll.toDoubleOrZero, text.after("h").trimAll.toDoubleOrZero);
+      } else if (text.isLike("h*w*")) {
+        return Size(text.between("h", "w").trimAll.toDoubleOrZero, text.after("w").trimAll.toDoubleOrZero);
+      } else if (text.isLike("*x*")) {
+        return Size(text.split("x").first.trimAll.toDoubleOrZero, text.split("x").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*by*")) {
+        return Size(text.split("by").first.trimAll.toDoubleOrZero, text.split("by").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*por*")) {
+        return Size(text.split("por").first.trimAll.toDoubleOrZero, text.split("por").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*,*")) {
+        return Size(text.split(",").first.trimAll.toDoubleOrZero, text.split(",").last.toDoubleOrZero);
+      } else if (text.isLike("*-*")) {
+        return Size(text.split("-").first.trimAll.toDoubleOrZero, text.split("-").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*_*")) {
+        return Size(text.split("_").first.trimAll.toDoubleOrZero, text.split("_").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*:*")) {
+        return Size(text.split("_").first.trimAll.toDoubleOrZero, text.split("_").last.trimAll.toDoubleOrZero);
+      } else {
+        return Size(text.split(" ").first.trimAll.toDoubleOrZero, text.split(" ").last.trimAll.toDoubleOrZero);
+      }
+    } catch (e) {
+      return Size.zero;
+    }
+  }
+
+  /// Returns the first element after splitting the string using the specified [pattern].
+  /// If the string cannot be split, it returns the original string.
+  string firstSplit(Pattern pattern) => split(pattern).first;
+
+  /// Returns the last element after splitting the string using the specified [pattern].
+  /// If the string cannot be split, it returns the original string.
+  string lastSplit(Pattern pattern) => split(pattern).last;
+
+  /// Splits the string using the specified [pattern] and returns a list containing the last element and the remaining elements joined by the [pattern].
+  /// If the string cannot be split, it returns a list containing the original string.
+  List<string> splitLast(string pattern) {
+    var parts = split(pattern);
+    if (parts.length < 2) {
+      return [this];
+    }
+    var last = parts.removeLast();
+    return [parts.join(pattern), last];
+  }
+
+  /// Splits the string using the specified [pattern] and returns a list containing the first element and the remaining elements joined by the [pattern].
+  /// If the string cannot be split, it returns a list containing the original string.
+  List<string> splitFirst(string pattern) {
+    var parts = split(pattern);
+    if (parts.length < 2) {
+      return [this];
+    }
+    var first = parts.removeAt(0);
+    return [first, parts.join(pattern)];
+  }
 }

@@ -32,9 +32,9 @@ extension DialogExt on BuildContext {
   ///
   /// Returns a [Future<String?>].
   Future<String?> prompt({
-    Widget? title,
-    Widget? textOK,
-    Widget? textCancel,
+    dynamic title,
+    dynamic textOK,
+    dynamic textCancel,
     String? initialValue,
     bool isSelectedInitialValue = true,
     String? hintText,
@@ -67,9 +67,9 @@ extension DialogExt on BuildContext {
       barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
         return _PromptDialog(
-          title: title,
-          textOK: textOK,
-          textCancel: textCancel,
+          title: (title as Object?).asNullableText(),
+          textOK: (textOK as Object?).asNullableText(),
+          textCancel: (textCancel as Object?).asNullableText(),
           initialValue: initialValue,
           isSelectedInitialValue: isSelectedInitialValue,
           hintText: hintText,
@@ -100,7 +100,7 @@ extension DialogExt on BuildContext {
     );
   }
 
-  Future<void> alert(String message, [String? title]) async => await dialog(message, title: title);
+  Future<void> alert(dynamic message, [String? title]) async => await dialog(message, title: title);
 
   /// The `title` argument is used to title of alert dialog.
   /// The `content` argument is used to content of alert dialog.
