@@ -124,32 +124,15 @@ extension SqlRowExtensions on JsonRow {
 extension SqlTableExtensions on JsonTable {
   /// Perform a search into a [JsonTable] comparing each term in [searchTerms] against each [JsonRow] entry value using [string.flatContains].
   /// Optionally use a max [levenshteinDistance] if the first comparison wont find nothing
-  Iterable<JsonRow> search({required string searchTerm, strings keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
-    if (searchTerm.isBlank) {
-      if (allIfEmpty) {
-        return orderBy((e) => true);
-      } else {
-        return <JsonRow>[].orderBy((e) => true);
-      }
-    }
-
+  Iterable<JsonRow> searchMap({required string searchTerm, strings keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
     if (keys.isEmpty) {
       keys = selectMany((e, i) => e.keys).distinct().toList();
     }
 
-    searchFunc(JsonRow row) => keys.where((k) => "${row[k]}".flatContains(searchTerm)).length;
-
-    levFunc(JsonRow row) => levenshteinDistance <= 0 ? 0 : keys.selectMany((e, i) => "${row[e]}".asFlat.getUniqueWords.map((t) => searchTerm.asFlat.getLevenshtein(t, true))).count((e) => e <= levenshteinDistance.lockMin(1));
-
-    var l = where((row) => searchFunc(row) > 0);
-    if (l.isEmpty && levenshteinDistance > 0) {
-      l = where((row) => levFunc(row) > 0);
-    }
-
-    return l.orderByDescending(searchFunc).thenBy(levFunc);
+    return search(searchTerm: searchTerm, searchOn: (row) => [for (var k in keys) "${row[k] ?? ""}"], levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty);
   }
 
-  Iterable<JsonRow> searchMany({required strings searchTerms, strings keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) => searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));
+  Iterable<JsonRow> searchMapMany({required strings searchTerms, strings keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) => searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));
 }
 
 mixin SqlUtil {

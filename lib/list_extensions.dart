@@ -62,9 +62,74 @@ extension StringListExtensions on strings {
 
     return whereClause.wrap("(");
   }
+
+  /// Returns a list of Levenshtein distances between each element in the list and the given string [b].
+  /// The optional parameter [caseSensitive] determines whether the comparison should be case-sensitive or not.
+  /// If [caseSensitive] is not provided, it defaults to true.
+  List<int> getLevenshtein(String b, [bool caseSensitive = true]) => map((x) => x.getLevenshtein(b, caseSensitive)).toList();
 }
 
 extension ListExtension<T> on List<T> {
+  /// Searches for multiple items in an iterable based on the given search terms.
+  ///
+  /// The [searchTerms] parameter specifies the terms to search for.
+  /// The [searchOn] is a function that returns a list of strings to search on for each element in the iterable.
+  /// The [levenshteinDistance] is the maximum allowed Levenshtein distance for fuzzy matching. Defaults to 0.
+  /// The [allIfEmpty] determines whether to return all elements if the search term is empty. Defaults to true.
+  ///
+  /// Returns an iterable of elements that match the search criteria, ordered by relevance.
+  /// The relevance is determined by the number of matches in the search strings and the Levenshtein distance.
+  Iterable<T> searchMany({
+    required strings searchTerms,
+    required strings Function(T) searchOn,
+    int levenshteinDistance = 0,
+    bool allIfEmpty = true,
+  }) =>
+      searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));
+  Iterable<T> searchMany({required strings searchTerms, required strings Function(T) searchOn, int levenshteinDistance = 0, bool allIfEmpty = true}) => searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));
+
+  /// Searches for elements in the iterable based on a search term and search criteria.
+  ///
+  /// The [searchTerm] is the term to search for.
+  /// The [searchOn] is a function that returns a list of strings to search on for each element in the iterable.
+  /// The [levenshteinDistance] is the maximum allowed Levenshtein distance for fuzzy matching. Defaults to 0.
+  /// The [allIfEmpty] determines whether to return all elements if the search term is empty. Defaults to true.
+  ///
+  /// Returns an iterable of elements that match the search criteria, ordered by relevance.
+  /// The relevance is determined by the number of matches in the search strings and the Levenshtein distance.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// var myList = [/* elements */];
+  /// var searchResults = myList.search(
+  ///   searchTerm: 'example',
+  ///   searchOn: (element) => [element.name, element.description],
+  ///   levenshteinDistance: 2,
+  ///   allIfEmpty: false,
+  /// );
+  /// ```
+
+  Iterable<T> search({required string searchTerm, required strings Function(T) searchOn, int levenshteinDistance = 0, bool allIfEmpty = true}) {
+    if (searchTerm.isBlank) {
+      if (allIfEmpty) {
+        return orderBy((e) => true);
+      } else {
+        return <T>[].orderBy((e) => true);
+      }
+    }
+
+    searchFunc(T item) => searchOn(item).where((k) => k.flatContains(searchTerm)).length;
+
+    levFunc(T item) => levenshteinDistance <= 0 ? 0 : searchOn(item).selectMany((e, i) => e.asFlat.getUniqueWords.map((t) => searchTerm.asFlat.getLevenshtein(t))).count((e) => e <= levenshteinDistance.lockMin(1));
+
+    var l = where((row) => searchFunc(row) > 0);
+    if (l.isEmpty && levenshteinDistance > 0) {
+      l = where((row) => levFunc(row) > 0);
+    }
+
+    return l.orderByDescending(searchFunc).thenBy(levFunc);
+  }
+
   /// Detach items from a list according to a
   /// function and return these items
   Iterable<T> detachItems([bool Function(T)? predicate]) {
