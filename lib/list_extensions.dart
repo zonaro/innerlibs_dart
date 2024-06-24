@@ -85,8 +85,7 @@ extension ListExtension<T> on List<T> {
     int levenshteinDistance = 0,
     bool allIfEmpty = true,
   }) =>
-      searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));
-  Iterable<T> searchMany({required strings searchTerms, required strings Function(T) searchOn, int levenshteinDistance = 0, bool allIfEmpty = true}) => searchTerms.selectMany((e, i) => search(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));
+      searchTerms.selectMany((e, i) => search(searchTerm: e, searchOn: searchOn, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty)).distinct();
 
   /// Searches for elements in the iterable based on a search term and search criteria.
   ///
