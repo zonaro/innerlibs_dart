@@ -29,7 +29,7 @@ extension SqlRowExtensions on JsonRow {
     bool isMySql = dataBaseProvider.flatEqualAny(["mysql", "mariadb"]);
     bool isSqlServer = dataBaseProvider.flatEqualAny(["mssql", "sqlserver"]);
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
-    procedureName = procedureName.wrap(quoteChar);
+    procedureName = SqlUtil.wrap(procedureName, quoteChar, dataBaseProvider);
 
     if (isMySql) {
       sqlCall += 'CALL $procedureName(';
@@ -113,7 +113,7 @@ extension SqlRowExtensions on JsonRow {
       items: this,
       nullAsBlank: nullAsBlank,
     );
-    return 'INSERT INTO ${SqlUtil.wrapColumn(tableName, quoteChar, dataBaseProvider)} ($columns) VALUES ($values);';
+    return 'INSERT INTO ${SqlUtil.wrap(tableName, quoteChar, dataBaseProvider)} ($columns) VALUES ($values);';
   }
 
   /// Generates an UPDATE command for the given table name, WHERE clause, and map of values.
@@ -134,14 +134,14 @@ extension SqlRowExtensions on JsonRow {
   }) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     var upsertMap = JsonRow.from(this);
-    String updates = upsertMap.entries.map((e) => "${e.key.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
+    String updates = upsertMap.entries.map((e) => "${SqlUtil.wrap(e.key)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
     String whereClause = where.asWhereClausule(
       nullAsBlank: nullAsBlank,
       quoteChar: quoteChar,
       dataBaseProvider: dataBaseProvider,
     );
 
-    return 'UPDATE ${tableName.wrap(quoteChar)} SET $updates WHERE $whereClause;';
+    return 'UPDATE ${SqlUtil.wrap(tableName, quoteChar, dataBaseProvider)} SET $updates WHERE $whereClause;';
   }
 
   /// Generates a DELETE command for the given table name.
@@ -164,7 +164,7 @@ extension SqlRowExtensions on JsonRow {
       quoteChar: quoteChar,
       dataBaseProvider: dataBaseProvider,
     );
-    return 'DELETE FROM ${tableName.wrap(quoteChar)} WHERE $whereClause;';
+    return 'DELETE FROM ${SqlUtil.wrap(tableName, quoteChar, dataBaseProvider)} WHERE $whereClause;';
   }
 
   /// Generates a DELETE command for deleting the top [count] rows from the given table.
@@ -194,9 +194,9 @@ extension SqlRowExtensions on JsonRow {
       dataBaseProvider: dataBaseProvider,
     );
 
-    return """DELETE FROM ${SqlUtil.wrapColumn(tableName)} WHERE $idColumn in (
+    return """DELETE FROM ${SqlUtil.wrap(tableName)} WHERE $idColumn in (
                 SELECT ${SqlUtil.isSqlServer(dataBaseProvider) ? "TOP($count)" : ""} $idColumn
-                FROM ${SqlUtil.wrapColumn(tableName)}
+                FROM ${SqlUtil.wrap(tableName)}
                 WHERE $whereClause
                 ORDER BY $idColumn ${asc ? "ASC" : "DESC"} ${SqlUtil.isMySql(dataBaseProvider) ? "LIMIT $count" : ""}
               );""";
@@ -232,7 +232,7 @@ extension SqlRowExtensions on JsonRow {
       quoteChar: quoteChar,
       dataBaseProvider: dataBaseProvider,
     ).ifBlank("*");
-    return 'SELECT $columnString FROM ${SqlUtil.wrapColumn(tableName, quoteChar, dataBaseProvider)} WHERE $whereClause;';
+    return 'SELECT $columnString FROM ${SqlUtil.wrap(tableName, quoteChar, dataBaseProvider)} WHERE $whereClause;';
   }
 
   /// Generates a WHERE clause for the given map of column names and values.
@@ -250,7 +250,7 @@ extension SqlRowExtensions on JsonRow {
     bool and = true,
   }) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
-    return entries.map((e) => "${SqlUtil.wrapColumn(e.key, quoteChar, dataBaseProvider)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' ${and ? "AND" : "OR"} ');
+    return entries.map((e) => "${SqlUtil.wrap(e.key, quoteChar, dataBaseProvider)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' ${and ? "AND" : "OR"} ');
   }
 }
 
@@ -302,10 +302,10 @@ mixin SqlUtil {
     return defaultQuoteChar;
   }
 
-  /// Wraps the given column name with the specified quote character.
-  ///
-  /// If [quoteChar] is not provided, it uses the quote character determined by the database provider.
-  static wrapColumn(String col, [String? quoteChar, String dataBaseProvider = ""]) => col.wrap(quoteChar ?? SqlUtil.quoteCharFromProvider(dataBaseProvider));
+  /// Wraps the given object name with the specified quote character.
+  /// If the quote character is not provided and the database provider is specified, it uses the appropriate quote character.
+  /// Otherwise, it uses the [defaultQuoteChar].
+  static wrap(String objectName, [String? quoteChar, String dataBaseProvider = ""]) => objectName.wrap(quoteChar ?? SqlUtil.quoteCharFromProvider(dataBaseProvider));
 
   /// Checks if the given database provider is SQL Server.
   static bool isSqlServer(String dataBaseProvider) {
@@ -323,7 +323,7 @@ mixin SqlUtil {
   ///
   /// The [quoteChar] parameter specifies the quote character to use for wrapping column names.
   /// The [dataBaseProvider] parameter is used to determine the appropriate quote character if [quoteChar] is not provided.
-  static String columnsFromList({required List<String> items, String? quoteChar, String dataBaseProvider = ""}) => items.map((e) => SqlUtil.wrapColumn(e, quoteChar, dataBaseProvider)).join(", ");
+  static String columnsFromList({required List<String> items, String? quoteChar, String dataBaseProvider = ""}) => items.map((e) => SqlUtil.wrap(e, quoteChar, dataBaseProvider)).join(", ");
 
   /// Returns a comma-separated string of wrapped column names from the given map.
   ///
