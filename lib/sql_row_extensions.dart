@@ -1,5 +1,6 @@
 import 'package:innerlibs/innerlibs.dart';
-/// 
+
+///
 extension SqlRowExtensions on JsonRow {
   /// Generates a SQL call string for a given stored procedure and database provider.
   ///
@@ -133,7 +134,6 @@ extension SqlRowExtensions on JsonRow {
   }) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     var upsertMap = JsonRow.from(this);
-    where.keys.forEach(upsertMap.remove);
     String updates = upsertMap.entries.map((e) => "${e.key.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
     String whereClause = where.asWhereClausule(
       nullAsBlank: nullAsBlank,
