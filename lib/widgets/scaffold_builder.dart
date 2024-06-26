@@ -76,7 +76,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
 
   int get currentIndex => widget.currentIndex.value;
 
-  Widget get title => (entry.pageTitle | widget.title | (currentIndex.toString())).forceWidget;
+  Widget get title => (entry.pageTitle ?? (widget.title as Object?).forceWidget ?? (currentIndex.toString()).forceWidget)!;
 
   IconData get icon => entry.icon;
 
@@ -212,7 +212,7 @@ class MenuEntry {
   final Widget? floatingActionButton;
   final Color? backgroundColor;
 
-  dynamic get pageTitle => (pages.singleOrNull?.title ?? title);
+  Widget? get pageTitle => (pages.singleOrNull?.title as Object?).forceWidget ?? (title as Object?).forceWidget;
 
   MenuEntry({
     required this.title,
