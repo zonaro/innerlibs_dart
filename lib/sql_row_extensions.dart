@@ -134,7 +134,7 @@ extension SqlRowExtensions on JsonRow {
   }) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     var upsertMap = JsonRow.from(this);
-    String updates = upsertMap.entries.map((e) => "${SqlUtil.wrap(e.key)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
+    String updates = upsertMap.entries.map((e) => "${SqlUtil.wrap(e.key, quoteChar, dataBaseProvider)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
     String whereClause = where.asWhereClausule(
       nullAsBlank: nullAsBlank,
       quoteChar: quoteChar,
