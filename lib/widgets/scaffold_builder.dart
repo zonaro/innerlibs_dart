@@ -84,7 +84,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
 
   IconData get activeIcon => entry.activeIcon ?? icon;
 
-  string get actionTitle => entry.actionTitle | title;
+  string get actionTitle => entry.actionTitle | (title is Text ? (title as Text).data : title.toString()) | "";
 
   void Function(int) get onNavigationTap {
     return (int value) {
