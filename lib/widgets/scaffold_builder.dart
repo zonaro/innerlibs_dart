@@ -76,7 +76,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
 
   int get currentIndex => widget.currentIndex.value;
 
-  Widget get title => (entry.pageTitle ?? (widget.title as Object?).forceWidget ?? (currentIndex.toString()).forceWidget)!;
+  Widget get title => (entry.titleWidget ?? (widget.title as Object?).forceWidget ?? (currentIndex.toString()).forceWidget)!;
 
   IconData get icon => entry.icon;
 
@@ -113,7 +113,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
           BottomNavigationBarItem(
             icon: Icon(entry.icon),
             activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon),
-            label: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.title : entry.title,
+            label: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString,
             tooltip: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip,
             backgroundColor: entry.backgroundColor,
           ),
@@ -212,7 +212,9 @@ class MenuEntry {
   final Widget? floatingActionButton;
   final Color? backgroundColor;
 
-  Widget? get pageTitle => (pages.singleOrNull?.title as Object?).forceWidget ?? (title as Object?).forceWidget;
+  Widget? get titleWidget => (pages.singleOrNull?.title as Object?).forceWidget ?? (title as Object?).forceWidget;
+
+  string get titleString => (titleWidget is Text ? (title as Text).data : title.toString()) | "";
 
   MenuEntry({
     required this.title,
