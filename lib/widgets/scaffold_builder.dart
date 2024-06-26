@@ -109,14 +109,15 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
   FloatingActionButtonLocation? get floatingActionButtonLocation => entry.floatingActionButtonLocation;
 
   List<BottomNavigationBarItem> get bottomNavigationBarItems => [
-        for (var entry in widget.items)
-          BottomNavigationBarItem(
-            icon: Icon(entry.icon),
-            activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon),
-            label: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString,
-            tooltip: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip,
-            backgroundColor: entry.backgroundColor,
-          ),
+        if (widget.items.length > 1)
+          for (var entry in widget.items)
+            BottomNavigationBarItem(
+              icon: Icon(entry.icon),
+              activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon),
+              label: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString,
+              tooltip: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip,
+              backgroundColor: entry.backgroundColor,
+            ),
       ];
 
   @override
