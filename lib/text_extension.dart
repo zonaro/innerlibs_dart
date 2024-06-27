@@ -120,7 +120,7 @@ extension StyledText<T extends Text> on T {
         ),
       ) as T;
 
-  T textColor(Color color) => copyWith(
+  T textColor(Color? color) => copyWith(
         style: (style ?? const TextStyle()).copyWith(
           color: color,
         ),
