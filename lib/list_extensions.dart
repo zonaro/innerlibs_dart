@@ -206,12 +206,6 @@ extension IterablesExtension<T> on Iterable<T> {
   /// Returns an iterable containing only the non-null elements of the original iterable.
   Iterable<T> get whereNotNull => where((e) => e != null);
 
-  // /// Returns the first element that satisfies the given [test] function, or `null` if no element is found.
-  // T? firstWhereOrNull(bool Function(T) test) => where(test).firstOrNull;
-
-  // /// Returns the single element that satisfies the given [test] function, or `null` if no element is found or multiple elements are found.
-  // T? singleWhereOrNull(bool Function(T) test) => where(test).singleOrNull;
-
   /// Removes duplicate elements from a list based on a provided predicate.
   ///
   /// The [predicate] function should return a value that uniquely identifies
