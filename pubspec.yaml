@@ -13,6 +13,7 @@ dependencies:
   crypto:
   intl:
   darq:
+  collection:
   convert:
   http: 
   async:

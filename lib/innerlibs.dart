@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
+export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
 
 export 'align_extensions.dart';

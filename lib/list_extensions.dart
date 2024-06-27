@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:innerlibs/innerlibs.dart';
 
 extension StringListExtensions on strings {
@@ -204,7 +202,7 @@ extension ListExtension<T> on List<T> {
 }
 
 /// Adds extensions to the `List` class
-extension IterableExtension<T> on Iterable<T> {
+extension IterablesExtension<T> on Iterable<T> {
   /// Returns an iterable containing only the non-null elements of the original iterable.
   Iterable<T> get whereNotNull => where((e) => e != null);
 
