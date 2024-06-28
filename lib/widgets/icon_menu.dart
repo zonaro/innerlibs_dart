@@ -14,6 +14,17 @@ class _IconMenuState extends State<IconMenu> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        if (widget.buttons.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        if (widget.buttons.length == 1) {
+          return IconButton(
+            tooltip: widget.buttons.first.text,
+            icon: widget.buttons.first.icon,
+            onPressed: widget.buttons.first.onPressed,
+          );
+        }
+
         if (constraints.maxWidth < 600) {
           return PopupMenuButton<IconMenuButton>(
             icon: const Icon(Icons.menu),
