@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -3040,5 +3041,34 @@ extension StringExtension on String {
     }
     var first = parts.removeAt(0);
     return [first, parts.join(pattern)];
+  }
+
+  Future<List<String>> fetchGoogleSuggestions({string language = ""}) async {
+    if (isBlank) return [];
+
+    final url = Uri.https('suggestqueries.google.com', '/complete/search', {
+      'output': 'toolbar',
+      if (language.isNotBlank) 'hl': language,
+      'q': this,
+      'gl': 'in',
+    });
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        // Parse the XML response
+        final xmlData = response.body;
+        // Extract suggestions from the XML (you can use an XML parsing library)
+        // For simplicity, let's assume the suggestions are separated by '<suggestion data="..."/>'
+        final suggestionRegex = RegExp(r'<suggestion data="([^"]+)"');
+        final matches = suggestionRegex.allMatches(xmlData);
+        final suggestions = matches.map((match) => match.group(1)).toList();
+        return suggestions.whereNotNull().toList();
+      } else {
+        throw Exception('Failed to fetch suggestions');
+      }
+    } catch (e) {
+      throw Exception('Error fetching suggestions: $e');
+    }
   }
 }

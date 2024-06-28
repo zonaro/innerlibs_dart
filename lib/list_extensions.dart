@@ -203,9 +203,6 @@ extension ListExtension<T> on List<T> {
 
 /// Adds extensions to the `List` class
 extension IterablesExtension<T> on Iterable<T> {
-  /// Returns an iterable containing only the non-null elements of the original iterable.
-  Iterable<T> get whereNotNull => where((e) => e != null);
-
   /// Removes duplicate elements from a list based on a provided predicate.
   ///
   /// The [predicate] function should return a value that uniquely identifies
