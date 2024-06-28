@@ -3044,31 +3044,29 @@ extension StringExtension on String {
   }
 
   Future<List<String>> fetchGoogleSuggestions({string language = ""}) async {
-    if (isBlank) return [];
-
-    final url = Uri.https('suggestqueries.google.com', '/complete/search', {
-      'output': 'toolbar',
-      if (language.isNotBlank) 'hl': language,
-      'q': this,
-      'gl': 'in',
-    });
-
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        // Parse the XML response
-        final xmlData = response.body;
-        // Extract suggestions from the XML (you can use an XML parsing library)
-        // For simplicity, let's assume the suggestions are separated by '<suggestion data="..."/>'
-        final suggestionRegex = RegExp(r'<suggestion data="([^"]+)"');
-        final matches = suggestionRegex.allMatches(xmlData);
-        final suggestions = matches.map((match) => match.group(1)).toList();
-        return suggestions.whereNotNull().toList();
-      } else {
-        throw Exception('Failed to fetch suggestions');
+    if (isNotBlank) {
+      final url = Uri.https('suggestqueries.google.com', '/complete/search', {
+        'output': 'toolbar',
+        if (language.isNotBlank) 'hl': language,
+        'q': this,
+        'gl': 'in',
+      });
+      try {
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          // Parse the XML response
+          final xmlData = response.body;
+          // Extract suggestions from the XML (you can use an XML parsing library)
+          // For simplicity, let's assume the suggestions are separated by '<suggestion data="..."/>'
+          final suggestionRegex = RegExp(r'<suggestion data="([^"]+)"');
+          final matches = suggestionRegex.allMatches(xmlData);
+          final suggestions = matches.map((match) => match.group(1)).toList();
+          return suggestions.whereNotNull().toList();
+        }
+      } catch (e) {
+        consoleLog('Error fetching suggestions: $e');
       }
-    } catch (e) {
-      throw Exception('Error fetching suggestions: $e');
     }
+    return [];
   }
 }
