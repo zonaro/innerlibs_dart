@@ -115,7 +115,7 @@ extension ListExtension<T> on List<T> {
       }
     }
 
-    searchFunc(T item) => searchOn(item).where((k) => k.flatContains(searchTerm)).length;
+    searchFunc(T item) => searchOn(item).where((k) => k.removeAny(StringHelpers.wordSplitters).flatContains(searchTerm.removeAny(StringHelpers.wordSplitters))).length;
 
     levFunc(T item) => levenshteinDistance <= 0 ? 0 : searchOn(item).selectMany((e, i) => e.asFlat.getUniqueWords.map((t) => searchTerm.asFlat.getLevenshtein(t))).count((e) => e <= levenshteinDistance.lockMin(1));
 

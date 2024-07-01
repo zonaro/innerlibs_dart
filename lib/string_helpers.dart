@@ -1,5 +1,17 @@
+import 'package:innerlibs/innerlibs.dart';
+
 /// `String` helpers
 class StringHelpers {
+
+ static strings get wordSplitters => [
+  ...breakLineChars,
+  ...whiteSpaceChars,
+  ...identChars,
+  ...endOfSentenceChars,
+  ...midSentenceChars,
+  ...openWrappers,
+  ...closeWrappers,
+ ];
   /// Chars from Aa to Zz
   static List<String> get alphaChars => (alphaUpperChars + alphaLowerChars)..sort();
 
