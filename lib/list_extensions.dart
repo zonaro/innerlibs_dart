@@ -115,7 +115,7 @@ extension ListExtension<T> on List<T> {
       }
     }
 
-    searchFunc(T item) => searchOn(item).where((k) => k.removeAny(StringHelpers.wordSplitters).flatContains(searchTerm.removeAny(StringHelpers.wordSplitters))).length;
+    searchFunc(T item) => searchOn(item).where((k) => k.pascalSplitString.removeAny(StringHelpers.wordSplitters).flatContains(searchTerm.pascalSplitString.removeAny(StringHelpers.wordSplitters))).length;
 
     levFunc(T item) => levenshteinDistance <= 0 ? 0 : searchOn(item).selectMany((e, i) => e.asFlat.getUniqueWords.map((t) => searchTerm.asFlat.getLevenshtein(t))).count((e) => e <= levenshteinDistance.lockMin(1));
 
@@ -186,7 +186,7 @@ extension ListExtension<T> on List<T> {
   ///   List<int> numbers = [1, 2, 3, 4, 5];
   ///   int element = 0;
   ///   numbers.insertBetween(element);
-  ///   print(result);  // prints: [1, 0, 2, 0, 3, 0, 4, 0, 5]
+  ///   print(numbers);  // prints: [1, 0, 2, 0, 3, 0, 4, 0, 5]
   /// }
   /// ```
   ///
