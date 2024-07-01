@@ -3057,7 +3057,7 @@ extension StringExtension on String {
           // For simplicity, let's assume the suggestions are separated by '<suggestion data="..."/>'
           final suggestionRegex = RegExp(r'<suggestion data="([^"]+)"');
           final matches = suggestionRegex.allMatches(xmlData);
-          final suggestions = matches.map((match) => match.group(1)).toList();
+          final suggestions = matches.map((match) => match.group(1)?.urlDecode).toList();
           return suggestions.whereNotNull().toList();
         }
       } catch (e) {
