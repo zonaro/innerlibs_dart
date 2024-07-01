@@ -31,7 +31,7 @@ class _IconMenuState extends State<IconMenu> {
         if (widget.buttons.length == 1) {
           var button = widget.buttons.first;
           if (button is IconMenuButton) {
-            if (button.showText) {
+            if (button.extended) {
               return TextButton.icon(
                 icon: Icon(
                   button.icon,
@@ -94,34 +94,9 @@ class _IconMenuState extends State<IconMenu> {
           return Row(
             children: widget.buttons.map((button) {
               if (button is IconMenuDivider) {
-                return Container(
-                  margin: const EdgeInsets.all(10),
-                  height: adaptedSize,
-                  width: 1,
-                  color: button.color ?? color,
-                );
+                return createDivider(adaptedSize, button, color);
               } else if (button is IconMenuButton) {
-                if (button.showText) {
-                  return TextButton.icon(
-                    icon: Icon(
-                      button.icon,
-                      color: button.color ?? color,
-                      size: iconSize,
-                    ),
-                    label: Text(button.text).textColor(button.color ?? color),
-                    onPressed: button.onPressed,
-                  );
-                } else {
-                  return IconButton(
-                    tooltip: button.text,
-                    icon: Icon(
-                      button.icon,
-                      color: button.color ?? color,
-                      size: iconSize,
-                    ),
-                    onPressed: button.onPressed,
-                  );
-                }
+                return createIconButton(button, color, iconSize);
               } else {
                 throw Exception("Invalid IconMenuItem type");
               }
@@ -130,6 +105,39 @@ class _IconMenuState extends State<IconMenu> {
         }
       },
     );
+  }
+
+  Container createDivider(double adaptedSize, IconMenuDivider button, Color? color) {
+    return Container(
+      margin: const EdgeInsets.all(10),
+      height: adaptedSize,
+      width: 1,
+      color: button.color ?? color,
+    );
+  }
+
+  Widget createIconButton(IconMenuButton button, Color? color, double iconSize) {
+    if (button.extended) {
+      return TextButton.icon(
+        icon: Icon(
+          button.icon,
+          color: button.color ?? color,
+          size: iconSize,
+        ),
+        label: Text(button.text).textColor(button.color ?? color),
+        onPressed: button.onPressed,
+      );
+    } else {
+      return IconButton(
+        tooltip: button.text,
+        icon: Icon(
+          button.icon,
+          color: button.color ?? color,
+          size: iconSize,
+        ),
+        onPressed: button.onPressed,
+      );
+    }
   }
 }
 
@@ -147,14 +155,18 @@ class IconMenuDivider extends IconMenuItem {
 class IconMenuButton extends IconMenuItem {
   final IconData icon;
   final String text;
-  final bool showText;
+  final bool extended;
+  final bool enabled;
   final void Function()? onPressed;
+  final List<IconMenuItem> subMenu;
 
   IconMenuButton({
     required this.icon,
     required this.text,
-    this.showText = false,
+    this.extended = false,
+    this.enabled = true,
     this.onPressed,
     super.color,
+    this.subMenu = const [],
   });
 }

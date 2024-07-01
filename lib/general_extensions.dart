@@ -41,11 +41,11 @@ extension ObjectExtensions<T extends Object?> on T {
     } else if (R == DateTime) {
       return "$this".toDate() as R;
     } else if (R == num) {
-      return "$this".toNum as R;
+      return num.parse("$this") as R;
     } else if (R == int) {
-      return "$this".toInt as R;
+      return int.parse("$this") as R;
     } else if (R == double) {
-      return "$this".toDouble as R;
+      return double.parse("$this") as R;
     } else if (R == String) {
       return "$this" as R;
     } else {

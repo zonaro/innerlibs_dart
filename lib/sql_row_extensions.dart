@@ -371,3 +371,24 @@ mixin SqlUtil {
     return "";
   }
 }
+
+// Certifique-se de que este é o caminho correto para o arquivo SQLResponse
+
+class Dao {
+  final String? dataBaseProvider;
+  final String? quoteChar;
+  final dynamic Function(string) sqlFunction;
+
+  Dao({this.dataBaseProvider, this.quoteChar, required this.sqlFunction});
+
+  Future<SQLResponseOf<T>> executeSQL<T>(String sql, {T Function(dynamic)? transform, dataSetType = 'set'}) async {
+    try {
+      var result = await sqlFunction(sql);
+      transform ??= (x) => x as T;
+      T data = transform(result);
+      return SQLResponseOf<T>.fromData(data, sql: sql, dataSetType: dataSetType);
+    } catch (e) {
+      return SQLResponseOf<T>.error(message: e.toString(), sql: sql, dataSetType: dataSetType);
+    }
+  }
+}

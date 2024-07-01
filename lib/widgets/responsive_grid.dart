@@ -89,6 +89,34 @@ class ResponsiveColumn {
     this.padding,
     this.margin,
   });
+
+  /// Responsive Column thats have breakpoints for each [ScreenTier]. Each tier has a default value
+  factory ResponsiveColumn.all({
+    required int value,
+    double? height,
+    Widget child = const SizedBox.shrink(),
+    Decoration? decoration,
+    Decoration? foregroundDecoration,
+    Alignment? alignment,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+  }) =>
+      ResponsiveColumn(
+        xxs: value,
+        xs: value,
+        sm: value,
+        md: value,
+        lg: value,
+        xl: value,
+        xxl: value,
+        height: height,
+        child: child,
+        decoration: decoration,
+        foregroundDecoration: foregroundDecoration,
+        alignment: alignment,
+        padding: padding,
+        margin: margin,
+      );
 }
 
 class ResponsiveList extends StatelessWidget {
