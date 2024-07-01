@@ -126,19 +126,19 @@ extension StyledText<T extends Text> on T {
         ),
       ) as T;
 
-  T textAlign(TextAlign align) => copyWith(textAlign: align) as T;
+  T align(TextAlign align) => copyWith(textAlign: align) as T;
 
-  T centerText() => textAlign(TextAlign.center);
+  T centerText() => align(TextAlign.center);
 
-  T textDirection(TextDirection direction) => copyWith(textDirection: direction) as T;
+  T direction(TextDirection direction) => copyWith(textDirection: direction) as T;
 
-  T textBaseline(TextBaseline textBaseline) => copyWith(
+  T baseLine(TextBaseline textBaseline) => copyWith(
         style: (style ?? const TextStyle()).copyWith(
           textBaseline: textBaseline,
         ),
       ) as T;
 
-  T textWidthBasis(TextWidthBasis textWidthBasis) => copyWith(textWidthBasis: textWidthBasis) as T;
+  T widthBasis(TextWidthBasis textWidthBasis) => copyWith(textWidthBasis: textWidthBasis) as T;
 
   T withUnderLine() => copyWith(style: (style ?? const TextStyle()).copyWith(decoration: TextDecoration.underline)) as T;
 }
