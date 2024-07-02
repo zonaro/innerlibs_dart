@@ -223,27 +223,107 @@ extension ObjectExtensions<T extends Object?> on T {
     }
   }
 
-  /// Call [toString] on object and wraps it into [Text]
-  Text asText({TextStyle? style, string defaultText = ""}) => asNullableText(style) ?? Text(defaultText.trimAll, style: style);
+  /// Converts the object to a [Text] widget with the specified properties.
+  ///
+  /// If the object is null, it returns [defaultText] in a [Text] widget.
+  /// If the object is already a [Text] widget, it returns the object itself.
+  /// If [validate] is true and the object is not valid (see [isValid]), it returns [defaultText] in a [Text] widget.
+  /// Otherwise, it converts the object to a [Text] widget with the default text.
+  ///
+  /// The [style], [strutStyle], [textAlign], [textDirection], [locale], [softWrap],
+  /// [overflow], [textScaler], [maxLines], [semanticsLabel], and [textWidthBasis]
+  /// parameters are used to customize the appearance and behavior of the [Text] widget.
+  ///
+  ///
+  /// Returns a [Text] widget with the specified properties.
+  Text asText({
+    TextStyle? style,
+    StrutStyle? strutStyle,
+    TextAlign? textAlign,
+    TextDirection? textDirection,
+    Locale? locale,
+    bool? softWrap,
+    TextOverflow? overflow,
+    TextScaler? textScaler,
+    int? maxLines,
+    String? semanticsLabel,
+    TextWidthBasis? textWidthBasis,
+    String defaultText = "",
+    bool validate = true,
+  }) =>
+      asNullableText(
+        style: style,
+        strutStyle: strutStyle,
+        textAlign: textAlign,
+        textDirection: textDirection,
+        locale: locale,
+        softWrap: softWrap,
+        overflow: overflow,
+        textScaler: textScaler,
+        maxLines: maxLines,
+        semanticsLabel: semanticsLabel,
+        textWidthBasis: textWidthBasis,
+        validate: validate,
+      )!;
 
-  /// Call [toString] on object and wraps it into [Text]. return null if string fails against [isValid]
-  Text? asNullableText([TextStyle? style]) {
-    if (this == null) return null;
+  /// Converts the object to a nullable [Text] widget with the specified properties.
+  ///
+  /// If the object is null, it returns null.
+  /// If the object is already a [Text] widget, it returns the object itself.
+  /// If [validate] is true and the object is not valid (see [isValid]), it returns null.
+  /// Otherwise, it converts the object to a [Text] widget with the string representation of the object.
+  ///
+  /// The [style], [strutStyle], [textAlign], [textDirection], [locale], [softWrap],
+  /// [overflow], [textScaler], [maxLines], [semanticsLabel], and [textWidthBasis]
+  /// parameters are used to customize the appearance and behavior of the [Text] widget.
+  ///
+  /// Returns a nullable [Text] widget with the specified properties.
+  Text? asNullableText({
+    TextStyle? style,
+    StrutStyle? strutStyle,
+    TextAlign? textAlign,
+    TextDirection? textDirection,
+    Locale? locale,
+    bool? softWrap,
+    TextOverflow? overflow,
+    TextScaler? textScaler,
+    int? maxLines,
+    String? semanticsLabel,
+    TextWidthBasis? textWidthBasis,
+    bool validate = true,
+    String? defaultText,
+  }) {
+    Text? text;
+
+    if (this == null && defaultText == null) return null;
+
     if (this is Text) {
-      if (style != null) {
-        return (this as Text).textStyle(style);
-      } else {
-        return (this as Text);
+      text = this as Text;
+    } else {
+      if (validate == false || this.isValid) {
+        text = Text("$this" | defaultText);
+      } else if (defaultText != null) {
+        text = Text(defaultText);
       }
     }
-    var s = "$this";
-    if (s.isValid) {
-      return Text(s, style: style);
-    }
-    return null;
+
+    return text?.copyWith(
+      style: style,
+      strutStyle: strutStyle,
+      textAlign: textAlign,
+      textDirection: textDirection,
+      locale: locale,
+      softWrap: softWrap,
+      overflow: overflow,
+      textScaler: textScaler,
+      maxLines: maxLines,
+      semanticsLabel: semanticsLabel,
+      textWidthBasis: textWidthBasis,
+    );
   }
 
-  /// Return [this] if [this] is a  [Widget] otherwise call [ToString()] and return a [Text] with this string. Return null if  [this] is null or [this].isValid return false;
+  /// Returns a [Widget] if the object is not null and is of type [Widget].
+  /// Otherwise, it returns the result of the [asNullableText] method.
   Widget? get forceWidget {
     if (this == null) {
       return null;
@@ -252,6 +332,6 @@ extension ObjectExtensions<T extends Object?> on T {
       return this as Widget;
     }
 
-    return asText();
+    return asNullableText();
   }
 }
