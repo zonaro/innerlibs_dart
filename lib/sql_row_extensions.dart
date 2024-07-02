@@ -372,16 +372,25 @@ mixin SqlUtil {
   }
 }
 
-// Certifique-se de que este é o caminho correto para o arquivo SQLResponse
-
+/// A class representing a Data Access Object (DAO) for executing SQL queries and operations.
 class Dao {
-  final String? dataBaseProvider;
-  final String? quoteChar;
+  final String dataBaseProvider;
+  String? quoteChar;
   final dynamic Function(string) sqlFunction;
 
-  Dao({this.dataBaseProvider, this.quoteChar, required this.sqlFunction});
+  /// Constructs a new instance of the [Dao] class.
+  ///
+  /// The [dataBaseProvider] parameter specifies the database provider.
+  /// The [sqlFunction] parameter is a function that executes SQL queries.
+  /// The [quoteChar] parameter specifies the character used for quoting identifiers.
+  Dao({required this.dataBaseProvider, required this.sqlFunction, this.quoteChar});
 
-  Future<SQLResponseOf<T>> executeSQL<T>(String sql, {T Function(dynamic)? transform, dataSetType = 'set'}) async {
+  /// Executes an SQL query and returns the result as a [SQLResponseOf] object.
+  ///
+  /// The [sql] parameter specifies the SQL query to execute.
+  /// The [transform] parameter is an optional function to transform the query result.
+  /// The [dataSetType] parameter specifies the type of data set being queried.
+  Future<SQLResponseOf<T>> executeSQL<T>({required String sql, T Function(dynamic)? transform, dataSetType = 'set'}) async {
     try {
       var result = await sqlFunction(sql);
       transform ??= (x) => x as T;
@@ -390,5 +399,133 @@ class Dao {
     } catch (e) {
       return SQLResponseOf<T>.error(message: e.toString(), sql: sql, dataSetType: dataSetType);
     }
+  }
+
+  /// Executes an SQL SELECT query and returns the result as a [SQLResponseOf] object.
+  ///
+  /// The [tableName] parameter specifies the name of the table to query.
+  /// The [columns] parameter is a list of column names to select.
+  /// The [where] parameter is a [JsonRow] object representing the WHERE clause.
+  /// The [nullAsBlank] parameter specifies whether to treat null values as blank.
+  /// The [and] parameter specifies whether to use the AND operator in the WHERE clause.
+  /// The [transform] parameter is an optional function to transform the query result.
+  Future<SQLResponseOf<T>> executeSelect<T>({required String tableName, List<String> columns = const [], JsonRow where = const {}, bool nullAsBlank = false, bool and = true, T Function(dynamic)? transform}) {
+    return executeSQL(
+      dataSetType: "table",
+      transform: transform,
+      sql: where.asSelectWhereCommand(
+        tableName: tableName,
+        columns: columns,
+        nullAsBlank: nullAsBlank,
+        quoteChar: quoteChar,
+        dataBaseProvider: dataBaseProvider,
+        and: and,
+      ),
+    );
+  }
+
+  /// Executes an SQL UPDATE query and returns the result as a [SQLResponseOf] object.
+  ///
+  /// The [tableName] parameter specifies the name of the table to update.
+  /// The [values] parameter is a [JsonRow] object representing the new values.
+  /// The [where] parameter is a [JsonRow] object representing the WHERE clause.
+  /// The [nullAsBlank] parameter specifies whether to treat null values as blank.
+  Future<SQLResponseOf<void>> executeUpdate({required String tableName, required JsonRow values, required JsonRow where, bool nullAsBlank = false}) {
+    return executeSQL(
+      dataSetType: "table",
+      sql: values.asUpdateCommand(
+        tableName: tableName,
+        where: where,
+        nullAsBlank: nullAsBlank,
+        quoteChar: quoteChar,
+        dataBaseProvider: dataBaseProvider,
+      ),
+    );
+  }
+
+  /// Executes an SQL INSERT query and returns the result as a [SQLResponseOf] object.
+  ///
+  /// The [tableName] parameter specifies the name of the table to insert into.
+  /// The [values] parameter is a [JsonRow] object representing the values to insert.
+  /// The [nullAsBlank] parameter specifies whether to treat null values as blank.
+  Future<SQLResponseOf<void>> executeInsert({
+    required String tableName,
+    required JsonRow values,
+    bool nullAsBlank = false,
+  }) {
+    return executeSQL(
+      dataSetType: "value",
+      sql: values.asInsertCommand(
+        tableName: tableName,
+        nullAsBlank: nullAsBlank,
+        quoteChar: quoteChar,
+        dataBaseProvider: dataBaseProvider,
+      ),
+    );
+  }
+
+  /// Executes an SQL UPSERT query and returns the result as a [SQLResponseOf] object.
+  ///
+  /// The [tableName] parameter specifies the name of the table to upsert into.
+  /// The [values] parameter is a [JsonRow] object representing the values to upsert.
+  /// The [where] parameter is a [JsonRow] object representing the WHERE clause.
+  /// The [nullAsBlank] parameter specifies whether to treat null values as blank.
+  Future<SQLResponseOf<void>> executeUpsert({
+    required String tableName,
+    required JsonRow values,
+    JsonRow where = const {},
+    bool nullAsBlank = false,
+  }) {
+    return executeSQL(
+      dataSetType: "table",
+      sql: values.asUpsertCommand(
+        tableName: tableName,
+        where: where,
+        nullAsBlank: nullAsBlank,
+        quoteChar: quoteChar,
+        dataBaseProvider: dataBaseProvider,
+      ),
+    );
+  }
+
+  /// Executes an SQL DELETE query and returns the result as a [SQLResponseOf] object.
+  ///
+  /// The [tableName] parameter specifies the name of the table to delete from.
+  /// The [where] parameter is a [JsonRow] object representing the WHERE clause.
+  /// The [nullAsBlank] parameter specifies whether to treat null values as blank.
+  /// The [transform] parameter is an optional function to transform the query result.
+  Future<SQLResponseOf<T>> executeDelete<T>({required String tableName, JsonRow where = const {}, bool nullAsBlank = false, T Function(dynamic)? transform}) {
+    return executeSQL(
+      dataSetType: "table",
+      transform: transform,
+      sql: where.asDeleteCommand(
+        tableName: tableName,
+        nullAsBlank: nullAsBlank,
+        quoteChar: quoteChar,
+        dataBaseProvider: dataBaseProvider,
+      ),
+    );
+  }
+
+  /// Executes an SQL DELETE TOP query and returns the result as a [SQLResponseOf] object.
+  ///
+  /// The [tableName] parameter specifies the name of the table to delete from.
+  /// The [count] parameter specifies the number of rows to delete.
+  /// The [idColumn] parameter specifies the column to order by.
+  /// The [asc] parameter specifies whether to order in ascending or descending order.
+  /// The [where] parameter is a [JsonRow] object representing the WHERE clause.
+  /// The [nullAsBlank] parameter specifies whether to treat null values as blank.
+  Future<SQLResponseOf<void>> executeDeleteTop<T>({required String tableName, required int count, required String idColumn, required bool asc, JsonRow where = const {}, bool nullAsBlank = false}) {
+    return executeSQL(
+        dataSetType: "value",
+        sql: where.asDeleteTopCommand(
+          tableName,
+          count,
+          idColumn,
+          asc,
+          dataBaseProvider,
+          nullAsBlank,
+          quoteChar,
+        ));
   }
 }
