@@ -1045,8 +1045,11 @@ extension StringExtension on String {
   /// bool firstChars = foo.first(3); // returns 'hel'
   /// ```
   String first([int n = 1]) {
-    if (isBlank || length < n || n < 0) {
+    if (isBlank || length < n) {
       return blankIfNull;
+    }
+    if (n <= 0) {
+      return "";
     }
 
     return substring(0, n);
@@ -1073,8 +1076,11 @@ extension StringExtension on String {
   /// bool firstChars = foo.last(3); // returns 'rld'
   /// ```
   String last([int n = 1]) {
-    if (isBlank || length < n || n < 0) {
+    if (isBlank || length < n) {
       return blankIfNull;
+    }
+    if (n <= 0) {
+      return "";
     }
 
     return substring(length - n, length);
@@ -1150,7 +1156,7 @@ extension StringExtension on String {
     var words = trim().split(RegExp(r'(\s+)'));
     var result = words[0].toLowerCase();
     for (var i = 1; i < words.length; i++) {
-      result += words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
+      result += "${words[i].substring(0, 1).toUpperCase()}${words[i].substring(1).toLowerCase()}";
     }
     return result;
   }
