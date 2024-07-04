@@ -311,7 +311,13 @@ extension StringExtension on String {
     final Iterable<int> characterCodes = characters.map((String char) => 127397 + char.codeUnits.first);
     return String.fromCharCodes(characterCodes);
   }
-
+  /// Converts a string to a color.
+  ///
+  /// If the string is empty, it returns [Colors.transparent] as the default color.
+  /// If the string is a valid hexadecimal color, it converts it to a [Color] object.
+  /// If the string is not a valid hexadecimal color, it computes a hash value and converts it to a [Color] object.
+  ///
+  /// Returns the converted color.
   Color get asColor {
     if (isBlank) {
       return Colors.transparent; // Default color if the string is empty
@@ -336,6 +342,11 @@ extension StringExtension on String {
     return Color(hash + 0xFF000000);
   }
 
+  /// Removes diacritics from the string.
+  /// Diacritics are accents or other marks added to letters in some languages.
+  /// If the string is blank, it returns a blank string. 
+  /// If a diacritic is not found in the map, it keeps the original character.
+  /// Returns the modified string with diacritics removed.
   String get removeDiacritics {
     if (isBlank) return blankIfNull;
     if (_diacriticsMap.isEmpty) {
