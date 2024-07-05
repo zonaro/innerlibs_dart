@@ -116,7 +116,7 @@ class _FloatingAreaState extends State<FloatingArea> {
                     }
 
                     // Update the position of the widget in the children list
-                    var t = _children[widget.children.indexOf(w)];
+                    var t = _children[_children.indexOf(w)];
                     t.x = x;
                     t.y = y;
 
