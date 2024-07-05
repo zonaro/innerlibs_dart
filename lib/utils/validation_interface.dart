@@ -1,9 +1,21 @@
-import 'package:innerlibs/innerlibs.dart';
-
-/// Implement a validator in your class
+/// The `Validator` class is used to implement validation logic in other classes.
 abstract class Validator {
-  /// Function thats return an empty list if this instance is valid,
-  /// otherwise return a [List<string>]  with messages,
-  /// explaining whats is not valid in this class.
-  strings validate();
+  /// Validates the current instance and returns a list of error messages if the instance is invalid.
+  ///
+  /// Returns an empty list if the instance is valid.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// class MyValidator implements Validator {
+  ///   @override
+  ///   List<String> validate() {
+  ///     List<String> errors = [];
+  ///
+  ///     // Perform validation logic here
+  ///
+  ///     return errors;
+  ///   }
+  /// }
+  /// ```
+  List<String> validate();
 }

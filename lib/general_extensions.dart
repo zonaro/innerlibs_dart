@@ -3,7 +3,15 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
+/// Extension method that compares two values and swaps them if necessary.
+///
+/// This extension method can be used on any type that extends the `Comparable` class.
+/// It compares the current value with the `other` value and swaps them if the current value is greater.
+/// The method returns a tuple containing the updated values.
 extension CompareAndSwap<T extends Comparable> on T {
+  /// Compares the current value with the `other` value and swaps them if necessary.
+  ///
+  /// Returns a tuple containing the updated values.
   (T, T) compareAndSwap(T other) {
     T a = this;
     if (a.compareTo(other) > 0) {
@@ -18,7 +26,7 @@ extension CompareAndSwap<T extends Comparable> on T {
 extension ObjectExtensions<T extends Object?> on T {
   /// Converts a value of type `Object` to a specified type `T`.
   ///
-  /// This function can convert between `DateTime`, `num`, `int`, `double`, and `String` types.
+  /// This function can convert between `bool`, `DateTime`, `num`, `int`, `double`, and `String` types.
   /// It assumes that the input is in a format that can be parsed to the desired type.
   ///
   /// Throws an `ArgumentError` if the conversion is not possible.
@@ -29,6 +37,7 @@ extension ObjectExtensions<T extends Object?> on T {
   /// print(parseTo<double>('123.45')); // prints: 123.45
   /// print(parseTo<DateTime>('2024-05-27 13:18:56')); // prints: 2024-05-27 13:18:56.000
   /// print(parseTo<String>(123)); // prints: '123'
+  /// print(parseTo<bool>('y')); // prints: true
   /// ```
   ///
   /// [T] The type to convert the value to.
@@ -48,6 +57,8 @@ extension ObjectExtensions<T extends Object?> on T {
       return double.parse("$this") as R;
     } else if (R == String) {
       return "$this" as R;
+    } else if (R == bool) {
+      return "$this".asBool() as R;
     } else {
       throw ArgumentError('Cannot convert $T to $R');
     }
@@ -77,6 +88,9 @@ extension ObjectExtensions<T extends Object?> on T {
     }
   }
 
+  /// Checks if the current object is present in the given list.
+  /// Returns `true` if the current object is not `null` and is present in the list,
+  /// otherwise returns `false`.
   bool isIn(List items) => this != null && items.contains(this);
 
   /// Checks if [this] is a valid value. The following values are considered invalid:
@@ -89,7 +103,7 @@ extension ObjectExtensions<T extends Object?> on T {
         return false;
       }
       if (this is String) {
-        return (this as String).nullIf((s) => s == null || s.flatEqual("null")).isNotBlank;
+        return (this as String).nullIf((s) => s == null || s.trimAll.flatEqual("null")).isNotBlank;
       }
       if (this is bool) {
         return (this as bool);
@@ -432,7 +446,6 @@ extension ObjectExtensions<T extends Object?> on T {
     bool validate = true,
     String? defaultText,
   }) {
-    
     if (this != null && this is Widget) {
       return this as Widget;
     }

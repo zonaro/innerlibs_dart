@@ -2,23 +2,32 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:innerlibs/utils/constants.dart';
 import 'package:intl/intl.dart';
 
+/// Represents a range of dates.
 class DateRange {
+  /// Creates a new instance of the [DateRange] class with the specified start and end dates.
   DateRange(date startDate, date endDate) {
     var r = startDate.compareAndSwap(endDate);
     _startDate = r.$1;
     _endDate = r.$2;
   }
 
+  /// Creates a new instance of the [DateRange] class representing today's date.
   factory DateRange.today() => DateRange(today, today.endOfDay);
 
+  /// Gets the start date of the date range.
   date get startDate => _startDate;
+
+  /// Sets the start date of the date range.
   set startDate(date value) {
     var r = value.compareAndSwap(endDate);
     _startDate = r.$1;
     _endDate = r.$2;
   }
 
+  /// Gets the end date of the date range.
   date get endDate => _endDate;
+
+  /// Sets the end date of the date range.
   set endDate(date value) {
     var r = startDate.compareAndSwap(value);
     _startDate = r.$1;
@@ -29,6 +38,14 @@ class DateRange {
   late date _endDate;
 }
 
+/// Extension methods for the `DateTime` class.
+///
+/// This extension provides various utility methods to manipulate and format `DateTime` objects.
+/// It includes methods to find the next day of the week, get the first and last day of the week, month, and year,
+/// calculate the first and last day of a fortnight, quarter, bimester, and semester,
+/// check if a date is the same as today, yesterday, or tomorrow,
+/// get the beginning and end of a day, format the date and time in a readable format,
+/// calculate the time difference between two dates, determine the time of day, and more.
 extension DateTimeExtensions on DateTime {
   DateTime findNextDayOfWeek(int weekday) {
     int daysDifference = weekday - this.weekday;
@@ -38,53 +55,91 @@ extension DateTimeExtensions on DateTime {
     return add(Duration(days: daysDifference));
   }
 
+  /// Returns the last day of the week for the given date.
   DateTime get lastDayOfWeek => add((DateTime.daysPerWeek - weekday).days);
 
+  /// Returns the first day of the week for the given date.
   DateTime get firstDayOfWeek => subtract((weekday - 1).days);
 
+  /// Returns the first day of the month for the given date.
   DateTime get firstDayOfMonth => DateTime(year, month, 1);
 
+  /// Returns the last day of the month for the given date.
   DateTime get lastDayOfMonth => DateTime(year, month + 1, 0);
 
+  /// Returns the first day of the year for the given date.
   DateTime get firstDayOfYear => DateTime(year, 1, 1);
 
+  /// Returns the last day of the year for the given date.
   DateTime get lastDayOfYear => DateTime(year, 12, 31);
 
+  /// Returns the first day of the fortnight.
   date get firstDayOfFortnight => day <= 15 ? firstDayOfMonth : date(year, month, 16);
+
+  /// Returns the last day of the fortnight.
   date get lastDayOfFortnight => day <= 15 ? date(year, month, 15) : lastDayOfMonth;
+
+  /// Returns the fortnight number.
   int get fortnightNumber => day <= 15 ? 1 : 2;
 
+  /// Returns the first day of the quarter.
   DateTime get firstDayOfQuarter => firstDayOfMonthGroup(3);
+
+  /// Returns the last day of the quarter.
   DateTime get lastDayOfQuarter => lastDayOfMonthGroup(3);
+
+  /// Returns the quarter number.
   int get quarterNumber => monthGroupNumber(3);
 
+  /// Returns the first day of the bimester.
   DateTime get firstDayOfBimester => firstDayOfMonthGroup(2);
+
+  /// Returns the last day of the bimester.
   DateTime get lastDayOfBimester => lastDayOfMonthGroup(2);
+
+  /// Returns the bimester number.
   int get bimesterNumber => monthGroupNumber(2);
 
+  /// Returns the first day of the semester.
   DateTime get firstDayOfSemester => firstDayOfMonthGroup(6);
+
+  /// Returns the last day of the semester.
   DateTime get lastDayOfSemester => lastDayOfMonthGroup(6);
+
+  /// Returns the semester number.
   int get semesterNumber => monthGroupNumber(6);
 
+  /// Returns the first month of the group.
   int firstMonthOfGroup(int group) => ((month - 1) ~/ group) * group + 1;
 
+  /// Returns the last month of the group.
   int lastMonthOfGroup(int group) => (firstMonthOfGroup(group) + group) - 1;
 
+  /// Returns the first day of the month group.
   date firstDayOfMonthGroup(int group) => DateTime(year, firstMonthOfGroup(group), 1);
 
+  /// Returns the last day of the month group.
   date lastDayOfMonthGroup(int group) => DateTime(year, lastMonthOfGroup(group) + 1, 0);
 
+  /// Returns the month group number.
   int monthGroupNumber(int group) => ((month - 1) ~/ group) + 1;
 
+  /// Checks if the date is the same as the specified [other] date.
   bool isSameDate(DateTime other) => year == other.year && month == other.month && day == other.day;
 
+  /// Checks if the date is today.
   bool get isToday => isSameDate(now);
 
+  /// Checks if the date is yesterday.
   bool get isYesterday => isSameDate(yesterday);
 
+  /// Checks if the date is tomorrow.
   bool get isTomorrow => isSameDate(tomorrow);
 
+  /// Returns the beginning of the day.
   date get beginOfDay => date(year, month, day);
+
+  /// Returns the end of the day.
   date get endOfDay => date(year, month, day, 23, 59, 59, 999);
 
   /// Readable Date
