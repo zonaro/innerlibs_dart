@@ -272,13 +272,13 @@ extension DialogExt on BuildContext {
           if (isApple) {
             return CupertinoAlertDialog(
               title: title?.asText(),
-              content: (content as Object?).forceWidget,
+              content: (content as Object?).forceWidget(),
               actions: arrWidget,
             );
           } else {
             return AlertDialog(
               title: title?.asText(),
-              content: (content as Object?).forceWidget,
+              content: (content as Object?).forceWidget(),
               actions: arrWidget,
             );
           }

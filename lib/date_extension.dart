@@ -287,15 +287,37 @@ extension DateTimeExtensions on DateTime {
     }
   }
 
+  /// Extension method to calculate the duration from the current date and time to the given date and time.
   Duration get fromNow => now.difference(this);
 
+  /// Subtracts the given duration from the current date and time.
   DateTime operator -(Duration other) => subtract(other);
+
+  /// Adds the given duration to the current date and time.
   DateTime operator +(Duration other) => add(other);
 
+  /// Checks if the current date and time is greater than the given date and time.
   bool operator >(DateTime other) => isAfter(other);
+
+  /// Checks if the current date and time is less than the given date and time.
   bool operator <(DateTime other) => isBefore(other);
+
+  /// Checks if the current date and time is greater than or equal to the given date and time.
   bool operator >=(DateTime other) => this > other || this == other;
+
+  /// Checks if the current date and time is less than or equal to the given date and time.
   bool operator <=(DateTime other) => this < other || this == other;
 
-  string format(string format, [string? locale]) => DateFormat(format, locale).format(this);
+  /// Formats the date according to the specified format and locale.
+  ///
+  /// If the [format] is blank, it returns the ISO 8601 string representation of the date.
+  /// Otherwise, it uses the [format] and [locale] parameters to format the date.
+  /// The [format] parameter specifies the desired format, and the [locale] parameter
+  /// specifies the locale to use for formatting.
+  ///
+  /// Returns the formatted date as a string.
+  String format([String format = "", String? locale]) {
+    if (format.isBlank) return toIso8601String();
+    return DateFormat(format, locale).format(this);
+  }
 }

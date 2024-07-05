@@ -292,6 +292,7 @@ extension ObjectExtensions<T extends Object?> on T {
     TextWidthBasis? textWidthBasis,
     bool validate = true,
     String? defaultText,
+    string dateFormat = "",
   }) {
     Text? text;
 
@@ -301,7 +302,13 @@ extension ObjectExtensions<T extends Object?> on T {
       text = this as Text;
     } else {
       if (validate == false || this.isValid) {
-        text = Text("$this" | defaultText);
+        if (this is Map || this is List) {
+          text = Text(jsonEncode(this));
+        } else if (this is DateTime) {
+          text = Text((this as DateTime).format(dateFormat, locale?.countryCode));
+        } else {
+          text = Text("$this" | defaultText);
+        }
       } else if (defaultText != null) {
         text = Text(defaultText);
       }
@@ -322,16 +329,128 @@ extension ObjectExtensions<T extends Object?> on T {
     );
   }
 
-  /// Returns a [Widget] if the object is not null and is of type [Widget].
-  /// Otherwise, it returns the result of the [asNullableText] method.
-  Widget? get forceWidget {
-    if (this == null) {
-      return null;
-    }
-    if (this is Widget) {
+  /// A utility extension method that allows forcing a widget to be returned,
+  /// with optional customization of its properties.
+  ///
+  /// This method can be used on any object, and it will return a [Widget] if the object
+  /// is already a widget, or it will convert the object to a [Text] widget with the provided
+  /// customizations if the object is a [Text]. If the object is neither a [Widget] nor a [Text],
+  /// it will be converted to a [Text] widget using the [asNullableText] method.
+  ///
+  /// The optional parameters can be used to customize the properties of the returned widget,
+  /// such as the [style], [textAlign], [maxLines], etc.
+  ///
+  /// ## Example 1:
+  /// ```dart
+  /// Text myText = Text('Hello');
+  /// Widget myWidget = myText.forceWidget(style: TextStyle(fontSize: 16));
+  /// ```
+  /// ## Example 2:
+  /// ```dart
+  /// Text anotherText = Text('Welcome');
+  /// Widget anotherWidget = anotherText.forceWidget(
+  ///   style: TextStyle(fontSize: 20),
+  ///   textAlign: TextAlign.center,
+  /// );
+  /// ```
+  /// ## Example 3:
+  /// ```dart
+  /// String myString = 'Hello World';
+  /// Widget myStringWidget = myString.forceWidget(
+  ///   style: TextStyle(color: Colors.blue),
+  ///   defaultText: 'No text provided',
+  /// );
+  /// ```
+  /// ## Example 4:
+  /// ```dart
+  /// int myNumber = 42;
+  /// Widget myNumberWidget = myNumber.forceWidget(
+  ///   style: TextStyle(fontWeight: FontWeight.bold),
+  ///   defaultText: 'No number provided',
+  /// );
+  /// ```
+  /// ## Example 5:
+  /// ```dart
+  /// bool myBool = true;
+  /// Widget myBoolWidget = myBool.forceWidget(
+  ///   style: TextStyle(fontStyle: FontStyle.italic),
+  ///   defaultText: 'No boolean provided',
+  /// );
+  /// ```
+  /// ## Example 6:
+  /// ```dart
+  /// double myDouble = 3.14;
+  /// Widget myDoubleWidget = myDouble.forceWidget(
+  ///   style: TextStyle(color: Colors.red),
+  ///   defaultText: 'No double provided',
+  /// );
+  /// ```
+  /// ## Example 7:
+  /// ```dart
+  /// List<String> myList = ['Apple', 'Banana', 'Orange'];
+  /// Widget myListWidget = myList.forceWidget(
+  ///   style: TextStyle(color: Colors.green),
+  ///   defaultText: 'No list provided',
+  /// );
+  /// ```
+  /// ## Example 8:
+  /// ```dart
+  /// Map<String, int> myMap = {'Apple': 1, 'Banana': 2, 'Orange': 3};
+  /// Widget myMapWidget = myMap.forceWidget(
+  ///   style: TextStyle(color: Colors.orange),
+  ///   defaultText: 'No map provided',
+  /// );
+  /// ```
+  /// ## Example 9:
+  /// ```dart
+  /// DateTime myDateTime = DateTime.now();
+  /// Widget myDateTimeWidget = myDateTime.forceWidget(
+  ///   style: TextStyle(color: Colors.purple),
+  ///   defaultText: 'No date provided',
+  /// );
+  /// ```
+  /// ## Example 10:
+  /// ```dart
+  /// Object myObject = Object();
+  /// Widget myObjectWidget = myObject.forceWidget(
+  ///   style: TextStyle(color: Colors.yellow),
+  ///   defaultText: 'No object provided',
+  /// );
+  /// ```
+  Widget? forceWidget({
+    TextStyle? style,
+    StrutStyle? strutStyle,
+    TextAlign? textAlign,
+    TextDirection? textDirection,
+    Locale? locale,
+    bool? softWrap,
+    TextOverflow? overflow,
+    TextScaler? textScaler,
+    int? maxLines,
+    String? semanticsLabel,
+    TextWidthBasis? textWidthBasis,
+    bool validate = true,
+    String? defaultText,
+  }) {
+    
+    if (this != null && this is Widget) {
       return this as Widget;
     }
 
-    return asNullableText();
+    return asNullableText(
+      style: style,
+      strutStyle: strutStyle,
+      textAlign: textAlign,
+      textDirection: textDirection,
+      locale: locale,
+      softWrap: softWrap,
+      overflow: overflow,
+      textScaler: textScaler,
+      maxLines: maxLines,
+      semanticsLabel: semanticsLabel,
+      textWidthBasis: textWidthBasis,
+      validate: validate,
+      defaultText: defaultText,
+    );
   }
 }

@@ -76,7 +76,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
 
   int get currentIndex => widget.currentIndex.value;
 
-  Widget get title => (entry.titleWidget ?? (widget.title as Object?).forceWidget ?? (currentIndex.toString()).forceWidget)!;
+  Widget get title => (entry.titleWidget ?? (widget.title as Object?).forceWidget() ?? (currentIndex.toString()).forceWidget())!;
 
   IconData get icon => entry.icon;
 
@@ -136,7 +136,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
                 tabs: entry.pages.map((x) {
                   return Tab(
                     icon: Icon(x.icon),
-                    child: (x.title as Object?).forceWidget ?? Text("Tab ${entry.pages.indexOf(x) + 1}"),
+                    child: (x.title as Object?).forceWidget() ?? Text("Tab ${entry.pages.indexOf(x) + 1}"),
                   );
                 }).toList())
             : null,
@@ -213,7 +213,7 @@ class MenuEntry {
   final Widget? floatingActionButton;
   final Color? backgroundColor;
 
-  Widget? get titleWidget => (pages.singleOrNull?.title as Object?).forceWidget ?? (title as Object?).forceWidget;
+  Widget? get titleWidget => (pages.singleOrNull?.title as Object?).forceWidget() ?? (title as Object?).forceWidget();
 
   string get titleString => (titleWidget is Text ? (title as Text).data : title.toString()) | "";
 
