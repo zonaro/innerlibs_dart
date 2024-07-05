@@ -395,7 +395,20 @@ extension StringExtension on String {
       }
     }
 
-    return words.select((w, i) => i == 0 ? w.toLowerCase() : w.capitalizeFirst).toList();
+    words = words.select((w, i) => i == 0 ? w.toLowerCase() : w.capitalizeFirst).toList();
+    List<string> newWords = [];
+    for (var word in words) {
+      if (word.length == 1 && word.isUpperCase) {
+        var i = words.indexOf(word);
+        if (words[i - 1].isUpperCase) {
+          newWords.add(words[i - 1] + word);
+        }
+      } else {
+        newWords.add(word);
+      }
+    }
+
+    return newWords;
   }
 
   /// Splits a pascal case string into individual words.
