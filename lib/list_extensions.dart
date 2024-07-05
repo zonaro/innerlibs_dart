@@ -266,6 +266,71 @@ extension IterablesExtension<T> on Iterable<T> {
     return true;
   }
 
+  /// Splits the list into multiple sublists of the specified [count].
+  ///
+  /// The original list is divided into sublists of size [count],
+  /// except for the last sublist which may have a smaller size if the
+  /// length of the original list is not divisible by [count].
+  ///
+  /// Example:
+  /// ```dart
+  /// var myList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  /// var result = myList.split(3);
+  /// print(result); // [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+  /// ```
+  ///
+  /// Returns a new list containing the sublists.
+  List<List<T>> split(int count) {
+    var l = toList();
+    var r = <List<T>>[];
+    for (var i = 0; i < l.length; i += count) {
+      r.add(l.sublist(i, i + count));
+    }
+    return r;
+  }
+
+  /// Splits the list into sublists based on the provided [keyFunction].
+  /// Each sublist contains elements that have the same key value.
+  /// Returns a list of sublists.
+  List<List<T>> splitBy(int Function(T) keyFunction) {
+    var r = <List<T>>[];
+    var l = toList();
+    var keys = l.map(keyFunction).distinct().toList();
+    for (var key in keys) {
+      r.add(l.where((e) => keyFunction(e) == key).toList());
+    }
+    return r;
+  }
+
+  /// Splits the list into sublists based on a given predicate.
+  ///
+  /// The [predicate] function takes two elements of the list as input and returns a boolean value.
+  /// If the predicate returns true, a new sublist is created with the current element.
+  /// If the predicate returns false, the current element is added to the last sublist.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// var numbers = [1, 2, 3, 4, 5, 6];
+  /// var result = numbers.splitByPredicate((a, b) => a % 2 == b % 2);
+  /// print(result); // [[1], [2, 3], [4, 5], [6]]
+  /// ```
+  List<List<T>> splitByPredicate(bool Function(T, T) predicate) {
+    var r = <List<T>>[];
+    var l = toList();
+    for (var i = 0; i < l.length; i++) {
+      if (i == 0 || predicate(l[i - 1], l[i])) {
+        r.add([l[i]]);
+      } else {
+        r.last.add(l[i]);
+      }
+    }
+    return r;
+  }
+
+  /// Pairs up the elements of this list with the elements of the [other] list.
+  /// Returns a new list of tuples, where each tuple contains two elements:
+  /// the corresponding element from this list and the corresponding element from the [other] list.
+  /// If one of the lists is shorter than the other, the missing elements are paired with null.
   List<(T?, T?)> pairUp(List<T> other) {
     var l = toList();
     return pairUpIndexes(other).map((e) {
@@ -279,6 +344,8 @@ extension IterablesExtension<T> on Iterable<T> {
     }).toList();
   }
 
+  /// Returns a list of pairs of indexes, where each pair represents the index of an element in the original list and the index of the same element in the provided [other] list.
+  /// If an element in the original list is not found in the [other] list, its index will be represented as -1 in the pair.
   List<(int, int)> pairUpIndexes(List<T> other) {
     var l = toList();
     final r = <(int, int)>[];
@@ -338,19 +405,11 @@ extension IterablesExtension<T> on Iterable<T> {
       return null;
     }
 
-    // Create a map to store the frequency of each element
-    final frequencyMap = <T, int>{};
-
-    // Iterate over the list and update the frequency map
-    for (final element in this) {
-      frequencyMap[element] = (frequencyMap[element] ?? 0) + 1;
-    }
-
     // Find the element with the highest frequency
     T? mostFrequentElement;
     int maxFrequency = 0;
 
-    for (final entry in frequencyMap.entries) {
+    for (final entry in frequencies.entries) {
       if (entry.value > maxFrequency) {
         maxFrequency = entry.value;
         mostFrequentElement = entry.key;
@@ -361,25 +420,16 @@ extension IterablesExtension<T> on Iterable<T> {
   }
 
   /// Returns the least frequent element in the list.
-
   T? get leastFrequent {
     if (isEmpty) {
       return null;
-    }
-
-    // Create a map to store the frequency of each element
-    final frequencyMap = <T, int>{};
-
-    // Iterate over the list and update the frequency map
-    for (final element in this) {
-      frequencyMap[element] = (frequencyMap[element] ?? 0) + 1;
     }
 
     // Find the element with the lowest frequency
     T? leastFrequentElement;
     int minFrequency = length + 1;
 
-    for (final entry in frequencyMap.entries) {
+    for (final entry in frequencies.entries) {
       if (entry.value < minFrequency) {
         minFrequency = entry.value;
         leastFrequentElement = entry.key;
@@ -387,5 +437,26 @@ extension IterablesExtension<T> on Iterable<T> {
     }
 
     return leastFrequentElement;
+  }
+
+  /// Returns a map that represents the frequency of each element in the list.
+  ///
+  /// The keys of the map are the elements in the list, and the values are the
+  /// number of times each element appears in the list.
+  ///
+  /// Example:
+  /// ```dart
+  /// final list = [1, 2, 2, 3, 3, 3];
+  /// final frequencies = list.frequencies;
+  /// print(frequencies); // {1: 1, 2: 2, 3: 3}
+  /// ```
+  Map<T, int> get frequencies {
+    final frequencyMap = <T, int>{};
+
+    for (final element in this) {
+      frequencyMap[element] = (frequencyMap[element] ?? 0) + 1;
+    }
+
+    return frequencyMap;
   }
 }
