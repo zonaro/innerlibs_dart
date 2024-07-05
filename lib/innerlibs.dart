@@ -56,7 +56,7 @@ export 'widgets/badge.dart';
 export 'widgets/custom_calendar.dart';
 export 'widgets/custom_date_range_picker.dart';
 export 'widgets/date_picker_form_field.dart';
-export 'widgets/floating_overlay.dart';
+export 'widgets/floating_area.dart';
 export 'widgets/future_awaiter.dart';
 export 'widgets/icon_card.dart';
 export 'widgets/image_card.dart';
