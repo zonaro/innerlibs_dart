@@ -47,6 +47,7 @@ export 'utils/day.dart';
 export 'utils/format_time.dart';
 export 'utils/formatters.dart';
 export 'utils/haptic_feedback_type.dart';
+export 'utils/keyed_json_table.dart';
 export 'utils/month.dart';
 export 'utils/sql_response.dart';
 export 'utils/validation_interface.dart';
