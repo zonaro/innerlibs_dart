@@ -1,5 +1,4 @@
 import 'package:innerlibs/innerlibs.dart';
-import 'package:innerlibs/list_extensions.dart';
 
 /// A class representing a keyed JSON table.
 ///
@@ -64,22 +63,22 @@ class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
   /// Returns a pair of values computed from the given [key] using the provided [keyFunc] and [valueFunc].
   /// The [keyFunc] is a function that takes a [JsonRow] and returns a value of type [T1].
   /// The [valueFunc] is a function that takes a [JsonRow] and returns a value of type [T2].
-  (T1, T2) getPair<T1, T2>(T key, T1 Function(JsonRow?) keyFunc, T2 Function(JsonRow?) valueFunc) => (keyFunc(this[key]), valueFunc(this[key]));
+  (T1, T2) getPair<T1, T2>(T key, T1 Function(JsonRow) keyFunc, T2 Function(JsonRow) valueFunc) => (keyFunc(this[key]!), valueFunc(this[key]!));
 
   /// Returns a [MapEntry] with the key and value computed from the given [key] using the provided [keyFunc] and [valueFunc].
   /// The [keyFunc] is a function that takes a [JsonRow] and returns a value of type [T1].
   /// The [valueFunc] is a function that takes a [JsonRow] and returns a value of type [T2].
-  MapEntry<T1, T2> getMapEntry<T1, T2>(T key, T1 Function(JsonRow?) keyFunc, T2 Function(JsonRow?) valueFunc) => MapEntry(keyFunc(this[key]), valueFunc(this[key]));
+  MapEntry<T1, T2> getMapEntry<T1, T2>(T key, T1 Function(JsonRow) keyFunc, T2 Function(JsonRow) valueFunc) => MapEntry(keyFunc(this[key]!), valueFunc(this[key]!));
 
   /// Returns a list of pairs computed from the elements in the table using the provided [keyFunc] and [valueFunc].
   /// The [keyFunc] is a function that takes a [JsonRow] and returns a value of type [T1].
   /// The [valueFunc] is a function that takes a [JsonRow] and returns a value of type [T2].
-  List<(T1, T2)> getPairs<T1, T2>(T1 Function(JsonRow?) keyFunc, T2 Function(JsonRow?) valueFunc) => this.table.where((e) => e[keyName] != null).map((e) => getPair(e[keyName] as T, keyFunc, valueFunc)).toList();
+  List<(T1, T2)> getPairs<T1, T2>(T1 Function(JsonRow) keyFunc, T2 Function(JsonRow) valueFunc) => this.table.where((e) => e[keyName] != null).map((e) => getPair(e[keyName] as T, keyFunc, valueFunc)).toList();
 
   /// Returns a map computed from the elements in the table using the provided [keyFunc] and [valueFunc].
   /// The [keyFunc] is a function that takes a [JsonRow] and returns a value of type [T1].
   /// The [valueFunc] is a function that takes a [JsonRow] and returns a value of type [T2].
-  Map<T1, T2> getMap<T1, T2>(T1 Function(JsonRow?) keyFunc, T2 Function(JsonRow?) valueFunc) => Map.fromEntries(table.where((e) => e[keyName] != null).map((e) => getMapEntry(e[keyName] as T, keyFunc, valueFunc)));
+  Map<T1, T2> getMap<T1, T2>(T1 Function(JsonRow) keyFunc, T2 Function(JsonRow) valueFunc) => Map.fromEntries(table.where((e) => e[keyName] != null).map((e) => getMapEntry(e[keyName] as T, keyFunc, valueFunc)));
 
   /// Add rows to this JsonTable. Only rows with valid Ids will be added. Return a list of IDs
   List<T> addAll(JsonTable rows, [bool override = false]) {
