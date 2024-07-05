@@ -13,6 +13,10 @@ extension BuildContextExtensions on BuildContext {
   ///
   ThemeData get theme => Theme.of(this);
 
+  /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
+  ColorScheme get colorScheme => theme.colorScheme;
+
+  /// performs a simple [Theme.of(context).textTheme] action and returns given [textTheme]
   TextTheme get textTheme => theme.textTheme;
 
   /// performs a simple [Theme.of(context).primaryTextTheme] action and returns given [primaryTextTheme]
@@ -47,6 +51,18 @@ extension BuildContextExtensions on BuildContext {
   /// The hover color used to indicate when a pointer is hovering over a
   /// component.
   Color get hoverColor => theme.hoverColor;
+
+  /// Returns the color for displaying text on the primary color.
+  Color get onPrimaryColor => theme.colorScheme.onPrimary;
+
+  /// Returns the color for the secondary element's text, based on the current theme.
+  Color get onSecondaryColor => theme.colorScheme.onSecondary;
+
+  /// Returns the color of the surface text on the current theme.
+  Color get onSurfaceColor => theme.colorScheme.onSurface;
+
+  /// Returns the error color from the current theme's color scheme.
+  Color get onErrorColor => theme.colorScheme.onError;
 
   /// The default color of the [Material] that underlies the [Scaffold]. The
   /// background color for a typical material app or a page within the app.
