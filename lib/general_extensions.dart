@@ -29,7 +29,7 @@ extension ObjectExtensions<T extends Object?> on T {
   /// This function can convert between `bool`, `DateTime`, `num`, `int`, `double`, and `String` types.
   /// It assumes that the input is in a format that can be parsed to the desired type.
   ///
-  /// Throws an `ArgumentError` if the conversion is not possible.
+  /// return null if the conversion is not possible.
   ///
   /// Usage:
   /// ```dart
@@ -44,9 +44,9 @@ extension ObjectExtensions<T extends Object?> on T {
   /// [value] The value to convert.
   ///
   /// Returns the converted value of type `T`.
-  R parseTo<R>() {
+  R? parseTo<R>() {
     if (this == null || T == R) {
-      return this as R;
+      return this as R?;
     } else if (R == DateTime) {
       return "$this".toDate() as R;
     } else if (R == num) {
@@ -60,7 +60,8 @@ extension ObjectExtensions<T extends Object?> on T {
     } else if (R == bool) {
       return "$this".asBool() as R;
     } else {
-      throw ArgumentError('Cannot convert $T to $R');
+      consoleLog('Cannot convert $T to $R');
+      return null;
     }
   }
 
@@ -139,6 +140,56 @@ extension ObjectExtensions<T extends Object?> on T {
       consoleLog("IsValid => ", error: e);
       return false;
     }
+  }
+
+  /// Checks if the current string is equal to the given [text] when both are flattened.
+  /// Returns `true` if they are equal, `false` otherwise.
+  bool flatEqual(T text) => asFlat == text?.asFlat;
+
+  /// Checks if the current string contains the given [text] when both are flattened.
+  /// If the current string is blank, it returns `true` only if the [text] is also blank.
+  /// If the [text] is blank, it returns `true`.
+  /// Otherwise, it checks if the current string contains the [text] when both are flattened.
+  /// Returns `true` if the current string contains the [text], `false` otherwise.
+  bool flatContains(T text) {
+    if (asFlat.isBlank) return text.asFlat.isBlank;
+
+    if (text.asFlat.isBlank) {
+      return true;
+    }
+    return asFlat.contains(text!.asFlat);
+  }
+
+  /// Returns flat representation string by removing diacritics, converting to lowercase, and trimming all whitespace.
+  string get asFlat {
+    if (this == null) return "";
+    if (this is DateTime) return (this as DateTime).format();
+    if (this is Map || this is List) return jsonEncode(this).removeDiacritics.toLowerCase().trimAll;
+    return "$this".removeDiacritics.toLowerCase().trimAll;
+  }
+
+  /// Checks if any of the strings in the given [texts] iterable is equal to the current string.
+  /// Returns `true` if any string is equal, otherwise returns `false`.
+  bool flatEqualAny(Iterable<T> texts) {
+    for (var t in texts) {
+      if (flatEqual(t)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Checks if the string contains any of the specified texts.
+  ///
+  /// Returns `true` if the string contains any of the texts in the [texts] iterable,
+  /// otherwise returns `false`.
+  bool flatContainsAny(Iterable<T> texts) {
+    for (var t in texts) {
+      if (flatContains(t)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /// Checks if [this] is not a Blank value:

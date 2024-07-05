@@ -311,6 +311,7 @@ extension StringExtension on String {
     final Iterable<int> characterCodes = characters.map((String char) => 127397 + char.codeUnits.first);
     return String.fromCharCodes(characterCodes);
   }
+
   /// Converts a string to a color.
   ///
   /// If the string is empty, it returns [Colors.transparent] as the default color.
@@ -344,7 +345,7 @@ extension StringExtension on String {
 
   /// Removes diacritics from the string.
   /// Diacritics are accents or other marks added to letters in some languages.
-  /// If the string is blank, it returns a blank string. 
+  /// If the string is blank, it returns a blank string.
   /// If a diacritic is not found in the map, it keeps the original character.
   /// Returns the modified string with diacritics removed.
   String get removeDiacritics {
@@ -400,51 +401,6 @@ extension StringExtension on String {
   /// Splits a pascal case string into individual words.
   /// Returns a list of strings representing the words in the pascal case string.
   List<String> get pascalSplit => camelSplit.map((w) => w.capitalizeFirst).toList();
-
-  /// Checks if the current string is equal to the given [text] when both are flattened.
-  /// Returns `true` if they are equal, `false` otherwise.
-  bool flatEqual(String? text) => asFlat == text?.asFlat;
-
-  /// Checks if the current string contains the given [text] when both are flattened.
-  /// If the current string is blank, it returns `true` only if the [text] is also blank.
-  /// If the [text] is blank, it returns `true`.
-  /// Otherwise, it checks if the current string contains the [text] when both are flattened.
-  /// Returns `true` if the current string contains the [text], `false` otherwise.
-  bool flatContains(String? text) {
-    if (isBlank) return text.isBlank;
-
-    if (text.isBlank) {
-      return true;
-    }
-    return asFlat.contains(text!.asFlat);
-  }
-
-  /// Returns the string as a flat representation by removing diacritics, converting to lowercase, and trimming all whitespace.
-  string get asFlat => removeDiacritics.toLowerCase().trimAll;
-
-  /// Checks if any of the strings in the given [texts] iterable is equal to the current string.
-  /// Returns `true` if any string is equal, otherwise returns `false`.
-  bool flatEqualAny(Iterable<String> texts) {
-    for (var t in texts) {
-      if (flatEqual(t)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /// Checks if the string contains any of the specified texts.
-  ///
-  /// Returns `true` if the string contains any of the texts in the [texts] iterable,
-  /// otherwise returns `false`.
-  bool flatContainsAny(Iterable<String> texts) {
-    for (var t in texts) {
-      if (flatContains(t)) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   String get singularPt {
     if (endsWith('ões')) {
