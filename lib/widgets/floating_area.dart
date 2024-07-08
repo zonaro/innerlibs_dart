@@ -83,7 +83,7 @@ class _FloatingAreaState extends State<FloatingArea> {
       builder: (context, c) => Stack(
         children: [
           if (widget.background != null) widget.background!,
-          for (var w in _children)
+          for (var w in _children.where((w) => w.child != null))
             Positioned(
               left: w.x,
               top: w.y,
@@ -126,7 +126,7 @@ class _FloatingAreaState extends State<FloatingArea> {
                     }
                   });
                 },
-                child: w.child,
+                child: w.child!,
               ),
             ),
           if (widget.foreground != null) widget.foreground!,
@@ -137,10 +137,8 @@ class _FloatingAreaState extends State<FloatingArea> {
 }
 
 /// A draggable child widget for [FloatingArea].
-class DraggableChildren {
-  /// The child widget to be displayed in the [FloatingArea].
-  Widget child;
-
+// ignore: must_be_immutable
+class DraggableChildren extends Material {
   /// The x-coordinate of the child.
   double x;
 
@@ -156,7 +154,8 @@ class DraggableChildren {
   /// The [x] parameter is the initial x-coordinate of the draggable child.
   /// The [y] parameter is the initial y-coordinate of the draggable child.
   DraggableChildren({
-    required this.child,
+    super.key,
+    required super.child,
     required this.x,
     required this.y,
     this.data = const {},
