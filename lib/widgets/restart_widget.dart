@@ -5,7 +5,9 @@ import 'package:innerlibs/build_context_extensions.dart';
 import 'package:innerlibs/global.dart';
 
 class RestartWidget extends StatefulWidget {
-  const RestartWidget({super.key, required this.child});
+  const RestartWidget({super.key, required this.child, this.onRestart});
+
+  final void Function(BuildContext)? onRestart;
 
   final Widget child;
 
@@ -30,6 +32,9 @@ class _RestartWidgetState extends State<RestartWidget> {
     setState(() {
       key = UniqueKey();
     });
+    if (widget.onRestart != null) {
+      widget.onRestart!(context);
+    }
   }
 
   @override

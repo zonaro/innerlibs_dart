@@ -167,3 +167,27 @@ class FutureAwaiter<T> extends StatelessWidget {
     }
   }
 }
+
+class FutureBool extends StatelessWidget {
+  final Future<bool> future;
+  final Widget trueWidget;
+  final Widget? falseWidget;
+  final Widget? loading;
+
+  const FutureBool({
+    super.key,
+    required this.future,
+    required this.trueWidget,
+    this.falseWidget,
+    this.loading,
+  });
+
+  @override
+  Widget build(BuildContext context) => FutureAwaiter<bool>(
+        future: () async => await future,
+        builder: (_) => trueWidget,
+        loading: loading,
+        emptyChild: falseWidget,
+        errorChild: (e) => falseWidget ?? const SizedBox.shrink(),
+      );
+}

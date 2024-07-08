@@ -396,19 +396,23 @@ extension StringExtension on String {
     }
 
     words = words.select((w, i) => i == 0 ? w.toLowerCase() : w.capitalizeFirst).toList();
-    List<string> newWords = [];
-    for (var word in words) {
-      if (word.length == 1 && word.isUpperCase) {
-        var i = words.indexOf(word);
-        if (words[i - 1].isUpperCase) {
-          newWords.add(words[i - 1] + word);
+    try {
+      List<string> newWords = [];
+      for (var word in words) {
+        if (word.length == 1 && word.isUpperCase) {
+          var i = words.indexOf(word);
+          if (words[i - 1].isUpperCase) {
+            newWords.add(words[i - 1] + word);
+          }
+        } else {
+          newWords.add(word);
         }
-      } else {
-        newWords.add(word);
       }
+      return newWords;
+    } catch (e) {
+      consoleLog('Error: $e');
+      return words;
     }
-
-    return newWords;
   }
 
   /// Splits a pascal case string into individual words.
@@ -694,8 +698,7 @@ extension StringExtension on String {
       return false;
     }
     substring(0, 1);
-    var regex = RegExp(
-        r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
+    var regex = RegExp(r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
     return regex.hasMatch(this);
   }
 
@@ -904,12 +907,21 @@ extension StringExtension on String {
   String removeAny(List<Pattern> texts) => replaceMany(texts);
 
   String replaceMany(List<Pattern> from, [String to = ""]) {
+    if (isEmpty) return blankIfNull;
     String result = this;
     for (var pattern in from) {
       result = result.replaceAll(pattern, to);
     }
     return result;
   }
+
+  /// Checks if the string starts with any of the provided strings.
+  /// Returns `true` if the string starts with any of the provided strings, `false` otherwise.
+  bool startsWithAny(Iterable<String> strings) => strings.any((element) => startsWith(element));
+
+  /// Checks if the string ends with any of the provided strings.
+  /// Returns `true` if the string ends with any of the provided strings, `false` otherwise.
+  bool endsWithAny(Iterable<String> strings) => strings.any((element) => endsWith(element));
 
   /// Finds all character occurrences and returns count as:
   /// ```dart

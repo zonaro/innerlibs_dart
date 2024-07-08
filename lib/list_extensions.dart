@@ -107,6 +107,8 @@ extension ListExtension<T> on List<T> {
   /// ```
 
   Iterable<T> search({required string searchTerm, required strings Function(T) searchOn, int levenshteinDistance = 0, bool allIfEmpty = true}) {
+    if (isEmpty) return <T>[].orderBy((e) => true);
+
     if (searchTerm.isBlank) {
       if (allIfEmpty) {
         return orderBy((e) => true);
@@ -115,9 +117,30 @@ extension ListExtension<T> on List<T> {
       }
     }
 
-    searchFunc(T item) => searchOn(item).where((k) => k.pascalSplitString.removeAny(StringHelpers.wordSplitters).flatContains(searchTerm.pascalSplitString.removeAny(StringHelpers.wordSplitters))).length;
+    int searchFunc(T item) {
+      return searchOn(item).where((k) {
+        var keyword = k.camelSplitString.removeAny(StringHelpers.wordSplitters);
+        var searchword = searchTerm.camelSplitString.removeAny(StringHelpers.wordSplitters);
 
-    levFunc(T item) => levenshteinDistance <= 0 ? 0 : searchOn(item).selectMany((e, i) => e.asFlat.getUniqueWords.map((t) => searchTerm.asFlat.getLevenshtein(t))).count((e) => e <= levenshteinDistance.lockMin(1));
+        return keyword.flatContains(searchword);
+      }).length;
+    }
+
+    int levFunc(T item) {
+      if (levenshteinDistance <= 0) {
+        return 0;
+      } else {
+        return searchOn(item).selectMany((e, i) {
+          return e.getUniqueWords.map((t) {
+            var keyword = t.asFlat;
+            var searchword = searchTerm.asFlat;
+            return searchword.getLevenshtein(keyword);
+          });
+        }).count((e) {
+          return e <= levenshteinDistance;
+        });
+      }
+    }
 
     var l = where((row) => searchFunc(row) > 0);
     if (l.isEmpty && levenshteinDistance > 0) {
