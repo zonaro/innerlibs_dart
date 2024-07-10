@@ -833,6 +833,8 @@ extension StringExtension on String {
   /// ```
   bool isIn(Iterable<String> strings) => isNotBlank && strings.isNotEmpty && strings.contains(this);
 
+  bool isNotIn(Iterable<String> strings) => !isIn(strings);
+
   /// Checks if the `String` has only Latin characters.
   /// ### Example
   /// ```dart
