@@ -5,6 +5,7 @@ library innerlibs;
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:innerlibs/innerlibs.dart';
 
 export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
@@ -111,3 +112,56 @@ typedef JsonTableSet = List<JsonTable>;
 
 /// Alias for [Map<string, List<Map<String, dynamic>>>], used to group data tables
 typedef GroupedJsonTable = Map<string, JsonTable>;
+
+/// Checks if [object] has a valid value. The following values are considered invalid:
+/// Null values; Empty or only white spaces [String]s, 0 for [num] , [minDate] for [DateTime]. Call [isValid] recursively on [List] items or [Map] values.
+/// Classes thats implements [Validator] will be checked using [Validator.validate] function.
+/// Other class types, this method  call [ToString()] and check the result string against [isValid].
+bool isValid(dynamic object) {
+  try {
+    if (object == null) {
+      return false;
+    }
+    if (object is String) {
+      return object.nullIf((s) => s == null || s.trimAll.flatEqual("null")).isNotBlank;
+    }
+    if (object is bool) {
+      return object;
+    }
+    if (object is num) {
+      return object != 0;
+    }
+    if (object is DateTime) {
+      return object > minDate;
+    }
+
+    if (object is Validator) {
+      return object.validate().isEmpty;
+    }
+
+    if (object is Iterable) {
+      var l = object;
+      if (l.isEmpty) return false;
+      for (var e in l) {
+        if ((e as Object?).isValid) {
+          return true;
+        }
+      }
+      return false;
+    }
+    if (object is Map) {
+      var m = object;
+      return m.isNotEmpty && m.values.isValid;
+    }
+
+    return object.toString().isValid;
+  } catch (e) {
+    consoleLog("IsValid => ", error: e);
+    return false;
+  }
+}
+
+/// Checks if the given [object] is not valid.
+///
+/// Returns `true` if the [object] is not valid, otherwise `false`.
+bool isNotValid(dynamic object) => !isValid(object);

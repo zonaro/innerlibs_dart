@@ -23,6 +23,8 @@ extension CompareAndSwap<T extends Comparable> on T {
   }
 }
 
+bool _valid(dynamic obj) => isValid(obj);
+
 extension ObjectExtensions<T extends Object?> on T {
   /// Converts a value of type `Object` to a specified type `T`.
   ///
@@ -100,49 +102,7 @@ extension ObjectExtensions<T extends Object?> on T {
   /// Null, empty or only white spaces for [String], 0 for [num] , [minDate] for [DateTime]. Call [isValid] recursively on [List] items or [Map] values.
   /// Class thats implements [Validator] will be checked using [Validator.validate] function.
   /// Other class types, this method  call [ToString()] and check the result string against [isValid].
-  bool get isValid {
-    try {
-      if (this == null) {
-        return false;
-      }
-      if (this is String) {
-        return (this as String).nullIf((s) => s == null || s.trimAll.flatEqual("null")).isNotBlank;
-      }
-      if (this is bool) {
-        return (this as bool);
-      }
-      if (this is num) {
-        return this != 0;
-      }
-      if (this is DateTime) {
-        return (this as DateTime) > minDate;
-      }
-
-      if (this is Validator) {
-        return (this as Validator).validate().isEmpty;
-      }
-
-      if (this is Iterable) {
-        var l = (this as Iterable);
-        if (l.isEmpty) return false;
-        for (var e in l) {
-          if ((e as Object?).isValid) {
-            return true;
-          }
-        }
-        return false;
-      }
-      if (this is Map) {
-        var m = (this as Map);
-        return m.isNotEmpty && m.values.isValid;
-      }
-
-      return toString().isValid;
-    } catch (e) {
-      consoleLog("IsValid => ", error: e);
-      return false;
-    }
-  }
+  bool get isValid => _valid(this);
 
   /// Checks if the current string is equal to the given [text] when both are flattened.
   /// Returns `true` if they are equal, `false` otherwise.
