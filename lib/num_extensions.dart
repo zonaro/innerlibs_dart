@@ -22,36 +22,23 @@ extension NumExtensions<T extends num> on T {
     }
   }
 
-  Widget get widthBox => SizedBox(width: double.tryParse(toString()));
+  Widget get widthBox => SizedBox(width: toDouble());
 
-  Widget get heightBox => SizedBox(height: double.tryParse(toString()));
+  Widget get heightBox => SizedBox(height: toDouble());
 
-  ///   print('+ wait for 2 seconds');
-  ///   await 2000.delay();
-  ///   print('- 2 seconds completed');
-  ///   print('+ callback in 1.2sec');
-  ///   1000.delay(() => print('- 1.2sec callback called'));
-  ///   print('currently running callback 1.2sec');
-  Future delay([FutureOr Function()? callback]) async => Future.delayed(
-        Duration(milliseconds: round()),
-        callback,
-      );
+  Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: round()).delay(callback);
 
-  /// print(1.seconds + 200.milliseconds);
-  /// print(1.hours + 30.minutes);
-  /// print(1.5.hours);
-  ///```
-  Duration get milliseconds => Duration(milliseconds: round());
+  Duration get milliseconds => Duration(milliseconds: floor()) + Duration(microseconds: ((this % 1) * 1000).round());
 
   Duration get microseconds => Duration(microseconds: round());
 
-  Duration get seconds => Duration(seconds: round());
+  Duration get seconds => Duration(seconds: floor(), milliseconds: ((this % 1) * 1000).floor(), microseconds: (((this % 1) * 1000 % 1) * 1000).round());
 
-  Duration get minutes => Duration(minutes: round());
+  Duration get minutes => Duration(minutes: floor(), seconds: ((this % 1) * 60).floor(), milliseconds: (((this % 1) * 60 % 1) * 1000).floor(), microseconds: ((((this % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
-  Duration get hours => Duration(hours: round());
+  Duration get hours => Duration(hours: floor(), minutes: ((this % 1) * 60).floor(), seconds: (((this % 1) * 60 % 1) * 60).floor(), milliseconds: ((((this % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((this % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
-  Duration get days => Duration(days: round());
+  Duration get days => Duration(days: floor(), hours: ((this % 1) * 24).floor(), minutes: (((this % 1) * 24 % 1) * 60).floor(), seconds: ((((this % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: (((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: ((((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
   T get forcePositive => this < 0 ? -this as T : this;
   T get forceNegative => (-1 * this.forcePositive) as T;
@@ -210,4 +197,37 @@ extension NumNullExtensions<T extends num?> on T {
 
   bool get isNonZeroPositive => this != null && this! > 0;
   bool get isNonZeroNegative => this != null && this! < 0;
+}
+
+extension DurationExtensions on Duration {
+  String get formatted {
+    var hours = inHours;
+    var minutes = inMinutes.remainder(60);
+    var seconds = inSeconds.remainder(60);
+    var milliseconds = inMilliseconds.remainder(1000);
+    var microseconds = inMicroseconds.remainder(1000);
+
+    var formatted = "";
+    if (hours > 0) {
+      formatted += "$hours h ";
+    }
+    if (minutes > 0) {
+      formatted += "$minutes min ";
+    }
+    if (seconds > 0) {
+      formatted += "$seconds s ";
+    }
+    if (milliseconds > 0) {
+      formatted += "$milliseconds ms ";
+    }
+    if (microseconds > 0) {
+      formatted += "$microseconds µs";
+    }
+    return formatted.trim();
+  }
+
+  Future delay([FutureOr Function()? callback]) async => Future.delayed(
+        this,
+        callback,
+      );
 }
