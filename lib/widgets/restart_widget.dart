@@ -1,5 +1,7 @@
 // ignore_for_file: unnecessary_cast, use_build_context_synchronously
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:innerlibs/build_context_extensions.dart';
 import 'package:innerlibs/global.dart';
@@ -30,7 +32,7 @@ class _RestartWidgetState extends State<RestartWidget> {
 
   void restartApp() {
     setState(() {
-      key = UniqueKey();
+      key = ValueKey(Random().nextDouble());
     });
     if (widget.onRestart != null) {
       widget.onRestart!(context);
