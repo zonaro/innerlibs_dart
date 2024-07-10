@@ -121,26 +121,76 @@ typedef GroupedJsonTable = Map<string, JsonTable>;
 /// The following values are considered not valid:
 /// - `objects` thats fail against a custom validation function (if provided);
 /// - `NULL` objects, independent of type;
-/// - [String]s that are empty, equal to "null" or only white spaces;
+/// - [String]s that are empty, equal to "null" or have only white spaces;
 /// - [num]s that are equal to `0`;
 /// - [DateTime]s that are equal to `minDate`;
 /// - [bool]s that are equal to `false`;
 /// - [Iterable]s that are empty or have only invalid values;
 /// - [Map]s that are empty or have only invalid values;
-/// - Classes that implement [Validator]s that have validation errors (`Validator.validate().isNotEmpty`);
-/// - For other class types, this method calls `toString()` and checks the result string against [isValid].
+/// - Classes that implement [Validator]s that have validation errors;
+/// - For other types, this method calls `toString()` and checks the result string against [isValid].
 ///
 /// Returns `true` if the [object] is valid, `false` otherwise.
 ///
-/// Example:
+/// ### Example 1:
 /// ```dart
 /// var value = "Hello";
 /// var isValid = isValid(value);
 /// print(isValid); // Output: true
 /// ```
+///
+/// ### Example 2:
+/// ```dart
+/// var number = 0;
+/// var isValidNumber = isValid(number);
+/// print(isValidNumber); // Output: false
+/// ```
+///
+/// ### Example 3:
+/// ```dart
+/// var date = DateTime.now();
+/// var isValidDate = isValid(date);
+/// print(isValidDate); // Output: true
+/// ```
+///
+/// ### Example 4:
+/// ```dart
+/// var list = [1, 2, 3];
+/// var isValidList = isValid(list);
+/// print(isValidList); // Output: true
+/// ```
+///
+/// ### Example 5:
+/// ```dart
+/// var map = {'name': 'John', 'age': 30};
+/// var isValidMap = isValid(map);
+/// print(isValidMap); // Output: true
+/// ```
+/// ### Example 6:
+/// ```dart
+/// class Person implements Validator {
+///  String name;
+/// int age;
+/// Person(this.name, this.age);
+/// @override
+/// List<String> validate() {
+/// var errors = <String>[];
+/// if (name.isEmpty) {
+///   errors.add('Name is required');
+/// }
+/// if (age <= 0) {
+///   errors.add('Age must be greater than 0');
+/// }
+///  return errors;
+/// }
+/// }
+/// var person = Person('John', 30);
+/// var isValidPerson = isValid(person);
+/// print(isValidPerson); // Output: true
+/// ```
+///
 bool isValid(dynamic object, {bool Function(dynamic)? customValidator}) {
   try {
-    
     if (customValidator != null) {
       return customValidator(object);
     }
