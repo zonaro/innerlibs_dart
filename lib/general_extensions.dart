@@ -45,7 +45,9 @@ extension ObjectExtensions<T extends Object?> on T {
   ///
   /// Returns the converted value of type `T`.
   R? parseTo<R>() {
-    if (this == null || T == R) {
+    if (this == null) {
+      return null;
+    } else if (T == R) {
       return this as R?;
     } else if (R == DateTime) {
       return "$this".toDate() as R;
