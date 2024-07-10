@@ -75,6 +75,9 @@ typedef date = DateTime;
 /// C# alias for [String]
 typedef string = String;
 typedef strings = List<String>;
+typedef stringmap = Map<String, String>;
+typedef stringpair = Tuple2<String, String>;
+typedef stringrecord = (string, string);
 typedef ints = List<int>;
 typedef doubles = List<double>;
 typedef bytes = Uint8List;
@@ -110,15 +113,38 @@ typedef JsonTable = List<JsonRow>;
 /// Alias for [List<List<Map<String, dynamic>>>], used to represent a set of data tables
 typedef JsonTableSet = List<JsonTable>;
 
-/// Alias for [Map<string, List<Map<String, dynamic>>>], used to group data tables
+/// Alias for [Map<string, List<Map<String, dynamic>>>], used to group [JsonTable]s
 typedef GroupedJsonTable = Map<string, JsonTable>;
 
-/// Checks if [object] has a valid value. The following values are considered invalid:
-/// Null values; Empty or only white spaces [String]s, 0 for [num] , [minDate] for [DateTime]. Call [isValid] recursively on [List] items or [Map] values.
-/// Classes thats implements [Validator] will be checked using [Validator.validate] function.
-/// Other class types, this method  call [ToString()] and check the result string against [isValid].
-bool isValid(dynamic object) {
+/// Checks if [object] has a valid value.
+///
+/// The following values are considered not valid:
+/// - `objects` thats fail against a custom validation function (if provided);
+/// - `NULL` objects, independent of type;
+/// - [String]s that are empty, equal to "null" or only white spaces;
+/// - [num]s that are equal to `0`;
+/// - [DateTime]s that are equal to `minDate`;
+/// - [bool]s that are equal to `false`;
+/// - [Iterable]s that are empty or have only invalid values;
+/// - [Map]s that are empty or have only invalid values;
+/// - Classes that implement [Validator]s that have validation errors (`Validator.validate().isNotEmpty`);
+/// - For other class types, this method calls `toString()` and checks the result string against [isValid].
+///
+/// Returns `true` if the [object] is valid, `false` otherwise.
+///
+/// Example:
+/// ```dart
+/// var value = "Hello";
+/// var isValid = isValid(value);
+/// print(isValid); // Output: true
+/// ```
+bool isValid(dynamic object, {bool Function(dynamic)? customValidator}) {
   try {
+    
+    if (customValidator != null) {
+      return customValidator(object);
+    }
+
     if (object == null) {
       return false;
     }
@@ -143,15 +169,14 @@ bool isValid(dynamic object) {
       var l = object;
       if (l.isEmpty) return false;
       for (var e in l) {
-        if ((e as Object?).isValid) {
+        if (isValid(e)) {
           return true;
         }
       }
       return false;
     }
     if (object is Map) {
-      var m = object;
-      return m.isNotEmpty && m.values.isValid;
+      return object.isNotEmpty && object.values.isValid;
     }
 
     return object.toString().isValid;
@@ -161,7 +186,7 @@ bool isValid(dynamic object) {
   }
 }
 
-/// Checks if the given [object] is not valid.
+/// Checks if the given [object] is not valid (see [isValid] function).
 ///
-/// Returns `true` if the [object] is not valid, otherwise `false`.
-bool isNotValid(dynamic object) => !isValid(object);
+/// Returns `true` if the [object] is not valid, `false` otherwise.
+bool isNotValid(dynamic object, {bool Function(dynamic)? customValidator}) => !isValid(object, customValidator: customValidator);
