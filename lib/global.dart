@@ -234,6 +234,18 @@ String flatString(dynamic value) {
   return "$value".removeDiacritics.toLowerCase().trimAll;
 }
 
+
+/// Parses a value of type [T] to a value of type [R].
+/// 
+/// If the value is `null`, returns `null`.
+/// If [T] and [R] are the same type, returns the value as [R].
+/// If [R] is [DateTime], converts the value to a [DateTime] using the `toDate()` method.
+/// If [R] is [num], parses the value as a [num] using the `num.parse()` method.
+/// If [R] is [int], parses the value as an [int] using the `int.parse()` method.
+/// If [R] is [double], parses the value as a [double] using the `double.parse()` method.
+/// If [R] is [String], returns the value as a [String].
+/// If [R] is [bool], converts the value to a [bool] using the `asBool()` method.
+/// If none of the above conditions are met, logs an error message and returns `null`.
 R? parseTo<T, R>(T value) {
   if (value == null) {
     return null;
