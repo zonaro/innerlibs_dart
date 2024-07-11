@@ -189,7 +189,7 @@ typedef GroupedJsonTable = Map<string, JsonTable>;
 /// print(isValidPerson); // Output: true
 /// ```
 ///
-bool isValid(dynamic object, {bool Function(dynamic)? customValidator}) {
+bool isValid<T>(T? object, {bool Function(T?)? customValidator}) {
   try {
     if (customValidator != null) {
       return customValidator(object);
@@ -240,3 +240,24 @@ bool isValid(dynamic object, {bool Function(dynamic)? customValidator}) {
 ///
 /// Returns `true` if the [object] is not valid, `false` otherwise.
 bool isNotValid(dynamic object, {bool Function(dynamic)? customValidator}) => !isValid(object, customValidator: customValidator);
+
+/// Converts a dynamic value to a flat string representation.
+///
+/// If the value is null, an empty string is returned.
+/// If the value is a number, it is converted to a string.
+/// If the value is a DateTime object, it is formatted as a string.
+/// If the value is a boolean, it is converted to a string.
+/// If the value is a Map or an Iterable, the values are joined with a comma.
+/// The resulting string is then processed to remove diacritics,
+/// convert to lowercase, and remove leading/trailing whitespace.
+///
+/// Returns the flat string representation of the value.
+String flatString(dynamic value) {
+  if (value == null) return '';
+  if (value is num) value = value.toString();
+  if (value is DateTime) value = value.format();
+  if (value is bool) value = value.toString();
+  if (value is Map) value = value.values.join(", ");
+  if (value is Iterable) value = value.join(", ");
+  return "$value".removeDiacritics.toLowerCase().trimAll;
+}

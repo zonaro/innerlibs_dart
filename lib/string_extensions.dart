@@ -11,14 +11,21 @@ import 'package:intl/intl.dart';
 // for the utf8.encode method
 
 extension NullStringExtension on String? {
+
+  /// Returns the string if it is not null, otherwise returns an empty string.
   String get blankIfNull => this ?? "";
+
+  /// Returns the string if it is blank, otherwise returns "0".
   String get zeroIfBlank => ifBlank("0")!;
+
+  /// Returns null if string is blank. Otherwise, returns the string.
   String? get nullIfBlank => ifBlank(null);
 
   bool get isBlank => this == null || this!.isBlank;
 
   bool get isNotBlank => this != null && !isBlank;
 
+  /// Returns the string if it is not null, empty or blank, otherwise returns the specified string.
   String? ifBlank(String? newString) => this != null && this!.isNotBlank ? this : newString;
 
   /// Checks whether the `String` is `null`.
@@ -49,7 +56,7 @@ extension NullStringExtension on String? {
 
   String blankCoalesce(List<string?> newString) {
     var x = [blankIfNull, ...newString];
-    return x.firstWhere((e) => e.isNotBlank).blankIfNull;
+    return x.firstWhereOrNull((e) => e.isNotBlank).blankIfNull;
   }
 
   /// Return left string if not blank. Otherwise return right string.
@@ -698,7 +705,8 @@ extension StringExtension on String {
       return false;
     }
     substring(0, 1);
-    var regex = RegExp(r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
+    var regex = RegExp(
+        r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
     return regex.hasMatch(this);
   }
 

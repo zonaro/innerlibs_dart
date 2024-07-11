@@ -26,6 +26,16 @@ extension CompareAndSwap<T extends Comparable> on T {
 bool _valid(dynamic obj) => isValid(obj);
 
 extension ObjectExtensions<T extends Object?> on T {
+  bool get isNullable {
+    try {
+      // throws an exception if T is not nullable
+      final _ = null as T;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Converts a value of type `Object` to a specified type `T`.
   ///
   /// This function can convert between `bool`, `DateTime`, `num`, `int`, `double`, and `String` types.
@@ -124,10 +134,7 @@ extension ObjectExtensions<T extends Object?> on T {
 
   /// Returns flat representation string by removing diacritics, converting to lowercase, and trimming all whitespace.
   string get asFlat {
-    if (this == null) return "";
-    if (this is DateTime) return (this as DateTime).format();
-    if (this is Map || this is List) return jsonEncode(this).removeDiacritics.toLowerCase().trimAll;
-    return "$this".removeDiacritics.toLowerCase().trimAll;
+    return flatString(this);
   }
 
   /// Checks if any of the strings in the given [texts] iterable is equal to the current string.
