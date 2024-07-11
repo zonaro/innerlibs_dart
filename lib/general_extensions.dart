@@ -24,6 +24,7 @@ extension CompareAndSwap<T extends Comparable> on T {
 }
 
 bool _valid(dynamic obj) => isValid(obj);
+R? _parseTo<T, R>(T value) => parseTo<T, R>(value);
 
 extension ObjectExtensions<T extends Object?> on T {
   bool get isNullable {
@@ -56,28 +57,7 @@ extension ObjectExtensions<T extends Object?> on T {
   /// [value] The value to convert.
   ///
   /// Returns the converted value of type `T`.
-  R? parseTo<R>() {
-    if (this == null) {
-      return null;
-    } else if (T == R) {
-      return this as R?;
-    } else if (R == DateTime) {
-      return "$this".toDate() as R;
-    } else if (R == num) {
-      return num.parse("$this") as R;
-    } else if (R == int) {
-      return int.parse("$this") as R;
-    } else if (R == double) {
-      return double.parse("$this") as R;
-    } else if (R == String) {
-      return "$this" as R;
-    } else if (R == bool) {
-      return "$this".asBool() as R;
-    } else {
-      consoleLog('Cannot convert $T to $R');
-      return null;
-    }
-  }
+  R? parseTo<R>() => _parseTo<T, R>(this);
 
   // return a string of this object as a SQL Value
   String asSqlValue([bool nullAsBlank = false]) {
@@ -133,9 +113,7 @@ extension ObjectExtensions<T extends Object?> on T {
   }
 
   /// Returns flat representation string by removing diacritics, converting to lowercase, and trimming all whitespace.
-  string get asFlat {
-    return flatString(this);
-  }
+  string get asFlat => flatString(this);
 
   /// Checks if any of the strings in the given [texts] iterable is equal to the current string.
   /// Returns `true` if any string is equal, otherwise returns `false`.
