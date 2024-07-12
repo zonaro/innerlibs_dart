@@ -45,7 +45,6 @@ export 'theme_extension.dart';
 export 'tooltip_extension.dart';
 export 'util.dart';
 export 'utils/day.dart';
-export 'utils/format_time.dart';
 export 'utils/formatters.dart';
 export 'utils/haptic_feedback_type.dart';
 export 'utils/keyed_json_table.dart';
@@ -115,4 +114,3 @@ typedef JsonTableSet = List<JsonTable>;
 
 /// Alias for [Map<string, List<Map<String, dynamic>>>], used to group [JsonTable]s
 typedef GroupedJsonTable = Map<string, JsonTable>;
-
