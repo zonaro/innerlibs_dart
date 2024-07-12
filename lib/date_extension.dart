@@ -2,41 +2,7 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:innerlibs/utils/constants.dart';
 import 'package:intl/intl.dart';
 
-/// Represents a range of dates.
-class DateRange {
-  /// Creates a new instance of the [DateRange] class with the specified start and end dates.
-  DateRange(date startDate, date endDate) {
-    var r = startDate.compareAndSwap(endDate);
-    _startDate = r.$1;
-    _endDate = r.$2;
-  }
-
-  /// Creates a new instance of the [DateRange] class representing today's date.
-  factory DateRange.today() => DateRange(today, today.endOfDay);
-
-  /// Gets the start date of the date range.
-  date get startDate => _startDate;
-
-  /// Sets the start date of the date range.
-  set startDate(date value) {
-    var r = value.compareAndSwap(endDate);
-    _startDate = r.$1;
-    _endDate = r.$2;
-  }
-
-  /// Gets the end date of the date range.
-  date get endDate => _endDate;
-
-  /// Sets the end date of the date range.
-  set endDate(date value) {
-    var r = startDate.compareAndSwap(value);
-    _startDate = r.$1;
-    _endDate = r.$2;
-  }
-
-  late date _startDate;
-  late date _endDate;
-}
+export 'package:innerlibs/date_range.dart';
 
 /// Extension methods for the `DateTime` class.
 ///
@@ -47,7 +13,8 @@ class DateRange {
 /// get the beginning and end of a day, format the date and time in a readable format,
 /// calculate the time difference between two dates, determine the time of day, and more.
 extension DateTimeExtensions on DateTime {
-  DateTime findNextDayOfWeek(int weekday) {
+  /// Returns the next day of the week from the given date.
+  date findNextDayOfWeek(int weekday) {
     int daysDifference = weekday - this.weekday;
     if (daysDifference <= 0) {
       daysDifference += 7;
@@ -56,22 +23,52 @@ extension DateTimeExtensions on DateTime {
   }
 
   /// Returns the last day of the week for the given date.
-  DateTime get lastDayOfWeek => add((DateTime.daysPerWeek - weekday).days);
+  date get lastDayOfWeek => add((DateTime.daysPerWeek - weekday).days);
 
   /// Returns the first day of the week for the given date.
-  DateTime get firstDayOfWeek => subtract((weekday - 1).days);
+  date get firstDayOfWeek => subtract((weekday - 1).days);
 
   /// Returns the first day of the month for the given date.
-  DateTime get firstDayOfMonth => DateTime(year, month, 1);
+  date get firstDayOfMonth => DateTime(year, month, 1);
 
   /// Returns the last day of the month for the given date.
-  DateTime get lastDayOfMonth => DateTime(year, month + 1, 0);
+  date get lastDayOfMonth => DateTime(year, month + 1, 0);
 
   /// Returns the first day of the year for the given date.
-  DateTime get firstDayOfYear => DateTime(year, 1, 1);
+  date get firstDayOfYear => DateTime(year, 1, 1);
 
   /// Returns the last day of the year for the given date.
-  DateTime get lastDayOfYear => DateTime(year, 12, 31);
+  date get lastDayOfYear => DateTime(year, 12, 31);
+
+  /// Returns the next week.
+  date get nextWeek => add(7.days);
+
+  /// Returns the previous week.
+  date get previousWeek => subtract(7.days);
+
+  /// Returns the next month.
+  date get nextMonth => DateTime(year, month + 1, day);
+
+  /// Returns the previous month.
+  date get previousMonth => DateTime(year, month - 1, day);
+
+  /// Returns the next year.
+  date get nextYear => DateTime(year + 1, month, day);
+
+  /// Returns the previous year.
+  date get previousYear => DateTime(year - 1, month, day);
+
+  /// Returns the next bimester
+  date get nextBimester => date(year, firstDayOfBimester.nextMonth.nextMonth.month, day);
+
+  /// Returns the previous bimester
+  date get previousBimester => date(year, firstDayOfBimester.previousMonth.previousMonth.month, day);
+
+  /// Returns the next quarter.
+  date get nextQuarter => date(year, firstDayOfQuarter.nextMonth.nextMonth.nextMonth.month, day);
+
+  /// Returns the previous quarter.
+  date get previousQuarter => date(year, firstDayOfQuarter.previousMonth.previousMonth.previousMonth.month, day);
 
   /// Returns the first day of the fortnight.
   date get firstDayOfFortnight => day <= 15 ? firstDayOfMonth : date(year, month, 16);
@@ -180,10 +177,42 @@ extension DateTimeExtensions on DateTime {
   /// Returns short month string in the format Jan, Feb etc
   String get shortMonthName => monthName.first(3);
 
+  /// Get current percentage of the day
+  /// Returns the percentage of the day that has passed
+  double get percentageOfDay => (hour * 60 * 60 + minute * 60 + second) / (24 * 60 * 60);
+
+  /// Get current percentage of the year
+  double get percentageOfYear => (dayOfYear - 1) / (isLeapYear ? 366 : 365);
+
+  /// Get Day Of Year
+  int get dayOfYear {
+    var firstDayOfYear = DateTime(year, 1, 1);
+    return difference(firstDayOfYear).inDays + 1;
+  }
+
+  /// Get Week Of Year
+  int get weekOfYear {
+    var firstDayOfYear = DateTime(year, 1, 1);
+    var days = difference(firstDayOfYear).inDays;
+    return ((days - (days % 7)) / 7).floor() + 1;
+  }
+
+  /// Check if this year is a Leap Year
+  bool get isLeapYear => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+
   /// Time Ago
   ///
   /// Returns string of time difference between given DateTime and
-  /// [DateTime.now()] in the format 1d, 2h, 4s or Just now
+  /// [until] in the format 1d, 2h, 4s or Just now.
+  /// Default values are in English but can be changed by passing the
+  /// optional parameters.
+  /// - [remaining] is the string to be displayed after the time difference.
+  /// - [day] is the string to be displayed after the number of days.
+  /// - [hour] is the string to be displayed after the number of hours.
+  /// - [minute] is the string to be displayed after the number of minutes.
+  /// - [seconds] is the string to be displayed after the number of seconds.
+  /// - [justNow] is the string to be displayed if the time difference is less than a second.
+  /// - [until] is the date to compare with, if not provided, it will use the current date and time.
   String timeAgo({
     string remaining = "remaining",
     string day = "d",
@@ -215,19 +244,6 @@ extension DateTimeExtensions on DateTime {
   /// Time Of Day
   ///
   /// Returns time of day in the format Morning, Afternoon, Evening or Night
-  ///
-  /// Usage:
-  ///
-  /// ```dart
-  /// DateTime.now().timeOfDay
-  /// ```
-  ///
-  /// Result:
-  ///
-  /// ```dart
-  /// Morning
-  /// ```
-  ///
   String timeOfDay({string? morning, string? afternoon, string? evening, string? night}) {
     if (hour >= 0 && hour < 12) {
       return morning.ifBlank(afternoon).blankIfNull;
@@ -258,24 +274,17 @@ extension DateTimeExtensions on DateTime {
   ///
   String get timeOfDayEmoji => timeOfDay(morning: '☀️', afternoon: '🌤️', night: '🌙');
 
-  /// Is Between
+  /// Checks if the current date is between the specified start and end dates (exclusive).
   ///
-  /// Returns true if the given [DateTime] is between the given start and end [DateTime]
-  ///
-  /// Usage:
-  ///
-  /// ```dart
-  /// DateTime.now().isBetween(DateTime(2021, 1, 1), DateTime(2021, 12, 31))
-  /// ```
-  ///
-  /// Result:
-  ///
-  /// ```dart
-  /// true
-  /// ```
-  ///
+  /// Returns `true` if the current date is after the start date and before the end date.
+  /// Otherwise, returns `false`.
   bool isBetween(DateTime start, DateTime end) => isAfter(start) && isBefore(end);
 
+  ///
+  /// Checks if the current DateTime object is between or equal to the given start and end DateTime objects.
+  ///
+  /// Returns `true` if the current DateTime is between the start and end DateTime ,
+  /// or if it is equal to the start or end DateTime. Otherwise, returns `false`.
   bool isBetweenOrEqual(DateTime start, DateTime end) => isBetween(start, end) || this == start || this == end;
 
   /// Time Format
@@ -294,7 +303,18 @@ extension DateTimeExtensions on DateTime {
   /// 08:00pm
   /// ```
   ///
-  String get timeFormat => formatTime(this);
+  String get timeFormat {
+    final hour = this.hour;
+    final minute = this.minute;
+
+    final String period = hour >= 12 ? 'PM' : 'AM';
+    int hourIn12HourFormat = hour > 12 ? hour - 12 : hour;
+    hourIn12HourFormat = hourIn12HourFormat == 0 ? 12 : hourIn12HourFormat;
+    final String hourStr = hourIn12HourFormat.toString().padLeft(2, '0');
+    final String minuteStr = minute.toString().padLeft(2, '0');
+
+    return '$hourStr:$minuteStr$period';
+  }
 
   /// Readable Date Time Format
   ///

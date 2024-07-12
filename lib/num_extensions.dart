@@ -200,7 +200,10 @@ extension NumNullExtensions<T extends num?> on T {
 }
 
 extension DurationExtensions on Duration {
-  String get formatted {
+  string getFormatted({
+    bool includeMilliseconds = false,
+    bool includeMicroseconds = false,
+  }) {
     var hours = inHours;
     var minutes = inMinutes.remainder(60);
     var seconds = inSeconds.remainder(60);
@@ -217,16 +220,18 @@ extension DurationExtensions on Duration {
     if (seconds > 0) {
       formatted += "$seconds s ";
     }
-    if (milliseconds > 0) {
+    if (includeMilliseconds && milliseconds > 0) {
       formatted += "$milliseconds ms ";
     }
-    if (microseconds > 0) {
+    if (includeMilliseconds && microseconds > 0) {
       formatted += "$microseconds µs";
     }
     return formatted.trim();
   }
 
-/// Delay a function for the duration
+  String get formatted => getFormatted();
+
+  /// Delay a function for the duration
   Future delay([FutureOr Function()? callback]) async => Future.delayed(
         this,
         callback,
