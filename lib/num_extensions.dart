@@ -226,6 +226,7 @@ extension DurationExtensions on Duration {
     return formatted.trim();
   }
 
+/// Delay a function for the duration
   Future delay([FutureOr Function()? callback]) async => Future.delayed(
         this,
         callback,
