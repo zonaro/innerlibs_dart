@@ -70,7 +70,7 @@ extension StringListExtensions on strings {
 extension ListExtension<T> on List<T> {
   /// Searches for multiple items in an iterable based on the given search terms.
   ///
-  /// The [searchTerms] parameter specifies the terms to search for.
+  /// The [searchTerms] parameter specifies the terms to search for. Allow wildcards
   /// The [searchOn] is a function that returns a list of strings to search on for each element in the iterable.
   /// The [levenshteinDistance] is the maximum allowed Levenshtein distance for fuzzy matching. Defaults to 0.
   /// The [allIfEmpty] determines whether to return all elements if the search term is empty. Defaults to true.
@@ -82,31 +82,21 @@ extension ListExtension<T> on List<T> {
     required strings Function(T) searchOn,
     int levenshteinDistance = 0,
     bool allIfEmpty = true,
+    bool useWildcards = false,
   }) =>
       searchTerms.selectMany((e, i) => search(searchTerm: e, searchOn: searchOn, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty)).distinct();
 
-  /// Searches for elements in the iterable based on a search term and search criteria.
-  ///
-  /// The [searchTerm] is the term to search for.
-  /// The [searchOn] is a function that returns a list of strings to search on for each element in the iterable.
-  /// The [levenshteinDistance] is the maximum allowed Levenshtein distance for fuzzy matching. Defaults to 0.
-  /// The [allIfEmpty] determines whether to return all elements if the search term is empty. Defaults to true.
-  ///
-  /// Returns an iterable of elements that match the search criteria, ordered by relevance.
-  /// The relevance is determined by the number of matches in the search strings and the Levenshtein distance.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// var myList = [/* elements */];
-  /// var searchResults = myList.search(
-  ///   searchTerm: 'example',
-  ///   searchOn: (element) => [element.name, element.description],
-  ///   levenshteinDistance: 2,
-  ///   allIfEmpty: false,
-  /// );
-  /// ```
-
-  Iterable<T> search({required string searchTerm, required strings Function(T) searchOn, int levenshteinDistance = 0, bool allIfEmpty = true}) {
+  Iterable<T> search({
+    required string searchTerm,
+    required strings Function(T) searchOn,
+    int levenshteinDistance = 0,
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
+    bool useWildcards = false,
+    bool allIfEmpty = true,
+  }) {
     if (isEmpty) return <T>[].orderBy((e) => true);
 
     if (searchTerm.isBlank) {
@@ -117,12 +107,32 @@ extension ListExtension<T> on List<T> {
       }
     }
 
-    int searchFunc(T item) {
-      return searchOn(item).where((k) {
-        var keyword = k.camelSplitString.removeAny(StringHelpers.wordSplitters);
-        var searchword = searchTerm.camelSplitString.removeAny(StringHelpers.wordSplitters);
+    string transformString(string keyword) {
+      if (splitCamelCase) {
+        keyword = keyword.camelSplitString;
+      }
 
-        return keyword.flatContains(searchword);
+      if (ignoreWordSplitters) {
+        keyword = keyword.removeWordSplitters;
+      }
+
+      if (ignoreDiacritics) {
+        keyword = keyword.removeDiacritics;
+      }
+
+      if (ignoreCase) {
+        keyword = keyword.toLowerCase();
+      }
+
+      return keyword;
+    }
+
+    int searchFunc(T item) {
+      return searchOn(item).where((keyword) {
+        keyword = transformString(keyword);
+        var searchword = transformString(searchTerm);
+        if (useWildcards) return keyword.isLike(searchword, !ignoreCase);
+        return keyword.contains(searchword);
       }).length;
     }
 
@@ -131,9 +141,9 @@ extension ListExtension<T> on List<T> {
         return 0;
       } else {
         return searchOn(item).selectMany((e, i) {
-          return e.getUniqueWords.map((t) {
-            var keyword = t.asFlat;
-            var searchword = searchTerm.asFlat;
+          return e.getUniqueWords.map((keyword) {
+            keyword = transformString(keyword);
+            var searchword = transformString(searchTerm);
             return searchword.getLevenshtein(keyword);
           });
         }).count((e) {

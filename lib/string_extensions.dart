@@ -11,7 +11,6 @@ import 'package:intl/intl.dart';
 // for the utf8.encode method
 
 extension NullStringExtension on String? {
-
   /// Returns the string if it is not null, otherwise returns an empty string.
   String get blankIfNull => this ?? "";
 
@@ -2458,7 +2457,23 @@ extension StringExtension on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return replaceAll(RegExp(r'\s+'), '');
+    return removeAny(StringHelpers.whiteSpaceChars);
+  }
+
+  /// Removes all word splitters from the `String`.
+  string get removeWordSplitters {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return removeAny(StringHelpers.wordSplitters);
+  }
+
+  /// remove all break lines from the `String`.
+  string get removeBreakLines {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return removeAny(StringHelpers.breakLineChars);
   }
 
   bool get isIP => isIPv4 || isIPv6;
@@ -2909,10 +2924,6 @@ extension StringExtension on String {
     return this[0].toUpperCase() + substring(1).toLowerCase();
   }
 
-  /// Remove all whitespace inside string
-  /// Example: your name => yourname
-  String removeAllWhitespace() => replaceAll(' ', '');
-
   String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{{');
 
   String replaceMustachesWithMap(Map<String, dynamic> params) => replaceWrappedWithMap(values: params, openWrapChar: "{{");
@@ -2964,7 +2975,7 @@ extension StringExtension on String {
   /// - `?` matches any single character.
   ///
   /// Returns `true` if the [value] matches the [mask] pattern, `false` otherwise.
-  bool isLike(string mask) => RegExp('^${RegExp.escape(mask).replaceAll('\\*', '.*').replaceAll('\\?', '.').toString()}\$', multiLine: true).hasMatch(this);
+  bool isLike(string mask, [bool caseSensitive = false]) => RegExp('^${RegExp.escape(mask).replaceAll('\\*', '.*').replaceAll('\\?', '.').toString()}\$', multiLine: true, caseSensitive: caseSensitive).hasMatch(this);
 
   /// change a date string from a format to another format
   string changeDateFormat(string toFormat, [string? fromFormat, string? locale]) => toDate(fromFormat, locale).format(toFormat);
