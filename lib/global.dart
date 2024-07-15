@@ -38,7 +38,17 @@ date get yesterday => now.subtract(1.days);
 date get lastWeek => now.lastDayOfWeek - 7.days;
 int get thisYear => now.year;
 
-consoleLog(
+/// Logs a message to the console if the app is running in debug mode.
+///
+/// The [message] parameter is the message to be logged.
+/// The [time] parameter is an optional timestamp for the log message.
+/// The [sequenceNumber] parameter is an optional sequence number for the log message.
+/// The [level] parameter is an optional level for the log message.
+/// The [name] parameter is an optional name for the log message.
+/// The [zone] parameter is an optional zone for the log message.
+/// The [error] parameter is an optional error object associated with the log message.
+/// The [stackTrace] parameter is an optional stack trace associated with the log message.
+void consoleLog(
   String message, {
   DateTime? time,
   int? sequenceNumber,
@@ -49,7 +59,7 @@ consoleLog(
   StackTrace? stackTrace,
 }) {
   if (kDebugMode) {
-    log(message, time: time, sequenceNumber: sequenceNumber, level: level, name: name, zone: zone, error: error);
+    log(message, time: time ?? now, sequenceNumber: sequenceNumber, level: level, name: name, zone: zone, error: error);
   }
 }
 

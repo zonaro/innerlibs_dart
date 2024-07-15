@@ -98,7 +98,7 @@ class FutureAwaiter<T> extends StatelessWidget {
   }
 
   error(Object e) {
-    consoleLog("Error:", error: e);
+    consoleLog("Error: $e", error: e);
     return errorChild != null
         ? errorChild!(e)
         : supressError
