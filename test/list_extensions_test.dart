@@ -20,7 +20,7 @@ void main() {
   });
 
   test(' ', () {
-    for (var m in DateConstants.months()) {
+    for (var m in DateUtils.months()) {
       consoleLog(m);
     }
   });

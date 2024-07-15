@@ -1,5 +1,4 @@
 import 'package:innerlibs/innerlibs.dart';
-import 'package:innerlibs/utils/constants.dart';
 import 'package:intl/intl.dart';
 
 export 'package:innerlibs/date_range.dart';
@@ -47,10 +46,10 @@ extension DateTimeExtensions on DateTime {
   date get previousWeek => subtract(7.days);
 
   /// Returns the next month.
-  date get nextMonth => DateTime(year, month + 1, day);
+  date get nextMonth => DateTime(year, month + 1, day.lockMax(DateUtils.lastDayOfMonth(month + 1, year)));
 
   /// Returns the previous month.
-  date get previousMonth => DateTime(year, month - 1, day);
+  date get previousMonth => DateTime(year, month - 1, day.lockMax(DateUtils.lastDayOfMonth(month - 1, year)));
 
   /// Returns the next year.
   date get nextYear => DateTime(year + 1, month, day);
@@ -59,28 +58,32 @@ extension DateTimeExtensions on DateTime {
   date get previousYear => DateTime(year - 1, month, day);
 
   /// Returns the next semester.
-  date get nextSemester => date(year, firstDayOfSemester.nextMonth.nextMonth.nextMonth.nextMonth.nextMonth.nextMonth.month, day);
+  date get nextSemester => date(year, lastDayOfSemester.add(1.days).month, day.lockMax(lastDayOfSemester.add(1.days).lastDayOfMonth.day));
 
   /// Returns the previous semester
-  date get previousSemester => date(year, firstDayOfSemester.previousMonth.previousMonth.previousMonth.previousMonth.previousMonth.previousMonth.month, day);
+  date get previousSemester => date(year, firstDayOfSemester.add(-1.days).firstDayOfSemester.month, day.lockMax(firstDayOfSemester.add(-1.days).lastDayOfMonth.day));
 
   /// Returns the next bimester
-  date get nextBimester => date(year, firstDayOfBimester.nextMonth.nextMonth.month, day);
+  date get nextBimester => date(year, lastDayOfBimester.add(1.days).month, day.lockMax(lastDayOfBimester.add(1.days).lastDayOfMonth.day));
 
   /// Returns the previous bimester
-  date get previousBimester => date(year, firstDayOfBimester.previousMonth.previousMonth.month, day);
+  date get previousBimester => date(year, firstDayOfBimester.add(-1.days).firstDayOfBimester.month, day.lockMax(firstDayOfBimester.add(-1.days).lastDayOfMonth.day));
 
   /// Returns the next quarter.
-  date get nextQuarter => date(year, firstDayOfQuarter.nextMonth.nextMonth.nextMonth.month, day);
+  date get nextQuarter => date(year, lastDayOfQuarter.add(1.days).month, day.lockMax(lastDayOfQuarter.add(1.days).lastDayOfMonth.day));
 
   /// Returns the previous quarter.
-  date get previousQuarter => date(year, firstDayOfQuarter.previousMonth.previousMonth.previousMonth.month, day);
+  date get previousQuarter => date(year, firstDayOfQuarter.add(-1.days).firstDayOfQuarter.month, day.lockMax(firstDayOfQuarter.add(-1.days).lastDayOfMonth.day));
 
   /// Returns the first day of the fortnight.
   date get firstDayOfFortnight => day <= 15 ? firstDayOfMonth : date(year, month, 16);
 
   /// Returns the last day of the fortnight.
   date get lastDayOfFortnight => day <= 15 ? date(year, month, 15) : lastDayOfMonth;
+
+  date get nextFortnight => add(15.days);
+
+  date get previousFortnight => subtract(15.days);
 
   /// Returns the fortnight number.
   int get fortnightNumber => day <= 15 ? 1 : 2;
@@ -166,7 +169,7 @@ extension DateTimeExtensions on DateTime {
   /// Get Day
   ///
   /// Returns day string in the format Monday, Tuesday etc
-  String longWeekDay(dynamic locale) => weekday == 7 ? DateConstants.days(locale)[0] : DateConstants.days(locale)[weekday];
+  String longWeekDay(dynamic locale) => weekday == 7 ? DateUtils.days(locale)[0] : DateUtils.days(locale)[weekday];
 
   /// Get Short Day
   ///
@@ -176,7 +179,7 @@ extension DateTimeExtensions on DateTime {
   /// Get Month
   ///
   /// Returns month string in the format January, February etc
-  String monthName(dynamic locale) => DateConstants.months(locale)[month - 1];
+  String monthName(dynamic locale) => DateUtils.months(locale)[month - 1];
 
   /// Get Short Month
   ///
@@ -401,4 +404,16 @@ extension DateTimeExtensions on DateTime {
     if (format.isBlank) return toIso8601String();
     return DateFormat(format, locale).format(this);
   }
+}
+
+mixin DateUtils {
+  static List<string> months([dynamic locale]) => [
+        for (var i = 1; i <= 12; i++) DateFormat.MMMM(locale).format(DateTime(DateTime.now().year, i, 1)),
+      ];
+
+  static List<string> days([dynamic locale]) => [
+        for (var i = 1; i <= 7; i++) DateFormat.E().format(DateTime(now.year, 1, i)),
+      ];
+
+  static int lastDayOfMonth(int month, int year) => DateTime(year, month + 1, 0).day;
 }
