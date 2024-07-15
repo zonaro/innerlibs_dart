@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:innerlibs/innerlibs.dart';
-import 'package:innerlibs/utils/constants.dart';
 
 void main() {
   test(' ', () {
@@ -17,11 +16,5 @@ void main() {
   test(' ', () {
     var t = const Size(1920, 1080).getAspectRatioString();
     consoleLog(t);
-  });
-
-  test(' ', () {
-    for (var m in DateUtils.months()) {
-      consoleLog(m);
-    }
   });
 }
