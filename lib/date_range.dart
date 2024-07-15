@@ -4,9 +4,7 @@ import 'package:innerlibs/innerlibs.dart';
 class DateRange {
   /// Creates a new instance of the [DateRange] class with the specified start and end dates.
   DateRange(date startDate, date endDate) {
-    var r = startDate.compareAndSwap(endDate);
-    _startDate = r.$1;
-    _endDate = r.$2;
+    _dates = [startDate, endDate];
   }
 
   /// Creates a [DateRange] representing today.
@@ -17,6 +15,12 @@ class DateRange {
 
   /// Creates a [DateRange] representing tomorrow.
   factory DateRange.tomorrow() => DateRange(tomorrow, tomorrow.endOfDay);
+
+  /// Creates a [DateRange] representing yesterday and today.
+  DateRange.yesterdayToToday() : this(yesterday, today.endOfDay);
+
+  /// Creates a [DateRange] representing testerday, today and tomorrow.
+  DateRange.yesterdayToTomorrow() : this(yesterday, today.endOfDay);
 
   /// Creates a [DateRange] representing the current week.
   factory DateRange.thisWeek() => DateRange(today.firstDayOfWeek, today.lastDayOfWeek.endOfDay);
@@ -54,61 +58,141 @@ class DateRange {
   /// Creates a [DateRange] representing the next year.
   factory DateRange.nextYear() => DateRange(today.nextYear.firstDayOfYear, today.nextYear.lastDayOfYear.endOfDay);
 
+  /// Creates a [DateRange] representing the current bimester.
   factory DateRange.thisBimester() => DateRange(today.firstDayOfBimester, today.lastDayOfBimester.endOfDay);
 
+  /// Creates a [DateRange] representing the previous bimester.
   factory DateRange.lastBimester() => DateRange(today.previousBimester.firstDayOfBimester, today.previousBimester.lastDayOfBimester.endOfDay);
 
+  /// Creates a [DateRange] representing the next bimester.
   factory DateRange.nextBimester() => DateRange(today.nextBimester.firstDayOfBimester, today.nextBimester.lastDayOfBimester.endOfDay);
 
+  /// Creates a [DateRange] representing the current trimester.
   factory DateRange.thisSemester() => DateRange(today.firstDayOfSemester, today.lastDayOfSemester.endOfDay);
 
+  /// Creates a [DateRange] representing the previous semester.
   factory DateRange.lastSemester() => DateRange(today.previousSemester.firstDayOfSemester, today.previousSemester.lastDayOfSemester.endOfDay);
 
+  /// Creates a [DateRange] representing the next semester.
   factory DateRange.nextSemester() => DateRange(today.nextSemester.firstDayOfSemester, today.nextSemester.lastDayOfSemester.endOfDay);
 
   /// Creates a [DateRange] representing the specified number of days before today.
   /// - [days] The number of days before today.
   factory DateRange.daysAgo(int days) => DateRange(today.subtract(days.days), today.endOfDay);
 
+  /// Creates a [DateRange] representing the specified number of days after today.
+  /// - [days] The number of days after today.
+  factory DateRange.daysFromNow(int days) => DateRange(today, today.add(days.days).endOfDay);
+
+  /// Creates a [DateRange] representing the specified number of days before the specified date.
+  /// - [date] The date to calculate the range from.
+  /// - [days] The number of days before the specified date.
+  factory DateRange.daysBefore(date date, int days) => DateRange(date.subtract(days.days), date.endOfDay);
+
+  /// Creates a [DateRange] representing the specified number of days after the specified date.
+  /// - [date] The date to calculate the range from.
+  /// - [days] The number of days after the specified date.
+  factory DateRange.daysAfter(date date, int days) => DateRange(date, date.add(days.days).endOfDay);
+
   /// Gets the start date of the date range.
-  date get startDate => _startDate;
+  date get startDate => _dates.min;
 
   /// Sets the start date of the date range.
   set startDate(date value) {
-    var r = value.compareAndSwap(endDate);
-    _startDate = r.$1;
-    _endDate = r.$2;
+    _dates = [..._dates, value];
+    _dates = [_dates.min, _dates.max];
   }
 
   /// Gets the end date of the date range.
-  date get endDate => _endDate;
+  date get endDate => _dates.max;
 
   /// Sets the end date of the date range.
   set endDate(date value) {
-    var r = startDate.compareAndSwap(value);
-    _startDate = r.$1;
-    _endDate = r.$2;
+    _dates = [..._dates, value];
+    _dates = [_dates.min, _dates.max];
   }
 
-  late date _startDate;
-  late date _endDate;
+  List<date> _dates = [];
 
   /// Gets the duration of the date range.
   Duration get duration => endDate.difference(startDate);
 
   /// Returns true if today is in the date range.
-  bool get isNow => now.isBetweenOrEqual(_startDate, _endDate);
+  bool get isNow => now.isBetweenOrEqual(startDate, endDate);
 
   /// Returns true if yesterday is in the date range.
-  bool contains(date date) => date.isBetweenOrEqual(_startDate, _endDate);
+  bool contains(date date) => date.isBetweenOrEqual(startDate, endDate);
 
-  bool containsRange(DateRange range) => range.startDate.isBetweenOrEqual(_startDate, _endDate) && range.endDate.isBetweenOrEqual(_startDate, _endDate);
+  /// Checks if the date range contains the specified date range.
+  bool containsRange(DateRange range) => range.startDate.isBetweenOrEqual(startDate, endDate) && range.endDate.isBetweenOrEqual(startDate, endDate);
 
-  bool intersects(DateRange range) => range.startDate.isBetweenOrEqual(_startDate, _endDate) || range.endDate.isBetweenOrEqual(_startDate, _endDate);
+  /// Checks if the date range intersects the specified date range.
+  bool intersects(DateRange range) => range.startDate.isBetweenOrEqual(startDate, endDate) || range.endDate.isBetweenOrEqual(startDate, endDate);
 
   /// Returns true if the date range is in the past.
   bool get isPast => endDate.isBefore(now);
 
   /// Returns true if the date range is in the future.
   bool get isFuture => startDate.isAfter(now);
+
+  /// Overrides the equality operator to compare the current [DateRange] object with another object.
+  /// Returns `true` if the objects are equal, `false` otherwise.
+  /// Checks if the current [DateRange] object is equal to the [other] object.
+  ///
+  /// The equality comparison is performed based on the type of the [other] object.
+  /// If [other] is of type [DateRange], the comparison is based on the hash codes of the two objects.
+  /// If [other] is of type [int], the comparison is based on the milliseconds of the [duration] property.
+  /// If [other] is of type [Duration], the comparison is based on the equality of the [duration] property.
+  /// If [other] is of type [date], the comparison is based on whether the [other] date is contained within the [DateRange].
+  /// If [other] is of type [List<date>], the comparison is based on whether the minimum date of the [other] list is equal to the [startDate]
+  /// and the maximum date of the [other] list is equal to the [endDate].
+  /// If [other] is of type [(date, date)], the comparison is based on whether the minimum date of the tuple is equal to the [startDate]
+  /// and the maximum date of the tuple is equal to the [endDate].
+  /// If [other] is of type [string], the comparison is based on the type of the [other] string.
+  /// If the [other] string is a valid date, the comparison is based on whether the date is contained within the [DateRange].
+  /// If the [other] string is a valid number, the comparison is based on whether the milliseconds of the [duration] property is equal to the number.
+  /// Other types return `false`.
+  /// Returns `true` if the objects are equal, `false` otherwise.
+  @override
+  bool operator ==(Object other) {
+    if (other is DateRange) {
+      return hashCode == other.hashCode;
+    }
+    if (other is int) {
+      return duration.inMilliseconds == other;
+    }
+    if (other is Duration) {
+      return duration == other;
+    }
+    if (other is date) {
+      return contains(other);
+    }
+
+    if (other is List<date>) {
+      return other.min == startDate && other.max == endDate;
+    }
+
+    if (other is (date, date)) {
+      var t = other.$1.compareAndSwap(other.$2);
+      return t.min == startDate && t.max == endDate;
+    }
+
+    if (other is string) {
+      if (other.isDate) {
+        return contains(other.toDate());
+      }
+      if (other.isNumber) {
+        return duration.inMilliseconds == other.toInt!;
+      }
+    }
+    return false;
+  }
+
+  /// Returns the hash code for this [DateRange] object.
+  @override
+  int get hashCode => Object.hash(startDate, endDate);
+
+  /// Returns a string representation of this [DateRange] object.
+  @override
+  String toString() => '$startDate ~ $endDate - ${duration.formatted}';
 }

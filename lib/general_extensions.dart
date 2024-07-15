@@ -12,14 +12,14 @@ extension CompareAndSwap<T extends Comparable> on T {
   /// Compares the current value with the `other` value and swaps them if necessary.
   ///
   /// Returns a tuple containing the updated values.
-  (T, T) compareAndSwap(T other) {
+  Iterable<T> compareAndSwap(T other) {
     T a = this;
     if (a.compareTo(other) > 0) {
       var temp = a;
       a = other;
       other = temp;
     }
-    return (a, other);
+    return [a, other];
   }
 }
 
