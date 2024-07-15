@@ -31,40 +31,40 @@ class DateRange {
   factory DateRange.thisMonth() => DateRange(today.firstDayOfMonth, today.lastDayOfMonth.endOfDay);
 
   /// Creates a [DateRange] representing the previous month.
-  factory DateRange.lastMonth() => DateRange(today.firstDayOfMonth.previousMonth, today.lastDayOfMonth.previousMonth.endOfDay);
+  factory DateRange.lastMonth() => DateRange(today.previousMonth.firstDayOfMonth, today.previousMonth.lastDayOfMonth.endOfDay);
 
   /// Creates a [DateRange] representing the next month.
-  factory DateRange.nextMonth() => DateRange(today.firstDayOfMonth.nextMonth, today.lastDayOfMonth.nextMonth.endOfDay);
+  factory DateRange.nextMonth() => DateRange(today.nextMonth.firstDayOfMonth, today.nextMonth.lastDayOfMonth.endOfDay);
 
   /// Creates a [DateRange] representing the current quarter.
   factory DateRange.thisQuarter() => DateRange(today.firstDayOfQuarter, today.lastDayOfQuarter.endOfDay);
 
   /// Creates a [DateRange] representing the previous quarter.
-  factory DateRange.lastQuarter() => DateRange(today.firstDayOfQuarter.previousQuarter, today.lastDayOfQuarter.previousQuarter.endOfDay);
+  factory DateRange.lastQuarter() => DateRange(today.previousQuarter.firstDayOfQuarter, today.previousQuarter.lastDayOfQuarter.endOfDay);
 
   /// Creates a [DateRange] representing the next quarter.
-  factory DateRange.nextQuarter() => DateRange(today.firstDayOfQuarter.nextQuarter, today.lastDayOfQuarter.nextQuarter.endOfDay);
+  factory DateRange.nextQuarter() => DateRange(today.nextQuarter.firstDayOfQuarter, today.nextQuarter.lastDayOfQuarter.endOfDay);
 
   /// Creates a [DateRange] representing the current year.
   factory DateRange.thisYear() => DateRange(today.firstDayOfYear, today.lastDayOfYear.endOfDay);
 
   /// Creates a [DateRange] representing the previous year.
-  factory DateRange.lastYear() => DateRange(today.firstDayOfYear.previousYear, today.lastDayOfYear.previousYear.endOfDay);
+  factory DateRange.lastYear() => DateRange(today.previousYear.firstDayOfYear, today.previousYear.lastDayOfYear.endOfDay);
 
   /// Creates a [DateRange] representing the next year.
-  factory DateRange.nextYear() => DateRange(today.firstDayOfYear.nextYear, today.lastDayOfYear.nextYear.endOfDay);
+  factory DateRange.nextYear() => DateRange(today.nextYear.firstDayOfYear, today.nextYear.lastDayOfYear.endOfDay);
 
   factory DateRange.thisBimester() => DateRange(today.firstDayOfBimester, today.lastDayOfBimester.endOfDay);
 
-  factory DateRange.lastBimester() => DateRange(today.firstDayOfBimester.previousBimester, today.lastDayOfBimester.previousBimester.endOfDay);
+  factory DateRange.lastBimester() => DateRange(today.previousBimester.firstDayOfBimester, today.previousBimester.lastDayOfBimester.endOfDay);
 
-  factory DateRange.nextBimester() => DateRange(today.firstDayOfBimester.nextBimester, today.lastDayOfBimester.nextBimester.endOfDay);
+  factory DateRange.nextBimester() => DateRange(today.nextBimester.firstDayOfBimester, today.nextBimester.lastDayOfBimester.endOfDay);
 
   factory DateRange.thisSemester() => DateRange(today.firstDayOfSemester, today.lastDayOfSemester.endOfDay);
 
-  factory DateRange.lastSemester() => DateRange(today.firstDayOfSemester.previousSemester, today.lastDayOfSemester.previousSemester.endOfDay);
+  factory DateRange.lastSemester() => DateRange(today.previousSemester.firstDayOfSemester, today.previousSemester.lastDayOfSemester.endOfDay);
 
-  factory DateRange.nextSemester() => DateRange(today.firstDayOfSemester.nextSemester, today.lastDayOfSemester.nextSemester.endOfDay);
+  factory DateRange.nextSemester() => DateRange(today.nextSemester.firstDayOfSemester, today.nextSemester.lastDayOfSemester.endOfDay);
 
   /// Creates a [DateRange] representing the specified number of days before today.
   /// - [days] The number of days before today.
