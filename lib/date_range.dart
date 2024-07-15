@@ -3,8 +3,8 @@ import 'package:innerlibs/innerlibs.dart';
 /// Represents a range of dates.
 class DateRange {
   /// Creates a new instance of the [DateRange] class with the specified start and end dates.
-  DateRange(date startDate, date endDate) {
-    _dates = [startDate, endDate];
+  DateRange(date startDate, [date? endDate]) {
+    _dates = [startDate, endDate ?? startDate];
   }
 
   /// Creates a [DateRange] representing today.

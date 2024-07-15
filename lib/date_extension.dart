@@ -283,6 +283,9 @@ extension DateTimeExtensions on DateTime {
   ///
   String get timeOfDayEmoji => timeOfDay(morning: '☀️', afternoon: '🌤️', night: '🌙');
 
+  /// Converts the current date to a [DateRange] object with the specified [endDate].
+  DateRange toRange([DateTime? endDate]) => DateRange(this, endDate);
+
   /// Checks if the current date is between the specified start and end dates (exclusive).
   ///
   /// Returns `true` if the current date is after the start date and before the end date.
