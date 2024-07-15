@@ -360,7 +360,7 @@ mixin SqlUtil {
   /// If [count] is not null, it returns "TOP(count)" for SQL Server and "LIMIT count" for MySQL.
   /// Otherwise, it returns an empty string.
   static String topOrLimit(String dataBaseProvider, int? count) {
-    if (count != null) {
+    if (count != null && count > 0) {
       if (isSqlServer(dataBaseProvider)) {
         return "TOP($count)";
       }

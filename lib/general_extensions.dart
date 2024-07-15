@@ -24,7 +24,7 @@ extension CompareAndSwap<T extends Comparable> on T {
 }
 
 bool _valid(dynamic obj) => isValid(obj);
-R? _parseTo<T, R>(T value) => parseTo<T, R>(value);
+R? _parseTo<R>(value) => parseTo<R>(value);
 
 extension ObjectExtensions<T extends Object?> on T {
   bool get isNullable {
@@ -57,7 +57,7 @@ extension ObjectExtensions<T extends Object?> on T {
   /// [value] The value to convert.
   ///
   /// Returns the converted value of type `T`.
-  R? parseTo<R>() => _parseTo<T, R>(this);
+  R? parseTo<R>() => _parseTo<R>(this);
 
   // return a string of this object as a SQL Value
   String asSqlValue([bool nullAsBlank = false]) {

@@ -86,6 +86,16 @@ extension ListExtension<T> on List<T> {
   }) =>
       searchTerms.selectMany((e, i) => search(searchTerm: e, searchOn: searchOn, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty)).distinct();
 
+  /// Searches the iterable for items that match the specified search criteria.
+  ///
+  /// The [searchTerm] parameter specifies the term to search for.
+  /// The [searchOn] parameter is a function that returns a list of strings to search on for each item.
+  /// The [levenshteinDistance] parameter specifies the maximum Levenshtein distance allowed for fuzzy matching.
+  /// The [ignoreCase], [ignoreDiacritics], [ignoreWordSplitters], [splitCamelCase], [useWildcards], and [allIfEmpty] parameters control various search options.
+  ///
+  /// Returns an iterable of items that match the search criteria, ordered by relevance.
+  /// The relevance is determined by the number of matches and the Levenshtein distance (if applicable).
+
   Iterable<T> search({
     required string searchTerm,
     required strings Function(T) searchOn,
@@ -144,7 +154,7 @@ extension ListExtension<T> on List<T> {
           return e.getUniqueWords.map((keyword) {
             keyword = transformString(keyword);
             var searchword = transformString(searchTerm);
-            return searchword.getLevenshtein(keyword);
+            return searchword.getLevenshtein(keyword, !ignoreCase);
           });
         }).count((e) {
           return e <= levenshteinDistance;

@@ -20,8 +20,8 @@ void main() {
   });
 
   test(' ', () {
-    for (var m in DateConstants.months) {
-      consoleLog(m.month);
+    for (var m in DateConstants.months()) {
+      consoleLog(m);
     }
   });
 }

@@ -54,6 +54,22 @@ class DateRange {
   /// Creates a [DateRange] representing the next year.
   factory DateRange.nextYear() => DateRange(today.firstDayOfYear.nextYear, today.lastDayOfYear.nextYear.endOfDay);
 
+  factory DateRange.thisBimester() => DateRange(today.firstDayOfBimester, today.lastDayOfBimester.endOfDay);
+
+  factory DateRange.lastBimester() => DateRange(today.firstDayOfBimester.previousBimester, today.lastDayOfBimester.previousBimester.endOfDay);
+
+  factory DateRange.nextBimester() => DateRange(today.firstDayOfBimester.nextBimester, today.lastDayOfBimester.nextBimester.endOfDay);
+
+  factory DateRange.thisSemester() => DateRange(today.firstDayOfSemester, today.lastDayOfSemester.endOfDay);
+
+  factory DateRange.lastSemester() => DateRange(today.firstDayOfSemester.previousSemester, today.lastDayOfSemester.previousSemester.endOfDay);
+
+  factory DateRange.nextSemester() => DateRange(today.firstDayOfSemester.nextSemester, today.lastDayOfSemester.nextSemester.endOfDay);
+
+  /// Creates a [DateRange] representing the specified number of days before today.
+  /// - [days] The number of days before today.
+  factory DateRange.daysAgo(int days) => DateRange(today.subtract(days.days), today.endOfDay);
+
   /// Gets the start date of the date range.
   date get startDate => _startDate;
 

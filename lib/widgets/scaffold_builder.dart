@@ -215,7 +215,7 @@ class MenuEntry {
 
   Widget? get titleWidget => (pages.singleOrNull?.title as Object?).forceWidget() ?? (title as Object?).forceWidget();
 
-  string get titleString => (titleWidget is Text ? (title as Text).data : title.toString()) | "";
+  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
 
   MenuEntry({
     required this.title,

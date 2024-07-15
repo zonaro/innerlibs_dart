@@ -6,17 +6,15 @@
 //  Copyright (c) 2023 ModestNerds, Co
 //
 
+import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
-import 'day.dart';
-import 'month.dart';
+mixin DateConstants {
+  static List<string> months([dynamic locale]) => [
+        for (var i = 1; i <= 12; i++) DateFormat.MMMM(locale).format(DateTime(DateTime.now().year, i, 1)),
+      ];
 
-class DateConstants {
-  static final List<Month> months = [
-    for (var i = 1; i <= 12; i++) Month(DateFormat.MMMM().format(DateTime(DateTime.now().year, i, 1))),
-  ];
-
-  static final List<Day> days = [
-    for (var i = 1; i <= 7; i++) Day(DateFormat.E().format(DateTime(2022, 1, i))),
-  ];
+  static List<string> days([dynamic locale]) => [
+        for (var i = 1; i <= 7; i++) DateFormat.E().format(DateTime(now.year, 1, i)),
+      ];
 }

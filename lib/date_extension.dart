@@ -58,6 +58,12 @@ extension DateTimeExtensions on DateTime {
   /// Returns the previous year.
   date get previousYear => DateTime(year - 1, month, day);
 
+  /// Returns the next semester.
+  date get nextSemester => date(year, firstDayOfSemester.nextMonth.nextMonth.nextMonth.nextMonth.nextMonth.nextMonth.month, day);
+
+  /// Returns the previous semester
+  date get previousSemester => date(year, firstDayOfSemester.previousMonth.previousMonth.previousMonth.previousMonth.previousMonth.previousMonth.month, day);
+
   /// Returns the next bimester
   date get nextBimester => date(year, firstDayOfBimester.nextMonth.nextMonth.month, day);
 
@@ -160,22 +166,22 @@ extension DateTimeExtensions on DateTime {
   /// Get Day
   ///
   /// Returns day string in the format Monday, Tuesday etc
-  String get longWeekDay => weekday == 7 ? DateConstants.days[0].day : DateConstants.days[weekday].day;
+  String longWeekDay(dynamic locale) => weekday == 7 ? DateConstants.days(locale)[0] : DateConstants.days(locale)[weekday];
 
   /// Get Short Day
   ///
   /// Returns short day string in the format Mon, Tue, Wed etc
-  String get shortWeekday => longWeekDay.first(3);
+  String shortWeekday(dynamic locale) => longWeekDay(locale).first(3);
 
   /// Get Month
   ///
   /// Returns month string in the format January, February etc
-  String get monthName => DateConstants.months[month - 1].month;
+  String monthName(dynamic locale) => DateConstants.months(locale)[month - 1];
 
   /// Get Short Month
   ///
   /// Returns short month string in the format Jan, Feb etc
-  String get shortMonthName => monthName.first(3);
+  String shortMonthName(dynamic locale) => monthName(locale).first(3);
 
   /// Get current percentage of the day
   /// Returns the percentage of the day that has passed
@@ -349,16 +355,16 @@ extension DateTimeExtensions on DateTime {
   /// 08:00pm
   /// ```
   ///
-  String describe({string yesterday = "Yesterday"}) {
+  String describe({string yesterday = "Yesterday", dynamic locale}) {
     final difference = fromNow.inDays;
     if (difference == 0) {
       return timeFormat;
     } else if (difference == 1) {
       return yesterday;
     } else if (difference <= 7) {
-      return longWeekDay;
+      return longWeekDay(locale);
     } else {
-      return '$day/$monthName/$year';
+      return '$day/${monthName(locale)}/$year';
     }
   }
 

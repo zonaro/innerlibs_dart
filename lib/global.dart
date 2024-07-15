@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 bool get isDesktop => (isMacOS || isWindows || isLinux);
@@ -234,22 +235,27 @@ String flatString(dynamic value) {
   return "$value".removeDiacritics.toLowerCase().trimAll;
 }
 
-
 /// Parses a value of type [T] to a value of type [R].
-/// 
+///
 /// If the value is `null`, returns `null`.
-/// If [T] and [R] are the same type, returns the value as [R].
+/// If [value] is [R] returns the value as [R].
 /// If [R] is [DateTime], converts the value to a [DateTime] using the `toDate()` method.
 /// If [R] is [num], parses the value as a [num] using the `num.parse()` method.
 /// If [R] is [int], parses the value as an [int] using the `int.parse()` method.
 /// If [R] is [double], parses the value as a [double] using the `double.parse()` method.
 /// If [R] is [String], returns the value as a [String].
 /// If [R] is [bool], converts the value to a [bool] using the `asBool()` method.
+/// If [R] is [Widget], converts the value to a [Widget] using the `forceWidget()` method.
+/// If [R] is [Text], converts the value to a [Text] using the `asText()` method.
+/// If [R] is [List], converts the value to a [List] containing the value.
+/// if [R] is another type, returns the value as [R].
 /// If none of the above conditions are met, logs an error message and returns `null`.
-R? parseTo<T, R>(T value) {
+R? parseTo<R>(dynamic value) {
   if (value == null) {
     return null;
-  } else if (T == R) {
+  }
+  consoleLog("Parsing from ${value.runtimeType} to $R");
+  if (value is R) {
     return value as R?;
   } else if (R == DateTime) {
     return "$value".toDate() as R;
@@ -263,8 +269,18 @@ R? parseTo<T, R>(T value) {
     return "$value" as R;
   } else if (R == bool) {
     return "$value".asBool() as R;
+  } else if (R == Widget) {
+    return (value as Object?).forceWidget() as R;
+  } else if (R is Text) {
+    return (value as Object?).asText() as R;
+  } else if (R == List) {
+    return [value] as R;
   } else {
-    consoleLog('Cannot convert $T to $R');
-    return null;
+    try {
+      return value as R;
+    } catch (e) {
+      consoleLog("Cannot parse $value into $R", error: e);
+    }
   }
+  return null;
 }
