@@ -195,4 +195,68 @@ class DateRange {
   /// Returns a string representation of this [DateRange] object.
   @override
   String toString() => '$startDate ~ $endDate - ${duration.formatted}';
+
+  /// Returns a JSON-encodable representation of this [DateRange] object.
+  Map<String, dynamic> toJson() => {
+        'startDate': startDate.toIso8601String(),
+        'endDate': endDate.toIso8601String(),
+      };
+
+  /// Generates an iterable of [DateTime] objects representing each minute within the date range.
+  Iterable<DateTime> minutes() sync* {
+    var i = startDate;
+    while (i.isAfter(startDate) && i.isBefore(endDate)) {
+      yield i;
+      i = i.add(const Duration(minutes: 1));
+    }
+  }
+
+  /// Generates an iterable of [DateTime] objects representing each hour within the date range.
+  Iterable<DateTime> hours() sync* {
+    var i = startDate;
+    while (i.isAfter(startDate) && i.isBefore(endDate)) {
+      yield i;
+      i = i.add(const Duration(hours: 1));
+    }
+  }
+
+  /// Generates an iterable of [DateTime] objects representing each day within the date range.
+  Iterable<DateTime> days() sync* {
+    var i = startDate;
+    while (i.isAfter(startDate) && i.isBefore(endDate)) {
+      yield i;
+      i = i.add(const Duration(days: 1));
+    }
+  }
+
+  /// Generates an iterable of [DateTime] objects representing each week within the date range.
+  Iterable<DateTime> weeks() sync* {
+    var i = startDate.firstDayOfWeek;
+    while (i.isAfter(startDate) && i.isBefore(endDate)) {
+      yield i;
+      i = i.add(const Duration(days: 7));
+    }
+  }
+
+  /// Generates an iterable of [DateTime] objects representing each month within the date range.
+  Iterable<DateTime> months() sync* {
+    var i = startDate;
+    while (i.isAfter(startDate) && i.isBefore(endDate)) {
+      yield i;
+      if (i.month == 12) {
+        i = DateTime(i.year + 1, 1, i.day);
+      } else {
+        i = DateTime(i.year, i.month + 1, i.day);
+      }
+    }
+  }
+
+  /// Generates an iterable of [DateTime] objects representing each year within the date range.
+  Iterable<DateTime> years() sync* {
+    var i = startDate;
+    while (i.isAfter(startDate) && i.isBefore(endDate)) {
+      yield i;
+      i = DateTime(i.year + 1, i.month, i.day);
+    }
+  }
 }

@@ -40,6 +40,8 @@ extension NumExtensions<T extends num> on T {
 
   Duration get days => Duration(days: floor(), hours: ((this % 1) * 24).floor(), minutes: (((this % 1) * 24 % 1) * 60).floor(), seconds: ((((this % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: (((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: ((((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
+  Duration get weeks => Duration(days: (this * 7).floor(), hours: (((this * 7) % 1) * 24).floor(), minutes: ((((this * 7) % 1) * 24 % 1) * 60).floor(), seconds: (((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: ((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+
   T get forcePositive => this < 0 ? -this as T : this;
   T get forceNegative => (-1 * this.forcePositive) as T;
 
