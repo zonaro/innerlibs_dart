@@ -401,7 +401,7 @@ extension StringExtension on String {
       }
     }
 
-    words = words.select((w, i) => i == 0 ? w.toLowerCase() : w.capitalizeFirst).toList();
+    words = words.select((w, i) => i == 0 ? w.toLowerCase() : w.capitalize).toList();
     try {
       List<string> newWords = [];
       for (var word in words) {
@@ -423,7 +423,7 @@ extension StringExtension on String {
 
   /// Splits a pascal case string into individual words.
   /// Returns a list of strings representing the words in the pascal case string.
-  List<String> get pascalSplit => camelSplit.map((w) => w.capitalizeFirst).toList();
+  List<String> get pascalSplit => camelSplit.map((w) => w.capitalize).toList();
 
   String get singularPt {
     if (endsWith('ões')) {
@@ -1173,12 +1173,16 @@ extension StringExtension on String {
       return blankIfNull;
     }
 
-    var words = trim().toLowerCase().split(' ');
-    for (var i = 0; i < words.length; i++) {
-      words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1);
+    var words = trim().split(RegExp(r'\s+'));
+    var result = '';
+
+    for (var word in words) {
+      if (word.isNotEmpty) {
+        result += '${word[0].toUpperCase()}${word.substring(1).toLowerCase()} ';
+      }
     }
 
-    return words.join(' ');
+    return result.trim();
   }
 
   /// Returns a list of the `String`'s characters.
@@ -1902,7 +1906,24 @@ extension StringExtension on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return splitLines.where((x) => x.isNotBlank).join("\r\n").replaceAll(RegExp(' +'), ' ').trim();
+    return splitLines.where((x) => x.isNotBlank).map((value) {
+      // Remove spaces before any of this chars (using replaceAllMapped):
+      //:,.;?!.,)]}
+      value = value.replaceAllMapped(RegExp(r'\s+([\%:,.;?!\)\]})])'), (match) {
+        return match.group(1) ?? '';
+      });
+
+      // Remove spaces after any of this chars (using replaceAllMapped):
+      // ([{
+      value = value.replaceAllMapped(RegExp(r'([\(\[\{])\s+'), (match) {
+        return match.group(1) ?? '';
+      });
+
+      // Remove extra spaces between words
+      value = value.replaceAll(RegExp(r'\s+'), ' ');
+
+      return value.trim();
+    }).join("\r\n");
   }
 
   /// Try parse a bool value. See [asBool] to convert strings into [bool]
@@ -2910,18 +2931,11 @@ extension StringExtension on String {
     return replaceRange(index, index + pattern.length, replacement);
   }
 
-  /// Capitalize each word inside string
-  /// Example: your name => Your Name
-  String get capitalize {
-    if (isEmpty) return blankIfNull;
-    return split(' ').map((e) => e.capitalizeFirst).join(' ');
-  }
-
   /// Uppercase first letter inside string and let the others lowercase
   /// Example: your name => Your name
-  String get capitalizeFirst {
+  String get capitalize {
     if (isEmpty) return blankIfNull;
-    return this[0].toUpperCase() + substring(1).toLowerCase();
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 
   String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{{');
@@ -3060,7 +3074,10 @@ extension StringExtension on String {
     return [first, parts.join(pattern)];
   }
 
-  Future<List<String>> fetchGoogleSuggestions({string language = ""}) async {
+  /// Fetches Google suggestions based on the given language.
+  /// Returns a list of suggestions as strings.
+  /// If the language is not provided, it defaults to an empty string.
+  Future<List<String>> fetchGoogleSuggestions({String language = ""}) async {
     if (isNotBlank) {
       final url = Uri.https('suggestqueries.google.com', '/complete/search', {
         'output': 'toolbar',
@@ -3085,5 +3102,82 @@ extension StringExtension on String {
       }
     }
     return [];
+  }
+
+  /// Fix the whitespaces in a string by removing spaces after opening a quote and before closing a quote.
+  string get fixQuotes {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    /// use regex to remove spaces after opening quotes and before closing quotes.
+    /// The pattern reads as "quote, any number of spaces, stuff that's not a quote (captured), followed by any number of spaces and a quote. The replacement is just the thing you captured in quotes.
+    string value = replaceAllMapped(RegExp(r'"(\s*)([^"]+)(\s*)"'), (match) => ' "${match.group(2)?.trimAll}" ');
+
+    // also do the same with single quotes
+    value = value.replaceAllMapped(RegExp(r"'(\s*)([^']+)(\s*)'"), (match) => " '${match.group(2)?.trimAll}' ");
+
+    return value.trimAll;
+  }
+
+  /// Fixes the given [value] by applying various text formatting rules.
+  ///
+  /// The method performs the following operations on the input value:
+  /// - If the value is blank, it returns a blank string.
+  /// - Trims leading and trailing whitespace from the value.
+  /// - Adds a space after punctuation or comma, if not already present.
+  /// - Replaces a comma at the end of the value with a dot.
+  /// - Adds a space before a hyphen if it is followed by a space.
+  /// - Ensures that the sentence ends with a dot if it doesn't end with any punctuation.
+  /// - Ensures that the first characters after a punctuation are uppercase (ignoring whitespace).
+  /// - Ensures that the first character of the sentence is uppercase.
+  ///
+  /// Returns the fixed text value.
+
+  String get fixText {
+    var value = this;
+    if (value.isBlank) {
+      return blankIfNull;
+    }
+
+    // split lines ang guarantee the first letter in each line is uppercase and the last character is a punctuation. if last char is not a punctuation, add a dot
+    value = value.splitLines.map((line) {
+      line = line.trimAll;
+
+      if (line.isBlank) {
+        return "";
+      }
+
+      line = line.fixQuotes;
+
+      // Add space after closing parenthesis, closing brackets, punctuation or comma, if not is any of following chars (using replaceAllMapped):
+      // )]}!?:;.,
+      line = line.replaceAllMapped(RegExp(r'([)\]}!?:;.,])([^ )\]}!?:;.,])'), (match) => '${match.group(1)} ${match.group(2)}');
+
+      line = line.trim();
+
+      // Replace comma at the end with a dot
+      if (line.endsWith(',')) {
+        line = '${line.substring(0, line.length - 1)}.';
+      }
+
+      // if value contains a - followed by a space, add a space before the - if not exist
+      line = line.replaceAllMapped(RegExp(r'(?<!\s)-\s'), (match) => ' - ');
+
+      // Ensure the sentence ends with a dot if it doesn't end with any punctuation
+      if (!RegExp(r'[.!?]$').hasMatch(line)) {
+        line += '.';
+      }
+
+      // Ensure the first characters after a punctuation are uppercase (ignore whitespace)
+      line = line.replaceAllMapped(RegExp(r'([.!?])\s*([a-z])'), (match) => '${match.group(1)} ${match.group(2)?.toUpperCase()}');
+
+      // Ensure the first character of sentece is uppercase
+      line = "${line.first().toUpperCase()}${line.substring(1)}";
+
+      return line;
+    }).join("\r\n");
+
+    return value;
   }
 }

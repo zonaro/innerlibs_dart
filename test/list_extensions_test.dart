@@ -14,6 +14,11 @@ void main() {
   });
 
   test(' ', () {
+    var t = " isso é um ! teste [r],[ aaaaa         ] ( fixo )\r\n    nova linha nos esquema\r\nai a gente usa' aspas'   tudo'cagado   '".fixText;
+    consoleLog(t);
+  });
+
+  test(' ', () {
     var t = const Size(1920, 1080).getAspectRatioString();
     consoleLog(t);
   });
