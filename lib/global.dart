@@ -247,19 +247,19 @@ String flatString(dynamic value) {
 
 /// Parses a value of type [T] to a value of type [R].
 ///
-/// If the value is `null`, returns `null`.
-/// If [value] is [R] returns the value as [R].
-/// If [R] is [DateTime], converts the value to a [DateTime] using the `toDate()` method.
-/// If [R] is [num], parses the value as a [num] using the `num.parse()` method.
-/// If [R] is [int], parses the value as an [int] using the `int.parse()` method.
-/// If [R] is [double], parses the value as a [double] using the `double.parse()` method.
-/// If [R] is [String], returns the value as a [String].
-/// If [R] is [bool], converts the value to a [bool] using the `asBool()` method.
-/// If [R] is [Widget], converts the value to a [Widget] using the `forceWidget()` method.
-/// If [R] is [Text], converts the value to a [Text] using the `asText()` method.
-/// If [R] is [List], converts the value to a [List] containing the value.
-/// if [R] is another type, returns the value as [R].
-/// If none of the above conditions are met, logs an error message and returns `null`.
+/// - If the value is `null`, returns `null`.
+/// - If [value] is [R] returns the value as [R].
+/// - If [R] is [DateTime], converts the value to a [DateTime] using the `toDate()` method.
+/// - If [R] is [num], parses the value as a [num] using the `num.parse()` method.
+/// - If [R] is [int], parses the value as an [int] using the `int.parse()` method.
+/// - If [R] is [double], parses the value as a [double] using the `double.parse()` method.
+/// - If [R] is [String], returns the value as a [String].
+/// - If [R] is [bool], converts the value to a [bool] using the `asBool()` method.
+/// - If [R] is [Widget], converts the value to a [Widget] using the `forceWidget()` method.
+/// - If [R] is [Text], converts the value to a [Text] using the `asText()` method.
+/// - If [R] is [List], converts the value to a [List] containing the value.
+/// - if [R] is another type, returns the value as [R].
+/// - If none of the above conditions are met, logs an error message and returns `null`.
 R? parseTo<R>(dynamic value) {
   if (value == null) {
     return null;
