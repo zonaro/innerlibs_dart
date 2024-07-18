@@ -47,6 +47,7 @@ export 'util.dart';
 export 'utils/formatters.dart';
 export 'utils/haptic_feedback_type.dart';
 export 'utils/keyed_json_table.dart';
+export 'utils/self_map.dart';
 export 'utils/sql_response.dart';
 export 'utils/validation_interface.dart';
 export 'widget_ext.dart';
