@@ -298,4 +298,4 @@ R? parseTo<R>(dynamic value) {
 /// Validates a value of type [T] using a list of validation functions.
 /// The [value] is considered valid if at least one of the validation functions returns `true`.
 /// If the value is valid, it is returned; otherwise, `null` is returned.
-T? valid<T>(T value, List<bool> Function(T?)? validations) => isValid(value, customValidator: validations) ? value : null;
+T? valid<T>(T value, List<bool> Function(T?)? validations,[string? throwErrorMessage]) => isValid(value, customValidator: validations) ? value : throwErrorMessage.isNotBlank ? throw Exception(throwErrorMessage) : null;

@@ -25,7 +25,7 @@ extension CompareAndSwap<T extends Comparable> on T {
 
 bool _isvalid<T>(T obj, List<bool> Function(T?)? customValidator) => isValid(obj, customValidator: customValidator);
 
-T? _valid<T>(T obj, List<bool> Function(T?)? validations) => valid<T>(obj, validations);
+T? _valid<T>(T obj, List<bool> Function(T?)? validations, [string? throwErrorMessage]) => valid<T>(obj, validations, throwErrorMessage);
 R? _parseTo<R>(value) => parseTo<R>(value);
 
 extension ObjectExtensions<T extends Object?> on T {
@@ -165,7 +165,7 @@ extension ObjectExtensions<T extends Object?> on T {
   ///
   bool isValid([List<bool> Function(T?)? customValidator]) => _isvalid<T>(this, customValidator);
 
-  T? valid(List<bool> Function(T?)? validations) => _valid(this, validations);
+  T? valid(List<bool> Function(T?)? validations, [string? throwErrorMessage]) => _valid(this, validations, throwErrorMessage);
 
   /// Checks if the current string is equal to the given [text] when both are flattened.
   /// Returns `true` if they are equal, `false` otherwise.
