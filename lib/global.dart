@@ -102,7 +102,7 @@ T getBreakpointValue<V extends Comparable, T>(V value, Map<V, T> breakpoints) {
 /// Checks if [object] has a valid value.
 ///
 /// The following values are considered not valid:
-/// - `objects` thats fail against a custom validation function (if provided);
+/// - `objects` thats fail against a custom validation functions (if provided). The custom validation function must return a list of booleans. If at least one of the booleans is `true`, the object is considered valid.;
 /// - `NULL` objects, independent of type;
 /// - [String]s that are empty, equal to "null" or have only white spaces;
 /// - [num]s that are equal to `0`;
@@ -172,10 +172,10 @@ T getBreakpointValue<V extends Comparable, T>(V value, Map<V, T> breakpoints) {
 /// print(isValidPerson); // Output: true
 /// ```
 ///
-bool isValid<T>(T? object, {bool Function(T?)? customValidator}) {
+bool isValid<T>(T? object, {List<bool> Function(T?)? customValidator}) {
   try {
     if (customValidator != null) {
-      return customValidator(object);
+      return customValidator(object).any((x) => true);
     }
 
     if (object == null) {
@@ -209,10 +209,10 @@ bool isValid<T>(T? object, {bool Function(T?)? customValidator}) {
       return false;
     }
     if (object is Map) {
-      return object.isNotEmpty && object.values.isValid;
+      return object.isNotEmpty && object.values.isValid();
     }
 
-    return object.toString().isValid;
+    return object.toString().isValid();
   } catch (e) {
     consoleLog("IsValid => ", error: e);
     return false;
@@ -222,7 +222,7 @@ bool isValid<T>(T? object, {bool Function(T?)? customValidator}) {
 /// Checks if the given [object] is not valid (see [isValid] function).
 ///
 /// Returns `true` if the [object] is not valid, `false` otherwise.
-bool isNotValid(dynamic object, {bool Function(dynamic)? customValidator}) => !isValid(object, customValidator: customValidator);
+bool isNotValid<T>(T object, {List<bool> Function(T?)? customValidator}) => !isValid(object, customValidator: customValidator);
 
 /// Converts a dynamic value to a flat string representation.
 ///
@@ -294,3 +294,8 @@ R? parseTo<R>(dynamic value) {
   }
   return null;
 }
+
+/// Validates a value of type [T] using a list of validation functions.
+/// The [value] is considered valid if at least one of the validation functions returns `true`.
+/// If the value is valid, it is returned; otherwise, `null` is returned.
+T? valid<T>(T value, List<bool> Function(T?)? validations) => isValid(value, customValidator: validations) ? value : null;

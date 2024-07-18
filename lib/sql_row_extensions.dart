@@ -71,7 +71,7 @@ extension SqlRowExtensions on JsonRow {
     String dataBaseProvider = "",
   }) {
     quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
-    if (where.isValid) {
+    if (where.isValid()) {
       return asUpdateCommand(
         tableName: tableName,
         where: where!,

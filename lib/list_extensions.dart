@@ -267,14 +267,14 @@ extension IterablesExtension<T> on Iterable<T> {
   ///   print(result);  // Output: [{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}, {'id': 3, 'name': 'David'}]
   /// }
   /// ```
-  List<T> distinctBy<E>(E Function(T) predicate) {
+  Set<T> distinctBy<E>(E Function(T) predicate) {
     Set<T> uniqueElements = {};
     for (T element in this) {
       if (!uniqueElements.any((e) => predicate(e) == predicate(element))) {
         uniqueElements.add(element);
       }
     }
-    return uniqueElements.toList();
+    return uniqueElements;
   }
 
   /// Groups the items in the list by the item returned by the lambda function.
@@ -406,7 +406,7 @@ extension IterablesExtension<T> on Iterable<T> {
   }
 
   /// return only valid items (see [Object.isValid])
-  Iterable<T> get whereValid => where((e) => (e as Object?).isValid);
+  Iterable<T> get whereValid => where((e) => (e as Object?).isValid());
 
   /// Checks if a list contains at least [count] values from [values].
   ///

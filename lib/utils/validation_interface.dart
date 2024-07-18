@@ -19,3 +19,11 @@ abstract class Validator {
   /// ```
   List<String> validate();
 }
+
+extension ValidatorClassExtensions on Validator {
+  /// Returns `true` if the instance is valid, otherwise returns `false`.
+  bool get isValid => validate().isEmpty;
+
+  /// Returns `true` if the instance is invalid, otherwise returns `false`.
+  bool get isNotValid => !isValid;
+}

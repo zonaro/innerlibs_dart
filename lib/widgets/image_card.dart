@@ -233,13 +233,13 @@ class ImageCard extends StatelessWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: image,
-                fit: title.isValid || description.isValid ? BoxFit.cover : BoxFit.contain,
+                fit: title.isValid() || description.isValid() ? BoxFit.cover : BoxFit.contain,
               ),
             ),
             child: Container(
               padding: 15.allAround,
               decoration: BoxDecoration(
-                gradient: title.isValid || description.isValid
+                gradient: title.isValid() || description.isValid()
                     ? LinearGradient(
                         colors: [accentColor, (accentColor).withOpacity(.3), Colors.transparent],
                         begin: begin,
@@ -251,13 +251,13 @@ class ImageCard extends StatelessWidget {
                 mainAxisAlignment: mainAxisAlignment,
                 crossAxisAlignment: crossAxisAlignment,
                 children: [
-                  if (title.isValid)
+                  if (title.isValid())
                     Text(
                       title!,
                       style: context.headlineSmall,
                       textAlign: textAlign,
                     ).textColor(textColor),
-                  if (description.isValid)
+                  if (description.isValid())
                     Text(
                       description!,
                       style: context.bodyLarge,

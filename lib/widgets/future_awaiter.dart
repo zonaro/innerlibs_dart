@@ -37,7 +37,7 @@ class AwaiterData<T> extends ValueNotifier<T?> {
   bool get hasData {
     if (value != null) {
       if (validate) {
-        return value.isValid;
+        return value.isValid();
       }
       return true;
     }

@@ -48,7 +48,7 @@ class SQLResponseOf<T extends Object?> {
     bool hasdata = false;
     string status = "OK";
     try {
-      hasdata = data.isValid;
+      hasdata = data.isValid();
       if (data is Iterable) {
         status = List.from(data).isEmpty ? "empty" : "OK";
       }
