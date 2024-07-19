@@ -279,6 +279,8 @@ R? parseTo<R>(dynamic value) {
     return "$value" as R;
   } else if (R == bool) {
     return "$value".asBool() as R;
+  } else if (R == Uri) {
+    return Uri.parse("$value") as R;
   } else if (R == Widget) {
     return (value as Object?).forceWidget() as R;
   } else if (R is Text) {
@@ -298,4 +300,53 @@ R? parseTo<R>(dynamic value) {
 /// Validates a value of type [T] using a list of validation functions.
 /// The [value] is considered valid if at least one of the validation functions returns `true`.
 /// If the value is valid, it is returned; otherwise, `null` is returned.
-T? valid<T>(T value, List<bool> Function(T?)? validations,[string? throwErrorMessage]) => isValid(value, customValidator: validations) ? value : throwErrorMessage.isNotBlank ? throw Exception(throwErrorMessage) : null;
+T? valid<T>(T value, List<bool> Function(T?)? validations, [string? throwErrorMessage]) => isValid(value, customValidator: validations)
+    ? value
+    : throwErrorMessage.isNotBlank
+        ? throw Exception(throwErrorMessage)
+        : null;
+
+/// Generates a arrow or ident string with a specified length and pattern.
+///
+/// - The `length` parameter specifies the number of arrows to generate.
+/// - The `pattern` parameter specifies the pattern of the arrows.
+/// - If the `pattern` is empty, an empty string is returned.
+/// - If the `length` is 0, an empty string is returned.
+/// - If the `length` is negative, the absolute value of `length` is used and the pattern is reversed.
+/// - If the `pattern` has a length of 1, the pattern is repeated `length` times.
+/// - If the `pattern` has a length of 2, the first character is repeated `length - 1` times, followed by the second character.
+/// - If the `pattern` has a length greater than 2, the first and last characters are preserved, and the middle characters are repeated until the length is reached.
+/// - The default pattern is a space character (ident).
+/// Returns the generated arrow or ident string.
+String identArrow({required int length, String pattern = " "}) {
+  if (pattern.isEmpty) {
+    return "";
+  }
+  if (length == 0) {
+    return "";
+  }
+  bool reverse = length < 0;
+
+  length = length.forcePositive;
+
+  if (pattern.length == 1) {
+    pattern = pattern * (length);
+  } else {
+    String first = pattern.first();
+    String last = pattern.last();
+    if (pattern.length == 2) {
+      pattern = (first * (length - 1)) + last;
+    } else {
+      var middle = pattern.removeFirst().removeLast();
+      var i = 0;
+      while (middle.length < length - 2) {
+        if (i >= middle.length) i = 0;
+        middle += middle.charAt(i);
+        i++;
+      }
+      pattern = first + middle + last;
+    }
+  }
+  if (reverse) pattern = pattern.toArray.map((x) => x.getOppositeWrap).reverse().join();
+  return pattern;
+}

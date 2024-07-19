@@ -44,6 +44,8 @@ export 'text_style_extension.dart';
 export 'theme_extension.dart';
 export 'tooltip_extension.dart';
 export 'util.dart';
+export 'utils/tag_xml.dart';
+export 'utils/oembed.dart';
 export 'utils/formatters.dart';
 export 'utils/haptic_feedback_type.dart';
 export 'utils/keyed_json_table.dart';

@@ -551,6 +551,36 @@ extension StringExtension on String {
     return chunks;
   }
 
+  /// Adds indentation to a string based on the specified deep level and indentation characters.
+  ///
+  /// The [deepLevel] parameter specifies the number of indentation levels to add.
+  /// The [identWith] parameter specifies the characters used for indentation. By default, it is a single space character.
+  /// - If [identWith] is a single character, it will be repeated for each indentation level.
+  /// - If [identWith] is a two-character string, the first character will be repeated for each indentation level, and the second character will be used for the last indentation level.
+  /// - If [identWith] is a multi-character string, the first character will be used for the first indentation level, the last character will be used for the last indentation level, and the middle characters will be repeated to fill the remaining space.
+  /// The [multiplier] parameter specifies the number of times to repeat the indentation characters for each level.
+  /// ## Example
+  /// ```dart
+  /// String text = ' Hello, world!';
+  /// String indentedText = text.identWith(4, '>=>');
+  /// print(indentedText); // Output: '>==> Hello, world!'
+  /// ```
+  /// ```dart
+  /// String text = ' Hello, world!';
+  /// String indentedText = text.identWith(2, '  ');
+  /// print(indentedText); // Output: '    Hello, world!'
+  /// ```
+
+  String identWith(int deepLevel, [String identWith = " ", int multiplier = 1]) {
+    if (deepLevel == 0) return this;
+    var ii = identArrow(length: deepLevel * multiplier.lockMin(1), pattern: identWith);
+    if (deepLevel > 0) {
+      return ii + this;
+    } else {
+      return this + ii;
+    }
+  }
+
   /// Returns the average read time duration of the given `String` in seconds.
   ///
   /// The default calculation is based on 200 words per minute.
