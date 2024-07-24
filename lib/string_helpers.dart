@@ -1,17 +1,20 @@
 import 'package:innerlibs/innerlibs.dart';
 
+/// Break Line char
+const breakLine = "\r\n";
+
 /// `String` helpers
 class StringHelpers {
+  static strings get wordSplitters => [
+        ...breakLineChars,
+        ...whiteSpaceChars,
+        ...identChars,
+        ...endOfSentenceChars,
+        ...midSentenceChars,
+        ...openWrappers,
+        ...closeWrappers,
+      ];
 
- static strings get wordSplitters => [
-  ...breakLineChars,
-  ...whiteSpaceChars,
-  ...identChars,
-  ...endOfSentenceChars,
-  ...midSentenceChars,
-  ...openWrappers,
-  ...closeWrappers,
- ];
   /// Chars from Aa to Zz
   static List<String> get alphaChars => (alphaUpperChars + alphaLowerChars)..sort();
 
@@ -28,7 +31,7 @@ class StringHelpers {
   static List<String> get numberChars => ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
   /// Line feed and carriage retrun
-  static List<String> get breakLineChars => ["\n", "\r", "\r\n"];
+  static List<String> get breakLineChars => ["\n", "\r", breakLine];
 
   /// White space char
   static List<String> get whiteSpaceChars => [" "];

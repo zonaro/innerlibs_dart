@@ -22,9 +22,9 @@ extension NumExtensions<T extends num> on T {
     }
   }
 
-  Widget get widthBox => SizedBox(width: toDouble());
+  SizedBox get widthBox => SizedBox(width: toDouble());
 
-  Widget get heightBox => SizedBox(height: toDouble());
+  SizedBox get heightBox => SizedBox(height: toDouble());
 
   Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: round()).delay(callback);
 
@@ -210,7 +210,7 @@ extension NumNullExtensions<T extends num?> on T {
   /// The [length] parameter specifies the total length of the resulting string.
   /// The [fill] parameter specifies the character used to fill the remaining space.
   /// The [fractionDigits] parameter specifies the number of digits after the decimal point.
-  String? fixedLength(int length, [String fill = "0", int fractionDigits = 0]) => this?.toStringAsFixed(fractionDigits).padLeft(length, fill);
+  String? fixedLength(int length, {String fill = "0", int fractionDigits = 0}) => this?.toStringAsFixed(fractionDigits).padLeft(length, fill);
 }
 
 extension DurationExtensions on Duration {
