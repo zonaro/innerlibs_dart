@@ -191,14 +191,26 @@ extension NumExtensions<T extends num> on T {
   }
 }
 
+/// Extension methods for nullable numbers.
 extension NumNullExtensions<T extends num?> on T {
-  /// Checks whether number is 0 or null
+  /// Checks whether the number is 0 or null.
   bool get isNullOrZero => this == null || this == 0;
 
+  /// Returns null if the number is 0, otherwise returns the number itself.
   T? get nullIfZero => this == 0 ? null : this;
 
+  /// Checks whether the number is a non-zero positive number.
   bool get isNonZeroPositive => this != null && this! > 0;
+
+  /// Checks whether the number is a non-zero negative number.
   bool get isNonZeroNegative => this != null && this! < 0;
+
+  /// Returns a string representation of the number with a fixed length.
+  ///
+  /// The [length] parameter specifies the total length of the resulting string.
+  /// The [fill] parameter specifies the character used to fill the remaining space.
+  /// The [fractionDigits] parameter specifies the number of digits after the decimal point.
+  String? fixedLength(int length, [String fill = "0", int fractionDigits = 0]) => this?.toStringAsFixed(fractionDigits).padLeft(length, fill);
 }
 
 extension DurationExtensions on Duration {
