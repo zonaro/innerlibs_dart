@@ -1,14 +1,16 @@
+import 'dart:convert';
+
 import 'package:innerlibs/innerlibs.dart';
 
 /// A map implementation that uses a function to generate keys for each value.
 class SelfMap<K, V> implements Map<K, V> {
   /// Creates a new instance of [SelfMap] with the provided [items] and [keyFunc].
   ///
-  /// - A copy of [items] list is used to initialize the map.
+  /// - A copy of [items] is used to initialize the map.
   /// - The keys are generated using the [keyFunc] function, and the values are the corresponding items in the [items] list. if the key changes in a value, the key in map will reflect its changes.
   /// - If [keyFunc] is not provided, the default key function is used, which returns the hash code of the value.
   /// - The [keyFunc] function is used to ensure that the keys are unique. If the [items] list contains duplicate keys, only the first value with the key is retained.
-  SelfMap(List<V> items, [K Function(V)? keyFunc]) {
+  SelfMap(Iterable<V> items, [K Function(V)? keyFunc]) {
     this._keyFunc = keyFunc ?? ((e) => e.hashCode as K);
     this._items = items.distinctBy(this._keyFunc);
   }
@@ -18,13 +20,11 @@ class SelfMap<K, V> implements Map<K, V> {
   late Set<V> _items;
 
   @override
-  V? operator [](Object? key) {
-    return _items.singleWhereOrNull((e) => _keyFunc(e) == key);
-  }
+  V? operator [](Object? key) => _items.singleWhereOrNull((e) => _keyFunc(e) == key);
 
   /// Returns the value associated with the specified [key] in the map.
   /// The [key] must be of type [K].
-  /// if Map contains key and the key is different than the key of the value, the old value is not removed.
+  /// if Map contains [key] and the [key] is different than the key of the value, the old value is not removed.
   @override
   void operator []=(K key, V value) {
     if (containsKey(key) && _keyFunc(value) == key) {
@@ -40,7 +40,7 @@ class SelfMap<K, V> implements Map<K, V> {
     }
   }
 
-  /// Adds a value to the map.
+  /// Adds a value to the map. The key is generated using the [keyFunc] function.
   void add(V value) => _items.add(value);
 
   @override
@@ -51,24 +51,16 @@ class SelfMap<K, V> implements Map<K, V> {
   }
 
   @override
-  Map<RK, RV> cast<RK, RV>() {
-    return map((key, value) => MapEntry(parseTo(key), parseTo(value)));
-  }
+  Map<RK, RV> cast<RK, RV>() => map((key, value) => MapEntry(parseTo(key), parseTo(value)));
 
   @override
-  void clear() {
-    _items.clear();
-  }
+  void clear() => _items.clear();
 
   @override
-  bool containsKey(Object? key) {
-    return _items.any((e) => _keyFunc(parseTo(key)) == key);
-  }
+  bool containsKey(Object? key) => _items.any((e) => _keyFunc(parseTo(key)) == key);
 
   @override
-  bool containsValue(Object? value) {
-    return _items.contains(parseTo(value));
-  }
+  bool containsValue(Object? value) => _items.contains(parseTo(value));
 
   @override
   Iterable<MapEntry<K, V>> get entries => _items.map((e) => MapEntry(_keyFunc(e), e));
@@ -93,9 +85,7 @@ class SelfMap<K, V> implements Map<K, V> {
   int get length => _items.length;
 
   @override
-  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) transform) {
-    return {for (var e in _items.map((e) => transform(_keyFunc(e), e))) e.key: e.value};
-  }
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) transform) => {for (var e in _items.map((e) => transform(_keyFunc(e), e))) e.key: e.value};
 
   @override
   V putIfAbsent(K key, V Function() ifAbsent) {
@@ -142,4 +132,12 @@ class SelfMap<K, V> implements Map<K, V> {
 
   @override
   Iterable<V> get values => [..._items];
+
+  /// Returns a JSON representation of the map.
+  Map<String, dynamic> toJson() => {
+        for (var entry in entries) entry.key.toString(): entry.value,
+      };
+
+  /// Returns a JSON string representation of the map.
+  string toJsonString() => jsonEncode(toJson());
 }

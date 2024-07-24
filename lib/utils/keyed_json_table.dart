@@ -81,16 +81,7 @@ class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
   Map<T1, T2> getMap<T1, T2>(T1 Function(JsonRow) keyFunc, T2 Function(JsonRow) valueFunc) => Map.fromEntries(table.where((e) => e[keyName] != null).map((e) => getMapEntry(e[keyName] as T, keyFunc, valueFunc)));
 
   /// Add rows to this JsonTable. Only rows with valid Ids will be added. Return a list of IDs
-  List<T> addAll(JsonTable rows, [bool override = false]) {
-    List<T> pks = [];
-    for (var newRow in rows) {
-      T? pk = add(newRow, override);
-      if (pk.isValid()) {
-        pks.add(pk as T);
-      }
-    }
-    return pks;
-  }
+  List<T> addAll(JsonTable rows, [bool override = false]) => [for (var newRow in rows) add(newRow, override) as T];
 
   /// Add a row to this JsonTable. Only rows with valid Ids will be added. Return the ID
   T? add(JsonRow row, [bool override = false]) {
@@ -103,6 +94,13 @@ class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
       }
     }
     return null;
+  }
+
+  /// Reload the table with the provided rows.
+  /// Only rows with valid Ids will be added.
+  void reloadWith(JsonTable rows) {
+    clear();
+    addAll(rows);
   }
 
   /// Returns the value associated with the specified [key] in the [JsonRow].
@@ -139,6 +137,5 @@ class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
 
 extension ListMapExtension<K, V> on JsonTable {
   /// Converts a list of maps to a keyed JSON table.
-  KeyedJsonTable<T> toKeyedTable<T extends Comparable>(String keyName) => KeyedJsonTable<T>(keyName: keyName, items: this);
+  KeyedJsonTable<T> toKeyedTable<T extends Comparable>(String keyName) => KeyedJsonTable<T>(keyName: keyName, table: this);
 }
-

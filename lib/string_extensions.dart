@@ -3210,4 +3210,7 @@ extension StringExtension on String {
 
     return value;
   }
+
+  /// Return a base64 encoded string
+  string get base64 => base64Encode(utf8.encode(this));
 }
