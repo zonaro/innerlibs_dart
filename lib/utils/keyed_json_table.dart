@@ -137,5 +137,5 @@ class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
 
 extension ListMapExtension<K, V> on JsonTable {
   /// Converts a list of maps to a keyed JSON table.
-  KeyedJsonTable<T> toKeyedTable<T extends Comparable>(String keyName) => KeyedJsonTable<T>(keyName: keyName, table: this);
+  KeyedJsonTable<T> toKeyedTable<T extends Comparable>(String keyName) => KeyedJsonTable<T>(keyName: keyName, items: this);
 }
