@@ -33,8 +33,9 @@ class ScaffoldBuilder extends StatefulWidget {
     this.bottomNavigationBarType,
     this.scrollableTabs,
     this.labelColor,
+    this.titleColor,
   });
-
+  final Color? titleColor;
   final bool? scrollableTabs;
   final Color? labelColor;
   final Widget? drawer;
@@ -128,6 +129,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
         title: title,
         leading: widget.leading,
         backgroundColor: widget.appBarBackgroundColor,
+        foregroundColor: widget.titleColor,
         actions: entry.toolbarItems ?? widget.actions,
         bottom: entry.pages.length > 1
             ? TabBar(
@@ -212,12 +214,14 @@ class MenuEntry {
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Widget? floatingActionButton;
   final Color? backgroundColor;
+  final string? route;
 
   Widget? get titleWidget => (pages.singleOrNull?.title as Object?).forceWidget() ?? (title as Object?).forceWidget();
 
   string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
 
   MenuEntry({
+    this.route,
     required this.title,
     required this.icon,
     required this.pages,
