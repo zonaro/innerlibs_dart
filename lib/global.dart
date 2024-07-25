@@ -282,9 +282,9 @@ R? parseTo<R>(dynamic value) {
   } else if (R == Uri) {
     return Uri.parse("$value") as R;
   } else if (R == Widget) {
-    return (value as Object?).forceWidget() as R;
+    return forceWidget(value) as R;
   } else if (R is Text) {
-    return (value as Object?).asText() as R;
+    return (value as Object?).asNullableText() as R;
   } else if (R == List) {
     return [value] as R;
   } else {
@@ -295,6 +295,154 @@ R? parseTo<R>(dynamic value) {
     }
   }
   return null;
+}
+
+/// A utility extension method that allows forcing a widget to be returned,
+/// with optional customization of its properties.
+///
+/// This method can be used on any object, and it will return a [Widget] if the object
+/// is already a widget, or it will convert the object to a [Text] widget with the provided
+/// customizations if the object is a [Text]. If the object is neither a [Widget] nor a [Text],
+/// it will be converted to a [Text] widget using the [asNullableText] method.
+///
+/// The optional parameters can be used to customize the properties of the returned widget,
+/// such as the [style], [textAlign], [maxLines], etc.
+///
+/// ## Example 1:
+/// ```dart
+/// Text myText = Text('Hello');
+/// Widget myWidget = myText.forceWidget(style: TextStyle(fontSize: 16));
+/// ```
+/// ## Example 2:
+/// ```dart
+/// Text anotherText = Text('Welcome');
+/// Widget anotherWidget = anotherText.forceWidget(
+///   style: TextStyle(fontSize: 20),
+///   textAlign: TextAlign.center,
+/// );
+/// ```
+/// ## Example 3:
+/// ```dart
+/// String myString = 'Hello World';
+/// Widget myStringWidget = myString.forceWidget(
+///   style: TextStyle(color: Colors.blue),
+///   defaultText: 'No text provided',
+/// );
+/// ```
+/// ## Example 4:
+/// ```dart
+/// int myNumber = 42;
+/// Widget myNumberWidget = myNumber.forceWidget(
+///   style: TextStyle(fontWeight: FontWeight.bold),
+///   defaultText: 'No number provided',
+/// );
+/// ```
+/// ## Example 5:
+/// ```dart
+/// bool myBool = true;
+/// Widget myBoolWidget = myBool.forceWidget(
+///   style: TextStyle(fontStyle: FontStyle.italic),
+///   defaultText: 'No boolean provided',
+/// );
+/// ```
+/// ## Example 6:
+/// ```dart
+/// double myDouble = 3.14;
+/// Widget myDoubleWidget = myDouble.forceWidget(
+///   style: TextStyle(color: Colors.red),
+///   defaultText: 'No double provided',
+/// );
+/// ```
+/// ## Example 7:
+/// ```dart
+/// List<String> myList = ['Apple', 'Banana', 'Orange'];
+/// Widget myListWidget = myList.forceWidget(
+///   style: TextStyle(color: Colors.green),
+///   defaultText: 'No list provided',
+/// );
+/// ```
+/// ## Example 8:
+/// ```dart
+/// Map<String, int> myMap = {'Apple': 1, 'Banana': 2, 'Orange': 3};
+/// Widget myMapWidget = myMap.forceWidget(
+///   style: TextStyle(color: Colors.orange),
+///   defaultText: 'No map provided',
+/// );
+/// ```
+/// ## Example 9:
+/// ```dart
+/// DateTime myDateTime = DateTime.now();
+/// Widget myDateTimeWidget = myDateTime.forceWidget(
+///   style: TextStyle(color: Colors.purple),
+///   defaultText: 'No date provided',
+/// );
+/// ```
+/// ## Example 10:
+/// ```dart
+/// Object myObject = Object();
+/// Widget myObjectWidget = myObject.forceWidget(
+///   style: TextStyle(color: Colors.yellow),
+///   defaultText: 'No object provided',
+/// );
+/// ```
+Widget? forceWidget(
+  dynamic item, {
+  TextStyle? style,
+  StrutStyle? strutStyle,
+  TextAlign? textAlign,
+  TextDirection? textDirection,
+  Locale? locale,
+  bool? softWrap,
+  TextOverflow? overflow,
+  TextScaler? textScaler,
+  int? maxLines,
+  String? semanticsLabel,
+  TextWidthBasis? textWidthBasis,
+  bool validate = true,
+  String? defaultText,
+}) {
+  if (item != null && item is Widget) {
+    return item;
+  }
+  if (item is IconData) {
+    return (item).asIcon(
+      size: style?.fontSize,
+      color: style?.color,
+      applyTextScaling: textScaler != null,
+      weight: style?.fontWeight?.value.toDouble(),
+      semanticLabel: semanticsLabel ?? defaultText,
+      shadows: style?.shadows,
+      textDirection: textDirection,
+    );
+  }
+
+  if (item is IconData?) {
+    return (item).asNullableIcon(
+      size: style?.fontSize,
+      color: style?.color,
+      applyTextScaling: textScaler != null,
+      weight: style?.fontWeight?.value.toDouble(),
+      semanticLabel: semanticsLabel ?? defaultText,
+      shadows: style?.shadows,
+      textDirection: textDirection,
+    );
+  }
+
+  return (item as Object?).asNullableText(
+    style: style,
+    strutStyle: strutStyle,
+    textAlign: textAlign,
+    textDirection: textDirection,
+    locale: locale,
+    softWrap: softWrap,
+    overflow: overflow,
+    textScaler: textScaler,
+    maxLines: maxLines,
+    semanticsLabel: semanticsLabel,
+    textWidthBasis: textWidthBasis,
+    validate: validate,
+    defaultText: defaultText,
+  );
 }
 
 /// Validates a value of type [T] using a list of validation functions.

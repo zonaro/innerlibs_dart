@@ -391,7 +391,7 @@ class ResponsiveRow extends StatelessWidget {
       }
 
       if ((children[i] is Widget) == false) {
-        children[i] = (children[i] as Object?).forceWidget();
+        children[i] = forceWidget(children[i]);
       }
 
       if (children[i] is Widget) {

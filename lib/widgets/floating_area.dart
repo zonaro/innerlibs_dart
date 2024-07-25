@@ -72,7 +72,7 @@ class _FloatingAreaState extends State<FloatingArea> {
       if (w is DraggableChildren) {
         _children.add(w);
       } else {
-        _children.add(DraggableChildren(x: 0, y: 0, child: (w as Object?).forceWidget()!));
+        _children.add(DraggableChildren(x: 0, y: 0, child: forceWidget(w)!));
       }
     }
   }
