@@ -98,7 +98,7 @@ extension ListExtension<T> on List<T> {
 
   Iterable<T> search({
     required string searchTerm,
-    required strings Function(T) searchOn,
+    required List<dynamic> Function(T) searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -139,10 +139,18 @@ extension ListExtension<T> on List<T> {
 
     int searchFunc(T item) {
       return searchOn(item).where((keyword) {
-        keyword = transformString(keyword);
+        if (keyword == null) return false;
+
         var searchword = transformString(searchTerm);
-        if (useWildcards) return keyword.isLike(searchword, !ignoreCase);
-        return keyword.contains(searchword);
+
+        if (keyword is num) {
+          if (useWildcards) return keyword.toString().isLike(searchword, !ignoreCase);
+          return keyword.asFlat.startsWith(searchTerm);
+        }
+
+        keyword = transformString("$keyword");
+        if (useWildcards) return keyword.toString().isLike(searchword, !ignoreCase);
+        return keyword.toString().contains(searchword);
       }).length;
     }
 
@@ -152,7 +160,8 @@ extension ListExtension<T> on List<T> {
       } else {
         return searchOn(item).selectMany((e, i) {
           return e.getUniqueWords.map((keyword) {
-            keyword = transformString(keyword);
+            keyword ??= "";
+            keyword = transformString("$keyword");
             var searchword = transformString(searchTerm);
             return searchword.getLevenshtein(keyword, !ignoreCase);
           });
