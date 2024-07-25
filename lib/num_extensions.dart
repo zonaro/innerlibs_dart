@@ -25,7 +25,7 @@ extension NumExtensions<T extends num> on T {
   SizedBox get widthBox => SizedBox(width: toDouble());
 
   SizedBox get heightBox => SizedBox(height: toDouble());
-  SizedBox get squareBox => SizedBox.square(toDouble());
+  SizedBox get squareBox => SizedBox.square(dimension: toDouble());
 
   Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: round()).delay(callback);
 

@@ -85,10 +85,22 @@ extension ObjectExtensions<T extends Object?> on T {
     }
   }
 
-  /// Checks if the current object is present in the given list.
+  /// Checks if the current object is present in the given list, map or string.
   /// Returns `true` if the current object is not `null` and is present in the list,
   /// otherwise returns `false`.
-  bool isIn(List items) => this != null && items.contains(this);
+  bool isIn(dynamic items) {
+    if (items == null) return false;
+    if (items is Iterable) {
+      return this != null && items.contains(this);
+    }
+    if (items is Map) {
+      return this != null && items.containsValue(this);
+    }
+    if (items is String) {
+      return this != null && items.getWords.contains(toString());
+    }
+    return false;
+  }
 
   /// Checks if [object] has a valid value.
   ///
