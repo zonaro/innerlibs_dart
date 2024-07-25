@@ -68,40 +68,6 @@ extension StringListExtensions on strings {
 }
 
 extension ListExtension<T> on List<T> {
-  /// Searches for multiple items in an iterable based on the given search terms.
-  ///
-  /// The [searchTerms] parameter specifies the terms to search for. Allow wildcards
-  /// The [searchOn] is a function that returns a list of strings to search on for each element in the iterable.
-  /// The [levenshteinDistance] is the maximum allowed Levenshtein distance for fuzzy matching. Defaults to 0.
-  /// The [allIfEmpty] determines whether to return all elements if the search term is empty. Defaults to true.
-  ///
-  /// Returns an iterable of elements that match the search criteria, ordered by relevance.
-  /// The relevance is determined by the number of matches in the search strings and the Levenshtein distance.
-  Iterable<T> searchMany({
-    required strings searchTerms,
-    required List<dynamic> Function(T) searchOn,
-    int levenshteinDistance = 0,
-    bool ignoreCase = true,
-    bool ignoreDiacritics = true,
-    bool ignoreWordSplitters = true,
-    bool splitCamelCase = true,
-    bool useWildcards = false,
-    bool allIfEmpty = true,
-  }) =>
-      searchTerms
-          .selectMany((e, i) => search(
-                searchTerm: e,
-                searchOn: searchOn,
-                levenshteinDistance: levenshteinDistance,
-                ignoreCase: ignoreCase,
-                ignoreDiacritics: ignoreDiacritics,
-                ignoreWordSplitters: ignoreWordSplitters,
-                splitCamelCase: splitCamelCase,
-                useWildcards: useWildcards,
-                allIfEmpty: allIfEmpty,
-              ))
-          .distinct();
-
   /// Searches the iterable for items that match the specified search criteria.
   ///
   /// The [searchTerm] parameter specifies the term to search for.
@@ -113,7 +79,7 @@ extension ListExtension<T> on List<T> {
   /// The relevance is determined by the number of matches and the Levenshtein distance (if applicable).
 
   Iterable<T> search({
-    required string searchTerm,
+    required strings searchTerms,
     required List<dynamic> Function(T) searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
@@ -125,7 +91,7 @@ extension ListExtension<T> on List<T> {
   }) {
     if (isEmpty) return <T>[].orderBy((e) => true);
 
-    if (searchTerm.isBlank) {
+    if (searchTerms.whereValid.isEmpty) {
       if (allIfEmpty) {
         return orderBy((e) => true);
       } else {
@@ -133,66 +99,51 @@ extension ListExtension<T> on List<T> {
       }
     }
 
-    string transformString(string keyword) {
-      if (splitCamelCase) {
-        keyword = keyword.camelSplitString;
-      }
+    var l = where(
+      (item) => FilterFunctions.searchFunction(
+        item: item,
+        searchTerms: searchTerms,
+        searchOn: searchOn,
+        ignoreCase: ignoreCase,
+        ignoreDiacritics: ignoreDiacritics,
+        ignoreWordSplitters: ignoreWordSplitters,
+        splitCamelCase: splitCamelCase,
+        useWildcards: useWildcards,
+      ),
+    );
 
-      if (ignoreWordSplitters) {
-        keyword = keyword.removeWordSplitters;
-      }
-
-      if (ignoreDiacritics) {
-        keyword = keyword.removeDiacritics;
-      }
-
-      if (ignoreCase) {
-        keyword = keyword.toLowerCase();
-      }
-
-      return keyword;
-    }
-
-    int searchFunc(T item) {
-      return searchOn(item).where((keyword) {
-        if (keyword == null) return false;
-
-        var searchword = transformString(searchTerm);
-
-        if (keyword is num) {
-          if (useWildcards) return keyword.toString().isLike(searchword, !ignoreCase);
-          return keyword.asFlat.startsWith(searchTerm);
-        }
-
-        keyword = transformString("$keyword");
-        if (useWildcards) return keyword.toString().isLike(searchword, !ignoreCase);
-        return keyword.toString().contains(searchword);
-      }).length;
-    }
-
-    int levFunc(T item) {
-      if (levenshteinDistance <= 0) {
-        return 0;
-      } else {
-        return searchOn(item).selectMany((e, i) {
-          return e.getUniqueWords.map((keyword) {
-            keyword ??= "";
-            keyword = transformString("$keyword");
-            var searchword = transformString(searchTerm);
-            return searchword.getLevenshtein(keyword, !ignoreCase);
-          });
-        }).count((e) {
-          return e <= levenshteinDistance;
-        });
-      }
-    }
-
-    var l = where((row) => searchFunc(row) > 0);
     if (l.isEmpty && levenshteinDistance > 0) {
-      l = where((row) => levFunc(row) > 0);
+      l = where(
+        (item) => FilterFunctions.levenshteinFunction(
+          item: item,
+          searchTerms: searchTerms,
+          searchOn: searchOn,
+          levenshteinDistance: levenshteinDistance,
+        ),
+      );
     }
 
-    return l.orderByDescending(searchFunc).thenBy(levFunc);
+    return l
+        .orderByDescending(
+          (item) => FilterFunctions.countSearch(
+            item: item,
+            searchTerms: searchTerms,
+            searchOn: searchOn,
+            ignoreCase: ignoreCase,
+            ignoreDiacritics: ignoreDiacritics,
+            ignoreWordSplitters: ignoreWordSplitters,
+            splitCamelCase: splitCamelCase,
+            useWildcards: useWildcards,
+          ),
+        )
+        .thenBy(
+          (item) => FilterFunctions.countLevenshtein(
+            item: item,
+            searchTerms: searchTerms,
+            searchOn: searchOn,
+            levenshteinDistance: levenshteinDistance,
+          ),
+        );
   }
 
   /// Detach items from a list according to a

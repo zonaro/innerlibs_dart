@@ -350,3 +350,128 @@ String identArrow({required int length, String pattern = " "}) {
   if (reverse) pattern = pattern.toArray.map((x) => x.getOppositeWrap).reverse().join();
   return pattern;
 }
+
+mixin FilterFunctions {
+  static string transformString(
+    dynamic value, {
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
+    bool useWildcards = false,
+  }) {
+    if (value == null) return "";
+
+    string keyword = value.toString();
+
+    if (splitCamelCase) {
+      keyword = keyword.camelSplitString;
+    }
+
+    if (ignoreWordSplitters) {
+      keyword = keyword.removeWordSplitters;
+    }
+
+    if (ignoreDiacritics) {
+      keyword = keyword.removeDiacritics;
+    }
+
+    if (ignoreCase) {
+      keyword = keyword.toLowerCase();
+    }
+
+    return keyword;
+  }
+
+  static int countSearch<T>({
+    required strings searchTerms,
+    required T item,
+    required List<dynamic> Function(T) searchOn,
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
+    bool useWildcards = false,
+  }) {
+    return [
+      for (var searchTerm in searchTerms)
+        ...searchOn(item).where((keyword) {
+          if (keyword == null) return false;
+          var searchword = transformString(searchTerm);
+
+          if (keyword is num) {
+            if (useWildcards) {
+              keyword = keyword.toString();
+            } else {
+              return keyword.asFlat.startsWith(searchTerm);
+            }
+          }
+
+          keyword = transformString("$keyword");
+          if (useWildcards) return keyword.toString().isLike(searchword, !ignoreCase);
+          return keyword.toString().contains(searchword);
+        })
+    ].length;
+  }
+
+  static int countLevenshtein<T>({
+    required strings searchTerms,
+    required T item,
+    required List<dynamic> Function(T) searchOn,
+    required int levenshteinDistance,
+    bool ignoreCase = true,
+  }) {
+    if (levenshteinDistance <= 0) {
+      return 0;
+    } else {
+      return [
+        for (var searchTerm in searchTerms)
+          ...searchOn(item).selectMany((e, i) {
+            if (e == null) return [];
+            return e.toString().getUniqueWords.map((keyword) {
+              keyword = transformString(keyword);
+              var searchword = transformString(searchTerm);
+              return searchword.getLevenshtein(keyword, !ignoreCase);
+            });
+          })
+      ].count((e) {
+        return e <= levenshteinDistance;
+      });
+    }
+  }
+
+  static bool searchFunction<T>({
+    required T item,
+    required strings searchTerms,
+    required List<dynamic> Function(T) searchOn,
+    int levenshteinDistance = 0,
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
+    bool useWildcards = false,
+  }) =>
+      countSearch(item: item, searchTerms: searchTerms, searchOn: searchOn, ignoreCase: ignoreCase, ignoreDiacritics: ignoreDiacritics, ignoreWordSplitters: ignoreWordSplitters, splitCamelCase: splitCamelCase, useWildcards: useWildcards) > 0;
+
+  static bool levenshteinFunction<T>({
+    required T item,
+    required strings searchTerms,
+    required List<dynamic> Function(T) searchOn,
+    required int levenshteinDistance,
+    bool ignoreCase = true,
+  }) =>
+      countLevenshtein(item: item, searchTerms: searchTerms, searchOn: searchOn, levenshteinDistance: levenshteinDistance, ignoreCase: ignoreCase) > 0;
+
+  static bool filterFunction<T>({
+    required T item,
+    required strings searchTerms,
+    required List<dynamic> Function(T) searchOn,
+    int levenshteinDistance = 0,
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
+    bool useWildcards = false,
+  }) =>
+      searchFunction(item: item, searchTerms: searchTerms, searchOn: searchOn, ignoreCase: ignoreCase, ignoreDiacritics: ignoreDiacritics, ignoreWordSplitters: ignoreWordSplitters, splitCamelCase: splitCamelCase, useWildcards: useWildcards) || levenshteinFunction(item: item, searchTerms: searchTerms, searchOn: searchOn, levenshteinDistance: levenshteinDistance, ignoreCase: ignoreCase);
+}

@@ -263,23 +263,13 @@ extension SqlTableExtensions on JsonTable {
   /// The [allIfEmpty] parameter determines whether to return all [JsonRow] objects if the search term is empty.
   ///
   /// Returns an iterable of [JsonRow] objects that match the search criteria.
-  Iterable<JsonRow> searchMap({required String searchTerm, List<String> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
+  Iterable<JsonRow> searchMap({required strings searchTerms, List<String> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
     if (keys.isEmpty) {
       keys = selectMany((e, i) => e.keys).distinct().toList();
     }
 
-    return search(searchTerm: searchTerm, searchOn: (row) => [for (var k in keys) "${row[k] ?? ""}"], levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty);
+    return search(searchTerms: searchTerms, searchOn: (row) => [for (var k in keys) "${row[k] ?? ""}"], levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty);
   }
-
-  /// Searches for multiple [JsonRow] objects in the map based on the given search terms.
-  ///
-  /// The [searchTerms] parameter is a required list of strings representing the search terms.
-  /// The [keys] parameter is an optional list of strings representing the keys to search within the map.
-  /// The [levenshteinDistance] parameter is an optional integer representing the maximum Levenshtein distance allowed for fuzzy matching.
-  /// The [allIfEmpty] parameter is an optional boolean indicating whether to return all results if the search terms are empty.
-  ///
-  /// Returns an iterable of [JsonRow] objects that match the search criteria.
-  Iterable<JsonRow> searchMapMany({required strings searchTerms, strings keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) => searchTerms.selectMany((e, i) => searchMap(searchTerm: e, keys: keys, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty));
 }
 
 /// A mixin that provides utility functions for working with SQL.
