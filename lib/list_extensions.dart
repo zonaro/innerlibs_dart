@@ -79,12 +79,28 @@ extension ListExtension<T> on List<T> {
   /// The relevance is determined by the number of matches in the search strings and the Levenshtein distance.
   Iterable<T> searchMany({
     required strings searchTerms,
-    required strings Function(T) searchOn,
+    required List<dynamic> Function(T) searchOn,
     int levenshteinDistance = 0,
-    bool allIfEmpty = true,
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
     bool useWildcards = false,
+    bool allIfEmpty = true,
   }) =>
-      searchTerms.selectMany((e, i) => search(searchTerm: e, searchOn: searchOn, levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty)).distinct();
+      searchTerms
+          .selectMany((e, i) => search(
+                searchTerm: e,
+                searchOn: searchOn,
+                levenshteinDistance: levenshteinDistance,
+                ignoreCase: ignoreCase,
+                ignoreDiacritics: ignoreDiacritics,
+                ignoreWordSplitters: ignoreWordSplitters,
+                splitCamelCase: splitCamelCase,
+                useWildcards: useWildcards,
+                allIfEmpty: allIfEmpty,
+              ))
+          .distinct();
 
   /// Searches the iterable for items that match the specified search criteria.
   ///
