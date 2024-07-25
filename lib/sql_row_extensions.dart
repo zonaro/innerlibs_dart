@@ -254,23 +254,7 @@ extension SqlRowExtensions on JsonRow {
   }
 }
 
-extension SqlTableExtensions on JsonTable {
-  /// Searches for [JsonRow] objects in the iterable based on a search term and specified keys.
-  ///
-  /// The [searchTerm] parameter is the term to search for.
-  /// The [keys] parameter is a list of keys to search on. If empty, all keys in the [JsonRow] objects will be used.
-  /// The [levenshteinDistance] parameter is the maximum allowed Levenshtein distance between the search term and a value in the [JsonRow] objects.
-  /// The [allIfEmpty] parameter determines whether to return all [JsonRow] objects if the search term is empty.
-  ///
-  /// Returns an iterable of [JsonRow] objects that match the search criteria.
-  Iterable<JsonRow> searchMap({required strings searchTerms, List<String> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
-    if (keys.isEmpty) {
-      keys = selectMany((e, i) => e.keys).distinct().toList();
-    }
-
-    return search(searchTerms: searchTerms, searchOn: (row) => [for (var k in keys) "${row[k] ?? ""}"], levenshteinDistance: levenshteinDistance, allIfEmpty: allIfEmpty);
-  }
-}
+ 
 
 /// A mixin that provides utility functions for working with SQL.
 mixin SqlUtil {

@@ -68,19 +68,9 @@ extension StringListExtensions on strings {
 }
 
 extension ListExtension<T> on List<T> {
-  /// Searches the iterable for items that match the specified search criteria.
-  ///
-  /// The [searchTerm] parameter specifies the term to search for.
-  /// The [searchOn] parameter is a function that returns a list of strings to search on for each item.
-  /// The [levenshteinDistance] parameter specifies the maximum Levenshtein distance allowed for fuzzy matching.
-  /// The [ignoreCase], [ignoreDiacritics], [ignoreWordSplitters], [splitCamelCase], [useWildcards], and [allIfEmpty] parameters control various search options.
-  ///
-  /// Returns an iterable of items that match the search criteria, ordered by relevance.
-  /// The relevance is determined by the number of matches and the Levenshtein distance (if applicable).
-
-  Iterable<T> search({
-    required strings searchTerms,
-    required List<dynamic> Function(T) searchOn,
+  Iterable<T> search<O>({
+    required List<O> searchTerms,
+    required List<O> Function(T) searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -88,63 +78,19 @@ extension ListExtension<T> on List<T> {
     bool splitCamelCase = true,
     bool useWildcards = false,
     bool allIfEmpty = true,
-  }) {
-    if (isEmpty) return <T>[].orderBy((e) => true);
-
-    if (searchTerms.whereValid.isEmpty) {
-      if (allIfEmpty) {
-        return orderBy((e) => true);
-      } else {
-        return <T>[].orderBy((e) => true);
-      }
-    }
-
-    var l = where(
-      (item) => FilterFunctions.searchFunction(
-        item: item,
+  }) =>
+      FilterFunctions.search(
+        items: this,
         searchTerms: searchTerms,
         searchOn: searchOn,
+        levenshteinDistance: levenshteinDistance,
         ignoreCase: ignoreCase,
         ignoreDiacritics: ignoreDiacritics,
         ignoreWordSplitters: ignoreWordSplitters,
         splitCamelCase: splitCamelCase,
         useWildcards: useWildcards,
-      ),
-    );
-
-    if (l.isEmpty && levenshteinDistance > 0) {
-      l = where(
-        (item) => FilterFunctions.levenshteinFunction(
-          item: item,
-          searchTerms: searchTerms,
-          searchOn: searchOn,
-          levenshteinDistance: levenshteinDistance,
-        ),
+        allIfEmpty: allIfEmpty,
       );
-    }
-
-    return l
-        .orderByDescending(
-          (item) => FilterFunctions.countSearch(
-            item: item,
-            searchTerms: searchTerms,
-            searchOn: searchOn,
-            ignoreCase: ignoreCase,
-            ignoreDiacritics: ignoreDiacritics,
-            ignoreWordSplitters: ignoreWordSplitters,
-            splitCamelCase: splitCamelCase,
-            useWildcards: useWildcards,
-          ),
-        )
-        .thenBy(
-          (item) => FilterFunctions.countLevenshtein(
-            item: item,
-            searchTerms: searchTerms,
-            searchOn: searchOn,
-            levenshteinDistance: levenshteinDistance,
-          ),
-        );
-  }
 
   /// Detach items from a list according to a
   /// function and return these items
