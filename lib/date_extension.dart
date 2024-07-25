@@ -37,7 +37,7 @@ extension DateTimeExtensions on DateTime {
 
   /// Returns a new [DateTime] object by adding the specified amount of time to the current date and time.
   ///
-  /// The [year], [month], [day], [hour], [minute], [second], [millisecond], and [microsecond] parameters
+  /// The [years], monthsh], [days], [hours], [minutes], [seconds], [milliseconds], and [microseconds] parameters
   /// represent the amount of time to add to the current date and time. If any of these parameters are not
   /// provided, their default value is 0.
   ///
@@ -47,16 +47,16 @@ extension DateTimeExtensions on DateTime {
   /// DateTime futureDate = currentDate.sum(year: 1, month: 3, day: 7);
   /// print(futureDate); // Output: 2023-04-07 12:34:56.789
   /// ```
-  DateTime sum({int? year, int? month, int? day, int? hour, int? minute, int? second, int? millisecond, int? microsecond}) {
+  DateTime sum({int years = 0, int months = 0, int days = 0, int hours = 0, int minutes = 0, int seconds = 0, int milliseconds = 0, int microseconds = 0}) {
     return DateTime(
-      this.year + (year ?? 0),
-      this.month + (month ?? 0),
-      this.day + (day ?? 0),
-      this.hour + (hour ?? 0),
-      this.minute + (minute ?? 0),
-      this.second + (second ?? 0),
-      this.millisecond + (millisecond ?? 0),
-      this.microsecond + (microsecond ?? 0),
+      year + (years),
+      month + (months),
+      day + (days),
+      hour + (hours),
+      minute + (minutes),
+      second + (seconds),
+      millisecond + (milliseconds),
+      microsecond + (microseconds),
     );
   }
 
