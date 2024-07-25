@@ -12,6 +12,54 @@ export 'package:innerlibs/date_range.dart';
 /// get the beginning and end of a day, format the date and time in a readable format,
 /// calculate the time difference between two dates, determine the time of day, and more.
 extension DateTimeExtensions on DateTime {
+  /// Returns a [DateTime] object representing the specified date and time.
+  ///
+  /// The optional parameters allow you to specify the year, month, day, hour, minute, second, millisecond, and microsecond.
+  /// If any of the parameters are not provided, the current value of that component will be used.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// var myDate = at(year: 2022, month: 10, day: 31, hour: 12, minute: 0, second: 0);
+  /// print(myDate); // Output: 2022-10-31 12:00:00.000
+  /// ```
+  date at({int? year, int? month, int? day, int? hour, int? minute, int? second, int? millisecond, int? microsecond}) {
+    return DateTime(
+      year ?? this.year,
+      month ?? this.month,
+      day ?? this.day,
+      hour ?? this.hour,
+      minute ?? this.minute,
+      second ?? this.second,
+      millisecond ?? this.millisecond,
+      microsecond ?? this.microsecond,
+    );
+  }
+
+  /// Returns a new [DateTime] object by adding the specified amount of time to the current date and time.
+  ///
+  /// The [year], [month], [day], [hour], [minute], [second], [millisecond], and [microsecond] parameters
+  /// represent the amount of time to add to the current date and time. If any of these parameters are not
+  /// provided, their default value is 0.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// DateTime currentDate = DateTime.now();
+  /// DateTime futureDate = currentDate.sum(year: 1, month: 3, day: 7);
+  /// print(futureDate); // Output: 2023-04-07 12:34:56.789
+  /// ```
+  DateTime sum({int? year, int? month, int? day, int? hour, int? minute, int? second, int? millisecond, int? microsecond}) {
+    return DateTime(
+      this.year + (year ?? 0),
+      this.month + (month ?? 0),
+      this.day + (day ?? 0),
+      this.hour + (hour ?? 0),
+      this.minute + (minute ?? 0),
+      this.second + (second ?? 0),
+      this.millisecond + (millisecond ?? 0),
+      this.microsecond + (microsecond ?? 0),
+    );
+  }
+
   /// Returns the next day of the week from the given date.
   date findNextDayOfWeek(int weekday) {
     int daysDifference = weekday - this.weekday;

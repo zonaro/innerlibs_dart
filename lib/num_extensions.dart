@@ -25,6 +25,7 @@ extension NumExtensions<T extends num> on T {
   SizedBox get widthBox => SizedBox(width: toDouble());
 
   SizedBox get heightBox => SizedBox(height: toDouble());
+  SizedBox get squareBox => SizedBox.square(toDouble());
 
   Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: round()).delay(callback);
 
@@ -41,6 +42,8 @@ extension NumExtensions<T extends num> on T {
   Duration get days => Duration(days: floor(), hours: ((this % 1) * 24).floor(), minutes: (((this % 1) * 24 % 1) * 60).floor(), seconds: ((((this % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: (((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: ((((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
   Duration get weeks => Duration(days: (this * 7).floor(), hours: (((this * 7) % 1) * 24).floor(), minutes: ((((this * 7) % 1) * 24 % 1) * 60).floor(), seconds: (((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: ((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+
+  Duration get years => Duration(days: (this * 365.25).floor(), hours: (((this * 365.25) % 1) * 24).floor(), minutes: ((((this * 365.25) % 1) * 24 % 1) * 60).floor(), seconds: (((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: ((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
   T get forcePositive => this < 0 ? -this as T : this;
   T get forceNegative => (-1 * this.forcePositive) as T;

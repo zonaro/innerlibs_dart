@@ -425,6 +425,11 @@ extension StringExtension on String {
   /// Returns a list of strings representing the words in the pascal case string.
   List<String> get pascalSplit => camelSplit.map((w) => w.capitalize).toList();
 
+  /// Returns the singular form of a Portuguese word.
+  /// If the word ends with 'ões', it removes the last 3 characters and appends 'ão'.
+  /// If the word ends with 'ães', it removes the last 3 characters and appends 'ão'.
+  /// If the word ends with 's', it removes the last character.
+  /// Otherwise, it returns the original word.
   String get singularPt {
     if (endsWith('ões')) {
       return '${removeLast(3)}ão';
@@ -436,6 +441,11 @@ extension StringExtension on String {
     return this;
   }
 
+  /// Returns the singular form of a plural noun.
+  /// If the string ends with 'ies', it removes the last 3 characters and appends 'y'.
+  /// If the string ends with 'es', it removes the last 2 characters.
+  /// If the string ends with 's', it removes the last character.
+  /// If none of the above conditions are met, it returns the original string.
   String get singular {
     if (endsWith('ies')) {
       return '${removeLast(3)}y';
