@@ -175,7 +175,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
                   children: entry.pages.map((x) => x.child).toList(),
                 )
               : entry.pages.firstOrNull?.child ?? Container())
-          .wrapIf(widget.wrapper != null, widget.wrapper!),
+          .wrapIf(widget.wrapper != null, widget.wrapper ?? (x) => x),
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
       persistentFooterButtons: entry.persistentFooterButtons,
