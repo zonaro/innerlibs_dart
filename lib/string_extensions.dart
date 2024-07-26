@@ -1485,34 +1485,33 @@ extension StringExtension on String {
   /// String foo1 = 'esentis';
   /// int dist = foo.getLevenshtein('esentis2'); // 1
   /// ```
-  int getLevenshtein(String b, [bool caseSensitive = true]) {
+  int getLevenshtein(String other, [bool caseSensitive = true]) {
     if (isBlank) {
-      return b.length;
+      return other.length;
     }
-    var a = this;
+
     if (!caseSensitive) {
-      a = a.toLowerCase();
-      b = b.toLowerCase();
+      return toLowerCase().getLevenshtein(other.toLowerCase());
     }
 
-    List<int> costs = List<int>.filled(b.length + 1, 0);
+    List<int> costs = List<int>.filled(other.length + 1, 0);
 
-    for (var j = 0; j <= b.length; j++) {
+    for (var j = 0; j <= other.length; j++) {
       costs[j] = j;
     }
 
-    for (var i = 1; i <= a.length; i++) {
+    for (var i = 1; i <= length; i++) {
       int nw = costs[0];
       costs[0] = i;
 
-      for (var j = 1; j <= b.length; j++) {
-        int cj = min(1 + min(costs[j], costs[j - 1]), a[i - 1] == b[j - 1] ? nw : nw + 1);
+      for (var j = 1; j <= other.length; j++) {
+        int cj = min(1 + min(costs[j], costs[j - 1]), this[i - 1] == other[j - 1] ? nw : nw + 1);
         nw = costs[j];
         costs[j] = cj;
       }
     }
 
-    return costs[b.length];
+    return costs[other.length];
   }
 
   /// Inspired from Vincent van Proosdij.
@@ -1557,13 +1556,10 @@ extension StringExtension on String {
   /// String newFoo = foo.removeFirst(3) // 'ntis';
   /// ```
   String removeFirst([int n = 1]) {
-    if (isBlank) {
+    if (isBlank || n <= 0) {
       return blankIfNull;
     }
 
-    if (n <= 0) {
-      return blankIfNull;
-    }
     if (n >= length) {
       return '';
     }
@@ -1607,33 +1603,32 @@ extension StringExtension on String {
     return substring(0, n);
   }
 
-  /// Reverses slash in the `String`, by providing [direction],
-  ///
-  /// `0 = / -> \\`
-  ///
-  /// `1 = \\-> /`
+  /// Reverses slash in the `String`, by providing [backSlash],
+  /// - if [backSlash] is `true` it will replace all `/` with `\\`.
+  /// - if [backSlash] is `false` it will replace all `\\` with `/`.
+  /// - if [backSlash] is `null` it will replace all slashes into the most common one.
   ///
   /// ### Example
   /// ```dart
   /// String foo1 = 'C:/Documents/user/test';
-  /// String revFoo1 = foo1.reverseSlash(0); // returns 'C:\Documents\user\test'
+  /// String revFoo1 = foo1.fixSlash(true); // returns 'C:\Documents\user\test'
   ///
   /// String foo2 = 'C:\\Documents\\user\\test';
-  /// String revFoo2 = foo1.reverseSlash(1); // returns 'C:/Documents/user/test'
+  /// String revFoo2 = foo1.fixSlash(false); // returns 'C:/Documents/user/test'
+  ///
+  /// String foo3 = 'C:/Documents\\user/test';
+  /// String revFoo3 = foo1.fixSlash(); // returns 'C:/Documents/user/test'
+  ///
+  /// String foo4 = 'C:/Documents\\user\\test';
+  /// String revFoo4 = foo1.fixSlash(null); // returns 'C:\\Documents\\user\\test'
   /// ```
-  String reverseSlash(int direction) {
+  String fixSlash([bool? backSlash]) {
     if (isBlank) {
       return blankIfNull;
     }
 
-    switch (direction) {
-      case 0:
-        return replaceAll('/', '\\');
-      case 1:
-        return replaceAll('\\', '/');
-      default:
-        return blankIfNull;
-    }
+    backSlash ??= count('\\') > count('/');
+    return backSlash ? replaceAll('/', '\\') : replaceAll('\\', '/');
   }
 
   /// Returns the character at [index] of the `String`.
@@ -1658,7 +1653,7 @@ extension StringExtension on String {
     if (index < 0) {
       return '';
     }
-    return split('')[index];
+    return toArray[index];
   }
 
   /// Appends a [suffix] to the `String`.
@@ -1703,15 +1698,14 @@ extension StringExtension on String {
   /// String price = '1234567';
   /// String formattedPrice = foo1.toPriceAmount(currencySymbol: '€'); // returns '12.345,67 €'
   /// ```
-  String toPriceAmount({String? currencySymbol}) {
+  String toPriceAmount({String? currencySymbol, string? locale}) {
     if (isBlank) {
       return blankIfNull;
     }
 
     try {
-      var f = NumberFormat.currency(locale: 'el_GR');
-
-      return f.format(double.tryParse(replaceAll(',', '.'))).replaceAll('EUR', '').trim().append(currencySymbol == null ? '' : ' $currencySymbol');
+      var f = NumberFormat.currency(locale: locale, symbol: currencySymbol);
+      return f.format(this);
     } catch (e) {
       return blankIfNull;
     }
@@ -1732,17 +1726,11 @@ extension StringExtension on String {
   /// String day = date.getDayFromDate(); // returns 'Saturday'
   /// String grDay = date.getDayFromDate(locale:'el'); // returns 'Σάββατο'
   /// ```
-  String? getDayFromDate({String locale = 'en'}) {
-    initializeDateFormatting(locale);
+  String getDayFromDate({String? format, String? locale}) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
-
-    var date = DateTime.tryParse(this);
-    if (date == null) {
-      return null;
-    }
-    return DateFormat('EEEE', locale).format(date).toString();
+    return toDate(format, locale).format('EEEE');
   }
 
   /// Returns the month name of the date provided in `String` format.
@@ -1760,17 +1748,11 @@ extension StringExtension on String {
   /// String month = date.getMonthFromDate(); // returns 'August'
   /// String grMonth = date.getMonthFromDate(locale:'el'); // returns 'Αυγούστου'
   /// ```
-  String? getMonthFromDate({String locale = 'en'}) {
-    initializeDateFormatting(locale);
+  String getMonthFromDate({String? format, String? locale}) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
-
-    var date = DateTime.tryParse(this);
-    if (date == null) {
-      return null;
-    }
-    return DateFormat('MMMM', locale).format(date).toString();
+    return toDate(format, locale).format('MMMM');
   }
 
   /// Returns the first day of the month from the provided `DateTime` in `String` format.
@@ -1788,17 +1770,11 @@ extension StringExtension on String {
   /// String day = date.firstDayOfDate(); // returns 'Friday'
   /// String grDay = date.firstDayOfDate(locale:'el'); // returns 'Παρασκευή'
   /// ```
-  String? firstDayOfMonth({String locale = 'en'}) {
-    initializeDateFormatting(locale);
+  String firstDayOfMonth({String? format, String? locale}) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
-
-    var date = DateTime.tryParse(this);
-    if (date == null) {
-      return null;
-    }
-    return DateFormat('EEEE', locale).format(DateTime(date.year, date.month, 1)).toString();
+    return toDate(format, locale).firstDayOfMonth.format('EEEE');
   }
 
   /// Returns the last day of the month from the provided `DateTime` in `String` format.
@@ -1816,23 +1792,11 @@ extension StringExtension on String {
   /// String day = date.firstDayOfDate(); // returns 'Friday'
   /// String grDay = date.firstDayOfDate(locale:'el'); // returns 'Παρασκευή'
   /// ```
-  String? lastDayOfMonth({String locale = 'en'}) {
-    initializeDateFormatting(locale);
+  String? lastDayOfMonth({String? format, String? locale}) {
     if (isBlank) {
-      return this;
+      return blankIfNull;
     }
-
-    var date = DateTime.tryParse(this);
-    if (date == null) {
-      return null;
-    }
-    return DateFormat('EEEE', locale)
-        .format(
-          DateTime(date.year, date.month + 1, 1).add(
-            const Duration(days: -1),
-          ),
-        )
-        .toString();
+    return toDate(format, locale).lastDayOfMonth.format('EEEE');
   }
 
   /// Returns the left side of the `String` starting from [char].
@@ -1909,7 +1873,7 @@ extension StringExtension on String {
       return blankIfNull;
     }
 
-    int leftChars = (maxChars / 2).ceil();
+    int leftChars = (maxChars / 2).round();
     int rightChars = maxChars - leftChars;
     return '${first(leftChars)}...${last(rightChars)}';
   }
@@ -1966,7 +1930,7 @@ extension StringExtension on String {
     }).join("\r\n");
   }
 
-  /// Try parse a bool value. See [asBool] to convert strings into [bool]
+  /// Try parse a bool value. See [asBool] to convert strings into [bool] in a more efficient way
   bool? get toBool => bool.tryParse(this, caseSensitive: false);
 
   /// The Jaro distance is a measure of edit distance between two strings
@@ -1982,9 +1946,13 @@ extension StringExtension on String {
   /// String t2 = 'esen';
   /// print(t1.getJaro(t2)); // prints 0.8571428571428571
   /// ```
-  double getJaro(String t) {
+  double getJaro(String t, [bool caseSensitive = true]) {
     if (isBlank) {
       return 1;
+    }
+
+    if (!caseSensitive) {
+      return toLowerCase().getJaro(t.toLowerCase());
     }
 
     final int sLen = length;
@@ -3016,6 +2984,7 @@ extension StringExtension on String {
   /// return a date from string
   date toDate([string? format, string? locale]) {
     try {
+      initializeDateFormatting(locale);
       return DateFormat(format, locale).parse(this);
     } catch (e) {
       return date.parse(this);
