@@ -206,7 +206,7 @@ extension NumNullExtensions<T extends num?> on T {
   /// Checks whether the number is a non-zero negative number.
   bool get isNonZeroNegative => this != null && this! < 0;
 
-  /// Returns a string representation of the number with a fixed length.
+  /// Returns a string representation of the number with a fixed length, including the decimal separator if needed.
   ///
   /// The [length] parameter specifies the total length of the resulting string.
   /// The [fill] parameter specifies the character used to fill the remaining space.
