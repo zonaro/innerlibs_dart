@@ -36,6 +36,7 @@ class ScaffoldBuilder extends StatefulWidget {
     this.titleColor,
     this.showUnselectedLabels = true,
     this.tabHeight,
+    this.floatingActionButtonLocation,
   });
   final Color? titleColor;
   final bool? scrollableTabs;
@@ -64,6 +65,7 @@ class ScaffoldBuilder extends StatefulWidget {
   final BottomNavigationBarType? bottomNavigationBarType;
   final bool showUnselectedLabels;
   final double? tabHeight;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   final Widget Function(Widget)? wrapper;
 
@@ -109,20 +111,19 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
     };
   }
 
-  Widget? get floatingActionButton => entry.floatingActionButton;
+  Widget? get floatingActionButton => entry.floatingActionButton ?? widget.floatingActionButton;
 
-  FloatingActionButtonLocation? get floatingActionButtonLocation => entry.floatingActionButtonLocation;
+  FloatingActionButtonLocation? get floatingActionButtonLocation => entry.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
 
   List<BottomNavigationBarItem> get bottomNavigationBarItems => [
-        if (widget.items.length > 1)
-          for (var entry in widget.items)
-            BottomNavigationBarItem(
-              icon: Icon(entry.icon),
-              activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon),
-              label: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString,
-              tooltip: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip,
-              backgroundColor: entry.backgroundColor,
-            ),
+        for (var entry in widget.items)
+          BottomNavigationBarItem(
+            icon: Icon(entry.icon),
+            activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon),
+            label: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString,
+            tooltip: widget.currentIndex.value == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip,
+            backgroundColor: entry.backgroundColor,
+          ),
       ];
 
   @override
@@ -148,7 +149,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
 
     return Scaffold(
       key: widget.key,
-      appBar: entry.showAppBar
+      appBar: entry.showAppBar || entry.pages.length > 1
           ? AppBar(
               title: title,
               leading: widget.leading,
@@ -174,8 +175,8 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
                   children: entry.pages.map((x) => x.child).toList(),
                 )
               : entry.pages.firstOrNull?.child ?? Container())
-          .wrapIf(widget.wrapper != null, widget.wrapper ?? (x) => x),
-      floatingActionButton: floatingActionButton ?? widget.floatingActionButton,
+          .wrapIf(widget.wrapper != null, widget.wrapper!),
+      floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
       persistentFooterButtons: entry.persistentFooterButtons,
       drawer: widget.drawer,
