@@ -34,6 +34,8 @@ class ScaffoldBuilder extends StatefulWidget {
     this.scrollableTabs,
     this.labelColor,
     this.titleColor,
+    this.showUnselectedLabels = true,
+    this.tabHeight,
   });
   final Color? titleColor;
   final bool? scrollableTabs;
@@ -60,10 +62,12 @@ class ScaffoldBuilder extends StatefulWidget {
   final Widget? leading;
   final List<Widget>? actions;
   final BottomNavigationBarType? bottomNavigationBarType;
+  final bool showUnselectedLabels;
+  final double? tabHeight;
 
   final Widget Function(Widget)? wrapper;
 
-  final List<MenuEntry> items;
+  final MenuEntries items;
 
   final void Function(int oldIndex, int newIndex)? onIndexChange;
   final ValueNotifier<int> currentIndex;
@@ -123,26 +127,48 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget>? actionItems;
+
+    if (entry.showAllToolbarActions) {
+      if (entry.toolbarItems != null) {
+        actionItems ??= [];
+        actionItems.addAll(entry.toolbarItems!);
+      }
+      if (entry.toolbarItems != null && widget.actions != null && widget.actions!.isNotEmpty && entry.toolbarItems!.isNotEmpty) {
+        actionItems ??= [];
+        actionItems.add(const SizedBox(width: 8));
+      }
+      if (widget.actions != null) {
+        actionItems ??= [];
+        actionItems.addAll(widget.actions!);
+      }
+    } else {
+      actionItems = entry.toolbarItems ?? widget.actions;
+    }
+
     return Scaffold(
       key: widget.key,
-      appBar: AppBar(
-        title: title,
-        leading: widget.leading,
-        backgroundColor: widget.appBarBackgroundColor,
-        foregroundColor: widget.titleColor,
-        actions: entry.toolbarItems ?? widget.actions,
-        bottom: entry.pages.length > 1
-            ? TabBar(
-                labelColor: widget.labelColor,
-                isScrollable: widget.scrollableTabs ?? false,
-                tabs: entry.pages.map((x) {
-                  return Tab(
-                    icon: Icon(x.icon),
-                    child: forceWidget(x.title) ?? Text("Tab ${entry.pages.indexOf(x) + 1}"),
-                  );
-                }).toList())
-            : null,
-      ),
+      appBar: entry.showAppBar
+          ? AppBar(
+              title: title,
+              leading: widget.leading,
+              backgroundColor: widget.appBarBackgroundColor,
+              foregroundColor: widget.titleColor,
+              actions: actionItems,
+              bottom: entry.pages.length > 1
+                  ? TabBar(
+                      labelColor: widget.labelColor,
+                      isScrollable: widget.scrollableTabs ?? false,
+                      tabs: entry.pages.map((x) {
+                        return Tab(
+                          height: widget.tabHeight,
+                          icon: Icon(x.icon),
+                          child: forceWidget(x.title) ?? Text("#${entry.pages.indexOf(x) + 1}"),
+                        );
+                      }).toList())
+                  : null,
+            )
+          : null,
       body: (entry.pages.length > 1
               ? TabBarView(
                   children: entry.pages.map((x) => x.child).toList(),
@@ -162,7 +188,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> {
               currentIndex: currentIndex,
               items: bottomNavigationBarItems,
               type: widget.bottomNavigationBarType,
-              showUnselectedLabels: true,
+              showUnselectedLabels: widget.showUnselectedLabels,
             )
           : null,
       bottomSheet: widget.bottomSheet,
@@ -216,12 +242,16 @@ class MenuEntry {
   final Color? backgroundColor;
   final string? route;
 
+  final bool showAppBar;
+  final bool showAllToolbarActions;
+
   Widget? get titleWidget => forceWidget(pages.singleOrNull?.title) ?? forceWidget(title);
 
   string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
 
   MenuEntry({
     this.route,
+    this.showAllToolbarActions = true,
     required this.title,
     required this.icon,
     required this.pages,
@@ -236,5 +266,6 @@ class MenuEntry {
     this.action,
     this.actionIcon,
     this.persistentFooterButtons,
+    this.showAppBar = true,
   });
 }
