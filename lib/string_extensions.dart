@@ -1490,6 +1490,10 @@ extension StringExtension on String {
       return other.length;
     }
 
+    if (other.isBlank) {
+      return length;
+    }
+
     if (!caseSensitive) {
       return toLowerCase().getLevenshtein(other.toLowerCase());
     }
@@ -1946,55 +1950,63 @@ extension StringExtension on String {
   /// String t2 = 'esen';
   /// print(t1.getJaro(t2)); // prints 0.8571428571428571
   /// ```
-  double getJaro(String t, [bool caseSensitive = true]) {
-    if (isBlank) {
+  double getJaro(String other, [bool caseSensitive = true]) {
+    if (other == this) {
       return 1;
     }
 
-    if (!caseSensitive) {
-      return toLowerCase().getJaro(t.toLowerCase());
+    if (other.isBlank || isBlank) {
+      return 0;
     }
 
-    final int sLen = length;
-    final int tLen = t.length;
+    if (!caseSensitive) {
+      return toLowerCase().getJaro(other.toLowerCase());
+    }
+    int len1 = length;
+    int len2 = other.length;
 
-    if (sLen == 0 && tLen == 0) return 1;
+    // Maximum allowed matching distance
+    int matchDistance = (max(len1, len2) ~/ 2) - 1;
 
-    final int matchDistance = (max(sLen, tLen) / 2 - 1).toInt();
+    // Arrays to track character matches
+    List<bool> s1Matches = List.filled(len1, false);
+    List<bool> s2Matches = List.filled(len2, false);
 
-    final List<bool> sMatches = List<bool>.filled(sLen, false);
-    final List<bool> tMatches = List<bool>.filled(tLen, false);
+    int commonMatches = 0;
+    for (int i = 0; i < len1; i++) {
+      int start = max(0, i - matchDistance);
+      int end = min(len2 - 1, i + matchDistance);
 
-    int matches = 0;
-    int transpositions = 0;
-
-    for (int i = 0; i < sLen; i++) {
-      final int start = max(0, i - matchDistance);
-      final int end = max(i + matchDistance + 1, tLen);
-
-      for (int j = start; j < end; j++) {
-        if (tMatches[j]) continue;
-        if (charAt(i) != t.charAt(j)) continue;
-        sMatches[i] = true;
-        tMatches[j] = true;
-        matches++;
-        break;
+      for (int j = start; j <= end; j++) {
+        if (!s2Matches[j] && this[i] == other[j]) {
+          s1Matches[i] = true;
+          s2Matches[j] = true;
+          commonMatches++;
+          break;
+        }
       }
     }
 
-    if (matches == 0) return 0;
+    if (commonMatches == 0) {
+      return 0.0;
+    }
 
+    // Calculate transpositions
+    int transpositions = 0;
     int k = 0;
-    for (int i = 0; i < sLen; i++) {
-      if (!sMatches[i]) continue;
-      while (!tMatches[k]) {
+    for (int i = 0; i < len1; i++) {
+      if (s1Matches[i]) {
+        while (!s2Matches[k]) {
+          k++;
+        }
+        if (this[i] != other[k]) {
+          transpositions++;
+        }
         k++;
       }
-      if (charAt(i) != t.charAt(k)) transpositions++;
-      k++;
     }
 
-    return ((matches / sLen) + (matches / tLen) + ((matches - transpositions / 2.0) / matches)) / 3.0;
+    return (commonMatches.toDouble() / len1 + commonMatches.toDouble() / len2 + (commonMatches - transpositions).toDouble() / commonMatches) / 3.0;
   }
 
   /// Checks if the `String` is Blank (null, empty or only white spaces).

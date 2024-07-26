@@ -540,10 +540,10 @@ mixin FilterFunctions {
   /// Returns an iterable of items that match the search criteria, ordered by relevance.
   /// The relevance is determined by the number of matches and the Levenshtein distance (if applicable).
 
-  static Iterable<T> search<T, O>({
+  static Iterable<T> search<T>({
     required Iterable<T> items,
-    required Iterable<O> searchTerms,
-    required Iterable<O> Function(T) searchOn,
+    required Iterable<dynamic> searchTerms,
+    required Iterable<dynamic> Function(T) searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -583,16 +583,15 @@ mixin FilterFunctions {
         ),
       );
     }
-    return l.orderByDescending((e) => countJaro(
+    return l.orderByDescending((item) => countJaro(
           searchTerms: searchTerms,
-          searchOn: searchOn(e),
+          searchOn: searchOn(item),
           ignoreCase: ignoreCase,
           ignoreDiacritics: ignoreDiacritics,
           ignoreWordSplitters: ignoreWordSplitters,
           splitCamelCase: splitCamelCase,
         ));
 
-        
     // return l
     //     .orderByDescending(
     //       (item) => FilterFunctions.countSearch(
@@ -703,7 +702,6 @@ mixin FilterFunctions {
   ///
   /// The [countSearch] function takes the following parameters:
   /// - [searchTerms]: A list of strings representing the search terms.
-  /// - [item]: The item to search on.
   /// - [searchOn]: A function that takes an item and returns a list of dynamic values to search on.
   /// - [ignoreCase]: A boolean indicating whether to ignore case sensitivity (default is true).
   /// - [ignoreDiacritics]: A boolean indicating whether to ignore diacritics (default is true).
@@ -712,9 +710,9 @@ mixin FilterFunctions {
   /// - [useWildcards]: A boolean indicating whether to use wildcards (*) for matching (true) or a standard `string.contains()` (false) (default is false).
   ///
   /// The function returns the count of occurrences of the search terms in the item.
-  static int countSearch<T, O>({
-    required Iterable<O> searchTerms,
-    required Iterable<O> searchOn,
+  static int countSearch({
+    required Iterable<dynamic> searchTerms,
+    required Iterable<dynamic> searchOn,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
     bool ignoreWordSplitters = true,
@@ -758,16 +756,15 @@ mixin FilterFunctions {
   ///
   /// The Levenshtein distance is a measure of the difference between two strings. It represents the minimum number of single-character edits (insertions, deletions, or substitutions) required to change one string into another.
   ///
-  /// The [item] is the target object to compare with the [searchTerms].
   /// The [searchOn] function is used to extract the relevant terms from the [item] for comparison.
   /// The [levenshteinDistance] is the maximum allowed Levenshtein distance for a match to be considered.
   /// The optional parameters [ignoreCase], [ignoreDiacritics], [ignoreWordSplitters], [splitCamelCase], and [useWildcards] control various aspects of the comparison.
   ///
   /// Returns the count of [searchTerms] that have a Levenshtein distance less than or equal to [levenshteinDistance].
 
-  static int countLevenshtein<T, O>({
-    required Iterable<O> searchTerms,
-    required Iterable<O> searchOn,
+  static int countLevenshtein({
+    required Iterable<dynamic> searchTerms,
+    required Iterable<dynamic> searchOn,
     required int levenshteinDistance,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -811,7 +808,6 @@ mixin FilterFunctions {
   /// This function takes an item, a list of search terms, and various options to customize the comparison.
   /// It returns the sum of the Jaro similarity scores between the item and each search term.
   ///
-  /// The [item] parameter is the item to compare against the search terms.
   /// The [searchTerms] parameter is an iterable of search terms to compare against the item.
   /// The [searchOn] parameter is a function that takes the item and returns an iterable of values to search on.
   /// The [ignoreCase] parameter specifies whether to ignore case when comparing strings (default is true).
@@ -820,42 +816,47 @@ mixin FilterFunctions {
   /// The [splitCamelCase] parameter specifies whether to split camel case words when comparing strings (default is true).
   ///
   /// Returns the sum of the Jaro similarity scores between the item and each search term.
-  static double countJaro<T, O>({
-    required Iterable<O> searchTerms,
-    required Iterable<O> searchOn,
+  static double countJaro({
+    required Iterable<dynamic> searchTerms,
+    required Iterable<dynamic> searchOn,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
     bool ignoreWordSplitters = true,
     bool splitCamelCase = true,
-  }) =>
-      [
-        for (var searchTerm in searchTerms)
-          ...searchOn.expand((e) {
-            if (e == null) return [];
-            return e.toString().getUniqueWords.map((keyword) {
-              keyword = generateKeyword(
-                keyword,
-                forceLowerCase: ignoreCase,
-                removeDiacritics: ignoreDiacritics,
-                removeWordSplitters: ignoreWordSplitters,
-                splitCamelCase: splitCamelCase,
-              );
-              var searchword = generateKeyword(
-                searchTerm,
-                forceLowerCase: ignoreCase,
-                removeDiacritics: ignoreDiacritics,
-                removeWordSplitters: ignoreWordSplitters,
-                splitCamelCase: splitCamelCase,
-              );
-              return searchword.getJaro(keyword, !ignoreCase);
-            });
-          })
-      ].sum();
+  }) {
+    return searchOn
+        .expand((e) {
+          return e == null
+              ? <double>[for (var _ in searchTerms) 0]
+              : e.toString().getUniqueWords.map((keyword) {
+                  decimal jaro = 0.0;
+                  for (var searchTerm in searchTerms) {
+                    keyword = generateKeyword(
+                      keyword,
+                      forceLowerCase: ignoreCase,
+                      removeDiacritics: ignoreDiacritics,
+                      removeWordSplitters: ignoreWordSplitters,
+                      splitCamelCase: splitCamelCase,
+                    );
+                    var searchword = generateKeyword(
+                      searchTerm,
+                      forceLowerCase: ignoreCase,
+                      removeDiacritics: ignoreDiacritics,
+                      removeWordSplitters: ignoreWordSplitters,
+                      splitCamelCase: splitCamelCase,
+                    );
+                    jaro += searchword.getJaro(keyword, !ignoreCase);
+                  }
+                  return jaro;
+                });
+        })
+        .sum
+        .toDouble();
+  }
 
   /// Searches for a specific item in an iterable based on given search terms and criteria.
   ///
   /// The [searchFunction] function takes in the following parameters:
-  /// - [item]: The item to search for.
   /// - [searchTerms]: The search terms to match against.
   /// - [searchOn]: An iterable of values to search on for each item.
   /// - [levenshteinDistance]: The maximum allowed Levenshtein distance for fuzzy matching. Defaults to 0.
@@ -866,9 +867,9 @@ mixin FilterFunctions {
   /// - [useWildcards]: Whether to use wildcards (*) for partial matching. Defaults to false.
   ///
   /// Returns `true` if the item matches any of the search terms based on the given criteria, `false` otherwise.
-  static bool searchFunction<T, O>({
-    required Iterable<O> searchTerms,
-    required Iterable<O> searchOn,
+  static bool searchFunction({
+    required Iterable<dynamic> searchTerms,
+    required Iterable<dynamic> searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -902,9 +903,9 @@ mixin FilterFunctions {
   ///
   /// Returns `true` if there is at least one search term within the specified Levenshtein distance of the item,
   /// and `false` otherwise.
-  static bool levenshteinFunction<T, O>({
-    required Iterable<O> searchTerms,
-    required Iterable<O> searchOn,
+  static bool levenshteinFunction({
+    required Iterable<dynamic> searchTerms,
+    required Iterable<dynamic> searchOn,
     required int levenshteinDistance,
     bool ignoreCase = true,
   }) =>
@@ -922,7 +923,6 @@ mixin FilterFunctions {
   /// the search terms to filter on, the function to extract search terms from the item,
   /// and several optional parameters to customize the filtering behavior.
   ///
-  /// The [item] parameter is the item to be filtered.
   /// The [searchTerms] parameter is an iterable of search terms to filter on.
   /// The [searchOn] parameter is a function that takes in an item and returns an iterable of search terms extracted from the item.
   /// The [levenshteinDistance] parameter is an optional parameter that specifies the maximum Levenshtein distance allowed for a match.
@@ -933,30 +933,29 @@ mixin FilterFunctions {
   /// The [useWildcards] parameter is an optional parameter that specifies whether to use wildcards when performing the filter.
   ///
   /// The function returns `true` if the item passes the filter, and `false` otherwise.
-  static bool fullFilterFunction<T, O>({
-    required Iterable<O> searchTerms,
-    required Iterable<O> searchOn,
+  static bool fullFilterFunction({
+    required Iterable<dynamic> searchTerms,
+    required Iterable<dynamic> searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
     bool ignoreWordSplitters = true,
     bool splitCamelCase = true,
     bool useWildcards = false,
-  }) {
-    return searchFunction(
-          searchTerms: searchTerms,
-          searchOn: searchOn,
-          ignoreCase: ignoreCase,
-          ignoreDiacritics: ignoreDiacritics,
-          ignoreWordSplitters: ignoreWordSplitters,
-          splitCamelCase: splitCamelCase,
-          useWildcards: useWildcards,
-        ) ||
-        levenshteinFunction(
-          searchTerms: searchTerms,
-          searchOn: searchOn,
-          levenshteinDistance: levenshteinDistance,
-          ignoreCase: ignoreCase,
-        );
-  }
+  }) =>
+      searchFunction(
+        searchTerms: searchTerms,
+        searchOn: searchOn,
+        ignoreCase: ignoreCase,
+        ignoreDiacritics: ignoreDiacritics,
+        ignoreWordSplitters: ignoreWordSplitters,
+        splitCamelCase: splitCamelCase,
+        useWildcards: useWildcards,
+      ) ||
+      levenshteinFunction(
+        searchTerms: searchTerms,
+        searchOn: searchOn,
+        levenshteinDistance: levenshteinDistance,
+        ignoreCase: ignoreCase,
+      );
 }
