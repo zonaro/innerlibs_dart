@@ -48,10 +48,8 @@ extension NumExtensions<T extends num> on T {
   T get forcePositive => this < 0 ? -this as T : this;
   T get forceNegative => (-1 * this.forcePositive) as T;
 
-  T lockMin(T minValue) => ([this, minValue]).max();
-  T lockMax(T maxValue) => ([this, maxValue]).min();
-
-  T lockBetween(T minValue, T maxValue) => lockMin(minValue).lockMax(maxValue);
+  T clampMin(T minValue) => ([this, minValue]).max();
+  T clampMax(T maxValue) => ([this, maxValue]).min();
 
   bool isLowerThan(num b) => this < b;
 

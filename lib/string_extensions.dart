@@ -583,7 +583,7 @@ extension StringExtension on String {
 
   String identWith(int deepLevel, [String identWith = " ", int multiplier = 1]) {
     if (deepLevel == 0) return this;
-    var ii = identArrow(length: deepLevel * multiplier.lockMin(1), pattern: identWith);
+    var ii = identArrow(length: deepLevel * multiplier.clampMin(1), pattern: identWith);
     if (deepLevel > 0) {
       return ii + this;
     } else {
@@ -605,7 +605,7 @@ extension StringExtension on String {
     if (isBlank) {
       return 0;
     }
-    var magicalNumber = getWords.length / wordsPerMinute.lockMin(1);
+    var magicalNumber = getWords.length / wordsPerMinute.clampMin(1);
     return (magicalNumber * 100).round();
   }
 

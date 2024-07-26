@@ -94,10 +94,10 @@ extension DateTimeExtensions on DateTime {
   date get previousWeek => subtract(7.days);
 
   /// Returns the next month.
-  date get nextMonth => DateTime(year, month + 1, day.lockMax(DateUtils.lastDayOfMonth(month + 1, year)));
+  date get nextMonth => DateTime(year, month + 1, day.clampMax(DateUtils.lastDayOfMonth(month + 1, year)));
 
   /// Returns the previous month.
-  date get previousMonth => DateTime(year, month - 1, day.lockMax(DateUtils.lastDayOfMonth(month - 1, year)));
+  date get previousMonth => DateTime(year, month - 1, day.clampMax(DateUtils.lastDayOfMonth(month - 1, year)));
 
   /// Returns the next year.
   date get nextYear => DateTime(year + 1, month, day);
@@ -106,22 +106,22 @@ extension DateTimeExtensions on DateTime {
   date get previousYear => DateTime(year - 1, month, day);
 
   /// Returns the next semester.
-  date get nextSemester => date(year, lastDayOfSemester.add(1.days).month, day.lockMax(lastDayOfSemester.add(1.days).lastDayOfMonth.day));
+  date get nextSemester => date(year, lastDayOfSemester.add(1.days).month, day.clampMax(lastDayOfSemester.add(1.days).lastDayOfMonth.day));
 
   /// Returns the previous semester
-  date get previousSemester => date(year, firstDayOfSemester.add(-1.days).firstDayOfSemester.month, day.lockMax(firstDayOfSemester.add(-1.days).lastDayOfMonth.day));
+  date get previousSemester => date(year, firstDayOfSemester.add(-1.days).firstDayOfSemester.month, day.clampMax(firstDayOfSemester.add(-1.days).lastDayOfMonth.day));
 
   /// Returns the next bimester
-  date get nextBimester => date(year, lastDayOfBimester.add(1.days).month, day.lockMax(lastDayOfBimester.add(1.days).lastDayOfMonth.day));
+  date get nextBimester => date(year, lastDayOfBimester.add(1.days).month, day.clampMax(lastDayOfBimester.add(1.days).lastDayOfMonth.day));
 
   /// Returns the previous bimester
-  date get previousBimester => date(year, firstDayOfBimester.add(-1.days).firstDayOfBimester.month, day.lockMax(firstDayOfBimester.add(-1.days).lastDayOfMonth.day));
+  date get previousBimester => date(year, firstDayOfBimester.add(-1.days).firstDayOfBimester.month, day.clampMax(firstDayOfBimester.add(-1.days).lastDayOfMonth.day));
 
   /// Returns the next quarter.
-  date get nextQuarter => date(year, lastDayOfQuarter.add(1.days).month, day.lockMax(lastDayOfQuarter.add(1.days).lastDayOfMonth.day));
+  date get nextQuarter => date(year, lastDayOfQuarter.add(1.days).month, day.clampMax(lastDayOfQuarter.add(1.days).lastDayOfMonth.day));
 
   /// Returns the previous quarter.
-  date get previousQuarter => date(year, firstDayOfQuarter.add(-1.days).firstDayOfQuarter.month, day.lockMax(firstDayOfQuarter.add(-1.days).lastDayOfMonth.day));
+  date get previousQuarter => date(year, firstDayOfQuarter.add(-1.days).firstDayOfQuarter.month, day.clampMax(firstDayOfQuarter.add(-1.days).lastDayOfMonth.day));
 
   /// Returns the first day of the fortnight.
   date get firstDayOfFortnight => day <= 15 ? firstDayOfMonth : date(year, month, 16);
