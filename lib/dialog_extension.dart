@@ -331,7 +331,7 @@ extension DialogExt on BuildContext {
     T? result;
     CancelableOperation<T?>? operation;
 
-    bool cancellable = (cancelTaskButtonText as Object?).asNullableText() != null && task != null;
+    bool cancellable = forceWidget(cancelTaskButtonText) != null && task != null;
 
     cancelTask() async {
       if (cancellable) {
@@ -356,7 +356,7 @@ extension DialogExt on BuildContext {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: cancelTask,
-                child: (cancelTaskButtonText).asNullableText(),
+                child: forceWidget(cancelTaskButtonText),
               ),
             ],
           ],
@@ -368,7 +368,7 @@ extension DialogExt on BuildContext {
                 const CircularProgressIndicator(),
                 if (loadingText != null) ...[
                   const SizedBox(height: 20),
-                  (loadingText as Object?).asText(),
+                  forceWidget(loadingText)!,
                 ],
               ],
             ),
