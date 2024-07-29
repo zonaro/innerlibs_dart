@@ -48,7 +48,7 @@ int get thisYear => now.year;
 /// The [zone] parameter is an optional zone for the log message.
 /// The [error] parameter is an optional error object associated with the log message.
 /// The [stackTrace] parameter is an optional stack trace associated with the log message.
-void consoleLog(
+string consoleLog(
   String message, {
   DateTime? time,
   int? sequenceNumber,
@@ -61,6 +61,7 @@ void consoleLog(
   if (kDebugMode) {
     log(message, time: time ?? now, sequenceNumber: sequenceNumber, level: level, name: name, zone: zone, error: error);
   }
+  return message;
 }
 
 /// Returns the value associated with the highest breakpoint that is less than or equal to the given [value].
