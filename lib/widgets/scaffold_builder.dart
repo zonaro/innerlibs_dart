@@ -101,7 +101,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
     });
   }
 
-  bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && widget.drawer == null;
+  bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && (widget.drawer == null || widget.drawer is DrawerHeader);
 
   MenuEntry get entry => widget.items[currentPageIndex];
 
@@ -156,10 +156,10 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
     );
   }
 
-  ListTile getDrawerItem(MenuEntry entry, PageEntry page, [Widget? title]) {
+  ListTile getDrawerItem(MenuEntry entry, PageEntry page, [bool isSubmenu = false]) {
     return ListTile(
-      leading: widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon) : Icon(entry.icon),
-      title: title ?? forceWidget(widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString),
+      leading: forceWidget(isSubmenu ? page.icon : null) ?? (widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon) : Icon(entry.icon)),
+      title: forceWidget(isSubmenu ? page.title : null) ?? forceWidget(widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString),
       subtitle: forceWidget((widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip) ?? ""),
       selectedColor: entry.backgroundColor,
       onTap: () {
@@ -194,7 +194,19 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
       ];
 
   List<Widget> get drawerItems => [
-        if (useDrawerInsteadOfBottomNavigationBar)
+        if (useDrawerInsteadOfBottomNavigationBar) ...[
+          if (widget.drawer is DrawerHeader) widget.drawer!,
+          if (context.canPop()) ...[
+            ListTile(
+              leading: const Icon(Icons.arrow_back),
+              title: Text(context.localizations.backButtonTooltip),
+              onTap: () {
+                context.pop(); // pop drawer
+                context.pop(); // pop page
+              },
+            ),
+            const Divider(),
+          ],
           for (var entry in widget.items)
             if (entry.pages.length > 1)
               ExpansionTile(
@@ -205,13 +217,22 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
                       (x) => getDrawerItem(
                         entry,
                         x,
-                        forceWidget(x.title),
+                        true,
                       ),
                     )
                     .toList(),
               )
             else
               getDrawerItem(entry, entry.pages.singleOrNull!),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.close),
+            title: Text(context.localizations.closeButtonTooltip),
+            onTap: () {
+              context.pop(); // pop drawer
+            },
+          ),
+        ]
       ];
 
   @override
@@ -297,13 +318,6 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
       endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture,
       restorationId: widget.restorationId,
     );
-    // ).wrapIf(entry.pages.length > 1, (x) {
-    //   return DefaultTabController(
-    //     length: entry.pages.length,
-    //     initialIndex: currentTabIndex,
-    //     child: x,
-    //   );
-    // });
   }
 }
 
