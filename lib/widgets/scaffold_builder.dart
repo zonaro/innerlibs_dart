@@ -159,8 +159,8 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
   ListTile getDrawerItem(MenuEntry entry, PageEntry page, [Widget? title]) {
     return ListTile(
       leading: widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon) : Icon(entry.icon),
-      title: title ?? Text(widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString),
-      subtitle: Text((widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip) ?? ""),
+      title: title ?? forceWidget(widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString),
+      subtitle: forceWidget((widget.currentIndex.pageIndex == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip) ?? ""),
       selectedColor: entry.backgroundColor,
       onTap: () {
         if (widget.currentIndex.pageIndex == widget.items.indexOf(entry) && widget.currentIndex.tabIndex == entry.pages.indexOf(page)) {
