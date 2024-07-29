@@ -98,15 +98,11 @@ extension NumExtensions<T extends num> on T {
   bool get hasDecimal => this % 1 != 0;
 
   /// Num to locale currency with symbol or not
-  String? toCurrency({bool? withSymbol}) {
-    if (isNullOrZero) {
-      return null;
+  String? toCurrency({bool? withSymbol, string? locale}) {
+    if (withSymbol == false) {
+      return NumberFormat.simpleCurrency(name: '', locale: locale).format(this).trim();
     } else {
-      if (withSymbol == false) {
-        return NumberFormat.simpleCurrency(name: '').format(this).trim();
-      } else {
-        return NumberFormat.simpleCurrency().format(this).trim();
-      }
+      return NumberFormat.simpleCurrency(locale: locale).format(this).trim();
     }
   }
 
