@@ -195,7 +195,6 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
 
   List<Widget> get drawerItems => [
         if (useDrawerInsteadOfBottomNavigationBar) ...[
-          if (widget.drawer is DrawerHeader) widget.drawer!,
           if (context.canPop()) ...[
             ListTile(
               leading: const Icon(Icons.arrow_back),
@@ -207,6 +206,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
             ),
             const Divider(),
           ],
+          if (widget.drawer is DrawerHeader) widget.drawer!,
           for (var entry in widget.items)
             if (entry.pages.length > 1)
               ExpansionTile(
