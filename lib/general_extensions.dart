@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
+import 'package:innerlibs/string_extensions.dart';
 
 /// Extension method that compares two values and swaps them if necessary.
 ///

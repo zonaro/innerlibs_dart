@@ -1,5 +1,6 @@
 import 'dart:ui';
-import 'package:innerlibs/innerlibs.dart';
+
+import 'package:innerlibs/string_extensions.dart';
 
 extension ColorExtensions on Color {
   String get hexadecimal => '#${value.toRadixString(16).removeFirst(2).padLeft(6, '0')}';

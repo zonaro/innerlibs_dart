@@ -9,6 +9,8 @@ import 'package:innerlibs/innerlibs.dart';
 
 export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
+export 'package:get/get.dart';
+export 'package:get/get.dart';
 
 export 'align_extensions.dart';
 export 'alignment_extensions.dart';
@@ -44,13 +46,13 @@ export 'text_style_extension.dart';
 export 'theme_extension.dart';
 export 'tooltip_extension.dart';
 export 'util.dart';
-export 'utils/tag_xml.dart';
-export 'utils/oembed.dart';
 export 'utils/formatters.dart';
 export 'utils/haptic_feedback_type.dart';
 export 'utils/keyed_json_table.dart';
+export 'utils/oembed.dart';
 export 'utils/self_map.dart';
 export 'utils/sql_response.dart';
+export 'utils/tag_xml.dart';
 export 'utils/validation_interface.dart';
 export 'widget_ext.dart';
 export 'widgets/avatar_image.dart';

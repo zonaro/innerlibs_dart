@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
+import 'package:innerlibs/string_extensions.dart';
 
 bool get isDesktop => (isMacOS || isWindows || isLinux);
 

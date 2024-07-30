@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
-extension NumExtensions<T extends num> on T {
+extension NumExtensions2<T extends num> on T {
   string get formatFileSize {
     if (this < 1024) {
       return "$this bytes";
@@ -241,10 +241,4 @@ extension DurationExtensions on Duration {
   }
 
   String get formatted => getFormatted();
-
-  /// Delay a function for the duration
-  Future delay([FutureOr Function()? callback]) async => Future.delayed(
-        this,
-        callback,
-      );
 }

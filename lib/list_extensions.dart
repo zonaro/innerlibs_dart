@@ -67,7 +67,7 @@ extension StringListExtensions on strings {
   List<int> getLevenshtein(String b, [bool caseSensitive = true]) => map((x) => x.getLevenshtein(b, caseSensitive)).toList();
 }
 
-extension ListExtension<T> on List<T> {
+extension ListExtension2<T> on List<T> {
   Iterable<T> search<O>({
     required List<O> searchTerms,
     required List<O> Function(T) searchOn,

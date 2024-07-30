@@ -6,12 +6,7 @@ import 'package:innerlibs/innerlibs.dart';
 
 extension BuildContextExtensions on BuildContext {
   MaterialLocalizations get localizations => MaterialLocalizations.of(this);
-
-//  THEMES
-
-  /// performs a simple [Theme.of(context)] action and returns given [result]
-  ///
-  ThemeData get theme => Theme.of(this);
+ 
 
   /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
   ColorScheme get colorScheme => theme.colorScheme;

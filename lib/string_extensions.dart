@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+
 // for the utf8.encode method
 
 extension NullStringExtension on String? {
@@ -62,7 +63,7 @@ extension NullStringExtension on String? {
   String operator |(Object? s) => ifBlank("$s") ?? "";
 }
 
-extension StringExtension on String {
+extension StringExtensions on String {
   static final _defaultDiacriticsRemovalap = [
     {'base': 'A', 'letters': '\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F'},
     {'base': 'AA', 'letters': '\uA732'},
@@ -401,7 +402,7 @@ extension StringExtension on String {
       }
     }
 
-    words = words.select((w, i) => i == 0 ? w.toLowerCase() : w.capitalize).toList();
+    words = words.select((w, i) => i == 0 ? w.toLowerCase() : w.capitalizeFirst).whereNotNull().toList();
     try {
       List<string> newWords = [];
       for (var word in words) {
@@ -423,7 +424,7 @@ extension StringExtension on String {
 
   /// Splits a pascal case string into individual words.
   /// Returns a list of strings representing the words in the pascal case string.
-  List<String> get pascalSplit => camelSplit.map((w) => w.capitalize).toList();
+  List<String> get pascalSplit => camelSplit.map((w) => w.capitalizeFirst).whereNotNull().toList();
 
   /// Returns the singular form of a Portuguese word.
   /// If the word ends with 'ões', it removes the last 3 characters and appends 'ão'.
@@ -3025,7 +3026,7 @@ extension StringExtension on String {
     text = text.replaceMany(["altura", "height", "l "], "h ");
 
     try {
-      if (text.isNumericOnly) {
+      if (text.isNumber) {
         return Size(text.trimAll.toDoubleOrZero, text.trimAll.toDoubleOrZero);
       } else if (text.isLike("width*") && !text.isLike("*height*")) {
         return Size(text.after("width").trimAll.toDoubleOrZero, text.after("width").trimAll.toDoubleOrZero);
