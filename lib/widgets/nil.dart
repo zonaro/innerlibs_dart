@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-
-/// A [Nil] instance, you can use in your layouts.
+/// A widget which is not in the layout and does nothing.
+/// It is useful when you have to return a widget and can't return null.
 const nil = Nil();
 
 /// A widget which is not in the layout and does nothing.

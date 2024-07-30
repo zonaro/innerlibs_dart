@@ -26,7 +26,7 @@ class _IconMenuState extends State<IconMenu> {
         var maxWidth = widget.maxWidth ?? constraints.maxWidth;
 
         if (widget.buttons.isEmpty) {
-          return const SizedBox.shrink();
+          return   nil;
         }
         if (widget.buttons.length == 1) {
           var button = widget.buttons.first;
@@ -53,7 +53,7 @@ class _IconMenuState extends State<IconMenu> {
               );
             }
           } else if (button is IconMenuDivider) {
-            return const SizedBox.shrink();
+            return   nil;
           } else {
             throw Exception("Invalid IconMenuItem type");
           }

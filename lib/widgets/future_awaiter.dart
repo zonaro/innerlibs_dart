@@ -106,7 +106,7 @@ class FutureAwaiter<T> extends StatelessWidget {
             : ErrorWidget(e);
   }
 
-  empty() => emptyChild ?? const SizedBox.shrink();
+  empty() => emptyChild ??   nil;
 
   Widget _buildWidget(AsyncSnapshot<T> snapshot) {
     try {
@@ -188,6 +188,6 @@ class FutureBool extends StatelessWidget {
         builder: (_) => trueWidget,
         loading: loading,
         emptyChild: falseWidget,
-        errorChild: (e) => falseWidget ?? const SizedBox.shrink(),
+        errorChild: (e) => falseWidget ??   nil,
       );
 }

@@ -64,7 +64,7 @@ class ResponsiveColumn {
     this.xl,
     this.xxl,
     this.height,
-    this.child = const SizedBox.shrink(),
+    this.child = nil,
     this.decoration,
     this.foregroundDecoration,
     this.alignment,
@@ -82,7 +82,7 @@ class ResponsiveColumn {
     this.xl = 2,
     this.xxl = 1,
     this.height,
-    this.child = const SizedBox.shrink(),
+    this.child =   nil,
     this.decoration,
     this.foregroundDecoration,
     this.alignment,
@@ -94,7 +94,7 @@ class ResponsiveColumn {
   factory ResponsiveColumn.all({
     required int value,
     double? height,
-    Widget child = const SizedBox.shrink(),
+    Widget child =   nil,
     Decoration? decoration,
     Decoration? foregroundDecoration,
     Alignment? alignment,
@@ -131,7 +131,7 @@ class ResponsiveList extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (context, constraints) {
-          if (children?.isEmpty ?? true) return const SizedBox.shrink();
+          if (children?.isEmpty ?? true)     nil;
 
           double width = constraints.maxWidth;
           var diw = desiredItemWidth ?? width;

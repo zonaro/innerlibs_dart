@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:innerlibs/build_context_extensions.dart';
+import 'package:innerlibs/widgets/nil.dart';
 
 class Responsive extends StatelessWidget {
   const Responsive({
@@ -32,5 +33,5 @@ class Responsive extends StatelessWidget {
         xl: xl,
         xxl: xxl,
       ) ??
-      const SizedBox.shrink();
+        nil;
 }
