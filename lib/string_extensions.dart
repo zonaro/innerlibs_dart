@@ -2678,7 +2678,7 @@ extension StringExtensions on String {
   /// String foo = 'hello world';
   /// bool isMixedCase = foo.isMixedCase; // returns false;
   ///
-  bool isMixedCase() {
+  bool get isMixedCase {
     if (isBlank) {
       return false;
     }
@@ -2686,21 +2686,8 @@ extension StringExtensions on String {
   }
 
   /// Checks whether the `String` is consisted of only unique characters.
-  ///
-  /// Returns true `String` if the `String` is empty.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// bool isUnique = foo.isUnique; // returns false;
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'hello world';
-  /// bool isUnique = foo.isUnique; // returns true;
-  /// ```
-  bool isUnique() {
+
+  bool get isUnique {
     if (isBlank) {
       return true;
     }
@@ -2810,11 +2797,11 @@ extension StringExtensions on String {
     }
     final Map<String, int> letterCounts = {};
 
-    split('').forEach((letter) {
+    for (var letter in toArray) {
       letterCounts[letter] = (letterCounts[letter] ?? 0) + 1;
-    });
+    }
 
-    for (final letter in characters.split('')) {
+    for (final letter in characters.toArray) {
       if (letterCounts[letter] == null || letterCounts[letter]! <= 0) {
         return false;
       }
@@ -2929,13 +2916,6 @@ extension StringExtensions on String {
       return this;
     }
     return replaceRange(index, index + pattern.length, replacement);
-  }
-
-  /// Uppercase first letter inside string and let the others lowercase
-  /// Example: your name => Your name
-  String get capitalize {
-    if (isEmpty) return blankIfNull;
-    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 
   String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{{');
