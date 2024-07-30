@@ -10,7 +10,6 @@ import 'package:innerlibs/innerlibs.dart';
 export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
 export 'package:get/get.dart';
-export 'package:get/get.dart';
 
 export 'align_extensions.dart';
 export 'alignment_extensions.dart';
