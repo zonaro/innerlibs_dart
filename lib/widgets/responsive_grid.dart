@@ -82,7 +82,7 @@ class ResponsiveColumn {
     this.xl = 2,
     this.xxl = 1,
     this.height,
-    this.child =   nil,
+    this.child = nil,
     this.decoration,
     this.foregroundDecoration,
     this.alignment,
@@ -90,11 +90,31 @@ class ResponsiveColumn {
     this.margin,
   });
 
+  factory ResponsiveColumn.full({
+    double? height,
+    Widget child = nil,
+    Decoration? decoration,
+    Decoration? foregroundDecoration,
+    Alignment? alignment,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+  }) =>
+      ResponsiveColumn.all(
+        value: 12,
+        height: height,
+        child: child,
+        decoration: decoration,
+        foregroundDecoration: foregroundDecoration,
+        alignment: alignment,
+        padding: padding,
+        margin: margin,
+      );
+
   /// Responsive Column thats have breakpoints for each [ScreenTier]. Each tier has a default value
   factory ResponsiveColumn.all({
     required int value,
     double? height,
-    Widget child =   nil,
+    Widget child = nil,
     Decoration? decoration,
     Decoration? foregroundDecoration,
     Alignment? alignment,
@@ -131,7 +151,7 @@ class ResponsiveList extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (context, constraints) {
-          if (children?.isEmpty ?? true)     nil;
+          if (children?.isEmpty ?? true) nil;
 
           double width = constraints.maxWidth;
           var diw = desiredItemWidth ?? width;
@@ -297,7 +317,7 @@ class ResponsiveRow extends StatelessWidget {
     int? lg = 4,
     int? xl = 6,
     int? xxl = 12,
-    List<dynamic> children = const [],
+    dynamic children = const [],
     WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.start,
     int totalSegments = 12,
     double horizontalSpacing = 0,
@@ -369,7 +389,7 @@ class ResponsiveRow extends StatelessWidget {
     int? lg,
     int? xl,
     int? xxl,
-    List<dynamic> children = const [],
+    dynamic children = const [],
     WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.start,
     int totalSegments = 12,
     double horizontalSpacing = 0,
@@ -384,6 +404,11 @@ class ResponsiveRow extends StatelessWidget {
     WrapAlignment runAlignment = WrapAlignment.start,
   }) {
     List<ResponsiveColumn> newChildren = [];
+
+    if (children is! List) {
+      children = [children];
+    }
+
     for (var i = 0; i < children.length; i++) {
       if (children[i] is ResponsiveColumn) {
         newChildren.add(children[i]);

@@ -84,21 +84,20 @@ class ScaffoldBuilderIndex extends ValueNotifier<(int, int)> {
   ScaffoldBuilderIndex({int pageIndex = 0, int tabIndex = 0}) : super((pageIndex, tabIndex));
 
   int get pageIndex => value.$1;
-  set pageIndex(int value) => this.value = (value, 0);
+  set pageIndex(int v) => value = (v, 0);
 
   int get tabIndex => value.$2;
-  set tabIndex(int value) => this.value = (pageIndex, value);
+  set tabIndex(int v) => value = (value.$1, v);
 }
 
 class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderStateMixin {
-  TabController? _tabController;
-
   @override
   initState() {
-    super.initState();
     widget.currentIndex.addListener(() {
-      recreateController();
+      consoleLog("${widget.currentIndex.pageIndex} - ${widget.currentIndex.tabIndex}");
+      entry.tabController?.animateTo(widget.currentIndex.tabIndex);
     });
+    super.initState();
   }
 
   bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && (widget.drawer == null || widget.drawer is DrawerHeader);
@@ -108,8 +107,13 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
   int get currentPageIndex => widget.currentIndex.pageIndex;
   set currentPageIndex(int value) => widget.currentIndex.pageIndex = value;
 
-  int get currentTabIndex => widget.currentIndex.tabIndex;
-  set currentTabIndex(int value) => widget.currentIndex.tabIndex = value;
+  int get currentTabIndex => entry.tabController?.index ?? 0;
+  set currentTabIndex(int value) {
+    if (entry.tabController != null) {
+      value = value.clamp(0, entry.tabController!.length - 1);
+      widget.currentIndex.tabIndex = value;
+    }
+  }
 
   Widget get title => (entry.titleWidget ?? forceWidget(widget.title) ?? forceWidget(currentPageIndex.toString()))!;
 
@@ -144,17 +148,6 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
   Widget? get floatingActionButton => entry.floatingActionButton ?? widget.floatingActionButton;
 
   FloatingActionButtonLocation? get floatingActionButtonLocation => entry.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
-
-  recreateController() {
-    if (_tabController != null) {
-      _tabController!.animateTo(currentTabIndex);
-    }
-    _tabController = TabController(
-      length: entry.pages.length,
-      initialIndex: currentTabIndex,
-      vsync: this,
-    );
-  }
 
   ListTile getDrawerItem(MenuEntry entry, PageEntry page, [bool isSubmenu = false]) {
     return ListTile(
@@ -237,8 +230,17 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    for (var i in widget.items) {
+      if (i.pages.length > 1) {
+        if (i.tabController == null) {
+          i.tabController = TabController(vsync: this, length: i.pages.length, initialIndex: widget.currentIndex.tabIndex.clamp(0, i.pages.length - 1));
+          i.tabController!.addListener(() {
+            widget.currentIndex.tabIndex = i.tabController!.index;
+          });
+        }
+      }
+    }
     List<Widget>? actionItems;
-    consoleLog("${widget.currentIndex.pageIndex} - ${widget.currentIndex.tabIndex}");
     if (entry.showAllToolbarActions) {
       if (entry.toolbarItems != null) {
         actionItems ??= [];
@@ -256,8 +258,6 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
       actionItems = entry.toolbarItems ?? widget.actions;
     }
 
-    recreateController();
-
     return Scaffold(
       key: widget.key,
       appBar: entry.showAppBar || entry.pages.length > 1 || useDrawerInsteadOfBottomNavigationBar
@@ -269,7 +269,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
               actions: actionItems,
               bottom: entry.pages.length > 1
                   ? TabBar(
-                      controller: _tabController,
+                      controller: entry.tabController!,
                       labelColor: widget.labelColor,
                       isScrollable: widget.scrollableTabs ?? false,
                       tabs: entry.pages
@@ -284,10 +284,10 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
           : null,
       body: (entry.pages.length > 1
               ? TabBarView(
-                  controller: _tabController,
+                  controller: entry.tabController!,
                   children: entry.pages.map((x) => x.child).toList(),
                 )
-              : entry.pages.firstOrNull?.child ?? Container())
+              : entry.pages.firstOrNull?.child ?? nil)
           .wrapIf(widget.wrapper != null, widget.wrapper ?? (x) => x),
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
@@ -356,6 +356,8 @@ class MenuEntry {
 
   final bool showAppBar;
   final bool showAllToolbarActions;
+
+  TabController? tabController;
 
   Widget? get titleWidget => forceWidget(pages.singleOrNull?.title) ?? forceWidget(title);
 
