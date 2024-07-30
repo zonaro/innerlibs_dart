@@ -10,8 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  crypto:
-  intl:
   darq:
   collection:
   convert:
@@ -21,6 +19,17 @@ dependencies:
   path:
   xml: 
   get:
+  crypto:
+  intl: 
+  xml_crypto:
+  pdf:
+  brasil_fields:
+  path_provider:
+  printing:
+  download:
+  file_picker:
+  gap:
+  dropdown_search:
  
  
    
@@ -29,6 +38,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+
+flutter: 
+  assets:
+    - lib/brasil.json 
+    - assets/consola.ttf
+    - assets/consolab.ttf
+    - assets/consolai.ttf
 
  
 
