@@ -2964,7 +2964,7 @@ extension StringExtensions on String {
   bool get isAlphabetOnly => hasMatch(r'^[a-zA-Z]+$');
 
   /// Checks if string contains at least one Capital Letter
-  bool get hasCapitalletter => hasMatch(r'[A-Z]');
+  bool get hasCapitalLetter => hasMatch(r'[A-Z]');
 
   /// Checks if string is boolean.
   bool get isBool => (this == 'true' || this == 'false');
