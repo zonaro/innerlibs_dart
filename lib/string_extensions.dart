@@ -2960,10 +2960,6 @@ extension StringExtensions on String {
 
   bool hasMatch(String pattern) => RegExp(pattern).hasMatch(this);
 
-  /// Checks if string consist only numeric.
-  /// Numeric only doesn't accepting "." which double data type have
-  bool get isNumericOnly => hasMatch(r'^\d+$');
-
   /// Checks if string consist only Alphabet. (No Whitespace)
   bool get isAlphabetOnly => hasMatch(r'^[a-zA-Z]+$');
 
