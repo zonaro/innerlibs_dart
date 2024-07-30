@@ -330,15 +330,18 @@ class _CampoDataState extends State<CampoData> {
   }
 }
 
-class CampoDecimal extends StatefulWidget {
+typedef CampoDecimal = CampoNumerico<decimal>;
+typedef CampoInteiro = CampoNumerico<int>;
+
+class CampoNumerico<T extends num> extends StatefulWidget {
   final String? label;
   final TextEditingController? controller;
-  final void Function(decimal? newValue)? onChange;
+  final void Function(T? newValue)? onChange;
   final void Function()? onEditingComplete;
-  final string? Function(decimal? newValue)? validator;
-  final decimal defaultValue;
+  final string? Function(T? newValue)? validator;
+  final T? defaultValue;
   final bool readOnly;
-  final List<(string, decimal)> options;
+  final List<(string, T)> options;
   final Color? borderColor;
   final TextAlign textAlign;
   final FocusNode? focusNode;
@@ -346,16 +349,16 @@ class CampoDecimal extends StatefulWidget {
   final bool isAutoComplete;
   final IconData? icon;
   final int? maxLen;
-  final NumberInputFormatter? formatter;
+  final List<NumberInputFormatter> inputFormatters;
 
-  const CampoDecimal({
+  const CampoNumerico({
     super.key,
     this.label,
     this.controller,
     this.onChange,
     this.onEditingComplete,
     this.validator,
-    this.defaultValue = 0,
+    this.defaultValue,
     this.readOnly = false,
     this.options = const [],
     this.borderColor,
@@ -365,110 +368,36 @@ class CampoDecimal extends StatefulWidget {
     this.isAutoComplete = false,
     this.icon,
     this.maxLen,
-    this.formatter,
+    this.inputFormatters = const [],
   });
 
   @override
   createState() => _CampoDecimalState();
 }
 
-class _CampoDecimalState extends State<CampoDecimal> {
+class _CampoDecimalState<T extends num> extends State<CampoNumerico<T>> {
   @override
   Widget build(BuildContext context) {
-    return CampoValor<decimal>(
+    return CampoValor<T>(
       icon: widget.icon,
       maxLen: widget.maxLen,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [widget.formatter ?? NumberInputFormatter()],
+      keyboardType: TextInputType.numberWithOptions(decimal: T is decimal),
+      inputFormatters: widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters,
       label: widget.label,
       controller: widget.controller,
       onChange: (newValue) {
         if (widget.onChange != null) {
-          widget.onChange!(newValue?.$2 ?? 0);
+          widget.onChange!(parseTo<T>(newValue?.$2));
         }
       },
       onEditingComplete: widget.onEditingComplete,
       validator: (v) {
         if (widget.validator != null) {
-          return widget.validator!(v?.$2 ?? 0);
+          return widget.validator!(parseTo(v?.$2));
         }
         return null;
       },
-      defaultValue: widget.defaultValue,
-      readOnly: widget.readOnly,
-      isAutoComplete: widget.isAutoComplete,
-      options: widget.options,
-      borderColor: widget.borderColor,
-      textAlign: widget.textAlign,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-    );
-  }
-}
-
-class CampoInteiro extends StatefulWidget {
-  final String? label;
-  final TextEditingController? controller;
-  final void Function(int? newValue)? onChange;
-  final void Function()? onEditingComplete;
-  final String? Function(int? newValue)? validator;
-  final int defaultValue;
-  final bool readOnly;
-  final List<(string, int)> options;
-  final Color? borderColor;
-  final TextAlign textAlign;
-  final FocusNode? focusNode;
-  final bool autofocus;
-  final bool isAutoComplete;
-  final IconData? icon;
-  final int? maxLen;
-
-  const CampoInteiro({
-    super.key,
-    this.label,
-    this.controller,
-    this.onChange,
-    this.onEditingComplete,
-    this.validator,
-    this.defaultValue = 0,
-    this.readOnly = false,
-    this.options = const [],
-    this.borderColor,
-    this.textAlign = TextAlign.end,
-    this.focusNode,
-    this.autofocus = false,
-    this.isAutoComplete = false,
-    this.icon,
-    this.maxLen,
-  });
-
-  @override
-  createState() => _CampoInteiroState();
-}
-
-class _CampoInteiroState extends State<CampoInteiro> {
-  @override
-  Widget build(BuildContext context) {
-    return CampoValor<int>(
-      icon: widget.icon,
-      maxLen: widget.maxLen,
-      keyboardType: TextInputType.number,
-      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^-?\d+'))],
-      label: widget.label,
-      controller: widget.controller,
-      onChange: (newValue) {
-        if (widget.onChange != null) {
-          widget.onChange!(newValue?.$2 ?? 0);
-        }
-      },
-      onEditingComplete: widget.onEditingComplete,
-      validator: (v) {
-        if (widget.validator != null) {
-          return widget.validator!(v?.$2 ?? 0);
-        }
-        return null;
-      },
-      defaultValue: widget.defaultValue,
+      defaultValue: parseTo(widget.defaultValue ?? 0),
       readOnly: widget.readOnly,
       isAutoComplete: widget.isAutoComplete,
       options: widget.options,
@@ -631,61 +560,65 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
   @override
   Widget build(BuildContext context) {
     if (widget.isAutoComplete || widget.options.isEmpty) {
+      field(FocusNode fn, TextEditingController textEditingController) => TextFormField(
+            focusNode: fn,
+            textAlign: widget.textAlign,
+            maxLength: widget.maxLen,
+            controller: textEditingController,
+            onChanged: (newValue) {
+              _controller!.text = newValue;
+              if (widget.onChange != null) {
+                widget.onChange!((newValue, newValue.parseTo<T>()));
+              }
+            },
+            onEditingComplete: widget.onEditingComplete,
+            inputFormatters: widget.inputFormatters,
+            keyboardType: widget.keyboardType,
+            decoration: estiloCampos(context, widget.label, widget.icon),
+            validator: (s) {
+              if (widget.validator != null) {
+                try {
+                  return widget.validator!((s ?? "", s.parseTo<T>()));
+                } catch (e) {
+                  return "$e";
+                }
+              }
+              return null;
+            },
+            maxLines: widget.lines,
+            readOnly: widget.readOnly,
+            obscureText: widget.obscureText,
+            textInputAction: TextInputAction.none,
+          );
+
       return Padding(
         padding: paddingCampos,
-        child: Autocomplete<(String, T?)>(
-          initialValue: _controller!.value,
-          onSelected: (newValue) {
-            _controller!.text = newValue.$2?.toString() ?? "";
-            if (widget.onChange != null) {
-              widget.onChange!(newValue);
-            }
-          },
-          displayStringForOption: (value) => value.toString(),
-          optionsBuilder: (value) => widget.options.where((e) => "${e.$2}".flatContains(value.text)),
-          fieldViewBuilder: (context, textEditingController, fn, onFieldSubmitted) {
-            textEditingController.text = _controller!.text;
-            return Focus(
-              focusNode: _focusNode,
-              autofocus: widget.autofocus,
-              onFocusChange: (v) {
-                if (v) {
-                  fn.requestFocus();
-                }
-              },
-              child: TextFormField(
-                focusNode: fn,
-                textAlign: widget.textAlign,
-                maxLength: widget.maxLen,
-                controller: textEditingController,
-                onChanged: (newValue) {
-                  _controller!.text = newValue;
+        child: widget.options.isNotEmpty
+            ? Autocomplete<(String, T?)>(
+                initialValue: _controller!.value,
+                onSelected: (newValue) {
+                  _controller!.text = newValue.$2?.toString() ?? "";
                   if (widget.onChange != null) {
-                    widget.onChange!((newValue, newValue.parseTo<T>()));
+                    widget.onChange!(newValue);
                   }
                 },
-                onEditingComplete: widget.onEditingComplete,
-                inputFormatters: widget.inputFormatters,
-                keyboardType: widget.keyboardType,
-                decoration: estiloCampos(context, widget.label, widget.icon),
-                validator: (s) {
-                  if (widget.validator != null) {
-                    try {
-                      return widget.validator!((s ?? "", s.parseTo<T>()));
-                    } catch (e) {
-                      return "$e";
-                    }
-                  }
-                  return null;
+                displayStringForOption: (value) => value.toString(),
+                optionsBuilder: (value) => widget.options.where((e) => "${e.$2}".flatContains(value.text)),
+                fieldViewBuilder: (context, textEditingController, fn, onFieldSubmitted) {
+                  textEditingController.text = _controller!.text;
+                  return Focus(
+                    focusNode: _focusNode,
+                    autofocus: widget.autofocus,
+                    onFocusChange: (v) {
+                      if (v) {
+                        fn.requestFocus();
+                      }
+                    },
+                    child: field(fn, textEditingController),
+                  );
                 },
-                maxLines: widget.lines,
-                readOnly: widget.readOnly,
-                obscureText: widget.obscureText,
-                textInputAction: TextInputAction.none,
-              ),
-            );
-          },
-        ),
+              )
+            : field(_focusNode!, _controller!),
       );
     } else {
       _dropdownValue = widget.options.where((e) => _controller!.text.isNotBlank && "${e.$2}".flatEqual(_controller!.text)).firstOrNull ?? widget.options.where((e) => e.$2 == widget.defaultValue).firstOrNull ?? widget.options.firstOrNull;
