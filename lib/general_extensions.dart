@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
-import 'package:innerlibs/string_extensions.dart';
 
 /// Extension method that compares two values and swaps them if necessary.
 ///
@@ -103,7 +102,7 @@ extension ObjectExtensions<T extends Object?> on T {
     return false;
   }
 
-  /// Checks if [object] has a valid value.
+  /// Checks if [Object] has a valid value.
   ///
   /// The following values are considered not valid:
   /// - `objects` thats fail against a custom validation functions (if provided). The custom validation function must return a list of booleans. If at least one of the booleans is `true`, the object is considered valid.;
@@ -117,7 +116,7 @@ extension ObjectExtensions<T extends Object?> on T {
   /// - Classes that implement [Validator]s that have validation errors;
   /// - For other types, this method calls `toString()` and checks the result string against [isValid].
   ///
-  /// Returns `true` if the [object] is valid, `false` otherwise.
+  /// Returns `true` if the [Object] is valid, `false` otherwise.
   ///
   /// ### Example 1:
   /// ```dart

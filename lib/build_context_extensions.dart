@@ -6,7 +6,6 @@ import 'package:innerlibs/innerlibs.dart';
 
 extension BuildContextExtensions on BuildContext {
   MaterialLocalizations get localizations => MaterialLocalizations.of(this);
- 
 
   /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
   ColorScheme get colorScheme => theme.colorScheme;
@@ -442,14 +441,6 @@ extension BuildContextExtensions on BuildContext {
 
   /// The same of MediaQuery.sizeOf(context)
   Size get screenSize => mediaQuery.size;
-
-  /// The same of MediaQuery.sizeOf(context).height
-  double get height => screenSize.height;
-
-  /// The same of [MediaQuery.sizeOf(context).width]
-  /// Note: updates when you rezise your screen (like on a browser or
-  /// desktop window)
-  double get width => screenSize.width;
 
   string get aspectRatioString => screenSize.getAspectRatioString();
   double get aspectRatio => width / height;

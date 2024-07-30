@@ -592,23 +592,16 @@ extension StringExtensions on String {
     }
   }
 
-  /// Returns the average read time duration of the given `String` in seconds.
-  ///
+  /// Returns the average read time duration of the given `String`.
   /// The default calculation is based on 200 words per minute.
   ///
-  /// You can pass the [wordsPerMinute] parameter for different read speeds.
+  /// You can pass the [wordsPerDuration] and [duration] parameters for different read speeds.
   /// ### Example
   /// ```dart
   /// String foo =  'Hello dear friend how you doing ?';
   /// int readTime = foo.readTime(); // returns 3 seconds.
   /// ```
-  int readTime({int wordsPerMinute = 200}) {
-    if (isBlank) {
-      return 0;
-    }
-    var magicalNumber = getWords.length / wordsPerMinute.clampMin(1);
-    return (magicalNumber * 100).round();
-  }
+  Duration readTime({int wordsPerDuration = 200, Duration duration = const Duration(minutes: 1)}) => isBlank || wordsPerDuration == 0 ? 0.seconds : (countWords / (wordsPerDuration * duration.inSeconds)).seconds;
 
   /// Counts the occurrences of a substring within a string.
   ///
@@ -800,20 +793,6 @@ extension StringExtensions on String {
     } on Exception {
       return false;
     }
-  }
-
-  /// Checks whether the `String` is a valid mail.
-  /// ### Example
-  /// ```dart
-  /// String foo = 'esentis@esentis.com';
-  /// bool isMail = foo.isMail; // returns true
-  /// ```
-  bool get isEmail {
-    if (isBlank) {
-      return false;
-    }
-    var regex = RegExp(r"(^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$)");
-    return regex.hasMatch(this);
   }
 
   /// Checks whether the `String` is a number.
