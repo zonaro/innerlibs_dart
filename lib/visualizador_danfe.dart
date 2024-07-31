@@ -6,8 +6,6 @@ import 'package:download/download.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:innerlibs/gerar_pdf_danfe.dart';
-import 'package:innerlibs/nfe.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
