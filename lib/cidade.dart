@@ -35,7 +35,7 @@ class Cidade implements Comparable<Cidade> {
 
   /// Obtém uma lista de todas as cidades.
   static Future<List<Cidade>> get pegarCidades async {
-    final data = await rootBundle.loadString('packages/hes_brasil/lib/brasil.json', cache: true);
+    final data = await rootBundle.loadString('packages/innerlibs/lib/brasil.json', cache: true);
     var items = JsonTable.from(jsonDecode(data));
     List<Cidade> cidades = [];
     for (var json in items) {
