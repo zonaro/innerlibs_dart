@@ -292,7 +292,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
       persistentFooterButtons: entry.persistentFooterButtons,
-      drawer: widget.drawer ?? (useDrawerInsteadOfBottomNavigationBar ? Drawer(child: ListView(children: drawerItems)) : null),
+      drawer: (useDrawerInsteadOfBottomNavigationBar ? Drawer(child: ListView(children: drawerItems)) : widget.drawer),
       endDrawer: widget.endDrawer,
       bottomNavigationBar: bottomNavigationBarItems.length > 1
           ? BottomNavigationBar(
