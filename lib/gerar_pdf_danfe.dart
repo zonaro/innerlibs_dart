@@ -19,10 +19,10 @@ Future<File> salvarPDF(Uint8List pdf, string diretorio, string chave) async {
 Future<Uint8List> gerarPDFDanfe(NFeProc cupomDanfe, [PdfPageFormat pageFormat = PdfPageFormat.roll80, Uint8List? logo]) async {
   var pdf = Document(
     theme: ThemeData.withFont(
-      base: Font.ttf(await rootBundle.load("packages/hes_brasil/assets/consola.ttf")),
-      bold: Font.ttf(await rootBundle.load("packages/hes_brasil/assets/consolab.ttf")),
-      italic: Font.ttf(await rootBundle.load("packages/hes_brasil/assets/consolai.ttf")),
-      boldItalic: Font.ttf(await rootBundle.load("packages/hes_brasil/assets/consolab.ttf")),
+      base: Font.ttf(await rootBundle.load("packages/innerlibs/assets/consola.ttf")),
+      bold: Font.ttf(await rootBundle.load("packages/innerlibs/assets/consolab.ttf")),
+      italic: Font.ttf(await rootBundle.load("packages/innerlibs/assets/consolai.ttf")),
+      boldItalic: Font.ttf(await rootBundle.load("packages/innerlibs/assets/consolab.ttf")),
     ),
   );
 
