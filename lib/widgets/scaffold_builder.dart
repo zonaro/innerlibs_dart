@@ -100,7 +100,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
     super.initState();
   }
 
-  bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && (widget.drawer == null || widget.drawer is DrawerHeader);
+  bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && (widget.drawer == null || widget.drawer is! Drawer);
 
   MenuEntry get entry => widget.items[currentPageIndex];
 
@@ -199,7 +199,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
             ),
             const Divider(),
           ],
-          if (widget.drawer is DrawerHeader) widget.drawer!,
+          if (widget.drawer is! Drawer) widget.drawer!,
           for (var entry in widget.items)
             if (entry.pages.length > 1)
               ExpansionTile(
