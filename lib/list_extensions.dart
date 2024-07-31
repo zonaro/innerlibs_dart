@@ -68,30 +68,6 @@ extension StringListExtensions on strings {
 }
 
 extension ListExtension2<T> on List<T> {
-  Iterable<T> search<O>({
-    required List<O> searchTerms,
-    required List<O> Function(T) searchOn,
-    int levenshteinDistance = 0,
-    bool ignoreCase = true,
-    bool ignoreDiacritics = true,
-    bool ignoreWordSplitters = true,
-    bool splitCamelCase = true,
-    bool useWildcards = false,
-    bool allIfEmpty = true,
-  }) =>
-      FilterFunctions.search(
-        items: this,
-        searchTerms: searchTerms,
-        searchOn: searchOn,
-        levenshteinDistance: levenshteinDistance,
-        ignoreCase: ignoreCase,
-        ignoreDiacritics: ignoreDiacritics,
-        ignoreWordSplitters: ignoreWordSplitters,
-        splitCamelCase: splitCamelCase,
-        useWildcards: useWildcards,
-        allIfEmpty: allIfEmpty,
-      );
-
   /// Detach items from a list according to a
   /// function and return these items
   Iterable<T> detachItems([bool Function(T)? predicate]) {
@@ -166,8 +142,44 @@ extension ListExtension2<T> on List<T> {
   }
 }
 
+extension MapSearch<K, V> on Iterable<Map<K, V>> {
+  Iterable<Map<K, V>> searchMap({required Iterable<V> searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
+    return FilterFunctions.searchMap<K, V>(
+      items: this,
+      searchTerms: searchTerms,
+      keys: keys,
+      levenshteinDistance: levenshteinDistance,
+      allIfEmpty: allIfEmpty,
+    );
+  }
+}
+
 /// Adds extensions to the `List` class
 extension IterablesExtension<T> on Iterable<T> {
+  Iterable<T> search({
+    required Iterable<dynamic> searchTerms,
+    required Iterable<dynamic> Function(T) searchOn,
+    int levenshteinDistance = 0,
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
+    bool useWildcards = false,
+    bool allIfEmpty = true,
+  }) =>
+      FilterFunctions.search(
+        items: this,
+        searchTerms: searchTerms,
+        searchOn: searchOn,
+        levenshteinDistance: levenshteinDistance,
+        ignoreCase: ignoreCase,
+        ignoreDiacritics: ignoreDiacritics,
+        ignoreWordSplitters: ignoreWordSplitters,
+        splitCamelCase: splitCamelCase,
+        useWildcards: useWildcards,
+        allIfEmpty: allIfEmpty,
+      );
+
   /// Removes duplicate elements from a list based on a provided predicate.
   ///
   /// The [predicate] function should return a value that uniquely identifies

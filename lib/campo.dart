@@ -350,6 +350,7 @@ class CampoNumerico<T extends num> extends StatefulWidget {
   final IconData? icon;
   final int? maxLen;
   final List<NumberInputFormatter> inputFormatters;
+  final Future<List<T>> Function(string)? asyncItems;
 
   const CampoNumerico({
     super.key,
@@ -369,13 +370,14 @@ class CampoNumerico<T extends num> extends StatefulWidget {
     this.icon,
     this.maxLen,
     this.inputFormatters = const [],
+    this.asyncItems,
   });
 
   @override
-  createState() => _CampoDecimalState();
+  createState() => _CampoNumericoState();
 }
 
-class _CampoDecimalState<T extends num> extends State<CampoNumerico<T>> {
+class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
   @override
   Widget build(BuildContext context) {
     return CampoValor<T>(
@@ -405,6 +407,7 @@ class _CampoDecimalState<T extends num> extends State<CampoNumerico<T>> {
       textAlign: widget.textAlign,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      asyncItems: widget.asyncItems != null ? (s) async => (await widget.asyncItems!(s)).map((e) => (parseTo<string>(e)!, parseTo<T>(e))).toList() : null,
     );
   }
 }
@@ -429,6 +432,7 @@ class CampoTexto extends StatefulWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final IconData? icon;
+  final Future<List<String>> Function(String)? asyncItems;
 
   const CampoTexto({
     super.key,
@@ -451,6 +455,7 @@ class CampoTexto extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.icon,
+    this.asyncItems,
   });
 
   @override
@@ -465,6 +470,7 @@ class _CampoTextoState extends State<CampoTexto> {
       icon: widget.icon,
       controller: widget.controller,
       options: widget.options.map((e) => (e, e)),
+      asyncItems: widget.asyncItems != null ? (s) async => (await widget.asyncItems!(s)).map((e) => (e, e)).toList() : null,
       inputFormatters: widget.inputFormatters,
       onChange: (newValue) {
         if (widget.onChange != null) {
@@ -513,6 +519,7 @@ class CampoValor<T> extends StatefulWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final IconData? icon;
+  final Future<List<(String, T?)>> Function(String)? asyncItems;
 
   const CampoValor({
     super.key,
@@ -535,6 +542,7 @@ class CampoValor<T> extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.icon,
+    this.asyncItems,
   });
 
   @override
@@ -557,40 +565,42 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
     super.initState();
   }
 
+  field(FocusNode fn, TextEditingController textEditingController) => TextFormField(
+        focusNode: fn,
+        textAlign: widget.textAlign,
+        maxLength: widget.maxLen,
+        controller: textEditingController,
+        onChanged: (newValue) {
+          _controller!.text = newValue;
+          if (widget.onChange != null) {
+            widget.onChange!((newValue, newValue.parseTo<T>()));
+          }
+        },
+        onEditingComplete: widget.onEditingComplete,
+        inputFormatters: widget.inputFormatters,
+        keyboardType: widget.keyboardType,
+        decoration: estiloCampos(context, widget.label, widget.icon),
+        validator: (s) {
+          if (widget.validator != null) {
+            try {
+              return widget.validator!((s ?? "", s.parseTo<T>()));
+            } catch (e) {
+              return "$e";
+            }
+          }
+          return null;
+        },
+        maxLines: widget.lines,
+        readOnly: widget.readOnly,
+        obscureText: widget.obscureText,
+        textInputAction: TextInputAction.none,
+      );
+
+  bool get hasOptions => widget.options.isNotEmpty || widget.asyncItems != null;
+
   @override
   Widget build(BuildContext context) {
-    if (widget.isAutoComplete || widget.options.isEmpty) {
-      field(FocusNode fn, TextEditingController textEditingController) => TextFormField(
-            focusNode: fn,
-            textAlign: widget.textAlign,
-            maxLength: widget.maxLen,
-            controller: textEditingController,
-            onChanged: (newValue) {
-              _controller!.text = newValue;
-              if (widget.onChange != null) {
-                widget.onChange!((newValue, newValue.parseTo<T>()));
-              }
-            },
-            onEditingComplete: widget.onEditingComplete,
-            inputFormatters: widget.inputFormatters,
-            keyboardType: widget.keyboardType,
-            decoration: estiloCampos(context, widget.label, widget.icon),
-            validator: (s) {
-              if (widget.validator != null) {
-                try {
-                  return widget.validator!((s ?? "", s.parseTo<T>()));
-                } catch (e) {
-                  return "$e";
-                }
-              }
-              return null;
-            },
-            maxLines: widget.lines,
-            readOnly: widget.readOnly,
-            obscureText: widget.obscureText,
-            textInputAction: TextInputAction.none,
-          );
-
+    if (widget.isAutoComplete || (hasOptions == false)) {
       return Padding(
         padding: paddingCampos,
         child: widget.options.isNotEmpty
@@ -603,7 +613,20 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
                   }
                 },
                 displayStringForOption: (value) => value.toString(),
-                optionsBuilder: (value) => widget.options.where((e) => "${e.$2}".flatContains(value.text)),
+                optionsBuilder: (v) async {
+                  List<(string, T?)> values = widget.options.toList();
+                  values = widget.options
+                      .search(
+                        searchTerms: v.text.split(";").whereValid,
+                        searchOn: (e) => [e.$1, flatString(e.$2)],
+                        levenshteinDistance: 2,
+                      )
+                      .toList();
+                  if (widget.asyncItems != null) {
+                    values = [...values, ...(await widget.asyncItems!(v.text))];
+                  }
+                  return values.distinct();
+                },
                 fieldViewBuilder: (context, textEditingController, fn, onFieldSubmitted) {
                   textEditingController.text = _controller!.text;
                   return Focus(
@@ -629,7 +652,7 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
               filters.isBlank ||
               FilterFunctions.fullFilterFunction(
                 searchTerms: filters.split(";").whereValid,
-                searchOn: [item.$1, item.$2.asFlat],
+                searchOn: [item.$1, flatString(item.$2)],
               ),
           compareFn: (item1, item2) => item1.$2.flatEqual(item2.$2),
           popupProps: popupCampos(context, widget.label, options: widget.options.toList()),
@@ -638,6 +661,20 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
             dropdownSearchDecoration: estiloCampos(context, widget.label, widget.icon),
           ),
           items: widget.options.toList(),
+          asyncItems: (v) async {
+            List<(string, T?)> values = widget.options.toList();
+            values = widget.options
+                .search(
+                  searchTerms: v.split(";").whereValid,
+                  searchOn: (e) => [e.$1, flatString(e.$2)],
+                  levenshteinDistance: 2,
+                )
+                .toList();
+            if (widget.asyncItems != null) {
+              values = [...values, ...(await widget.asyncItems!(v))];
+            }
+            return values.distinct().toList();
+          },
           itemAsString: (i) => i.$1,
           onChanged: (newValue) {
             var nv = newValue?.$2?.toString() ?? "";
@@ -661,12 +698,14 @@ class CampoCPFouCNPJ extends StatefulWidget {
   final TextEditingController? controller;
   final void Function(String?)? onChange;
   final bool readOnly;
+  final string? label;
 
   const CampoCPFouCNPJ({
     super.key,
     this.controller,
     this.onChange,
     this.readOnly = false,
+    this.label,
   });
 
   @override
@@ -677,7 +716,7 @@ class _CampoCPFouCNPJState extends State<CampoCPFouCNPJ> {
   @override
   Widget build(BuildContext context) {
     return CampoTexto(
-      label: 'CPF/CNPJ',
+      label: widget.label ?? 'CPF/CNPJ',
       controller: widget.controller,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
@@ -723,26 +762,26 @@ PopupProps<T> popupCampos<T>(BuildContext context, string? title, {List<T>? opti
           ),
           modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: context.colorScheme.surfaceBright),
           showSearchBox: options != null ? options.length > 4 : true,
-          emptyBuilder: pesquisaVazia,
+          emptyBuilder: (c, p) => pesquisaVazia(c, p, title ?? ""),
           itemBuilder: itemBuilder,
         )
       : PopupProps.menu(
           fit: FlexFit.tight,
           showSearchBox: options != null ? options.length > 4 : true,
-          emptyBuilder: pesquisaVazia,
+          emptyBuilder: (c, p) => pesquisaVazia(c, p, title ?? ""),
           itemBuilder: itemBuilder,
           searchFieldProps: TextFieldProps(decoration: estiloCampos(context, tt, icon)),
         );
 }
 
 /// gera os chips que aparecem nas buscas de SELECTs quando nao tem resultados
-Widget pesquisaVazia(BuildContext context, string searchEntry) {
+Widget pesquisaVazia(BuildContext context, string searchEntry, string label) {
   var searches = searchEntry.split(";").where((e) => e.isNotBlank).toList();
   return Expanded(
     child: Center(
       child: ListView(shrinkWrap: true, children: [
         const Text("Não foi possivel encontrar: ").toCenter(),
-        ...searches.map((e) => Padding(
+        ...searches.defaultIfEmpty(label).map((e) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: Chip(label: e.asText()),
             )),

@@ -368,6 +368,9 @@ extension StringExtensions on String {
     return replaceAllMapped(_diacriticsRegExp, (a) => _diacriticsMap[a.group(0)] ?? a.group(0));
   }
 
+  /// return a string in a firendly format
+  string get friendlyName => camelSplitString.replaceAll("_", " ").fixText.removeLastEqual(".").toTitleCase;
+
   /// Returns a string with camel case split into separate words.
   ///
   /// The camel case string is split into separate words using a space as the separator.

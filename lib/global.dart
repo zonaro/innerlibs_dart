@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
-import 'package:innerlibs/string_extensions.dart';
 
 bool get isDesktop => (isMacOS || isWindows || isLinux);
 
@@ -16,13 +14,20 @@ bool get isGoogle => (isAndroid || isFuchsia);
 
 bool get isApple => (isIOS || isMacOS);
 
-bool get isWeb => kIsWeb;
-bool get isMacOS => !isWeb && Platform.isMacOS;
-bool get isIOS => !isWeb && Platform.isIOS;
-bool get isWindows => !isWeb && Platform.isWindows;
-bool get isAndroid => !isWeb && Platform.isAndroid;
-bool get isFuchsia => !isWeb && Platform.isFuchsia;
-bool get isLinux => !isWeb && Platform.isLinux;
+bool get isWeb => GetPlatform.isWeb;
+bool get isMacOS => GetPlatform.isMacOS;
+bool get isIOS => GetPlatform.isIOS;
+bool get isWindows => GetPlatform.isWindows;
+bool get isAndroid => GetPlatform.isAndroid;
+bool get isFuchsia => GetPlatform.isFuchsia;
+bool get isLinux => GetPlatform.isDesktop;
+
+bool get isNativeMacOS => isMacOS && !isWeb;
+bool get isNativeIOS => isIOS && !isWeb;
+bool get isNativeWindows => isWindows && !isWeb;
+bool get isNativeAndroid => isAndroid && !isWeb;
+bool get isNativeFuchsia => isFuchsia && !isWeb;
+bool get isNativeLinux => isLinux && !isWeb;
 
 Brightness get brightness => SchedulerBinding.instance.platformDispatcher.platformBrightness;
 bool get isDarkMode => brightness == Brightness.dark;

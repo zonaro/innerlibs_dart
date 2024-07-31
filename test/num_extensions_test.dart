@@ -1,7 +1,11 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:innerlibs/file_extensions.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 void main() {
@@ -70,6 +74,11 @@ void main() {
       expect(const Duration(hours: 1, minutes: 30).formatted, equals('1 h 30 min'));
       expect(const Duration(minutes: 45, seconds: 30).formatted, equals('45 min 30 s'));
       expect(const Duration(seconds: 15, milliseconds: 500).formatted, equals('15 s'));
+    });
+
+    test("Dir Json", () async {
+      var s = await Directory("C:\\teste").toJson();
+      print(jsonEncode(s));
     });
 
     // Add more test cases for other extension methods...

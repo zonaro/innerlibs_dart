@@ -69,7 +69,7 @@ class FutureAwaiter<T> extends StatelessWidget {
   final bool supressError;
 
   /// Function thats receive a non-null [T] data returned by [future] and return a [Widget].
-  final Widget Function(T data) builder;
+  final Widget Function(T data)? builder;
 
   /// A [Widget] to return if [T] is null (or invalid if [data.validate] is true). If not specified return a shrink [SizedBox]
   final Widget? emptyChild;
@@ -80,11 +80,13 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// A function thats receive an error and return a [Widget]. If not specified return a [ErrorWidget]
   final Widget Function(Object error)? errorChild;
 
+  final Widget? child;
+
   /// Wraps a [FutureBuilder] into a more readable widget
+
   FutureAwaiter({
     super.key,
     required this.future,
-    required this.builder,
     this.emptyChild,
     this.loading,
     this.errorChild,
@@ -93,8 +95,13 @@ class FutureAwaiter<T> extends StatelessWidget {
     AwaiterData<T>? data,
     this.afterLoad,
     this.beforeLoad,
+    this.builder,
+    this.child,
   }) {
     this.data = data ?? AwaiterData();
+    if (((child == null) ^ (builder == null)) == false) {
+      throw ArgumentError("You must provide either a builder function or a child widget, but not both.");
+    }
   }
 
   error(Object e) {
@@ -106,7 +113,7 @@ class FutureAwaiter<T> extends StatelessWidget {
             : ErrorWidget(e);
   }
 
-  empty() => emptyChild ??   nil;
+  empty() => emptyChild ?? nil;
 
   Widget _buildWidget(AsyncSnapshot<T> snapshot) {
     try {
@@ -119,7 +126,13 @@ class FutureAwaiter<T> extends StatelessWidget {
       } else if (!data.hasData) {
         return empty();
       } else {
-        return builder(snapshot.data as T);
+        if (child != null) {
+          return child!;
+        } else if (builder != null) {
+          return builder!(data.value as T);
+        } else {
+          throw ArgumentError("Child widget or builder function must be provided.");
+        }
       }
     } catch (e) {
       data.error = e;
@@ -188,6 +201,6 @@ class FutureBool extends StatelessWidget {
         builder: (_) => trueWidget,
         loading: loading,
         emptyChild: falseWidget,
-        errorChild: (e) => falseWidget ??   nil,
+        errorChild: (e) => falseWidget ?? nil,
       );
 }
