@@ -103,7 +103,7 @@ T getBreakpointValue<V extends Comparable, T>(V value, Map<V, T> breakpoints) {
       break;
     }
   }
-  return highestValue ?? items.last.value;
+  return highestValue ?? items.first.value;
 }
 
 /// Checks if [object] has a valid value.

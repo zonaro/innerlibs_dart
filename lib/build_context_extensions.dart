@@ -460,13 +460,9 @@ extension BuildContextExtensions on BuildContext {
   bool get isPlatformLightMode => platformBrightness == Brightness.light;
 }
 
+typedef ScreenTierMap<T> = Map<T, ScreenTier>;
+
 extension MoreGetExtensions on GetInterface {
   // Returns the current [ScreenTier] based on the current [width] of the screen.
   ScreenTier get screenTier => ScreenTier.fromWidth(width);
-
-  /// returns a specific value according to the current screen [width] or [height] or the next lower value if omitted
-  T valueByBreakpoint<T>({required Map<double, T> breakpoints, Axis direction = Axis.horizontal}) => getBreakpointValue(direction == Axis.horizontal ? width : height, breakpoints);
-
-
-  
 }

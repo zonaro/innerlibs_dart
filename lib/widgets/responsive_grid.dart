@@ -1,41 +1,45 @@
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-/// Represent a Screen size tier (from extra small to double extra large)
-/// The tier is computed by comparing the current screen width to a set of pre-defined screen sizes using hte function [responsiveValueBy]
+/// Represents a Screen size tier (from extra small to double extra large).
+/// The tier is computed by comparing the current screen width to a set of pre-defined screen sizes using the function [responsiveValueBy].
 enum ScreenTier {
-  /// Double-Extra small screen
+  /// Double-Extra small screen.
   xxs(0),
 
-  /// Extra small screen
+  /// Extra small screen.
   xs(1),
 
-  /// Small screen
+  /// Small screen.
   sm(2),
 
-  /// Medium screen
+  /// Medium screen.
   md(3),
 
-  /// Large screen
+  /// Large screen.
   lg(4),
 
-  /// Extra Large screen
+  /// Extra Large screen.
   xl(5),
 
-  /// Double Extra Large screen
+  /// Double Extra Large screen.
   xxl(6);
 
   final int value;
 
   const ScreenTier(this.value);
+
   operator <(ScreenTier tier) => value < tier.value;
   operator <=(ScreenTier tier) => value <= tier.value;
   operator >(ScreenTier tier) => value > tier.value;
   operator >=(ScreenTier tier) => value >= tier.value;
 
-  factory ScreenTier.fromWidth(double width, [Map<double, ScreenTier>? breakpoints]) {
-    breakpoints = breakpoints == null || breakpoints.isEmpty ? null : breakpoints;
-    breakpoints ??= {
+  /// The breakpoints for different screen sizes.
+  static ScreenTierMap<double> breakpoints = {};
+
+  /// The default breakpoints for different screen sizes.
+  static ScreenTierMap<double> get defaultBreakpoints {
+    final x = <double, ScreenTier>{
       360: ScreenTier.xxs,
       576: ScreenTier.xs,
       768: ScreenTier.sm,
@@ -44,18 +48,34 @@ enum ScreenTier {
       1600: ScreenTier.xl,
       double.infinity: ScreenTier.xxl,
     };
-    return getBreakpointValue(width, breakpoints);
+    if (breakpoints.isEmpty) {
+      breakpoints = x;
+    }
+    return x;
+  }
+
+  /// Creates a [ScreenTier] object based on the given [width] and [customBreakPoints].
+  ///
+  /// The [width] parameter represents the width of the screen.
+  /// The [customBreakPoints] parameter is an optional map of custom breakpoints.
+  /// If no custom breakpoints are provided, the [defaultBreakpoints] will be used.
+  ///
+  /// Returns a [ScreenTier] object based on the given [width] and [customBreakPoints].
+  factory ScreenTier.fromWidth(double width, [ScreenTierMap<double> customBreakPoints = const {}]) {
+    if (breakpoints.isEmpty) breakpoints = defaultBreakpoints;
+    if (customBreakPoints.isEmpty) customBreakPoints = breakpoints;
+    return getBreakpointValue(width, customBreakPoints);
   }
 }
 
 class ResponsiveColumn {
-  final int xxs;
-  final int? xs;
-  final int? sm;
-  final int? md;
-  final int? lg;
-  final int? xl;
-  final int? xxl;
+  final double? xxs;
+  final double? xs;
+  final double? sm;
+  final double? md;
+  final double? lg;
+  final double? xl;
+  final double? xxl;
   final Widget child;
   final double? height;
   final Decoration? decoration;
@@ -125,7 +145,7 @@ class ResponsiveColumn {
 
   /// Responsive Column thats have breakpoints for each [ScreenTier]. Each tier has a default value
   factory ResponsiveColumn.all({
-    required int value,
+    required double value,
     double? height,
     Widget child = nil,
     Decoration? decoration,
@@ -291,7 +311,7 @@ class _ResponsiveListItem extends StatelessWidget {
 class ResponsiveRow extends StatelessWidget {
   final List<ResponsiveColumn> children;
   final WrapCrossAlignment crossAxisAlignment;
-  final int totalSegments;
+  final double totalSegments;
   final double horizontalSpacing;
   final double runSpacing;
   final double? columnHeight;
@@ -323,16 +343,16 @@ class ResponsiveRow extends StatelessWidget {
   /// Create a [ResponsiveRow] with a specific number of columns in each [ScreenTier]
   /// and wraps [children] into [ResponsiveColumn]s automatically
   factory ResponsiveRow.withAutoColumns({
-    int? xxs = 1,
-    int? xs = 2,
-    int? sm = 3,
-    int? md = 3,
-    int? lg = 4,
-    int? xl = 6,
-    int? xxl = 12,
+    double? xxs = 1,
+    double? xs = 2,
+    double? sm = 3,
+    double? md = 3,
+    double? lg = 4,
+    double? xl = 6,
+    double? xxl = 12,
     dynamic children = const [],
     WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.start,
-    int totalSegments = 12,
+    double totalSegments = 12,
     double horizontalSpacing = 0,
     double runSpacing = 0,
     double? columnHeight,
@@ -395,16 +415,16 @@ class ResponsiveRow extends StatelessWidget {
   /// screens (md), 4 columns on extra-large screens (lg), 3 columns on extra-extra-large
   /// screens (xl), and 2 columns on extra-extra-extra-large screens (xxl).
   factory ResponsiveRow.withColumns({
-    int? xxs = 1,
-    int? xs,
-    int? sm,
-    int? md,
-    int? lg,
-    int? xl,
-    int? xxl,
+    double? xxs = 1,
+    double? xs,
+    double? sm,
+    double? md,
+    double? lg,
+    double? xl,
+    double? xxl,
     dynamic children = const [],
     WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.start,
-    int totalSegments = 12,
+    double totalSegments = 12,
     double horizontalSpacing = 0,
     double runSpacing = 0,
     double? columnHeight,
@@ -428,6 +448,10 @@ class ResponsiveRow extends StatelessWidget {
         continue;
       }
 
+      if (children[i] is Nil) {
+        continue;
+      }
+
       if ((children[i] is Widget) == false) {
         children[i] = forceWidget(children[i]);
       }
@@ -436,13 +460,13 @@ class ResponsiveRow extends StatelessWidget {
         newChildren.add(
           ResponsiveColumn(
             height: columnHeight,
-            xxs: (totalSegments / (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-            xs: (totalSegments / (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-            sm: (totalSegments / (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl ?? 1)).round(),
-            md: (totalSegments / (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl ?? 1)).round(),
-            lg: (totalSegments / (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl ?? 1)).round(),
-            xl: (totalSegments / (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl ?? 1)).round(),
-            xxl: (totalSegments / (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? 1)).round(),
+            xxs: getColumnSizeBySegments(totalSegments, [xxs, xs, sm, md, lg, xl, xxl]),
+            xs: getColumnSizeBySegments(totalSegments, [xs, xxs, sm, md, lg, xl, xxl]),
+            sm: getColumnSizeBySegments(totalSegments, [sm, xs, xxs, md, lg, xl, xxl]),
+            md: getColumnSizeBySegments(totalSegments, [md, sm, xs, xxs, lg, xl, xxl]),
+            lg: getColumnSizeBySegments(totalSegments, [lg, md, sm, xs, xxs, xl, xxl]),
+            xl: getColumnSizeBySegments(totalSegments, [xl, lg, md, sm, xs, xxs, xxl]),
+            xxl: getColumnSizeBySegments(totalSegments, [xxl, xl, lg, md, sm, xs, xxs]),
             child: children[i],
           ),
         );
@@ -466,6 +490,14 @@ class ResponsiveRow extends StatelessWidget {
     );
   }
 
+  static double getColumnSizeBySegments(double totalSegments, List<double?> sizes) {
+    double size = (sizes.whereNotNull().firstOrNull ?? 1);
+    if (size > 0) {
+      size = (totalSegments / size);
+    }
+    return size;
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -481,23 +513,27 @@ class ResponsiveRow extends StatelessWidget {
             textDirection: textDirection,
             alignment: alignment,
             runAlignment: runAlignment,
-            children: children.map((c) {
-              final segments = context.valueByTier(xxs: c.xxs, xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl);
+            children: children
+                .map((c) {
+                  final segments = context.valueByTier(xxs: c.xxs, xs: c.xs, sm: c.sm, md: c.md, lg: c.lg, xl: c.xl, xxl: c.xxl);
+                  if (segments <= 0) return null;
 
-              final width = (segmentSize * segments.toDouble()) - ((children.length - 2).toDouble() * horizontalSpacing);
+                  final width = (segmentSize * segments) - ((children.length - 2).toDouble() * horizontalSpacing);
 
-              return Container(
-                decoration: c.decoration,
-                foregroundDecoration: c.foregroundDecoration,
-                alignment: c.alignment,
-                padding: c.padding,
-                margin: c.margin,
-                constraints: columnMaxHeight == null && columnMinHeight == null ? null : BoxConstraints(maxHeight: columnMaxHeight ?? double.infinity, minHeight: columnMinHeight ?? 0),
-                width: width,
-                height: c.height ?? columnHeight,
-                child: c.child,
-              );
-            }).toList(),
+                  return Container(
+                    decoration: c.decoration,
+                    foregroundDecoration: c.foregroundDecoration,
+                    alignment: c.alignment,
+                    padding: c.padding,
+                    margin: c.margin,
+                    constraints: columnMaxHeight == null && columnMinHeight == null ? null : BoxConstraints(maxHeight: columnMaxHeight ?? double.infinity, minHeight: columnMinHeight ?? 0),
+                    width: width,
+                    height: c.height ?? columnHeight,
+                    child: c.child,
+                  );
+                })
+                .whereNotNull()
+                .toList(),
           ),
         );
       },
