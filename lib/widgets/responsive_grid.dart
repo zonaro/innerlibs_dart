@@ -5,34 +5,47 @@ import 'package:innerlibs/innerlibs.dart';
 /// The tier is computed by comparing the current screen width to a set of pre-defined screen sizes using hte function [responsiveValueBy]
 enum ScreenTier {
   /// Double-Extra small screen
-  xxs,
+  xxs(0),
 
   /// Extra small screen
-  xs,
+  xs(1),
 
   /// Small screen
-  sm,
+  sm(2),
 
   /// Medium screen
-  md,
+  md(3),
 
   /// Large screen
-  lg,
+  lg(4),
 
   /// Extra Large screen
-  xl,
+  xl(5),
 
   /// Double Extra Large screen
-  xxl,
-}
+  xxl(6);
 
-extension ScreenTierExtensions on ScreenTier {
-  operator <(ScreenTier tier) => toInt < tier.toInt;
-  operator <=(ScreenTier tier) => toInt <= tier.toInt;
-  operator >(ScreenTier tier) => toInt > tier.toInt;
-  operator >=(ScreenTier tier) => toInt >= tier.toInt;
+  final int value;
 
-  int get toInt => ScreenTier.values.indexOf(this);
+  const ScreenTier(this.value);
+  operator <(ScreenTier tier) => value < tier.value;
+  operator <=(ScreenTier tier) => value <= tier.value;
+  operator >(ScreenTier tier) => value > tier.value;
+  operator >=(ScreenTier tier) => value >= tier.value;
+
+  factory ScreenTier.fromWidth(double width, [Map<double, ScreenTier>? breakpoints]) {
+    breakpoints = breakpoints == null || breakpoints.isEmpty ? null : breakpoints;
+    breakpoints ??= {
+      360: ScreenTier.xxs,
+      576: ScreenTier.xs,
+      768: ScreenTier.sm,
+      992: ScreenTier.md,
+      1200: ScreenTier.lg,
+      1600: ScreenTier.xl,
+      double.infinity: ScreenTier.xxl,
+    };
+    return getBreakpointValue(width, breakpoints);
+  }
 }
 
 class ResponsiveColumn {

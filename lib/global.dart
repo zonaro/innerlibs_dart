@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 bool get isDesktop => (isMacOS || isWindows || isLinux);
@@ -103,7 +103,7 @@ T getBreakpointValue<V extends Comparable, T>(V value, Map<V, T> breakpoints) {
       break;
     }
   }
-  return highestValue ?? items.first.value;
+  return highestValue ?? items.last.value;
 }
 
 /// Checks if [object] has a valid value.
@@ -505,6 +505,11 @@ String identArrow({required int length, String pattern = " "}) {
   if (reverse) pattern = pattern.toArray.map((x) => x.getOppositeWrap).reverse().join();
   return pattern;
 }
+
+///Shows a [SnackBar] with the given [content] in the current [Scaffold].
+///If the [content] is a [String], it will be converted to a [Text] widget. If the [content] is not a [SnackBar] and is a [Widget], it will be wrapped in a [SnackBar] widget. If the [content] is a [SnackBar], it will be shown. If none of the above conditions are met, the [content] will be converted to a [String] and shown as a [SnackBar].
+///Returns the [ScaffoldFeatureController] for the shown [SnackBar].
+ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(dynamic content) => Get.context?.showSnackBar(content);
 
 /// A mixin that provides various filter functions for searching and filtering data.
 ///

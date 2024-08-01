@@ -322,15 +322,7 @@ extension BuildContextExtensions on BuildContext {
   double get safeHeight => logicalHeight - paddingTop - paddingBottom;
 
   /// the current [ScreenTier]
-  ScreenTier get screenTier => valueByBreakpoint(breakpoints: {
-        360: ScreenTier.xxs,
-        576: ScreenTier.xs,
-        768: ScreenTier.sm,
-        992: ScreenTier.md,
-        1200: ScreenTier.lg,
-        1600: ScreenTier.xl,
-        double.infinity: ScreenTier.xxl,
-      });
+  ScreenTier get screenTier => ScreenTier.fromWidth(width);
 
   /// a size computed by [ScreenTier]
 
@@ -443,6 +435,7 @@ extension BuildContextExtensions on BuildContext {
   Size get screenSize => mediaQuery.size;
 
   string get aspectRatioString => screenSize.getAspectRatioString();
+
   double get aspectRatio => width / height;
 
   /// similar to [MediaQuery.devicePixelRatioOf(context)]
@@ -465,4 +458,15 @@ extension BuildContextExtensions on BuildContext {
 
   /// is light mode currently enabled?
   bool get isPlatformLightMode => platformBrightness == Brightness.light;
+}
+
+extension MoreGetExtensions on GetInterface {
+  // Returns the current [ScreenTier] based on the current [width] of the screen.
+  ScreenTier get screenTier => ScreenTier.fromWidth(width);
+
+  /// returns a specific value according to the current screen [width] or [height] or the next lower value if omitted
+  T valueByBreakpoint<T>({required Map<double, T> breakpoints, Axis direction = Axis.horizontal}) => getBreakpointValue(direction == Axis.horizontal ? width : height, breakpoints);
+
+
+  
 }
