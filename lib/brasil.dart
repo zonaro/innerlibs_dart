@@ -516,7 +516,7 @@ abstract interface class Brasil {
         est = pegarEstado(nomeEstadoOuUFOuIBGEouRegiao);
         cids.removeWhere((c) => c.estado.ibge != est.ibge);
       }
-      return cids.search(searchTerms: [nomeCidadeOuIBGE], searchOn: (x) => [x.nome, x.ibge]);
+      return cids.search(searchTerms: nomeCidadeOuIBGE, searchOn: (x) => [x.nome, x.ibge]);
     } catch (e) {
       return [];
     }

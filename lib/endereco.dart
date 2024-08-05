@@ -36,9 +36,9 @@ class Endereco implements Comparable<Endereco> {
       numero: (json['numero'] ?? "").toString(),
       complemento: (json['complemento'] ?? "").toString(),
       bairro: (json['bairro'] ?? "").toString(),
-      gia: parseTo(json['gia']),
-      ddd: parseTo(json['ddd']),
-      siafi: parseTo(json['siafi']),
+      gia: changeTo(json['gia']),
+      ddd: changeTo(json['ddd']),
+      siafi: changeTo(json['siafi']),
     );
   }
 
@@ -50,9 +50,9 @@ class Endereco implements Comparable<Endereco> {
       numero: (json['numero'] ?? "").toString(),
       complemento: (json['complemento'] ?? "").toString(),
       bairro: (json['bairro'] ?? "").toString(),
-      gia: parseTo(json['gia']),
-      ddd: parseTo(json['ddd']) ?? cidade?.ddd,
-      siafi: parseTo(json['siafi']),
+      gia: changeTo(json['gia']),
+      ddd: changeTo(json['ddd']) ?? cidade?.ddd,
+      siafi: changeTo(json['siafi']),
       cidade: cidade,
     );
   }

@@ -26,7 +26,7 @@ extension CompareAndSwap<T extends Comparable> on T {
 bool _isvalid<T>(T obj, List<bool> Function(T?)? customValidator) => isValid(obj, customValidator: customValidator);
 
 T? _valid<T>(T obj, List<bool> Function(T?)? validations, [string? throwErrorMessage]) => valid<T>(obj, validations, throwErrorMessage);
-R? _parseTo<R>(value) => parseTo<R>(value);
+R? _parseTo<R>(value) => changeTo<R>(value);
 
 extension ObjectExtensions<T extends Object?> on T {
   bool get isNullable {

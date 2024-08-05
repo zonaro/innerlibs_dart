@@ -28,9 +28,9 @@ class TagXml extends XmlElement implements Validator {
   T? getValueFromNode<T, U>(String tag, [T Function(U i)? constructor]) {
     var x = findElements(tag).singleOrNull?.innerText;
     if (x == null) return null;
-    if (constructor == null) return parseTo(x);
+    if (constructor == null) return changeTo(x);
     try {
-      return constructor(parseTo(x));
+      return constructor(changeTo(x));
     } catch (e) {
       return null;
     }

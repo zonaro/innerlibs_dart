@@ -121,7 +121,7 @@ class NFeProc extends TagXml {
       return gerarUriNFCe(
         chNFe: c.chave,
         nVersao: versao ?? "",
-        tpAmb: nfe?.infNFe?.ide?.tpAmb?.value.toString() ?? "2",
+        tpAmb: (nfe?.infNFe?.ide?.tpAmb ?? TipoAmbiente.homologacao).value.toString(),
         dhEmi: nfe?.infNFe?.ide?.dhEmi,
         vNF: nfe?.infNFe?.total?.icmsTot?.vNF,
         vICMS: nfe?.infNFe?.total?.icmsTot?.vICMS,

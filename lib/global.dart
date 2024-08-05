@@ -267,42 +267,66 @@ String flatString(dynamic value) {
 /// - If [R] is [List], converts the value to a [List] containing the value.
 /// - if [R] is another type, returns the value as [R].
 /// - If none of the above conditions are met, logs an error message and returns `null`.
-R? parseTo<R>(dynamic value) {
-  if (value == null) {
-    return null;
-  }
-  consoleLog("Parsing from ${value.runtimeType} to $R");
-  if (value is R) {
-    return value as R?;
-  } else if (R == DateTime) {
-    return "$value".toDate() as R;
-  } else if (R == num) {
-    return num.parse("$value") as R;
-  } else if (R == int) {
-    return int.parse("$value") as R;
-  } else if (R == double) {
-    return double.parse("$value") as R;
-  } else if (R == String) {
-    return "$value" as R;
-  } else if (R == bool) {
-    return "$value".asBool() as R;
-  } else if (R == Uri) {
-    return Uri.parse("$value") as R;
-  } else if (R == Widget) {
-    return forceWidget(value) as R;
-  } else if (R is Text) {
-    return (value as Object?).asNullableText() as R;
-  } else if (R == List) {
-    return [value] as R;
-  } else {
-    try {
-      return value as R;
-    } catch (e) {
-      consoleLog("Cannot parse $value into $R", error: e);
+R? changeTo<R>(dynamic value) {
+  try {
+    if (value == null) {
+      return null;
     }
+    consoleLog("Changing from ${value.runtimeType} to $R");
+    if (value is R) {
+      return value as R?;
+    } else if (R == DateTime) {
+      return "$value".toDate() as R;
+    } else if (R == num) {
+      return num.parse("$value") as R;
+    } else if (R == int) {
+      return int.parse("$value") as R;
+    } else if (R == double) {
+      return double.parse("$value") as R;
+    } else if (R == String) {
+      return "$value" as R;
+    } else if (R == bool) {
+      return "$value".asBool() as R;
+    } else if (R == Uri) {
+      return Uri.parse("$value") as R;
+    } else if (R == Widget) {
+      return forceWidget(value) as R;
+    } else if (R is Text) {
+      return (value as Object?).asNullableText() as R;
+    } else if (R == List) {
+      return forceList(value) as R;
+    } else {
+      return value as R;
+    }
+  } catch (e) {
+    consoleLog("Cannot change $value into $R", error: e);
   }
+
   return null;
 }
+
+/// Converts the given [item] into a list.
+///
+/// If [item] is `null`, an empty list is returned.
+/// If [item] is already a list, it is returned as is.
+/// If [item] is an [Iterable], it is converted to a list.
+/// Otherwise, [item] is wrapped in a list and returned.
+List forceList(dynamic item) {
+  if (item == null) {
+    return [];
+  }
+  if (item is List) {
+    return item;
+  }
+
+  if (item is Iterable) {
+    return [...item];
+  }
+
+  return [item];
+}
+
+List<T?> forceListOf<T>(dynamic item) => forceList(item).map((e) => changeTo<T>(e)).toList();
 
 /// A utility extension method that allows forcing a widget to be returned,
 /// with optional customization of its properties.
@@ -544,7 +568,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(dynamic 
 mixin FilterFunctions {
   /// Searches the iterable for items that match the specified search criteria.
   ///
-  /// The [searchTerm] parameter specifies the term to search for.
+  /// The [searchTerms] parameter specifies the term to search for. Can be a string or a list of strings.
   /// The [searchOn] parameter is a function that returns a list of strings to search on for each item.
   /// The [levenshteinDistance] parameter specifies the maximum Levenshtein distance allowed for fuzzy matching.
   /// The [ignoreCase], [ignoreDiacritics], [ignoreWordSplitters], [splitCamelCase], [useWildcards], and [allIfEmpty] parameters control various search options.
@@ -554,7 +578,7 @@ mixin FilterFunctions {
 
   static Iterable<T> search<T>({
     required Iterable<T> items,
-    required Iterable<dynamic> searchTerms,
+    required dynamic searchTerms,
     required Iterable<dynamic> Function(T) searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
@@ -566,7 +590,9 @@ mixin FilterFunctions {
   }) {
     if (items.isEmpty) return <T>[].orderBy((e) => true);
 
-    if (searchTerms.whereValid.isEmpty) {
+    var searches = forceListOf(searchTerms);
+
+    if (searches.whereValid.isEmpty) {
       if (allIfEmpty) {
         return items.orderBy((e) => true);
       } else {
@@ -576,7 +602,7 @@ mixin FilterFunctions {
 
     var l = items.where(
       (item) => FilterFunctions.searchFunction(
-        searchTerms: searchTerms,
+        searchTerms: searches,
         searchOn: searchOn(item),
         ignoreCase: ignoreCase,
         ignoreDiacritics: ignoreDiacritics,
@@ -589,14 +615,14 @@ mixin FilterFunctions {
     if (l.isEmpty && levenshteinDistance > 0) {
       l = items.where(
         (item) => FilterFunctions.levenshteinFunction(
-          searchTerms: searchTerms,
+          searchTerms: searches,
           searchOn: searchOn(item),
           levenshteinDistance: levenshteinDistance,
         ),
       );
     }
     return l.orderByDescending((item) => countJaro(
-          searchTerms: searchTerms,
+          searchTerms: searches,
           searchOn: searchOn(item),
           ignoreCase: ignoreCase,
           ignoreDiacritics: ignoreDiacritics,
@@ -629,13 +655,13 @@ mixin FilterFunctions {
 
   /// Searches for [JsonRow] objects in the iterable based on a search term and specified keys.
   ///
-  /// The [searchTerms] parameter is the term to search for.
+  /// The [searchTerms] parameter is the term to search for. Can be a string or a list of strings.
   /// The [keys] parameter is a list of keys to search on. If empty, all keys in the [JsonRow] objects will be used.
   /// The [levenshteinDistance] parameter is the maximum allowed Levenshtein distance between the search term and a value in the [JsonRow] objects.
   /// The [allIfEmpty] parameter determines whether to return all [JsonRow] objects if the search term is empty.
   ///
   /// Returns an iterable of [JsonRow] objects that match the search criteria.
-  static Iterable<Map<K, V>> searchMap<K, V>({required Iterable<Map<K, V>> items, required Iterable<V> searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
+  static Iterable<Map<K, V>> searchMap<K, V>({required Iterable<Map<K, V>> items, required dynamic searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
     if (keys.isEmpty) {
       keys = items.expand((e) => e.keys).distinct().toList();
     }
@@ -713,7 +739,7 @@ mixin FilterFunctions {
   /// Counts the number of occurrences of search terms in a given item.
   ///
   /// The [countSearch] function takes the following parameters:
-  /// - [searchTerms]: A list of strings representing the search terms.
+  /// - [searchTerms]: The search terms to count in the item. Can be a string or a list of strings.
   /// - [searchOn]: A function that takes an item and returns a list of dynamic values to search on.
   /// - [ignoreCase]: A boolean indicating whether to ignore case sensitivity (default is true).
   /// - [ignoreDiacritics]: A boolean indicating whether to ignore diacritics (default is true).
@@ -723,7 +749,7 @@ mixin FilterFunctions {
   ///
   /// The function returns the count of occurrences of the search terms in the item.
   static int countSearch({
-    required Iterable<dynamic> searchTerms,
+    required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -732,7 +758,7 @@ mixin FilterFunctions {
     bool useWildcards = false,
   }) {
     return [
-      for (var searchTerm in searchTerms)
+      for (var searchTerm in forceList(searchTerms))
         ...searchOn.where((v) {
           if (v == null) return false;
           var searchword = generateKeyword(
@@ -764,7 +790,7 @@ mixin FilterFunctions {
     ].length;
   }
 
-  /// Calculates the Levenshtein distance between an [item] and a collection of [searchTerms].
+  /// Calculates the Levenshtein distance between an [searchOn] items and a list of search terms.
   ///
   /// The Levenshtein distance is a measure of the difference between two strings. It represents the minimum number of single-character edits (insertions, deletions, or substitutions) required to change one string into another.
   ///
@@ -775,7 +801,7 @@ mixin FilterFunctions {
   /// Returns the count of [searchTerms] that have a Levenshtein distance less than or equal to [levenshteinDistance].
 
   static int countLevenshtein({
-    required Iterable<dynamic> searchTerms,
+    required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     required int levenshteinDistance,
     bool ignoreCase = true,
@@ -787,7 +813,7 @@ mixin FilterFunctions {
       return 0;
     } else {
       return [
-        for (var searchTerm in searchTerms)
+        for (var searchTerm in forceList(searchTerms))
           ...searchOn.expand((e) {
             if (e == null) return [];
             return e.toString().getUniqueWords.map((keyword) {
@@ -829,7 +855,7 @@ mixin FilterFunctions {
   ///
   /// Returns the sum of the Jaro similarity scores between the item and each search term.
   static double countJaro({
-    required Iterable<dynamic> searchTerms,
+    required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -839,10 +865,10 @@ mixin FilterFunctions {
     return searchOn
         .expand((e) {
           return e == null
-              ? <double>[for (var _ in searchTerms) 0]
+              ? <double>[for (var _ in forceList(searchTerms)) 0]
               : e.toString().getUniqueWords.map((keyword) {
                   decimal jaro = 0.0;
-                  for (var searchTerm in searchTerms) {
+                  for (var searchTerm in forceList(searchTerms)) {
                     keyword = generateKeyword(
                       keyword,
                       forceLowerCase: ignoreCase,
@@ -880,7 +906,7 @@ mixin FilterFunctions {
   ///
   /// Returns `true` if the item matches any of the search terms based on the given criteria, `false` otherwise.
   static bool searchFunction({
-    required Iterable<dynamic> searchTerms,
+    required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
@@ -916,7 +942,7 @@ mixin FilterFunctions {
   /// Returns `true` if there is at least one search term within the specified Levenshtein distance of the item,
   /// and `false` otherwise.
   static bool levenshteinFunction({
-    required Iterable<dynamic> searchTerms,
+    required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     required int levenshteinDistance,
     bool ignoreCase = true,
@@ -946,7 +972,7 @@ mixin FilterFunctions {
   ///
   /// The function returns `true` if the item passes the filter, and `false` otherwise.
   static bool fullFilterFunction({
-    required Iterable<dynamic> searchTerms,
+    required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,

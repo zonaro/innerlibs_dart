@@ -214,7 +214,7 @@ class OEmbedEndpoint {
 
   /// Constructs an [OEmbedEndpoint] from a JSON object.
   factory OEmbedEndpoint.fromJson(Map<String, dynamic> json) => OEmbedEndpoint(
-        parseTo(json['url']),
+        changeTo(json['url']),
         [
           for (var i in json['schemes'] ?? [])
             if (i != null && i is String) i

@@ -54,7 +54,7 @@ class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
   }
 
   /// Returns the [JsonRow] with the specified [key], or `null` if not found.
-  JsonRow? operator [](T key) => _table.where((row) => parseTo(row[keyName]) == key).singleOrNull;
+  JsonRow? operator [](T key) => _table.where((row) => changeTo(row[keyName]) == key).singleOrNull;
 
   /// Sets the [JsonRow] with the specified [key] to the given [values].
   void operator []=(T key, JsonRow values) => add(values..[keyName] = key);

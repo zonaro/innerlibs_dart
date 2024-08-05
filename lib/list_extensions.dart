@@ -157,7 +157,7 @@ extension MapSearch<K, V> on Iterable<Map<K, V>> {
 /// Adds extensions to the `List` class
 extension IterablesExtension<T> on Iterable<T> {
   Iterable<T> search({
-    required Iterable<dynamic> searchTerms,
+    required dynamic searchTerms,
     required Iterable<dynamic> Function(T) searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,

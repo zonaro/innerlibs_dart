@@ -389,17 +389,17 @@ class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
       controller: widget.controller,
       onChange: (newValue) {
         if (widget.onChange != null) {
-          widget.onChange!(parseTo<T>(newValue?.$2));
+          widget.onChange!(changeTo<T>(newValue?.$2));
         }
       },
       onEditingComplete: widget.onEditingComplete,
       validator: (v) {
         if (widget.validator != null) {
-          return widget.validator!(parseTo(v?.$2));
+          return widget.validator!(changeTo(v?.$2));
         }
         return null;
       },
-      defaultValue: parseTo(widget.defaultValue ?? 0),
+      defaultValue: changeTo(widget.defaultValue ?? 0),
       readOnly: widget.readOnly,
       isAutoComplete: widget.isAutoComplete,
       options: widget.options,
@@ -407,7 +407,7 @@ class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
       textAlign: widget.textAlign,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
-      asyncItems: widget.asyncItems != null ? (s) async => (await widget.asyncItems!(s)).map((e) => (parseTo<string>(e)!, parseTo<T>(e))).toList() : null,
+      asyncItems: widget.asyncItems != null ? (s) async => (await widget.asyncItems!(s)).map((e) => (changeTo<string>(e)!, changeTo<T>(e))).toList() : null,
     );
   }
 }

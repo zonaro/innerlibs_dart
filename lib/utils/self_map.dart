@@ -51,16 +51,16 @@ class SelfMap<K, V> implements Map<K, V> {
   }
 
   @override
-  Map<RK, RV> cast<RK, RV>() => map((key, value) => MapEntry(parseTo(key), parseTo(value)));
+  Map<RK, RV> cast<RK, RV>() => map((key, value) => MapEntry(changeTo(key), changeTo(value)));
 
   @override
   void clear() => _items.clear();
 
   @override
-  bool containsKey(Object? key) => _items.any((e) => _keyFunc(parseTo(key)) == key);
+  bool containsKey(Object? key) => _items.any((e) => _keyFunc(changeTo(key)) == key);
 
   @override
-  bool containsValue(Object? value) => _items.contains(parseTo(value));
+  bool containsValue(Object? value) => _items.contains(changeTo(value));
 
   @override
   Iterable<MapEntry<K, V>> get entries => _items.map((e) => MapEntry(_keyFunc(e), e));

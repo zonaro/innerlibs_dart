@@ -23,12 +23,12 @@ extension SqlRowExtensions on JsonRow {
   /// Throws an [ArgumentError] if the database provider is not recognized.
   ///
   /// Returns a [String] containing the SQL call command.
-  String generateSqlCall(String procedureName, String dataBaseProvider, [bool nullAsBlank = false, string? quoteChar]) {
+  String generateSqlCall(String procedureName, String dataBaseProvider, [bool nullAsBlank = false, dynamic quoteChar]) {
     var sqlCall = '';
 
     bool isMySql = dataBaseProvider.flatEqualAny(["mysql", "mariadb"]);
     bool isSqlServer = dataBaseProvider.flatEqualAny(["mssql", "sqlserver"]);
-    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
+
     procedureName = SqlUtil.wrap(procedureName, quoteChar, dataBaseProvider);
 
     if (isMySql) {
@@ -67,10 +67,9 @@ extension SqlRowExtensions on JsonRow {
     required String tableName,
     Map<String, dynamic>? where,
     bool nullAsBlank = false,
-    String? quoteChar,
+    dynamic quoteChar,
     String dataBaseProvider = "",
   }) {
-    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     if (where.isValid()) {
       return asUpdateCommand(
         tableName: tableName,
@@ -100,10 +99,9 @@ extension SqlRowExtensions on JsonRow {
   String asInsertCommand({
     required String tableName,
     bool nullAsBlank = false,
-    String? quoteChar,
+    dynamic quoteChar,
     String dataBaseProvider = "",
   }) {
-    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     String columns = SqlUtil.columnsFromMap(
       items: this,
       quoteChar: quoteChar,
@@ -129,10 +127,9 @@ extension SqlRowExtensions on JsonRow {
     required String tableName,
     required Map<String, dynamic> where,
     bool nullAsBlank = false,
-    String? quoteChar,
+    dynamic quoteChar,
     String dataBaseProvider = "",
   }) {
-    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     var upsertMap = JsonRow.from(this);
     String updates = upsertMap.entries.map((e) => "${SqlUtil.wrap(e.key, quoteChar, dataBaseProvider)} = ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(', ');
     String whereClause = where.asWhereClausule(
@@ -155,10 +152,9 @@ extension SqlRowExtensions on JsonRow {
   String asDeleteCommand({
     required String tableName,
     bool nullAsBlank = false,
-    String? quoteChar,
+    dynamic quoteChar,
     String dataBaseProvider = "",
   }) {
-    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     String whereClause = asWhereClausule(
       nullAsBlank: nullAsBlank,
       quoteChar: quoteChar,
@@ -185,18 +181,17 @@ extension SqlRowExtensions on JsonRow {
     bool asc,
     String dataBaseProvider, [
     bool nullAsBlank = false,
-    String? quoteChar,
+    dynamic quoteChar,
   ]) {
-    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     String whereClause = asWhereClausule(
       nullAsBlank: nullAsBlank,
       quoteChar: quoteChar,
       dataBaseProvider: dataBaseProvider,
     );
 
-    return """DELETE FROM ${SqlUtil.wrap(tableName)} WHERE $idColumn in (
+    return """DELETE FROM ${SqlUtil.wrap(tableName, quoteChar, dataBaseProvider)} WHERE $idColumn in (
                 SELECT ${SqlUtil.isSqlServer(dataBaseProvider) ? "TOP($count)" : ""} $idColumn
-                FROM ${SqlUtil.wrap(tableName)}
+                FROM ${SqlUtil.wrap(tableName, quoteChar, dataBaseProvider)}
                 WHERE $whereClause
                 ORDER BY $idColumn ${asc ? "ASC" : "DESC"} ${SqlUtil.isMySql(dataBaseProvider) ? "LIMIT $count" : ""}
               );""";
@@ -216,11 +211,10 @@ extension SqlRowExtensions on JsonRow {
     required String tableName,
     List<String> columns = const [],
     bool nullAsBlank = false,
-    String? quoteChar,
+    dynamic quoteChar,
     String dataBaseProvider = "",
     bool and = true,
   }) {
-    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     String whereClause = asWhereClausule(
       nullAsBlank: nullAsBlank,
       quoteChar: quoteChar,
@@ -245,16 +239,13 @@ extension SqlRowExtensions on JsonRow {
   /// Returns the generated WHERE clause as a string.
   String asWhereClausule({
     bool nullAsBlank = false,
-    String? quoteChar,
+    dynamic quoteChar,
     String dataBaseProvider = "",
     bool and = true,
   }) {
-    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
     return entries.map((e) => "${SqlUtil.wrap(e.key, quoteChar, dataBaseProvider)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${(e.value as Object?).asSqlValue(nullAsBlank)}").join(' ${and ? "AND" : "OR"} ');
   }
 }
-
- 
 
 /// A mixin that provides utility functions for working with SQL.
 mixin SqlUtil {
@@ -279,7 +270,35 @@ mixin SqlUtil {
   /// Wraps the given object name with the specified quote character.
   /// If the quote character is not provided and the database provider is specified, it uses the appropriate quote character.
   /// Otherwise, it uses the [defaultQuoteChar].
-  static wrap(String objectName, [String? quoteChar, String dataBaseProvider = ""]) => objectName.wrap(quoteChar ?? SqlUtil.quoteCharFromProvider(dataBaseProvider));
+  static wrap(String objectName, [dynamic quoteChar, String dataBaseProvider = ""]) {
+    if (quoteChar is bool) {
+      if (quoteChar == false) {
+        return objectName;
+      } else {
+        quoteChar = null;
+      }
+    }
+    
+    quoteChar ??= SqlUtil.quoteCharFromProvider(dataBaseProvider);
+
+    if (quoteChar is List) {
+      quoteChar = quoteChar.map((x) => flatString(x));
+    } else if (quoteChar != null && quoteChar is! String) {
+      quoteChar = flatString(quoteChar);
+    }
+
+    if (quoteChar is String) {
+      quoteChar = [quoteChar];
+    }
+
+    if (quoteChar is List && quoteChar.isNotEmpty) {
+      var oq = quoteChar.firstOrNull ?? SqlUtil.quoteCharFromProvider(dataBaseProvider);
+      var cq = quoteChar.skip(1).lastOrNull;
+      return objectName.wrap(flatString(oq), flatString(cq));
+    } else {
+      return objectName;
+    }
+  }
 
   /// Checks if the given database provider is SQL Server.
   static bool isSqlServer(String dataBaseProvider) {
@@ -297,13 +316,13 @@ mixin SqlUtil {
   ///
   /// The [quoteChar] parameter specifies the quote character to use for wrapping column names.
   /// The [dataBaseProvider] parameter is used to determine the appropriate quote character if [quoteChar] is not provided.
-  static String columnsFromList({required List<String> items, String? quoteChar, String dataBaseProvider = ""}) => items.map((e) => SqlUtil.wrap(e, quoteChar, dataBaseProvider)).join(", ");
+  static String columnsFromList({required List<String> items, dynamic quoteChar, String dataBaseProvider = ""}) => items.map((x) => x.split(".").map((e)=> SqlUtil.wrap(e, quoteChar, dataBaseProvider)).join(".")).join(", ");
 
   /// Returns a comma-separated string of wrapped column names from the given map.
   ///
   /// The [quoteChar] parameter specifies the quote character to use for wrapping column names.
   /// The [dataBaseProvider] parameter is used to determine the appropriate quote character if [quoteChar] is not provided.
-  static String columnsFromMap<K, V>({required Map<K, V> items, String? quoteChar, String dataBaseProvider = ""}) => columnsFromList(items: items.keys.map((x) => "$x").toList(), quoteChar: quoteChar, dataBaseProvider: dataBaseProvider);
+  static String columnsFromMap<K, V>({required Map<K, V> items, dynamic quoteChar, String dataBaseProvider = ""}) => columnsFromList(items: items.keys.map((x) => "$x").toList(), quoteChar: quoteChar, dataBaseProvider: dataBaseProvider);
 
   /// Returns a comma-separated string of SQL values from the given list.
   ///
