@@ -791,41 +791,40 @@ Widget pesquisaVazia(BuildContext context, string searchEntry, string label) {
 }
 
 Widget botaoSalvar(BuildContext context, void Function()? onPressed) => botaoTexto(
-      context,
       icon: Icons.save,
       label: 'Salvar',
       onPressed: onPressed,
     );
 
-Widget botaoTexto(BuildContext context, {required string label, required IconData icon, Color? color, required void Function()? onPressed}) => SizedBox(
+Widget botaoTexto({required string label, required IconData icon, Color? color, required void Function()? onPressed}) => SizedBox(
       height: 25,
       child: ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? context.colorScheme.primary,
+          backgroundColor: color ?? Get.context?.colorScheme.primary,
           textStyle: const TextStyle(fontSize: 12),
         ),
         icon: Icon(
           icon,
-          color: context.colorScheme.onPrimary,
+          color: Get.context?.colorScheme.onPrimary,
           size: 15,
         ),
         label: Text(
           label,
-          style: TextStyle(color: context.colorScheme.onPrimary),
+          style: TextStyle(color: Get.context?.colorScheme.onPrimary),
         ),
         onPressed: onPressed,
       ),
     );
 
-Widget botaoExcluir(BuildContext context, void Function()? onPressed) => botaoTexto(context, label: 'Excluir', icon: Icons.delete, color: Colors.redAccent, onPressed: onPressed);
-Widget botaoLimpar(BuildContext context, void Function()? onPressed) => botaoTexto(context, label: "Limpar formulário", icon: Icons.cleaning_services, onPressed: onPressed);
-Widget botaoCadastrar(BuildContext context, void Function()? onPressed) => botaoTexto(context, label: "Cadastrar", icon: Icons.edit, onPressed: onPressed);
+Widget botaoExcluir(BuildContext context, void Function()? onPressed) => botaoTexto(label: 'Excluir', icon: Icons.delete, color: Colors.redAccent, onPressed: onPressed);
+Widget botaoLimpar(BuildContext context, void Function()? onPressed) => botaoTexto(label: "Limpar formulário", icon: Icons.cleaning_services, onPressed: onPressed);
+Widget botaoCadastrar(BuildContext context, void Function()? onPressed) => botaoTexto(label: "Cadastrar", icon: Icons.edit, onPressed: onPressed);
 
-FloatingActionButton fabSalvar<T>(BuildContext context, T? id, VoidCallback onPressed) => fabTexto(context, label: id.isNotValid ? "Cadastrar" : "Salvar", icon: id.isNotValid ? Icons.edit : Icons.save, onPressed: onPressed);
+FloatingActionButton fabSalvar<T>(BuildContext context, T? id, VoidCallback onPressed) => fabTexto(label: id.isNotValid ? "Cadastrar" : "Salvar", icon: id.isNotValid ? Icons.edit : Icons.save, onPressed: onPressed);
 
-FloatingActionButton fabTexto(BuildContext context, {String? label, IconData? icon, Color? color, required VoidCallback onPressed}) => FloatingActionButton.extended(
+FloatingActionButton fabTexto({String? label, IconData? icon, Color? color, required VoidCallback onPressed}) => FloatingActionButton.extended(
       onPressed: onPressed,
-      backgroundColor: color ?? context.colorScheme.primary,
+      backgroundColor: color ?? Get.context?.colorScheme.primary,
       label: Row(
         children: [
           Visibility(visible: icon != null, child: Icon(icon)),

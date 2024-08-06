@@ -39,7 +39,7 @@ enum FinalidadeNFe {
 }
 
 /// Códigos de regimes tributários
-enum CRT {
+enum RegimeTributario {
   /// 1 - Simples Nacional
   simplesNacional(1),
 
@@ -50,18 +50,18 @@ enum CRT {
   regimeNormal(3);
 
   final int value;
-  const CRT(this.value);
+  const RegimeTributario(this.value);
 
-  bool get isSimplesNacional => this == CRT.simplesNacional || this == CRT.simplesNacionalExcessoSublimite;
+  bool get isSimplesNacional => this == RegimeTributario.simplesNacional || this == RegimeTributario.simplesNacionalExcessoSublimite;
 
-  factory CRT.fromInt(int value) {
+  factory RegimeTributario.fromInt(int value) {
     switch (value) {
       case 1:
-        return CRT.simplesNacional;
+        return RegimeTributario.simplesNacional;
       case 2:
-        return CRT.simplesNacionalExcessoSublimite;
+        return RegimeTributario.simplesNacionalExcessoSublimite;
       case 3:
-        return CRT.regimeNormal;
+        return RegimeTributario.regimeNormal;
       default:
         throw ArgumentError('CRT inválido: $value');
     }

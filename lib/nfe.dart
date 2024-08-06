@@ -186,8 +186,8 @@ class NFe extends TagXml implements Validator {
   }
 
   /// Obtém ou define o regime tributário da nota fiscal.
-  CRT? get regimeTributario => infNFe?.emit?.crt;
-  set regimeTributario(CRT? value) {
+  RegimeTributario? get regimeTributario => infNFe?.emit?.crt;
+  set regimeTributario(RegimeTributario? value) {
     infNFe ??= InfNFe();
     infNFe!.emit ??= Emit();
     infNFe!.emit!.crt = value;
@@ -683,8 +683,8 @@ class Emit extends TagXml {
   /// Obtém ou define o CRT (Código de Regime Tributário) da NFe.
   ///
   /// O CRT é um valor numérico que representa o regime tributário do contribuinte.
-  CRT? get crt => getValueFromNode('CRT', CRT.fromInt);
-  set crt(CRT? value) => setTextValueForNode('CRT', value?.value.toString());
+  RegimeTributario? get crt => getValueFromNode('CRT', RegimeTributario.fromInt);
+  set crt(RegimeTributario? value) => setTextValueForNode('CRT', value?.value.toString());
 }
 
 class EnderEmit extends Ender {
