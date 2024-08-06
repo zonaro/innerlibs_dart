@@ -1,5 +1,3 @@
-
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -226,6 +224,8 @@ class CampoListaEstado extends StatefulWidget {
   final void Function(Estado) onChanged;
   final bool modoCompacto;
   final Regiao regiao;
+  final void Function()? onIconTap;
+  final IconData? icon;
 
   const CampoListaEstado({
     super.key,
@@ -233,6 +233,8 @@ class CampoListaEstado extends StatefulWidget {
     required this.onChanged,
     this.modoCompacto = false,
     this.regiao = Regiao.nacional,
+    this.icon,
+    this.onIconTap,
   });
 
   @override
@@ -278,7 +280,7 @@ class _CampoListaEstadoState extends State<CampoListaEstado> {
         items: widget.regiao.estados.toList(),
         onChanged: (x) => widget.onChanged(x ?? Estado.naoDefinido),
         dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: estiloCampos(widget.modoCompacto ? "UF" : "Estado"),
+          dropdownSearchDecoration: estiloCampos(widget.modoCompacto ? "UF" : "Estado", widget.icon, widget.onIconTap),
         ),
       ),
     );
@@ -328,8 +330,82 @@ class _CampoDataState extends State<CampoData> {
   }
 }
 
+typedef CampoDouble = CampoNumerico<double>;
 typedef CampoDecimal = CampoNumerico<decimal>;
 typedef CampoInteiro = CampoNumerico<int>;
+
+class CampoEnum<T extends Enum> extends StatefulWidget {
+  final String? label;
+  final TextEditingController? controller;
+  final void Function(T?)? onChange;
+  final void Function()? onEditingComplete;
+  final string? Function(T?)? validator;
+  final T? defaultValue;
+  final bool readOnly;
+  final Color? borderColor;
+  final TextAlign textAlign;
+  final FocusNode? focusNode;
+  final bool autofocus;
+  final IconData? icon;
+  final int? maxLen;
+  final List<T> values;
+
+  CampoEnum({
+    super.key,
+    required this.values,
+    this.label,
+    this.controller,
+    this.onChange,
+    this.onEditingComplete,
+    this.validator,
+    this.defaultValue,
+    this.readOnly = false,
+    this.borderColor,
+    this.textAlign = TextAlign.start,
+    this.focusNode,
+    this.autofocus = false,
+    this.icon,
+    this.maxLen,
+  }) {
+    if (values.isEmpty) {
+      throw "CampoEnum: values não pode ser vazio";
+    }
+  }
+
+  @override
+  createState() => _CampoEnumState<T>();
+}
+
+class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
+  @override
+  Widget build(BuildContext context) {
+    return CampoValor<T>(
+      icon: widget.icon,
+      maxLen: widget.maxLen,
+      label: widget.label,
+      controller: widget.controller,
+      onChange: (newValue) {
+        if (widget.onChange != null) {
+          (widget.onChange)!(changeTo<T>(newValue?.$2));
+        }
+      },
+      onEditingComplete: widget.onEditingComplete,
+      validator: (v) {
+        if (widget.validator != null) {
+          return (widget.validator)!(changeTo(v?.$2));
+        }
+        return null;
+      },
+      defaultValue: changeTo(widget.defaultValue),
+      readOnly: widget.readOnly,
+      borderColor: widget.borderColor,
+      textAlign: widget.textAlign,
+      focusNode: widget.focusNode,
+      autofocus: widget.autofocus,
+      options: widget.values.map((e) => (e.toString().split(".").last.pascalSplitString, e)).toList(),
+    );
+  }
+}
 
 class CampoNumerico<T extends num> extends StatefulWidget {
   final String? label;
@@ -431,6 +507,7 @@ class CampoTexto extends StatefulWidget {
   final bool autofocus;
   final IconData? icon;
   final Future<List<String>> Function(String)? asyncItems;
+  final void Function()? onIconTap;
 
   const CampoTexto({
     super.key,
@@ -454,6 +531,7 @@ class CampoTexto extends StatefulWidget {
     this.autofocus = false,
     this.icon,
     this.asyncItems,
+    this.onIconTap,
   });
 
   @override
@@ -493,6 +571,7 @@ class _CampoTextoState extends State<CampoTexto> {
       obscureText: widget.obscureText,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      onIconTap: widget.onIconTap,
     );
   }
 }
@@ -518,6 +597,7 @@ class CampoValor<T> extends StatefulWidget {
   final bool autofocus;
   final IconData? icon;
   final Future<List<(String, T?)>> Function(String)? asyncItems;
+  final void Function()? onIconTap;
 
   const CampoValor({
     super.key,
@@ -541,6 +621,7 @@ class CampoValor<T> extends StatefulWidget {
     this.autofocus = false,
     this.icon,
     this.asyncItems,
+    this.onIconTap,
   });
 
   @override
@@ -577,7 +658,7 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
         onEditingComplete: widget.onEditingComplete,
         inputFormatters: widget.inputFormatters,
         keyboardType: widget.keyboardType,
-        decoration: estiloCampos(widget.label, widget.icon),
+        decoration: estiloCampos(widget.label, widget.icon, widget.onIconTap),
         validator: (s) {
           if (widget.validator != null) {
             try {
@@ -656,7 +737,7 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
           popupProps: popupCampos(widget.label, options: widget.options.toList()),
           selectedItem: _dropdownValue,
           dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: estiloCampos(widget.label, widget.icon),
+            dropdownSearchDecoration: estiloCampos(widget.label, widget.icon, widget.onIconTap),
           ),
           items: widget.options.toList(),
           asyncItems: (v) async {
@@ -728,8 +809,8 @@ class _CampoCPFouCNPJState extends State<CampoCPFouCNPJ> {
   }
 }
 
-InputDecoration estiloCampos([string? label, IconData? icon]) => InputDecoration(
-      icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: Get.context!.colorScheme.onSurface)),
+InputDecoration estiloCampos([string? label, IconData? icon, void Function()? onIconTap]) => InputDecoration(
+      icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
       label: label.asNullableText(),
       border: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -738,12 +819,12 @@ InputDecoration estiloCampos([string? label, IconData? icon]) => InputDecoration
       filled: true,
     );
 
-PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder, IconData? icon}) {
+PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder, IconData? icon, void Function()? onIconTap}) {
   var tt = "${"Pesquisar".blankIf((x) => options == null || options.length <= 4)} $title:".trim();
   return Get.screenTier < ScreenTier.xs
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon)),
+          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap)),
           title: InkWell(
             onTap: () => Get.back(),
             child: Padding(
@@ -768,7 +849,7 @@ PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(B
           showSearchBox: options != null ? options.length > 4 : true,
           emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
           itemBuilder: itemBuilder,
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon)),
+          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap)),
         );
 }
 

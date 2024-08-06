@@ -4,8 +4,6 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:innerlibs/innerlibs.dart';
 
- 
-
 /// Contém métodos uteis para varias operações relacionadas com o Brasil
 abstract interface class Brasil {
   static List<Regiao> get regioes => Regiao.pegarRegioes;
@@ -1106,7 +1104,12 @@ abstract interface class Brasil {
   ///
   /// Recebe um [numero] dinâmico e retorna uma string formatada com traço e parêntesis,
   /// utilizando a classe [Telefone] para realizar a formatação.
-  static String formatarTelefone(dynamic numero) => Telefone(numero).toString();
+  static String formatarTelefone(dynamic numero) {
+    if (Brasil.validarTelefone(numero)) {
+      return Telefone(numero).toString();
+    }
+    return "$numero";
+  }
 
   /// Retorna o tipo de pessoa com base no tipo ou documento fornecido.
   ///
