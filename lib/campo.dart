@@ -48,7 +48,6 @@ class _CampoListaCidadeState extends State<CampoListaCidade> {
               filters.flatEqual('capital') && item.capital ? filters : "",
             ]),
         popupProps: popupCampos(
-          context,
           widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
           itemBuilder: (context, item, isSelected) {
             isSelected = isSelected || item.ibge == widget.cidadeValue?.ibge;
@@ -68,7 +67,7 @@ class _CampoListaCidadeState extends State<CampoListaCidade> {
         ),
         selectedItem: widget.cidadeValue,
         dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: estiloCampos(context, widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"), Icons.map),
+          dropdownSearchDecoration: estiloCampos(widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"), Icons.map),
         ),
         onChanged: widget.onChanged,
       ),
@@ -249,7 +248,6 @@ class _CampoListaEstadoState extends State<CampoListaEstado> {
         compareFn: (item1, item2) => item1.ibge == item2.ibge,
         dropdownButtonProps: DropdownButtonProps(isVisible: widget.modoCompacto == false),
         popupProps: popupCampos(
-          context,
           widget.modoCompacto ? "UF" : "Estado",
           itemBuilder: (context, item, isSelected) {
             isSelected = isSelected || item.ibge == widget.estadoValue.ibge;
@@ -280,7 +278,7 @@ class _CampoListaEstadoState extends State<CampoListaEstado> {
         items: widget.regiao.estados.toList(),
         onChanged: (x) => widget.onChanged(x ?? Estado.naoDefinido),
         dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: estiloCampos(context, widget.modoCompacto ? "UF" : "Estado"),
+          dropdownSearchDecoration: estiloCampos(widget.modoCompacto ? "UF" : "Estado"),
         ),
       ),
     );
@@ -317,7 +315,7 @@ class _CampoDataState extends State<CampoData> {
     return Padding(
       padding: paddingCampos,
       child: DateTimePickerFormField(
-        decoration: estiloCampos(context, widget.label, widget.icon),
+        decoration: estiloCampos(widget.label, widget.icon),
         invalidDateMessage: 'Data inválida',
         outOfRangeMessage: "Data fora dos limites",
         initialDate: widget.initialDate ?? DateTime.now(),
@@ -579,7 +577,7 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
         onEditingComplete: widget.onEditingComplete,
         inputFormatters: widget.inputFormatters,
         keyboardType: widget.keyboardType,
-        decoration: estiloCampos(context, widget.label, widget.icon),
+        decoration: estiloCampos(widget.label, widget.icon),
         validator: (s) {
           if (widget.validator != null) {
             try {
@@ -655,10 +653,10 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
                 searchOn: [item.$1, flatString(item.$2)],
               ),
           compareFn: (item1, item2) => item1.$2.flatEqual(item2.$2),
-          popupProps: popupCampos(context, widget.label, options: widget.options.toList()),
+          popupProps: popupCampos(widget.label, options: widget.options.toList()),
           selectedItem: _dropdownValue,
           dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: estiloCampos(context, widget.label, widget.icon),
+            dropdownSearchDecoration: estiloCampos(widget.label, widget.icon),
           ),
           items: widget.options.toList(),
           asyncItems: (v) async {
@@ -730,24 +728,24 @@ class _CampoCPFouCNPJState extends State<CampoCPFouCNPJ> {
   }
 }
 
-estiloCampos(BuildContext context, [string? label, IconData? icon]) => InputDecoration(
-      icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: context.colorScheme.onSurface)),
+InputDecoration estiloCampos([string? label, IconData? icon]) => InputDecoration(
+      icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: Get.context!.colorScheme.onSurface)),
       label: label.asNullableText(),
       border: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: context.colorScheme.primary, width: 20),
+        borderSide: BorderSide(color: Get.context!.colorScheme.primary, width: 20),
       ),
       filled: true,
     );
 
-PopupProps<T> popupCampos<T>(BuildContext context, string? title, {List<T>? options, Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder, IconData? icon}) {
+PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder, IconData? icon}) {
   var tt = "${"Pesquisar".blankIf((x) => options == null || options.length <= 4)} $title:".trim();
-  return context.screenTier < ScreenTier.xs
+  return Get.screenTier < ScreenTier.xs
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(context, tt, icon)),
+          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon)),
           title: InkWell(
-            onTap: () => context.pop(),
+            onTap: () => Get.back(),
             child: Padding(
               padding: 6.allAround,
               child: Row(
@@ -755,27 +753,27 @@ PopupProps<T> popupCampos<T>(BuildContext context, string? title, {List<T>? opti
                 children: [
                   const Icon(Icons.arrow_back),
                   const Gap(10),
-                  context.localizations.backButtonTooltip.asText().fontSize(10),
+                  Get.context!.localizations.backButtonTooltip.asText().fontSize(10),
                 ],
               ).toCenter().paddingAll(8),
             ),
           ),
-          modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: context.colorScheme.surfaceBright),
+          modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: Get.context?.colorScheme.surfaceBright),
           showSearchBox: options != null ? options.length > 4 : true,
-          emptyBuilder: (c, p) => pesquisaVazia(c, p, title ?? ""),
+          emptyBuilder: (c, p) => pesquisaVazia(p, title ?? ""),
           itemBuilder: itemBuilder,
         )
       : PopupProps.menu(
           fit: FlexFit.tight,
           showSearchBox: options != null ? options.length > 4 : true,
-          emptyBuilder: (c, p) => pesquisaVazia(c, p, title ?? ""),
+          emptyBuilder: (c, p) => pesquisaVazia(p, title ?? ""),
           itemBuilder: itemBuilder,
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(context, tt, icon)),
+          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon)),
         );
 }
 
 /// gera os chips que aparecem nas buscas de SELECTs quando nao tem resultados
-Widget pesquisaVazia(BuildContext context, string searchEntry, string label) {
+Widget pesquisaVazia(string searchEntry, string label) {
   var searches = searchEntry.split(";").where((e) => e.isNotBlank).toList();
   return Expanded(
     child: Center(
