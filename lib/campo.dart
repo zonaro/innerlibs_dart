@@ -1,4 +1,4 @@
-library campo;
+
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -760,13 +760,13 @@ PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(B
           ),
           modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: Get.context?.colorScheme.surfaceBright),
           showSearchBox: options != null ? options.length > 4 : true,
-          emptyBuilder: (c, p) => pesquisaVazia(p, title ?? ""),
+          emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
           itemBuilder: itemBuilder,
         )
       : PopupProps.menu(
           fit: FlexFit.tight,
           showSearchBox: options != null ? options.length > 4 : true,
-          emptyBuilder: (c, p) => pesquisaVazia(p, title ?? ""),
+          emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
           itemBuilder: itemBuilder,
           searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon)),
         );
