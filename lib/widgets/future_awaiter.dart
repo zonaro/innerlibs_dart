@@ -18,8 +18,7 @@ class AwaiterData<T> extends ValueNotifier<T?> {
 
   set expired(bool value) {
     if (value) {
-      loadedAt = null;
-      this.value = null;
+      clear();
     }
   }
 
