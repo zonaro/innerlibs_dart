@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 /// Holds and validate the data loaded by a [FutureAwaiter]. Optionally expires after [expireDataAfter]
-class AwaiterData<T> extends ValueNotifier<T?> {
-  AwaiterData({this.validate = true, T? value, this.expireDataAfter}) : super(value);
+class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
+  AwaiterData({this.validateData = true, T? value, this.expireDataAfter, this.validations = const []}) : super(value);
 
   /// return true if last [expireAt] is less than [now]
   bool get expired {
@@ -29,14 +29,14 @@ class AwaiterData<T> extends ValueNotifier<T?> {
 
   /// When true, validate the snapshot data against the [Object.IsValid] function.
   /// Empty [List] or [Map], [Map] with all values empty, [num] = 0, empty or blank [String] will be considered empty data if this is true.
-  final bool validate;
+  final bool validateData;
 
   Object? error;
 
   bool get hasData {
     if (value != null) {
-      if (validate) {
-        return value.isValid();
+      if (validateData) {
+        return this.isValid();
       }
       return true;
     }
@@ -49,6 +49,19 @@ class AwaiterData<T> extends ValueNotifier<T?> {
     value = null;
     error = null;
     loadedAt = null;
+  }
+
+  List<string? Function(T?)> validations;
+
+  @override
+  Iterable<String> validate() {
+    if (this.validateData) {
+      if (validations.isEmpty) {
+        return value.isValid() ? [] : ["Data is invalid"];
+      }
+      return validations.map((x) => x(value)).whereNotNull();
+    }
+    return [];
   }
 }
 
