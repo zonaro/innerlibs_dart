@@ -45,6 +45,12 @@ class AwaiterData<T> extends ValueNotifier<T?> {
   }
 
   bool get hasError => error != null;
+
+  void clear() {
+    value = null;
+    error = null;
+    loadedAt = null;
+  }
 }
 
 /// Wraps a [FutureBuilder] into a [Widget] and add some data validations, making it easier to use.
