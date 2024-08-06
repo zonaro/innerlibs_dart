@@ -152,6 +152,15 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
     super.initState();
   }
 
+  @override
+  void dispose() {
+    for (var i in widget.items) {
+      i.tabController?.dispose();
+    }
+    indexController.dispose();
+    super.dispose();
+  }
+
   bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && (widget.drawer == null || widget.drawer is! Drawer);
 
   PageEntry get pageEntry => widget.items[indexController.pageIndex];
