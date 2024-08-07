@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-extension GestureDetectorExtensions on Widget {
+extension GestureDetectorExtensions on Widget? {
 //on double tap
-  Widget onDoubleTap(void Function()? function) {
+  Widget? onDoubleTap(void Function()? function) {
     if (function != null) {
       return GestureDetector(
         onDoubleTap: function,
@@ -13,7 +13,7 @@ extension GestureDetectorExtensions on Widget {
   }
 
   // on tap
-  Widget onTap(void Function()? function) {
+  Widget? onTap(void Function()? function) {
     if (function != null) {
       return GestureDetector(
         onTap: function,
@@ -24,7 +24,7 @@ extension GestureDetectorExtensions on Widget {
   }
 
   // on long press
-  Widget onLongPress(void Function()? function) {
+  Widget? onLongPress(void Function()? function) {
     if (function != null) {
       return GestureDetector(
         onLongPress: function,

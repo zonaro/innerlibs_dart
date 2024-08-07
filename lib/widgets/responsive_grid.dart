@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-/// Represents a Screen size tier (from extra small to double extra large).
+/// Represents a Screen size tier (from double extra small to double extra large).
 /// The tier is computed by comparing the current screen width to a set of pre-defined screen sizes using the function [responsiveValueBy].
 enum ScreenTier {
   /// Double-Extra small screen.
@@ -34,35 +34,50 @@ enum ScreenTier {
   operator >(ScreenTier tier) => value > tier.value;
   operator >=(ScreenTier tier) => value >= tier.value;
 
-  /// The breakpoints for different screen sizes.
-  static ScreenTierMap<double> breakpoints = {};
+  /// The breakpoints for different screen sizes defined by user.
+  /// if empty, the [defaultBreakpoints] will be used.
+  static ScreenTierMap<double> get breakpoints {
+    if (_bp.isEmpty) {
+      _bp = defaultBreakpoints;
+    }
+    return _bp;
+  }
+
+  static set breakpoints(ScreenTierMap<double> value) {
+    _bp = value;
+  }
+
+  static ScreenTierMap<double> _bp = {};
 
   /// The default breakpoints for different screen sizes.
-  static ScreenTierMap<double> get defaultBreakpoints {
-    final x = <double, ScreenTier>{
-      360: ScreenTier.xxs,
-      576: ScreenTier.xs,
-      768: ScreenTier.sm,
-      992: ScreenTier.md,
-      1200: ScreenTier.lg,
-      1600: ScreenTier.xl,
-      double.infinity: ScreenTier.xxl,
-    };
-    if (breakpoints.isEmpty) {
-      breakpoints = x;
-    }
-    return x;
-  }
+  /// The default breakpoints are as follows:
+  /// - xxs: 360
+  /// - xs: 576
+  /// - sm: 768
+  /// - md: 992
+  /// - lg: 1200
+  /// - xl: 1600
+  /// - xxl: double.infinity
+  static ScreenTierMap<double> get defaultBreakpoints => <double, ScreenTier>{
+        360: ScreenTier.xxs,
+        576: ScreenTier.xs,
+        768: ScreenTier.sm,
+        992: ScreenTier.md,
+        1200: ScreenTier.lg,
+        1600: ScreenTier.xl,
+        double.infinity: ScreenTier.xxl,
+      };
+
+  double get maxWidth => breakpoints.entries.firstWhere((e) => e.value == this).key;
 
   /// Creates a [ScreenTier] object based on the given [width] and [customBreakPoints].
   ///
   /// The [width] parameter represents the width of the screen.
   /// The [customBreakPoints] parameter is an optional map of custom breakpoints.
-  /// If no custom breakpoints are provided, the [defaultBreakpoints] will be used.
+  /// If no custom breakpoints are provided, the [breakpoints] will be used.
   ///
   /// Returns a [ScreenTier] object based on the given [width] and [customBreakPoints].
   factory ScreenTier.fromWidth(double width, [ScreenTierMap<double> customBreakPoints = const {}]) {
-    if (breakpoints.isEmpty) breakpoints = defaultBreakpoints;
     if (customBreakPoints.isEmpty) customBreakPoints = breakpoints;
     return getBreakpointValue(width, customBreakPoints);
   }

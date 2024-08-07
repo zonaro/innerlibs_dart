@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 bool get isDesktop => (isMacOS || isWindows || isLinux);
@@ -28,10 +27,13 @@ bool get isNativeWindows => isWindows && !isWeb;
 bool get isNativeAndroid => isAndroid && !isWeb;
 bool get isNativeFuchsia => isFuchsia && !isWeb;
 bool get isNativeLinux => isLinux && !isWeb;
+bool get isNativeDesktop => isDesktop && !isWeb;
+bool get isNativeMobile => isMobile && !isWeb;
+bool get isNativeGoogle => isGoogle && !isWeb;
+bool get isNativeApple => isApple && !isWeb;
 
-Brightness get brightness => SchedulerBinding.instance.platformDispatcher.platformBrightness;
-bool get isDarkMode => brightness == Brightness.dark;
-bool get isLightMode => brightness == Brightness.light;
+bool get isDarkMode => Get.isPlatformDarkMode;
+bool get isLightMode => Get.isPlatformDarkMode == false;
 
 DateTime get minDate => DateTime.utc(1970, 1, 1);
 DateTime get maxDate => DateTime.utc(9999, 12, 31, 23, 59, 59);
@@ -182,7 +184,7 @@ T getBreakpointValue<V extends Comparable, T>(V value, Map<V, T> breakpoints) {
 bool isValid<T>(T? object, {List<bool> Function(T?)? customValidator}) {
   try {
     if (customValidator != null) {
-      return customValidator(object).any((x) => true);
+      return customValidator(object).contains(true);
     }
 
     if (object == null) {
@@ -997,3 +999,6 @@ mixin FilterFunctions {
         ignoreCase: ignoreCase,
       );
 }
+
+// ignore: non_constant_identifier_names
+final InnerLibs = Get;

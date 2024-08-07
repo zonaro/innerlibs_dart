@@ -2,8 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-class ScaffoldBuilder extends StatefulWidget {
-  const ScaffoldBuilder({
+class PageTabScaffold extends StatefulWidget {
+  const PageTabScaffold({
     super.key,
     required this.items,
     this.indexController,
@@ -75,26 +75,62 @@ class ScaffoldBuilder extends StatefulWidget {
 
   final PageEntries items;
 
-  final void Function(ScaffoldBuilderController index)? onIndexChange;
-  final ScaffoldBuilderController? indexController;
+  final void Function(PageTabController index)? onIndexChange;
+  final PageTabController? indexController;
 
   @override
-  State<ScaffoldBuilder> createState() => _ScaffoldBuilderState();
+  State<PageTabScaffold> createState() => _PageTabScaffoldState();
 }
 
-class ScaffoldBuilderController extends ValueNotifier<(int, int)> {
-  ScaffoldBuilderController({int pageIndex = 0, int tabIndex = 0}) : super((pageIndex, tabIndex));
+/// A controller class for managing the state of a scaffold builder.
+///
+/// This class extends [ValueNotifier] and provides methods for navigating
+/// between different pages and tabs within the scaffold builder.
+class PageTabController extends ValueNotifier<(int, int)> {
+  /// Creates a new instance of [PageTabController].
+  ///
+  /// The [pageIndex] and [tabIndex] parameters specify the initial page and tab
+  /// indices respectively. By default, both indices are set to 0.
+  PageTabController({this.defaultPageIndex = 0, this.defaultTabIndex = 0}) : super((defaultPageIndex, defaultTabIndex));
 
+  final int defaultPageIndex;
+  final int defaultTabIndex;
+
+  /// Returns the current page index.
   int get pageIndex => value.$1;
+
+  /// Returns the current tab index.
   int get tabIndex => value.$2;
 
+  /// Returns the previous page index.
+  ///
+  /// If there is no previous index, -1 is returned.
   int get oldPageIndex => oldIndex?.$1 ?? -1;
+
+  /// Returns the previous tab index.
+  ///
+  /// If there is no previous index, -1 is returned.
   int get oldTabIndex => oldIndex?.$2 ?? -1;
 
+  /// Returns the previous page and tab indices as a tuple.
+  ///
+  /// If there is no previous index, null is returned.
   (int, int)? get oldIndex => history.firstOrNull;
 
+  /// A list of previous page and tab indices.
   List<(int, int)> history = [];
 
+  /// Navigates to the specified page and tab indices.
+  ///
+  /// If [pageIndex] is not provided, the current page index is used.
+  /// If [tabIndex] is not provided and [pageIndex] is different from the
+  /// current page index, the tab index is set to 0. Otherwise, the current
+  /// tab index is used.
+  ///
+  /// If either [pageIndex] or [tabIndex] is different from the current indices,
+  /// the previous indices are stored in the history list, and the current
+  /// indices are updated. Additionally, a log message is printed to the console
+  /// indicating the navigation change.
   void navigate({int? pageIndex, int? tabIndex}) {
     pageIndex ??= this.pageIndex;
     if (pageIndex != this.pageIndex && tabIndex == null) {
@@ -110,6 +146,11 @@ class ScaffoldBuilderController extends ValueNotifier<(int, int)> {
     }
   }
 
+  /// Navigates back to the previous page and tab indices.
+  ///
+  /// If there is a previous index in the history list, the current indices are
+  /// updated to the previous indices, and the previous indices are removed from
+  /// the history list.
   void back() {
     if (canGoBack) {
       value = (oldPageIndex, oldTabIndex);
@@ -117,15 +158,20 @@ class ScaffoldBuilderController extends ValueNotifier<(int, int)> {
     }
   }
 
+  /// Resets the controller to its initial state.
+  ///
+  /// The current indices are set to 0, and the history list is cleared.
   void reset() {
-    value = (0, 0);
+    value = (defaultPageIndex, defaultPageIndex);
     history.clear();
   }
 
+  /// Returns a boolean value indicating whether there is a previous index in the
+  /// history list.
   bool get canGoBack => history.isNotEmpty;
 }
 
-class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderStateMixin {
+class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderStateMixin {
   Widget? get mainDrawer {
     if (useDrawerInsteadOfBottomNavigationBar) {
       return Drawer(
@@ -142,10 +188,11 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
     }
   }
 
-  late ScaffoldBuilderController indexController;
+  late PageTabController indexController;
+
   @override
   initState() {
-    indexController = widget.indexController ?? ScaffoldBuilderController();
+    indexController = widget.indexController ?? PageTabController();
     indexController.addListener(() {
       pageEntry.tabController?.animateTo(indexController.tabIndex);
     });
@@ -157,7 +204,7 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
     for (var i in widget.items) {
       i.tabController?.dispose();
     }
-    indexController.dispose();
+    // indexController.dispose();
     super.dispose();
   }
 
@@ -176,10 +223,10 @@ class _ScaffoldBuilderState extends State<ScaffoldBuilder> with TickerProviderSt
         }
       } else {
         indexController.navigate(pageIndex: value);
-        setState(() {});
         if (widget.onIndexChange != null) {
           (widget.onIndexChange)!(indexController);
         }
+        setState(() {});
       }
     };
   }
