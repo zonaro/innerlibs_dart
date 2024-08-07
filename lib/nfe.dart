@@ -249,6 +249,9 @@ class NFe extends TagXml implements Validator {
       x.calcular();
     }
 
+    infNFe!.dest ??= Dest();
+    infNFe!.dest!.ajustar();
+
     for (var x in infNFe!.detPag) {
       if (x.tPag == FormaPagamento.semPagamento) {
         x.vPag = 0;
@@ -650,6 +653,7 @@ class Emit extends TagXml {
       if (xNome == null) "$deepArrow Razão Social do emitente não informada" else if (xNome?.length.isBetweenOrEqual(2, 60) == false) "$deepArrow Razão Social do emitente deve ter entre 2 e 60 caracteres",
       if (xFant == null) "$deepArrow Nome Fantasia do emitente não informado" else if (xFant?.length.isBetweenOrEqual(1, 60) == false) "$deepArrow Nome Fantasia do emitente deve ter entre 1 e 60 caracteres",
       if (enderEmit == null) "$deepArrow Endereço do emitente não informado" else ...enderEmit!.validate(),
+      if (crt == null) "$deepArrow CRT do emitente não informado",
     ];
   }
 
@@ -800,6 +804,22 @@ class Dest extends TagXml {
       if (ie == null) "$deepArrow IE do destinatário não informada" else if (ie?.length.isBetweenOrEqual(2, 14) == false) "$deepArrow IE do destinatário deve ter entre 2 e 14 caracteres",
       if (enderDest == null) "$deepArrow Endereço do destinatário não informado" else ...enderDest!.validate(),
     ];
+  }
+
+  void ajustar() {
+    enderDest ??= EnderDest();
+    enderDest!.uf = enderDest!.uf ?? Estado.naoDefinido;
+    if (enderDest!.uf == Estado.ex) {
+      indIEDest = IndicadorIEDestinatario.naoContribuinte;
+    }
+
+    if (indIEDest == IndicadorIEDestinatario.contribuinteICMS && ie == null) {
+      ie = "ISENTO";
+    }
+
+    if (indIEDest == IndicadorIEDestinatario.naoContribuinte) {
+      ie = null;
+    }
   }
 
   /// Obtém o endereço do destinatário.

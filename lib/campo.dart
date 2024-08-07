@@ -398,7 +398,6 @@ class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
       },
       defaultValue: changeTo(widget.defaultValue),
       readOnly: widget.readOnly,
-      borderColor: widget.borderColor,
       textAlign: widget.textAlign,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
@@ -416,7 +415,7 @@ class CampoNumerico<T extends num> extends StatefulWidget {
   final T? defaultValue;
   final bool readOnly;
   final List<(string, T)> options;
-  final Color? borderColor;
+  final Color? color;
   final TextAlign textAlign;
   final FocusNode? focusNode;
   final bool autofocus;
@@ -436,7 +435,7 @@ class CampoNumerico<T extends num> extends StatefulWidget {
     this.defaultValue,
     this.readOnly = false,
     this.options = const [],
-    this.borderColor,
+    this.color,
     this.textAlign = TextAlign.right,
     this.focusNode,
     this.autofocus = false,
@@ -477,7 +476,7 @@ class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
       readOnly: widget.readOnly,
       isAutoComplete: widget.isAutoComplete,
       options: widget.options,
-      borderColor: widget.borderColor,
+      color: widget.color,
       textAlign: widget.textAlign,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
@@ -499,7 +498,6 @@ class CampoTexto extends StatefulWidget {
   final String defaultValue;
   final bool readOnly;
   final bool isAutoComplete;
-  final Color? borderColor;
   final TextInputType? keyboardType;
   final TextAlign textAlign;
   final bool obscureText;
@@ -508,6 +506,7 @@ class CampoTexto extends StatefulWidget {
   final IconData? icon;
   final Future<List<String>> Function(String)? asyncItems;
   final void Function()? onIconTap;
+  final Color? color;
 
   const CampoTexto({
     super.key,
@@ -523,7 +522,6 @@ class CampoTexto extends StatefulWidget {
     this.defaultValue = "",
     this.readOnly = false,
     this.isAutoComplete = false,
-    this.borderColor,
     this.keyboardType,
     this.textAlign = TextAlign.start,
     this.obscureText = false,
@@ -532,6 +530,7 @@ class CampoTexto extends StatefulWidget {
     this.icon,
     this.asyncItems,
     this.onIconTap,
+    this.color,
   });
 
   @override
@@ -565,7 +564,7 @@ class _CampoTextoState extends State<CampoTexto> {
       defaultValue: widget.defaultValue,
       readOnly: widget.readOnly,
       isAutoComplete: widget.isAutoComplete,
-      borderColor: widget.borderColor,
+      color: widget.color,
       keyboardType: widget.keyboardType,
       textAlign: widget.textAlign,
       obscureText: widget.obscureText,
@@ -589,7 +588,6 @@ class CampoValor<T> extends StatefulWidget {
   final T? defaultValue;
   final bool readOnly;
   final bool isAutoComplete;
-  final Color? borderColor;
   final TextInputType? keyboardType;
   final TextAlign textAlign;
   final bool obscureText;
@@ -598,6 +596,7 @@ class CampoValor<T> extends StatefulWidget {
   final IconData? icon;
   final Future<List<(String, T?)>> Function(String)? asyncItems;
   final void Function()? onIconTap;
+  final Color? color;
 
   const CampoValor({
     super.key,
@@ -613,7 +612,6 @@ class CampoValor<T> extends StatefulWidget {
     this.defaultValue,
     this.readOnly = false,
     this.isAutoComplete = false,
-    this.borderColor,
     this.keyboardType,
     this.textAlign = TextAlign.start,
     this.obscureText = false,
@@ -622,6 +620,7 @@ class CampoValor<T> extends StatefulWidget {
     this.icon,
     this.asyncItems,
     this.onIconTap,
+    this.color,
   });
 
   @override
@@ -658,7 +657,7 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
         onEditingComplete: widget.onEditingComplete,
         inputFormatters: widget.inputFormatters,
         keyboardType: widget.keyboardType,
-        decoration: estiloCampos(widget.label, widget.icon, widget.onIconTap),
+        decoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color),
         validator: (s) {
           if (widget.validator != null) {
             try {
@@ -675,11 +674,11 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
         textInputAction: TextInputAction.none,
       );
 
-  bool get hasOptions => widget.options.isNotEmpty || widget.asyncItems != null;
+  bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isAutoComplete || (hasOptions == false)) {
+    if (widget.isAutoComplete || (useOptionsList == false)) {
       return Padding(
         padding: paddingCampos,
         child: widget.options.isNotEmpty
@@ -809,22 +808,22 @@ class _CampoCPFouCNPJState extends State<CampoCPFouCNPJ> {
   }
 }
 
-InputDecoration estiloCampos([string? label, IconData? icon, void Function()? onIconTap]) => InputDecoration(
-      icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
+InputDecoration estiloCampos([string? label, IconData? icon, void Function()? onIconTap, Color? color]) => InputDecoration(
+      icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
       label: label.asNullableText(),
       border: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: Get.context!.colorScheme.primary, width: 20),
+        borderSide: BorderSide(color: color ?? Get.context!.colorScheme.primary, width: 20),
       ),
       filled: true,
     );
 
-PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder, IconData? icon, void Function()? onIconTap}) {
+PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder, IconData? icon, void Function()? onIconTap, Color? color}) {
   var tt = "${"Pesquisar".blankIf((x) => options == null || options.length <= 4)} $title:".trim();
   return Get.screenTier < ScreenTier.xs
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap)),
+          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap, color)),
           title: InkWell(
             onTap: () => Get.back(),
             child: Padding(
@@ -849,7 +848,7 @@ PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(B
           showSearchBox: options != null ? options.length > 4 : true,
           emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
           itemBuilder: itemBuilder,
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap)),
+          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap, color)),
         );
 }
 

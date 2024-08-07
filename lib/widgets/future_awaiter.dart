@@ -22,6 +22,13 @@ class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
     }
   }
 
+  T? get data {
+    if (hasData) {
+      return value!;
+    }
+    return null;
+  }
+
   date? loadedAt;
 
   Duration? expireDataAfter;
