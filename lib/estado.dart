@@ -341,7 +341,7 @@ enum Estado implements Comparable<Estado> {
       }
     }
     if (value is num) {
-      value = value.floor().toString().first(2);
+      value = value.floor().toString().first(2).toIntOrZero.fixedLength(2);
     }
     switch (value.toString().toLowerCase()) {
       case "90":

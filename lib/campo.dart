@@ -6,7 +6,7 @@ import 'package:innerlibs/innerlibs.dart';
 const paddingCampos = EdgeInsets.all(8);
 
 class CampoListaCidade extends StatefulWidget {
-  final Cidade? cidadeValue;
+  final Cidade? value;
   final dynamic nomeEstadoOuUFOuIBGEouRegiao;
   final void Function(Cidade?)? onChanged;
   final String? Function(Cidade?)? validator;
@@ -14,7 +14,7 @@ class CampoListaCidade extends StatefulWidget {
 
   const CampoListaCidade({
     super.key,
-    this.cidadeValue,
+    this.value,
     this.nomeEstadoOuUFOuIBGEouRegiao,
     this.onChanged,
     this.validator,
@@ -48,7 +48,7 @@ class _CampoListaCidadeState extends State<CampoListaCidade> {
         popupProps: popupCampos(
           widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
           itemBuilder: (context, item, isSelected) {
-            isSelected = isSelected || item.ibge == widget.cidadeValue?.ibge;
+            isSelected = isSelected || item.ibge == widget.value?.ibge;
             return ListTile(
               leading: Visibility(
                 visible: isSelected,
@@ -63,7 +63,7 @@ class _CampoListaCidadeState extends State<CampoListaCidade> {
             );
           },
         ),
-        selectedItem: widget.cidadeValue,
+        selectedItem: widget.value,
         dropdownDecoratorProps: DropDownDecoratorProps(
           dropdownSearchDecoration: estiloCampos(widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"), Icons.map),
         ),
@@ -868,7 +868,7 @@ Widget pesquisaVazia(string searchEntry, string label) {
   );
 }
 
-Widget botaoSalvar(BuildContext context, void Function()? onPressed) => botaoTexto(
+Widget botaoSalvar(void Function()? onPressed) => botaoTexto(
       icon: Icons.save,
       label: 'Salvar',
       onPressed: onPressed,
@@ -894,11 +894,11 @@ Widget botaoTexto({required string label, required IconData icon, Color? color, 
       ),
     );
 
-Widget botaoExcluir(BuildContext context, void Function()? onPressed) => botaoTexto(label: 'Excluir', icon: Icons.delete, color: Colors.redAccent, onPressed: onPressed);
-Widget botaoLimpar(BuildContext context, void Function()? onPressed) => botaoTexto(label: "Limpar formulário", icon: Icons.cleaning_services, onPressed: onPressed);
-Widget botaoCadastrar(BuildContext context, void Function()? onPressed) => botaoTexto(label: "Cadastrar", icon: Icons.edit, onPressed: onPressed);
+Widget botaoExcluir(void Function()? onPressed) => botaoTexto(label: 'Excluir', icon: Icons.delete, color: Colors.redAccent, onPressed: onPressed);
+Widget botaoLimpar(void Function()? onPressed) => botaoTexto(label: "Limpar formulário", icon: Icons.cleaning_services, onPressed: onPressed);
+Widget botaoCadastrar(void Function()? onPressed) => botaoTexto(label: "Cadastrar", icon: Icons.edit, onPressed: onPressed);
 
-FloatingActionButton fabSalvar<T>(BuildContext context, T? id, VoidCallback onPressed) => fabTexto(label: id.isNotValid ? "Cadastrar" : "Salvar", icon: id.isNotValid ? Icons.edit : Icons.save, onPressed: onPressed);
+FloatingActionButton fabSalvar<T>(T? id, VoidCallback onPressed) => fabTexto(label: id.isNotValid ? "Cadastrar" : "Salvar", icon: id.isNotValid ? Icons.edit : Icons.save, onPressed: onPressed);
 
 FloatingActionButton fabTexto({String? label, IconData? icon, Color? color, required VoidCallback onPressed}) => FloatingActionButton.extended(
       onPressed: onPressed,

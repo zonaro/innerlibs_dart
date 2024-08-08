@@ -2344,7 +2344,7 @@ extension StringExtensions on String {
   /// ```dart
   /// bool contains = "abracadabra".containsAny(["a", "p"]); // returns true;
   /// ```
-  bool containsAny(List<String?> patterns) {
+  bool containsAny(Iterable<string?> patterns) {
     if (isNotBlank) {
       for (String? item in patterns.where((element) => element.isNotBlank)) {
         if (contains(item!)) {
@@ -2362,7 +2362,7 @@ extension StringExtensions on String {
   /// ```dart
   /// bool contains = "abracadabra".containsAll(["abra", "cadabra"]; // returns true;
   /// ```
-  bool containsAll(List<String?> patterns) {
+  bool containsAll(Iterable<string?> patterns) {
     for (String? item in patterns.where((element) => element.isNotBlank)) {
       if (isBlank || contains(item!) == false) {
         return false;

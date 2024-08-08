@@ -175,6 +175,48 @@ enum IndicadorIEDestinatario {
     }
   }
 
+  /// Retorna o tipo de contribuinte com base no tipo ou documento fornecido.
+  ///
+  /// O parâmetro [tipoPessoaOuDocumento] representa o tipo ou documento do contribuinte.
+  /// O parâmetro [inscricaoRg] é opcional e representa a inscrição RG do contribuinte, sendo "ISENTO" o valor padrão.
+  ///
+  /// Retorna uma expressão de caractere que representa o tipo de contribuinte:
+  /// - "9 - NÃO CONTRIBUINTE" para pessoas físicas.
+  /// - "2 - CONTRIBUINTE ISENTO" para pessoas jurídicas com inscrição RG igual a "ISENTO".
+  /// - "1 - CONTRIBUINTE ICMS" para pessoas jurídicas com inscrição RG diferente de "ISENTO".
+  ///
+  /// Se o parâmetro [tipoPessoaOuDocumento] estiver vazio, retorna uma string vazia.
+  factory IndicadorIEDestinatario.fromValue(dynamic tipoPessoaOuDocumento, [int? inscricaoRg]) {
+    if (tipoPessoaOuDocumento == null) {
+      return IndicadorIEDestinatario.naoContribuinte;
+    }
+
+    if (tipoPessoaOuDocumento is String) {
+      if (tipoPessoaOuDocumento.isBlank) {
+        return IndicadorIEDestinatario.naoContribuinte;
+      }
+
+      if (tipoPessoaOuDocumento.keywordContainsAny(["isento", "contribuinteIsento"])) {
+        return IndicadorIEDestinatario.contribuinteIsento;
+      }
+      if (tipoPessoaOuDocumento.keywordContainsAny(["contribuinte", "contribuinteICMS"])) {
+        return IndicadorIEDestinatario.contribuinteICMS;
+      }
+    }
+
+    var tipoPessoa = TipoPessoa.fromValue(tipoPessoaOuDocumento);
+
+    if (tipoPessoa == TipoPessoa.fisica || tipoPessoa == TipoPessoa.outros) {
+      return IndicadorIEDestinatario.naoContribuinte;
+    } else {
+      if (inscricaoRg == null || inscricaoRg == 0) {
+        return IndicadorIEDestinatario.contribuinteIsento;
+      } else {
+        return IndicadorIEDestinatario.contribuinteICMS;
+      }
+    }
+  }
+
   @override
   String toString() {
     switch (this) {
@@ -1372,7 +1414,8 @@ enum TipoProduto {
 
 enum TipoPessoa {
   fisica(0),
-  juridica(1);
+  juridica(1),
+  outros(99);
 
   final int value;
 
@@ -1394,7 +1437,7 @@ enum TipoPessoa {
   /// Retorna:
   /// O tipo de pessoa correspondente ao tipo ou documento fornecido.
   factory TipoPessoa.fromValue(dynamic value) {
-    value ??= TipoPessoa.fisica;
+    value ??= TipoPessoa.outros;
 
     if (value is TipoPessoa) {
       return value;
@@ -1419,22 +1462,20 @@ enum TipoPessoa {
         case 1:
           return TipoPessoa.juridica;
         default:
-          throw ArgumentError('Tipo de pessoa desconhecido: $value');
+          return TipoPessoa.outros;
       }
     }
 
-    if (value is String) {
-      switch (value.asFlat) {
-        case 'fisica':
-        case 'cpf':
-        case '':
-          return TipoPessoa.fisica;
-        case 'juridica':
-        case 'cnpj':
-          return TipoPessoa.juridica;
-      }
+    switch (flatString(value)) {
+      case 'fisica':
+      case 'cpf':
+        return TipoPessoa.fisica;
+      case 'juridica':
+      case 'cnpj':
+        return TipoPessoa.juridica;
+      default:
+        return TipoPessoa.outros;
     }
-    throw ArgumentError('Tipo de pessoa desconhecido: $value');
   }
 
   @override

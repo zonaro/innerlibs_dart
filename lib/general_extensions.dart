@@ -211,6 +211,24 @@ extension ObjectExtensions<T extends Object?> on T {
     return false;
   }
 
+  bool keywordEqual(
+    T value, {
+    bool forceLowerCase = true,
+    bool removeDiacritics = true,
+    bool removeWordSplitters = true,
+    bool splitCamelCase = true,
+  }) =>
+      FilterFunctions.generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) == FilterFunctions.generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
+
+  bool keywordContainsAny(
+    Iterable<T> value, {
+    bool forceLowerCase = true,
+    bool removeDiacritics = true,
+    bool removeWordSplitters = true,
+    bool splitCamelCase = true,
+  }) =>
+      FilterFunctions.generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(value.map((e) => FilterFunctions.generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
+
   /// Checks if the string contains any of the specified texts.
   ///
   /// Returns `true` if the string contains any of the texts in the [texts] iterable,

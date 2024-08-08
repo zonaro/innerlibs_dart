@@ -349,15 +349,6 @@ extension BuildContextExtensions on BuildContext {
   /// similar to [MediaQuery.of(context).viewInsets]
   EdgeInsets get viewInsets => mediaQuery.viewInsets;
 
-  /// similar to [MediaQuery.of(context).orientation]
-  Orientation get orientation => mediaQuery.orientation;
-
-  /// check if device is on landscape mode
-  bool get isLandscape => orientation == Orientation.landscape;
-
-  /// check if device is on portrait mode
-  bool get isPortrait => orientation == Orientation.portrait;
-
   bool get alwaysUse24HourFormat => mediaQuery.alwaysUse24HourFormat;
 
   Brightness get themeBrightness => theme.brightness;
