@@ -59,7 +59,7 @@ extension DialogExt on BuildContext {
     EdgeInsets? buttonPadding,
     EdgeInsets? iconPadding,
     bool canPop = false,
-    void Function(bool)? onPopInvoked,
+    void Function(bool, dynamic)? onPopInvoked,
     int? maxLength,
   }) {
     return showDialog(
@@ -116,7 +116,7 @@ extension DialogExt on BuildContext {
     dynamic textOK,
     dynamic textCancel,
     bool canPop = false,
-    void Function(bool)? onPopInvoked,
+    void Function(bool, dynamic)? onPopInvoked,
   }) async {
     final bool? isConfirm = await showDialog<bool>(
       context: this,
@@ -126,7 +126,7 @@ extension DialogExt on BuildContext {
         content ??= "${context.localizations.continueButtonLabel}?";
         return PopScope(
           canPop: canPop,
-          onPopInvoked: onPopInvoked,
+          onPopInvokedWithResult: onPopInvoked,
           child: AlertDialog(
             title: (title as Object?).asNullableText(),
             content: SingleChildScrollView(
@@ -169,7 +169,7 @@ extension DialogExt on BuildContext {
     dynamic textOK,
     dynamic textCancel,
     bool canPop = false,
-    void Function(bool)? onPopInvoked,
+    void Function(bool, dynamic)? onPopInvoked,
     Future<T?> Function()? task,
     dynamic cancelTaskButtonText,
     dynamic loadingText,
@@ -349,7 +349,7 @@ extension DialogExt on BuildContext {
       barrierDismissible: false,
       builder: (BuildContext context) => PopScope(
         canPop: cancellable,
-        onPopInvoked: (f) => cancelTask(),
+        onPopInvokedWithResult: (f, r) => cancelTask(),
         child: AlertDialog(
           actions: [
             if (cancellable) ...[
@@ -461,7 +461,7 @@ class _PromptDialog extends StatefulWidget {
   final EdgeInsets? buttonPadding;
   final EdgeInsets? iconPadding;
   final bool canPop;
-  final void Function(bool)? onPopInvoked;
+  final void Function(bool, dynamic)? onPopInvoked;
   final int? maxLength;
 
   @override
@@ -487,7 +487,7 @@ class __PromptDialogState extends State<_PromptDialog> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: widget.canPop,
-      onPopInvoked: widget.onPopInvoked,
+      onPopInvokedWithResult: widget.onPopInvoked,
       child: AlertDialog(
         insetPadding: widget.insetPadding,
         contentPadding: widget.contentPadding,

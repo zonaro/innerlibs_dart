@@ -329,15 +329,9 @@ enum Estado implements Comparable<Estado> {
 
   /// Cria uma instância de Estado a partir do código IBGE.
   factory Estado.fromUForIbge(dynamic value) {
-    if (value == null) {
-      return naoDefinido;
-    }
-
+    if (value == null) return naoDefinido;
     if (value is Estado) return value;
-
-    if (value is Cidade) {
-      return value.estado;
-    }
+    if (value is Cidade) return value.estado;
 
     if (value is String) {
       if (value.isNumericOnly) {

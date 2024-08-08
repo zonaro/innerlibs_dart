@@ -1261,3 +1261,191 @@ enum TipoImpressao {
     }
   }
 }
+
+/// Enumeração que representa os tipos de produtos.
+enum TipoProduto {
+  /// 00 - Revenda
+  revenda(0),
+
+  /// 01 - Matéria-Prima
+  materiaPrima(1),
+
+  /// 02 - Embalagem
+  embalagem(2),
+
+  /// 03 - Produto em Processo
+  produtoEmProcesso(3),
+
+  /// 04 - Produto Acabado
+  produtoAcabado(4),
+
+  /// 05 - Subproduto
+  subproduto(5),
+
+  /// 06 - Produto Intermediário
+  produtoIntermediario(6),
+
+  /// 07 - Material de Uso e Consumo
+  materialUsoConsumo(7),
+
+  /// 08 - Ativo Imobilizado
+  ativoImobilizado(8),
+
+  /// 09 - Serviços
+  servicos(9),
+
+  /// 10 - Outros Insumos
+  outrosInsumos(10),
+
+  /// 99 - Outras
+  outras(99);
+
+  final int value;
+
+  /// Construtor constante que associa um valor inteiro a cada tipo de produto.
+  const TipoProduto(this.value);
+
+  /// Método factory para construir os valores a partir de um inteiro.
+  factory TipoProduto.fromInt(int value) {
+    switch (value) {
+      case 0:
+        return TipoProduto.revenda;
+      case 1:
+        return TipoProduto.materiaPrima;
+      case 2:
+        return TipoProduto.embalagem;
+      case 3:
+        return TipoProduto.produtoEmProcesso;
+      case 4:
+        return TipoProduto.produtoAcabado;
+      case 5:
+        return TipoProduto.subproduto;
+      case 6:
+        return TipoProduto.produtoIntermediario;
+      case 7:
+        return TipoProduto.materialUsoConsumo;
+      case 8:
+        return TipoProduto.ativoImobilizado;
+      case 9:
+        return TipoProduto.servicos;
+      case 10:
+        return TipoProduto.outrosInsumos;
+      case 99:
+        return TipoProduto.outras;
+      default:
+        throw ArgumentError('Tipo de produto desconhecido: $value');
+    }
+  }
+
+  @override
+  String toString() {
+    switch (this) {
+      case TipoProduto.revenda:
+        return 'Revenda';
+      case TipoProduto.materiaPrima:
+        return 'Matéria-Prima';
+      case TipoProduto.embalagem:
+        return 'Embalagem';
+      case TipoProduto.produtoEmProcesso:
+        return 'Produto em Processo';
+      case TipoProduto.produtoAcabado:
+        return 'Produto Acabado';
+      case TipoProduto.subproduto:
+        return 'Subproduto';
+      case TipoProduto.produtoIntermediario:
+        return 'Produto Intermediário';
+      case TipoProduto.materialUsoConsumo:
+        return 'Material de Uso e Consumo';
+      case TipoProduto.ativoImobilizado:
+        return 'Ativo Imobilizado';
+      case TipoProduto.servicos:
+        return 'Serviços';
+      case TipoProduto.outrosInsumos:
+        return 'Outros Insumos';
+      case TipoProduto.outras:
+        return 'Outras';
+      default:
+        return 'Tipo de produto desconhecido';
+    }
+  }
+}
+
+enum TipoPessoa {
+  fisica(0),
+  juridica(1);
+
+  final int value;
+
+  const TipoPessoa(this.value);
+
+  /// Retorna o tipo de pessoa com base no tipo ou documento fornecido.
+  ///
+  /// - Se o valor estiver nulo retorna [fisica].
+  /// - Se o valor for um booleano, retorna [juridica] se for verdadeiro e [fisica] se for falso.
+  /// - Se o tipo do valor for [TipoPessoa], retorna o próprio valor.
+  /// - Se o valor for um CNPJ válido, retorna [juridica].
+  /// - Se o valor for um CPF válido, retorna [fisica].
+  /// - Se o valor for um outro número, retorna [fisica] se for 0 e [juridica] se for 1.
+  /// - Se o valor for uma string, retorna [fisica] se for 'fisica', 'cpf' ou em branco e [juridica] se for 'juridica' ou 'cnpj'.
+  ///
+  /// Parâmetros:
+  /// - [value]: O tipo ou documento a ser verificado.
+  ///
+  /// Retorna:
+  /// O tipo de pessoa correspondente ao tipo ou documento fornecido.
+  factory TipoPessoa.fromValue(dynamic value) {
+    value ??= TipoPessoa.fisica;
+
+    if (value is TipoPessoa) {
+      return value;
+    }
+
+    if (value is bool) {
+      return value ? TipoPessoa.juridica : TipoPessoa.fisica;
+    }
+
+    if (Brasil.validarCNPJ(value)) {
+      return TipoPessoa.juridica;
+    }
+
+    if (Brasil.validarCPF(value)) {
+      return TipoPessoa.fisica;
+    }
+
+    if (value is num) {
+      switch (value.round()) {
+        case 0:
+          return TipoPessoa.fisica;
+        case 1:
+          return TipoPessoa.juridica;
+        default:
+          throw ArgumentError('Tipo de pessoa desconhecido: $value');
+      }
+    }
+
+    if (value is String) {
+      switch (value.asFlat) {
+        case 'fisica':
+        case 'cpf':
+        case '':
+          return TipoPessoa.fisica;
+        case 'juridica':
+        case 'cnpj':
+          return TipoPessoa.juridica;
+      }
+    }
+    throw ArgumentError('Tipo de pessoa desconhecido: $value');
+  }
+
+  @override
+  String toString() {
+    switch (this) {
+      case TipoPessoa.fisica:
+        return 'Física';
+      case TipoPessoa.juridica:
+        return 'Jurídica';
+      default:
+        return 'Tipo de pessoa desconhecido';
+    }
+  }
+}

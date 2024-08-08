@@ -1074,7 +1074,10 @@ abstract interface class Brasil {
   static String formatarCNPJ(dynamic number) {
     // Implementação para formatar o número do CNPJ
     String cnpj = "$number".onlyNumbers.padLeft(14, "0");
-    return "${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12)}";
+    if (Brasil.validarCNPJ(number)) {
+      return "${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12)}";
+    }
+    return "$number";
   }
 
   /// Formata um número de CPF ou CNPJ.
@@ -1111,34 +1114,9 @@ abstract interface class Brasil {
     return "$numero";
   }
 
-  /// Retorna o tipo de pessoa com base no tipo ou documento fornecido.
-  ///
-  /// Se o tipo ou documento estiver em branco, retorna uma string vazia.
-  /// Se o tipo ou documento for um CNPJ válido, retorna "JURÍDICA".
-  /// Se o tipo ou documento for um CPF válido, retorna "FÍSICA".
-  ///
-  /// Parâmetros:
-  /// - [tipoOuDocumento]: O tipo ou documento a ser verificado.
-  ///
-  /// Retorna:
-  /// O tipo de pessoa correspondente ao tipo ou documento fornecido.
-  static String tipoPessoa(String documento) {
-    if (documento.isBlank) return "";
-
-    if (Brasil.validarCNPJ(documento)) {
-      documento = "Jurídica";
-    }
-
-    if (Brasil.validarCPF(documento)) {
-      documento = "Física";
-    }
-
-    return documento;
-  }
-
   /// Retorna o tipo de contribuinte com base no tipo ou documento fornecido.
   ///
-  /// O parâmetro [tipoPesoaOuDocumento] representa o tipo ou documento do contribuinte.
+  /// O parâmetro [tipoPessoaOuDocumento] representa o tipo ou documento do contribuinte.
   /// O parâmetro [inscricaoRg] é opcional e representa a inscrição RG do contribuinte, sendo "ISENTO" o valor padrão.
   ///
   /// Retorna uma expressão de caractere que representa o tipo de contribuinte:
@@ -1146,22 +1124,20 @@ abstract interface class Brasil {
   /// - "2 - CONTRIBUINTE ISENTO" para pessoas jurídicas com inscrição RG igual a "ISENTO".
   /// - "1 - CONTRIBUINTE ICMS" para pessoas jurídicas com inscrição RG diferente de "ISENTO".
   ///
-  /// Se o parâmetro [tipoPesoaOuDocumento] estiver vazio, retorna uma string vazia.
-  static IndicadorIEDestinatario? tipoContribuinte(String tipoPesoaOuDocumento, [int? inscricaoRg]) {
-    if (tipoPesoaOuDocumento.isBlank) return null;
-    tipoPesoaOuDocumento = tipoPessoa(tipoPesoaOuDocumento);
-    if (tipoPesoaOuDocumento.isNotBlank) {
-      if (tipoPesoaOuDocumento.flatEqual("FÍSICA")) {
-        return IndicadorIEDestinatario.naoContribuinte;
+  /// Se o parâmetro [tipoPessoaOuDocumento] estiver vazio, retorna uma string vazia.
+  static IndicadorIEDestinatario tipoContribuinte(String tipoPessoaOuDocumento, [int? inscricaoRg]) {
+    if (tipoPessoaOuDocumento.isBlank) {
+      return IndicadorIEDestinatario.naoContribuinte;
+    }
+    if (TipoPessoa.fromValue(tipoPessoaOuDocumento) == TipoPessoa.fisica) {
+      return IndicadorIEDestinatario.naoContribuinte;
+    } else {
+      if (inscricaoRg == null || inscricaoRg == 0) {
+        return IndicadorIEDestinatario.contribuinteIsento;
       } else {
-        if (tipoPesoaOuDocumento.flatEqual("JURÍDICA") && (inscricaoRg == null || inscricaoRg == 0)) {
-          return IndicadorIEDestinatario.contribuinteIsento;
-        } else {
-          return IndicadorIEDestinatario.contribuinteICMS;
-        }
+        return IndicadorIEDestinatario.contribuinteICMS;
       }
     }
-    return null;
   }
 
   /// Verifica se o tipo de contribuinte é um consumidor final.

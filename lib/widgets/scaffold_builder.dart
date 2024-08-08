@@ -394,7 +394,9 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) => indexController.back(),
+      onPopInvokedWithResult: (didPop, result) {
+        indexController.back();
+      },
       child: Scaffold(
         key: widget.key,
         appBar: pageEntry.showAppBar || pageEntry.tabs.length > 1 || useDrawerInsteadOfBottomNavigationBar
