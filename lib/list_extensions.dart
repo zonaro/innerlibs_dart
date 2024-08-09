@@ -243,6 +243,15 @@ extension IterablesExtension<T> on Iterable<T> {
     return true;
   }
 
+  bool containsAny(Iterable<T> otherList) {
+    for (final element in otherList) {
+      if (contains(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /// Splits the list into multiple sublists of the specified [count].
   ///
   /// The original list is divided into sublists of size [count],
