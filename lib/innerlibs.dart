@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-export 'package:brasil_fields/brasil_fields.dart';
+export 'package:brasil_fields/brasil_fields.dart' hide Estados;
 export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
 export 'package:gap/gap.dart';
@@ -87,6 +87,8 @@ export 'widgets/scaffold_builder.dart';
 export 'widgets/shimmer.dart';
 
 typedef date = DateTime;
+
+typedef Estados = Estado;
 
 /// C# alias for [String]
 typedef string = String;
