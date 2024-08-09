@@ -64,6 +64,25 @@ extension NullStringExtension on String? {
 }
 
 extension StringExtensions on String {
+  /// Applies XOR operation between the [this] string and the [key] string.
+  ///
+  /// The [input] string is converted to a list of UTF-16 code units, and the [key] string is also converted to a list of UTF-16 code units.
+  /// The XOR operation is then applied between each code unit of the [input] string and the corresponding code unit of the [key] string.
+  /// If the [key] string is shorter than the [input] string, the key will be repeated cyclically.
+  ///
+  /// Returns the result of the XOR operation as a new string.
+  String applyXorEncrypt(String key) {
+    List<int> inputBytes = codeUnits;
+    List<int> keyBytes = key.codeUnits;
+    List<int> resultBytes = [];
+
+    for (int i = 0; i < inputBytes.length; i++) {
+      resultBytes[i] = inputBytes[i] ^ keyBytes[i % keyBytes.length];
+    }
+
+    return String.fromCharCodes(resultBytes);
+  }
+
   static final _defaultDiacriticsRemovalap = [
     {'base': 'A', 'letters': '\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F'},
     {'base': 'AA', 'letters': '\uA732'},
@@ -159,9 +178,7 @@ extension StringExtensions on String {
 
   String? get asNullable => this;
 
-  String replaceSQLParameters(JsonRow params, [bool nullAsBlank = true, string parameterMatch = ":"]) {
-    return replaceParameters(params.map((k, v) => MapEntry(k, (v as Object?).asSqlValue(nullAsBlank))), parameterMatch);
-  }
+  String replaceSQLParameters(JsonRow params, [bool nullAsBlank = true, string parameterMatch = ":"]) => replaceParameters(params.map((k, v) => MapEntry(k, (v as Object?).asSqlValue(nullAsBlank))), parameterMatch);
 
   String replaceParameters(JsonRow params, string parameterMatch) {
     String query = this;
@@ -321,9 +338,9 @@ extension StringExtensions on String {
 
   /// Converts a string to a color.
   ///
-  /// If the string is empty, it returns [Colors.transparent] as the default color.
-  /// If the string is a valid hexadecimal color, it converts it to a [Color] object.
-  /// If the string is not a valid hexadecimal color, it computes a hash value and converts it to a [Color] object.
+  /// - If the string is empty, it returns [Colors.transparent] as the default color.
+  /// - If the string is a valid hexadecimal color, it converts it to a [Color] object.
+  /// - If the string is not a valid hexadecimal color, it computes a hash value and converts it to a [Color] object.
   ///
   /// Returns the converted color.
   Color get asColor {
@@ -741,7 +758,8 @@ extension StringExtensions on String {
       return false;
     }
     substring(0, 1);
-    var regex = RegExp(r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
+    var regex = RegExp(
+        r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
     return regex.hasMatch(this);
   }
 

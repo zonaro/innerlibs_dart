@@ -789,7 +789,7 @@ class Ender extends TagXml {
 
   /// Obtém ou define o número de telefone.
   string? get fone => getValueFromNode('fone');
-  set fone(String? value) => setTextValueForNode('fone', value?.toString());
+  set fone(String? value) => setTextValueForNode('fone', value?.onlyNumbers.toString());
 }
 
 /// Classe que representa o destinatário de uma nota fiscal eletrônica (NFe).
