@@ -868,13 +868,29 @@ Widget pesquisaVazia(string searchEntry, string label) {
   );
 }
 
-Widget botaoSalvar(void Function()? onPressed) => botaoTexto(
+Widget botaoSalvar(void Function()? onPressed) => BotaoTexto(
       icon: Icons.save,
       label: 'Salvar',
       onPressed: onPressed,
     );
 
-Widget botaoTexto({required string label, required IconData icon, Color? color, required void Function()? onPressed}) => SizedBox(
+class BotaoTexto extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final Color? color;
+  final void Function()? onPressed;
+
+  const BotaoTexto({
+    super.key,
+    required this.label,
+    required this.icon,
+    this.color,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
       height: 25,
       child: ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
@@ -893,14 +909,50 @@ Widget botaoTexto({required string label, required IconData icon, Color? color, 
         onPressed: onPressed,
       ),
     );
+  }
+}
 
-Widget botaoExcluir(void Function()? onPressed) => botaoTexto(label: 'Excluir', icon: Icons.delete, color: Colors.redAccent, onPressed: onPressed);
-Widget botaoLimpar(void Function()? onPressed) => botaoTexto(label: "Limpar formulário", icon: Icons.cleaning_services, onPressed: onPressed);
-Widget botaoCadastrar(void Function()? onPressed) => botaoTexto(label: "Cadastrar", icon: Icons.edit, onPressed: onPressed);
+Widget botaoExcluir(void Function()? onPressed) => BotaoTexto(label: 'Excluir', icon: Icons.delete, color: Colors.redAccent, onPressed: onPressed);
+Widget botaoLimpar(void Function()? onPressed) => BotaoTexto(label: "Limpar formulário", icon: Icons.cleaning_services, onPressed: onPressed);
+Widget botaoCadastrar(void Function()? onPressed) => BotaoTexto(label: "Cadastrar", icon: Icons.edit, onPressed: onPressed);
 
-FloatingActionButton fabSalvar<T>(T? id, VoidCallback onPressed) => fabTexto(label: id.isNotValid ? "Cadastrar" : "Salvar", icon: id.isNotValid ? Icons.edit : Icons.save, onPressed: onPressed);
+class FabSalvar<T> extends StatelessWidget {
+  final T? id;
+  final VoidCallback onPressed;
 
-FloatingActionButton fabTexto({String? label, IconData? icon, Color? color, required VoidCallback onPressed}) => FloatingActionButton.extended(
+  const FabSalvar({
+    Key? key,
+    required this.id,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FabTexto(
+      label: id.isNotValid ? "Cadastrar" : "Salvar",
+      icon: id.isNotValid ? Icons.edit : Icons.save,
+      onPressed: onPressed,
+    );
+  }
+}
+
+class FabTexto extends StatelessWidget {
+  final String? label;
+  final IconData? icon;
+  final Color? color;
+  final VoidCallback onPressed;
+
+  const FabTexto({
+    Key? key,
+    this.label,
+    this.icon,
+    this.color,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
       onPressed: onPressed,
       backgroundColor: color ?? Get.context?.colorScheme.primary,
       label: Row(
@@ -911,3 +963,5 @@ FloatingActionButton fabTexto({String? label, IconData? icon, Color? color, requ
         ],
       ),
     );
+  }
+}
