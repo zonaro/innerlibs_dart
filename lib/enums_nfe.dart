@@ -277,7 +277,7 @@ enum OrigemProduto {
   }
 
   factory OrigemProduto.fromString(string value) {
-    switch (FilterFunctions.generateKeyword(value)) {
+    switch (generateKeyword(value)) {
       case '0':
       case 'nacional':
         return OrigemProduto.nacional;

@@ -654,7 +654,8 @@ class Emit extends TagXml {
       if (xFant == null) "$deepArrow Nome Fantasia do emitente não informado" else if (xFant?.length.isBetweenOrEqual(1, 60) == false) "$deepArrow Nome Fantasia do emitente deve ter entre 1 e 60 caracteres",
       if (enderEmit == null) "$deepArrow Endereço do emitente não informado" else ...enderEmit!.validate(),
       if (crt == null) "$deepArrow CRT do emitente não informado",
-    ];
+      if (ie != null) enderEmit == null || enderEmit!.uf == null ? "$deepArrow IE informada mas UF não informada (EnderEmit)" : (enderEmit!.uf!.validarInscricaoEstadual(ie) ? null : "$deepArrow Inscrição estadual inválida para o estado ${enderEmit!.uf}"),
+    ].whereNotNull();
   }
 
   /// Obtém a instância da classe EnderEmit contida no documento XML.
@@ -674,12 +675,12 @@ class Emit extends TagXml {
   set xFant(String? value) => setTextValueForNode('xFant', value?.asFlat.toUpperCase());
 
   /// Obtém ou define o valor da Inscrição Estadual (IE).
-  int? get ie => getValueFromNode('IE');
-  set ie(int? value) => setTextValueForNode('IE', value?.toString());
+  string? get ie => getValueFromNode('IE');
+  set ie(string? value) => setTextValueForNode('IE', value?.toString());
 
   /// Obtém ou define o valor da Inscrição Municipal (IM).
-  int? get im => getValueFromNode('IM');
-  set im(int? value) => setTextValueForNode('IM', value?.toString());
+  string? get im => getValueFromNode('IM');
+  set im(string? value) => setTextValueForNode('IM', value?.toString());
 
   int? get cnae => getValueFromNode('CNAE');
   set cnae(int? value) => setTextValueForNode('CNAE', value?.toString());
@@ -692,11 +693,11 @@ class Emit extends TagXml {
 }
 
 class EnderEmit extends Ender {
-  EnderEmit([Endereco? endereco, Telefone? telefone]) : super("enderEmit", endereco, telefone);
+  EnderEmit([Endereco? endereco, Telefone? telefone]) : super("enderEmit", endereco: endereco, telefone: telefone);
 }
 
 class EnderDest extends Ender {
-  EnderDest([Endereco? endereco, Telefone? telefone]) : super("enderDest", endereco, telefone);
+  EnderDest([Endereco? endereco, Telefone? telefone]) : super("enderDest", endereco: endereco, telefone: telefone);
 }
 
 /// Classe que representa um objeto Endereço.
@@ -704,7 +705,7 @@ class EnderDest extends Ender {
 /// Esta classe é responsável por manipular e processar as informações
 /// do campo "ender" de uma Nota Fiscal Eletrônica (NFe).
 class Ender extends TagXml {
-  Ender(super.tagName, [Endereco? endereco, Telefone? telefone]) : super.fromTagName() {
+  Ender(super.tagName, {Endereco? endereco, Telefone? telefone}) : super.fromTagName() {
     xLgr = endereco?.logradouro;
     nro = endereco?.numero;
     xBairro = endereco?.bairro;

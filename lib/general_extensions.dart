@@ -218,7 +218,7 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      FilterFunctions.generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) == FilterFunctions.generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) == generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
 
   bool keywordContainsAny(
     Iterable<T> value, {
@@ -227,7 +227,7 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      FilterFunctions.generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(value.map((e) => FilterFunctions.generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(value.map((e) => generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
 
   /// Checks if the string contains any of the specified texts.
   ///

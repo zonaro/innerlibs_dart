@@ -327,6 +327,11 @@ abstract interface class Brasil {
     return true;
   }
 
+  /// Valida uma inscrição estadual.
+  /// Esta função recebe uma inscrição estadual como parâmetro e verifica se a inscrição estadual é válida para qualquer estado.
+  /// Para validar um estado especifico utilize a função `validarInscricaoEstadual` do estado correspondente.
+  static bool validarInscricaoEstadual(dynamic value) => Estado.naoDefinido.validarInscricaoEstadual(value);
+
   /// Retorna uma lista com todos os Estados do Brasil
   ///
   /// Esta função assíncrona carrega os dados de um arquivo JSON que contém informações sobre os Estados do Brasil.

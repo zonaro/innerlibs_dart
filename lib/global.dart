@@ -235,11 +235,11 @@ bool isNotValid<T>(T object, {List<bool> Function(T?)? customValidator}) => !isV
 
 /// Converts a dynamic value to a flat string representation.
 ///
-/// If the value is null, an empty string is returned.
-/// If the value is a number, it is converted to a string.
-/// If the value is a DateTime object, it is formatted as a string.
-/// If the value is a boolean, it is converted to a string.
-/// If the value is a Map or an Iterable, the values are joined with a comma.
+/// - If the value is null, an empty string is returned.
+/// - If the value is a number, it is converted to a string.
+/// - If the value is a DateTime object, it is formatted as a string.
+/// - If the value is a boolean, it is converted to a string.
+/// - If the value is a Map or an Iterable, the values are joined with a comma.
 /// The resulting string is then processed to remove diacritics,
 /// convert to lowercase, and remove leading/trailing whitespace.
 ///
@@ -252,6 +252,36 @@ String flatString(dynamic value) {
   if (value is Map) value = value.values.join(", ");
   if (value is Iterable) value = value.join(", ");
   return "$value".removeDiacritics.toLowerCase().trimAll;
+}
+
+String generateKeyword(
+  dynamic value, {
+  bool splitCamelCase = true,
+  bool removeWordSplitters = true,
+  bool removeDiacritics = true,
+  bool forceLowerCase = true,
+}) {
+  if (value == null) return "";
+
+  String keyword = value.toString();
+
+  if (splitCamelCase) {
+    keyword = keyword.camelSplitString;
+  }
+
+  if (removeWordSplitters) {
+    keyword = keyword.removeWordSplitters;
+  }
+
+  if (removeDiacritics) {
+    keyword = keyword.removeDiacritics;
+  }
+
+  if (forceLowerCase) {
+    keyword = keyword.toLowerCase();
+  }
+
+  return keyword;
 }
 
 /// Parses a value of type [T] to a value of type [R].
@@ -677,65 +707,6 @@ mixin FilterFunctions {
             ],
         levenshteinDistance: levenshteinDistance,
         allIfEmpty: allIfEmpty);
-  }
-
-  /// Transforms a given value into a keyword string.
-  ///
-  /// The transformation can include various options such as ignoring case,
-  /// ignoring diacritics, ignoring word splitters, splitting camel case,
-  /// and using wildcards.
-  ///
-  /// If the value is null, an empty string is returned.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// String result = transformString("Hello World",
-  ///   forceLowerCase: true,
-  ///   removeDiacritics: true,
-  ///   removeWordSplitters: true,
-  ///   splitCamelCase: true,
-  /// );
-  /// ```
-  ///
-  /// The above example will transform the string "Hello World" into "helloworld".
-  ///
-  /// Parameters:
-  /// - `value`: The value to be transformed into a keyword string.
-  /// - `forceLowerCase`: Whether to force lower case of the resulting keyword. Default is `true`.
-  /// - `removeDiacritics`: Whether to remove diacritics (accented characters) in the resulting keyword. Default is `true`.
-  /// - `ignoreWordSplitters`: Whether to ignore word splitters (e.g., spaces, hyphens,breaklines,parenthesis etc.) in the resulting keyword. Default is `true`.
-  /// - `splitCamelCase`: Whether to split camel case words in the resulting keyword. Default is `true`.
-  ///
-  /// Returns:
-  /// The transformed keyword string.
-  static String generateKeyword(
-    dynamic value, {
-    bool forceLowerCase = true,
-    bool removeDiacritics = true,
-    bool removeWordSplitters = true,
-    bool splitCamelCase = true,
-  }) {
-    if (value == null) return "";
-
-    String keyword = value.toString();
-
-    if (splitCamelCase) {
-      keyword = keyword.camelSplitString;
-    }
-
-    if (removeWordSplitters) {
-      keyword = keyword.removeWordSplitters;
-    }
-
-    if (removeDiacritics) {
-      keyword = keyword.removeDiacritics;
-    }
-
-    if (forceLowerCase) {
-      keyword = keyword.toLowerCase();
-    }
-
-    return keyword;
   }
 
   /// Counts the number of occurrences of search terms in a given item.
