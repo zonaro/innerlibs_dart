@@ -541,7 +541,7 @@ class Ide extends TagXml {
       if (verProc == null) "verProc não informada" else if (verProc?.length.isBetweenOrEqual(1, 20) == false) "verProc deve ter entre 1 e 20 caracteres",
       if (tpEmis?.isContingencia ?? false) ...[
         if (dhCont == null) "dhCont não informada",
-        if (xJust == null) "xJust não informada" else if (xJust?.length.isBetweenOrEqual(15, 255) == false) "xJust deve ter entre 15 e 256 caracteres",
+        if (xJust == null) "xJust não informada" else if (xJust?.length.isBetweenOrEqual(15, 255) == false) "xJust deve ter entre 15 e 255 caracteres",
       ],
     ];
   }
