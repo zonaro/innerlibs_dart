@@ -31,11 +31,11 @@ class Endereco implements Comparable<Endereco> {
 
   static Endereco fromPartialJson(Map<String, dynamic> json) {
     return Endereco(
-      cep: Brasil.formatarCEP((json['cep'] ?? "").toString().onlyNumbers.padLeft(8, '0')),
-      logradouro: (json['logradouro'] ?? "").toString(),
-      numero: (json['numero'] ?? "").toString(),
-      complemento: (json['complemento'] ?? "").toString(),
-      bairro: (json['bairro'] ?? "").toString(),
+      cep: Brasil.formatarCEP((json['cep']).toString().onlyNumbers.padLeft(8, '0')),
+      logradouro: changeTo(json['logradouro']),
+      numero: changeTo(json['numero']),
+      complemento: changeTo(json['complemento']),
+      bairro: changeTo(json['bairro']),
       gia: changeTo(json['gia']),
       ddd: changeTo(json['ddd']),
       siafi: changeTo(json['siafi']),
@@ -45,11 +45,11 @@ class Endereco implements Comparable<Endereco> {
   static Future<Endereco> fromJson(Map<String, dynamic> json) async {
     var cidade = await Cidade.pegar(json['ibge']);
     return Endereco(
-      cep: Brasil.formatarCEP((json['cep'] ?? "").toString().onlyNumbers.padLeft(8, '0')),
-      logradouro: (json['logradouro'] ?? "").toString(),
-      numero: (json['numero'] ?? "").toString(),
-      complemento: (json['complemento'] ?? "").toString(),
-      bairro: (json['bairro'] ?? "").toString(),
+      cep: Brasil.formatarCEP(changeTo<string>(json['cep']).onlyNumbers.padLeft(8, '0')),
+      logradouro: changeTo(json['logradouro']),
+      numero: changeTo(json['numero']),
+      complemento: changeTo(json['complemento']),
+      bairro: changeTo(json['bairro']),
       gia: changeTo(json['gia']),
       ddd: changeTo(json['ddd']) ?? cidade?.ddd,
       siafi: changeTo(json['siafi']),
@@ -90,21 +90,77 @@ class Endereco implements Comparable<Endereco> {
   @override
   bool operator ==(Object other) => hashCode == other.hashCode;
 
-  string get logradouroCompleto => [
-        logradouro,
-        numero,
-        complemento,
-      ].whereValid.join(", ").trim();
+  /// Retorna o logradouro completo do endereço.
+  ///
+  /// O logradouro completo é composto pelo logradouro, número e complemento,
+  /// separados por vírgula e sem espaços em branco desnecessários.
+  ///
+  ///
+  /// Exemplo:
+  /// ```
+  /// final endereco = Endereco();
+  /// endereco.logradouro = 'Rua Principal';
+  /// endereco.numero = '123';
+  /// endereco.complemento = 'Apto 4';
+  /// print(endereco.logradouroCompleto); // Rua Principal, 123, Apto 4
+  /// ```
+  string get logradouroCompleto => [logradouro, numero, complemento].whereValid.join(", ").trim();
 
-  /// Retorna o endereço completo.
-  string get endereco => [
-        logradouroCompleto,
-        bairroCidadeEstado,
-      ].whereValid.join(" - ").trim();
+  /// Retorna uma string contendo o bairro, cidade e estado concatenados, separados por hífen.
+  ///
+  /// A string resultante é obtida a partir dos valores das propriedades [bairro], [cidade.nome] e [estado.uf].
+  /// Caso a propriedade [cidade.nome] ou [estado.uf] sejam nulas, elas serão ignoradas na concatenação.
+  /// O resultado final é uma string sem espaços em branco no início ou no final.
+  ///
+  /// Exemplo de uso:
+  /// ```dart
+  /// String enderecoCompleto = bairroCidadeEstado;
+  /// print(enderecoCompleto); // "bairro - cidade - estado"
+  /// ```
+  string get bairroCidadeEstado => [bairro, cidade?.nome, estado?.uf].whereValid.join(" - ").trim();
 
+  /// Retorna o endereço completo formatado.
+  ///
+  /// O endereço completo é composto pelo logradouro completo, bairro, cidade e estado,
+  /// separados por hífen ("-"). O resultado é retornado como uma string, com espaços
+  /// em branco removidos no início e no final.
+  ///
+  /// Retorna:
+  ///     - O endereço formatado.
+  string get endereco => [logradouroCompleto, bairroCidadeEstado].whereValid.join(" - ").trim();
+
+  /// Retorna o endereço completo com o CEP.
+  ///
+  /// O endereço completo é formado pela concatenação do endereço e do CEP,
+  /// separados por um traço ("-"). Os valores inválidos são ignorados.
+  /// O resultado é retornado como uma string, com espaços em branco removidos.
+  ///
+  /// Exemplo:
+  /// ```dart
+  /// String endereco = "Rua A";
+  /// String cep = "12345-678";
+  /// String enderecoComCep = [endereco, cep].whereValid.join(" - ").trim();
+  /// print(enderecoComCep); // Saída: "Rua A - 12345-678"
+  /// ```
   string get enderecoComCep => [endereco, cep].whereValid.join(" - ").trim();
-  string get enderecoCompleto => [endereco, cep, pais].whereValid.join(" - ").trim();
-  string get bairroCidadeEstado => [bairro, cidade?.nome ?? "", estado?.uf].whereValid.join(" - ").trim();
+
+  /// Retorna o endereço completo, incluindo o endereço com CEP e o país.
+  ///
+  /// O endereço completo é obtido através da junção do endereço com CEP e o país,
+  /// separados por um traço ("-"). Qualquer espaço em branco no início ou no final
+  /// do endereço completo é removido.
+  ///
+  /// Retorna uma string contendo o endereço completo.
+  string get enderecoCompleto => [enderecoComCep, pais].whereValid.join(" - ").trim();
+
+  /// Retorna uma string contendo o bairro, cidade, estado e CEP concatenados, separados por " - ".
+  ///
+  /// Exemplo:
+  /// ```
+  /// final endereco = Endereco();
+  /// final resultado = endereco.bairroCidadeEstadoCep;
+  /// print(resultado); // "bairro - Cidade - Estado - cep"
+  /// ```
   string get bairroCidadeEstadoCep => [bairroCidadeEstado, cep].whereValid.join(" - ").trim();
 
   /// Retorna uma representação em String do endereço.

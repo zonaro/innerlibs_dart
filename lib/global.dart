@@ -284,7 +284,7 @@ String generateKeyword(
   return keyword;
 }
 
-/// Parses a value of type [T] to a value of type [R].
+/// Try change a value of any type into a value of type [R].
 ///
 /// - If the value is `null`, returns `null`.
 /// - If [value] is [R] returns the value as [R].
@@ -299,42 +299,75 @@ String generateKeyword(
 /// - If [R] is [List], converts the value to a [List] containing the value.
 /// - if [R] is another type, returns the value as [R].
 /// - If none of the above conditions are met, logs an error message and returns `null`.
-R? changeTo<R>(dynamic value) {
+R changeTo<R>(dynamic value) {
   try {
-    if (value == null) {
-      return null;
-    }
-    consoleLog("Changing from ${value.runtimeType} to $R");
-    if (value is R) {
-      return value as R?;
-    } else if (R == DateTime) {
-      return "$value".toDate() as R;
-    } else if (R == num) {
-      return num.parse("$value") as R;
-    } else if (R == int) {
-      return int.parse("$value") as R;
-    } else if (R == double) {
-      return double.parse("$value") as R;
-    } else if (R == String) {
-      return "$value" as R;
-    } else if (R == bool) {
-      return "$value".asBool() as R;
-    } else if (R == Uri) {
-      return Uri.parse("$value") as R;
-    } else if (R == Widget) {
-      return forceWidget(value) as R;
-    } else if (R is Text) {
-      return (value as Object?).asNullableText() as R;
-    } else if (R == List) {
-      return forceList(value) as R;
+    if (value != null) {
+      consoleLog("Changing from ${value.runtimeType} to $R");
+      if (value is R) {
+        return value;
+      } else if (R == DateTime) {
+        return "$value".toDate() as R;
+      } else if (R == int) {
+        return int.parse("$value") as R;
+      } else if (R == double) {
+        return double.parse("$value") as R;
+      } else if (R == num) {
+        return num.parse("$value") as R;
+      } else if (R == String) {
+        return "$value" as R;
+      } else if (R == bool) {
+        return "$value".asBool() as R;
+      } else if (R == Uri) {
+        return Uri.parse("$value") as R;
+      } else if (R == Widget) {
+        return forceWidget(value) as R;
+      } else if (R == Text) {
+        return (value as Object?).asNullableText() as R;
+      } else if (R == List) {
+        return forceList(value) as R;
+      } else {
+        return value as R;
+      }
     } else {
-      return value as R;
-    }
-  } catch (e) {
-    consoleLog("Cannot change $value into $R", error: e);
-  }
+      if (R.toString().endsWith("?")) {
+        return null as R;
+      }
+      if (R == String) {
+        return "" as R;
+      }
+      if (R == bool) {
+        return false as R;
+      }
 
-  return null;
+      if (R == int) {
+        return 0 as R;
+      }
+      if (R == double) {
+        return 0.0 as R;
+      }
+      if (R == num) {
+        return 0 as R;
+      }
+      if (R == DateTime) {
+        return minDate as R;
+      }
+      if (R == List) {
+        return [] as R;
+      }
+
+      if (R == Widget) {
+        return nil as R;
+      }
+    }
+    throw Exception("Incompatible conversion");
+  } catch (e) {
+    consoleLog("Cannot change $value into $R: $e", error: e);
+    try {
+      return value as R;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 /// Converts the given [item] into a list.

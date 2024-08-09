@@ -153,7 +153,7 @@ class PageTabController with ChangeNotifier {
 
     if (back > 0) {
       if (back > history.length) {
-        Get.context!.pop();
+        Get.back();
         return;
       }
 
@@ -251,7 +251,7 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
   bool isThisPage(PageEntry page) => indexController.pageIndex == indexController.items.indexOf(page);
   bool isThisTab(PageEntry page, TabEntry tab) => isThisPage(page) && indexController.tabIndex == page.tabs.indexOf(tab);
 
-  Widget getDrawerItem(PageEntry page, TabEntry tab, [bool isSubmenu = false]) {
+  Widget _getDrawerItem(PageEntry page, TabEntry tab, [bool isSubmenu = false]) {
     IconData? icon = (isSubmenu ? tab.icon : page.icon);
     if (isThisTab(page, tab) && page.action != null) {
       icon = page.actionIcon ?? page.activeIcon ?? icon;
@@ -303,7 +303,6 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
 
   List<Widget> get drawerItems => [
         if (useDrawerInsteadOfBottomNavigationBar) ...[
-          ...[leadingItem].whereNotNull(),
           if (widget.drawer != null && widget.drawer is! Drawer) widget.drawer!,
           for (var entry in indexController.items)
             if (entry.tabs.length > 1)
@@ -313,10 +312,10 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
                 childrenPadding: 10.fromLeft,
                 title: entry.titleWidget!,
                 leading: Icon(entry.icon),
-                children: entry.tabs.map((x) => getDrawerItem(entry, x, true)).toList(),
+                children: entry.tabs.map((x) => _getDrawerItem(entry, x, true)).toList(),
               )
             else
-              getDrawerItem(entry, entry.tabs.singleOrNull!),
+              _getDrawerItem(entry, entry.tabs.singleOrNull!),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.close),
@@ -327,35 +326,6 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
           ),
         ]
       ];
-
-  Widget? get leadingItem {
-    if (widget.leading != null) {
-      return widget.leading;
-    }
-    if (widget.automaticallyImplyLeading) {
-      if (indexController.canGoBack || Get.context!.canPop()) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextButton.icon(
-            icon: Icon(
-              indexController.canGoBack ? Icons.undo : Icons.arrow_back,
-              color: context.colorScheme.onSurface,
-            ),
-            label: useDrawerInsteadOfBottomNavigationBar ? Text(context.localizations.backButtonTooltip).textColor(context.colorScheme.onSurface) : nil,
-            onPressed: () {
-              indexController.back();
-              setState(() {});
-            },
-            onLongPress: () {
-              indexController.reset();
-              Get.back();
-            },
-          ),
-        );
-      }
-    }
-    return null;
-  }
 
   PageEntry get pageEntry => indexController.pageEntry;
 
@@ -392,84 +362,78 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
       actionItems = pageEntry.toolbarItems ?? widget.actions;
     }
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        indexController.back();
-      },
-      child: Scaffold(
-        key: widget.key,
-        appBar: pageEntry.showAppBar || pageEntry.tabs.length > 1 || useDrawerInsteadOfBottomNavigationBar
-            ? AppBar(
-                title: title,
-                leading: widget.leading,
-                automaticallyImplyLeading: widget.automaticallyImplyLeading,
-                backgroundColor: widget.appBarBackgroundColor,
-                foregroundColor: widget.titleColor,
-                actions: actionItems,
-                bottom: pageEntry.tabs.length > 1
-                    ? TabBar(
-                        controller: pageEntry.tabController!,
-                        labelColor: widget.labelColor,
-                        isScrollable: widget.scrollableTabs ?? false,
-                        tabs: pageEntry.tabs
-                            .map(
-                              (x) => Tab(
-                                height: widget.tabHeight,
-                                icon: Icon(x.icon),
-                                child: forceWidget(x.title) ?? Text("#${pageEntry.tabs.indexOf(x) + 1}"),
-                              ),
-                            )
-                            .toList())
-                    : null,
-              )
-            : null,
-        body: (pageEntry.tabs.length > 1
-                ? TabBarView(
-                    controller: pageEntry.tabController!,
-                    children: pageEntry.tabs.map((x) => x.child).toList(),
-                  )
-                : pageEntry.tabs.firstOrNull?.child ?? nil)
-            .wrapIf(widget.wrapper != null, widget.wrapper ?? (x) => x),
-        floatingActionButton: floatingActionButton,
-        floatingActionButtonLocation: floatingActionButtonLocation,
-        persistentFooterButtons: pageEntry.persistentFooterButtons,
-        drawer: mainDrawer,
-        endDrawer: widget.endDrawer,
-        bottomNavigationBar: bottomNavigationBarItems.length > 1
-            ? BottomNavigationBar(
-                unselectedItemColor: widget.iconColor,
-                selectedItemColor: widget.activeIconColor,
-                onTap: (index) {
-                  if (indexController.pageIndex == index) {
-                    var funcs = pageEntry.action;
-                    if (funcs != null) {
-                      (funcs)();
-                    }
-                  } else {
-                    indexController.pageIndex = index;
+    return Scaffold(
+      key: widget.key,
+      appBar: pageEntry.showAppBar || pageEntry.tabs.length > 1 || useDrawerInsteadOfBottomNavigationBar
+          ? AppBar(
+              title: title,
+              leading: widget.leading,
+              automaticallyImplyLeading: widget.automaticallyImplyLeading,
+              backgroundColor: widget.appBarBackgroundColor,
+              foregroundColor: widget.titleColor,
+              actions: actionItems,
+              bottom: pageEntry.tabs.length > 1
+                  ? TabBar(
+                      controller: pageEntry.tabController!,
+                      labelColor: widget.labelColor,
+                      isScrollable: widget.scrollableTabs ?? false,
+                      tabs: pageEntry.tabs
+                          .map(
+                            (x) => Tab(
+                              height: widget.tabHeight,
+                              icon: Icon(x.icon),
+                              child: forceWidget(x.title) ?? Text("#${pageEntry.tabs.indexOf(x) + 1}"),
+                            ),
+                          )
+                          .toList())
+                  : null,
+            )
+          : null,
+      body: (pageEntry.tabs.length > 1
+              ? TabBarView(
+                  controller: pageEntry.tabController!,
+                  children: pageEntry.tabs.map((x) => x.child).toList(),
+                )
+              : pageEntry.tabs.firstOrNull?.child ?? nil)
+          .wrapIf(widget.wrapper != null, widget.wrapper ?? (x) => x),
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
+      persistentFooterButtons: pageEntry.persistentFooterButtons,
+      drawer: mainDrawer,
+      endDrawer: widget.endDrawer,
+      bottomNavigationBar: bottomNavigationBarItems.length > 1
+          ? BottomNavigationBar(
+              unselectedItemColor: widget.iconColor,
+              selectedItemColor: widget.activeIconColor,
+              onTap: (index) {
+                if (indexController.pageIndex == index) {
+                  var funcs = pageEntry.action;
+                  if (funcs != null) {
+                    (funcs)();
                   }
-                },
-                currentIndex: indexController.pageIndex,
-                items: bottomNavigationBarItems,
-                type: widget.bottomNavigationBarType,
-                showUnselectedLabels: widget.showUnselectedLabels,
-                backgroundColor: widget.bottomBarBackgroundColor,
-              )
-            : null,
-        bottomSheet: widget.bottomSheet,
-        backgroundColor: widget.backgroundColor,
-        resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
-        primary: widget.primary,
-        drawerDragStartBehavior: widget.drawerDragStartBehavior,
-        extendBody: widget.extendBody,
-        extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
-        drawerScrimColor: widget.drawerScrimColor,
-        drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
-        drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
-        endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture,
-        restorationId: widget.restorationId,
-      ),
+                } else {
+                  indexController.pageIndex = index;
+                }
+              },
+              currentIndex: indexController.pageIndex,
+              items: bottomNavigationBarItems,
+              type: widget.bottomNavigationBarType,
+              showUnselectedLabels: widget.showUnselectedLabels,
+              backgroundColor: widget.bottomBarBackgroundColor,
+            )
+          : null,
+      bottomSheet: widget.bottomSheet,
+      backgroundColor: widget.backgroundColor,
+      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+      primary: widget.primary,
+      drawerDragStartBehavior: widget.drawerDragStartBehavior,
+      extendBody: widget.extendBody,
+      extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
+      drawerScrimColor: widget.drawerScrimColor,
+      drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
+      drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
+      endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture,
+      restorationId: widget.restorationId,
     );
   }
 }

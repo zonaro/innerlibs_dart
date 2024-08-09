@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:innerlibs/file_extensions.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 /// A utility class for managing JSON data in a directory.
