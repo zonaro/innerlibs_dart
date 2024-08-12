@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -245,12 +247,12 @@ class NFe extends TagXml implements Validator {
     infNFe!.chave; // Garante que a chave seja definida
     infNFe!.versao ??= "4.00";
 
+    infNFe!.dest ??= Dest();
+    infNFe!.dest!.ajustar();
+
     for (var x in infNFe!.det) {
       x.calcular();
     }
-
-    infNFe!.dest ??= Dest();
-    infNFe!.dest!.ajustar();
 
     for (var x in infNFe!.detPag) {
       if (x.tPag == FormaPagamento.semPagamento) {
@@ -376,9 +378,9 @@ class InfNFe extends TagXml {
       if (ide == null) "Tag ide não informada" else ...ide!.validate(),
       if (emit == null) "Tag emit não informada" else ...emit!.validate(),
       if (dest == null) "Tag dest não informada" else ...dest!.validate(),
-      if (det.isEmpty) "Nenhum det informado" else ...det.map((x) => x.validate()).expand((x) => x),
       if (total == null) "Tag total não informada" else ...total!.validate(),
       if (infAdic == null) "Tag infAdic não informada" else ...infAdic!.validate(),
+      if (det.isEmpty) "Nenhum det informado" else ...det.map((x) => x.validate()).expand((x) => x),
     ];
   }
 
@@ -726,12 +728,12 @@ class Ender extends TagXml {
       if (xBairro == null) "$deepArrow Bairro não informado" else if (xBairro?.length.isBetweenOrEqual(2, 60) == false) "$deepArrow Bairro deve ter entre 2 e 60 caracteres",
       if (cMun == null) "$deepArrow Código do município não informado",
       if (xMun == null) "$deepArrow Município não informado" else if (xMun?.length.isBetweenOrEqual(2, 60) == false) "$deepArrow Município deve ter entre 2 e 60 caracteres",
-      if (uf == null) "$deepArrow UF não informada",
+      if (uf == null || uf == Estado.naoDefinido) "$deepArrow UF não informada",
       if (cep == null) "$deepArrow CEP não informado" else if (Brasil.validarCEP(cep!) == false) "$deepArrow CEP inválido",
       if (cPais == null) "$deepArrow Código do país não informado",
       if (xPais == null) "$deepArrow País não informado" else if (xPais?.length.isBetweenOrEqual(2, 60) == false) "$deepArrow País deve ter entre 2 e 60 caracteres",
       if (fone == null) "$deepArrow Telefone não informado" else if (Brasil.validarTelefone(fone!) == false) "$deepArrow Telefone inválido",
-    ].map((e) => "$e (${super.tagName})").toList();
+    ];
   }
 
   /// Obtem o endereco formatado
@@ -804,7 +806,8 @@ class Dest extends TagXml {
       if (indIEDest == null) "$deepArrow Indicador de IE do destinatário não informado",
       if (ie == null) "$deepArrow IE do destinatário não informada" else if (ie?.length.isBetweenOrEqual(2, 14) == false) "$deepArrow IE do destinatário deve ter entre 2 e 14 caracteres",
       if (enderDest == null) "$deepArrow Endereço do destinatário não informado" else ...enderDest!.validate(),
-    ];
+      if (ie != null) enderDest == null || (enderDest!.uf == null || enderDest!.uf == Estado.naoDefinido) ? "$deepArrow IE informada mas UF não informada (EnderDest)" : (enderDest!.uf!.validarInscricaoEstadual(ie) ? null : "$deepArrow Inscrição estadual inválida para o estado ${enderDest!.uf}"),
+    ].whereNotNull();
   }
 
   void ajustar() {
@@ -895,6 +898,69 @@ class Det extends TagXml {
     prod ??= Prod();
     prod!.calcular();
   }
+}
+
+class IPI extends TagXml {
+  IPI() : super.fromTagName("IPI");
+
+  @override
+  Iterable<string> validate() {
+    return [
+      if (cEnq == null) "$deepArrow Código de Enquadramento não informado" else if (cEnq?.length.isBetweenOrEqual(3, 3) == false) "$deepArrow Código de Enquadramento deve ter 3 caracteres",
+      if (cSelo == null) "$deepArrow Código do Selo não informado",
+      if (cnpjProd == null) "$deepArrow CNPJ do produtor não informado" else if (Brasil.validarCNPJ(cnpjProd!) == false) "$deepArrow CNPJ do produtor inválido",
+    ];
+  }
+
+  /// Obtém ou define o código de enquadramento do IPI.
+  /// O código de enquadramento é um valor numérico que identifica a situação tributária do IPI.
+  string? get cEnq => getValueFromNode('cEnq');
+  set cEnq(String? value) => setTextValueForNode('cEnq', value?.toString());
+
+  SeloControle? get cSelo => getValueFromNode('cSelo', SeloControle.fromInt);
+  set cSelo(SeloControle? value) => setTextValueForNode('cSelo', value?.value.toString());
+
+  /// Obtém ou define o CNPJ do produtor.
+  int? get cnpjProd => getValueFromNode('CNPJ');
+  set cnpjProd(int? value) => setTextValueForNode('CNPJ', value?.fixedLength(ChaveNFe.tamanhoCNPJ));
+
+  /// Obtém ou define a quantidade de selos.
+  int? get qSelo => getValueFromNode('qSelo');
+  set qSelo(int? value) => setTextValueForNode('qSelo', value?.toString());
+
+  IPITrib? get ipiTrib => getTagAs('IPITrib', () => IPITrib());
+  set ipiTrib(IPITrib? value) => setTagFrom('IPITrib', value);
+
+  IPINT? get ipiNT => getTagAs('IPINT', () => IPINT());
+  set ipiNT(IPINT? value) => setTagFrom('IPINT', value);
+}
+
+class IPITrib extends TagXml {
+  IPITrib() : super.fromTagName("IPITrib");
+
+  /// Obtém o valor do campo cST.
+  int? get cst => getValueFromNode('CST');
+  set cst(int? value) => setTextValueForNode('CST', value?.toString());
+
+  /// Obtém o valor do campo vBC.
+  double? get vBC => getValueFromNode('vBC');
+  set vBC(double? value) => setTextValueForNode('vBC', value?.toString());
+
+  /// Obtém o valor do campo pIPI.
+  double? get pIPI => getValueFromNode('pIPI');
+  set pIPI(double? value) => setTextValueForNode('pIPI', value?.toString());
+
+  /// Obtém o valor do campo vIPI.
+  double? get vIPI => getValueFromNode('vIPI');
+  set vIPI(double? value) => setTextValueForNode('vIPI', value?.toString());
+}
+
+class IPINT extends TagXml {
+  IPINT() : super.fromTagName("IPINT");
+
+  /// Obtém o valor do campo CST.
+  int? get cst => getValueFromNode('CST');
+  set cst(int? value) => setTextValueForNode('CST', value?.toString());
 }
 
 /// Classe que representa a tag XML 'prod' do documento fiscal eletrônico (NF-e/NFC-e).
@@ -1063,12 +1129,16 @@ class Imposto extends TagXml {
   set icms(ICMS? value) => setTagFrom<ICMS>('ICMS', value);
 
   /// Obtém ou define o PIS (Programa de Integração Social) do imposto.
-  PIS? get pis => getTagAs<PIS>('PIS', () => PIS());
-  set pis(PIS? value) => setTagFrom<PIS>('PIS', value);
+  PisCofins? get pis => getTagAs<PisCofins>('PIS', () => PIS());
+  set pis(PisCofins? value) => setTagFrom<PisCofins>('PIS', value);
 
   /// Obtém ou define o COFINS (Contribuição para o Financiamento da Seguridade Social) do imposto.
-  COFINS? get cofins => getTagAs<COFINS>('COFINS', () => COFINS());
-  set cofins(COFINS? value) => setTagFrom<COFINS>('COFINS', value);
+  PisCofins? get cofins => getTagAs<PisCofins>('COFINS', () => COFINS());
+  set cofins(PisCofins? value) => setTagFrom<PisCofins>('COFINS', value);
+
+  /// Obtém ou define o IPI (Imposto sobre Produtos Industrializados) do imposto.
+  IPI? get ipi => getTagAs<IPI>('IPI', () => IPI());
+  set ipi(IPI? value) => setTagFrom<IPI>('IPI', value);
 }
 
 /// Classe que representa o ICMS (Imposto sobre Circulação de Mercadorias e Serviços) em um documento XML.
@@ -1219,7 +1289,7 @@ class Rastro extends TagXml {
 
 /// Classe que serve de base para as subtags do ICMS que possuem diversos nomes.
 class IcmsTag extends TagXml {
-  IcmsTag.icms(string suffix) : super.fromTagName("ICMS$suffix");
+  IcmsTag.icms(string sufixo) : super.fromTagName("ICMS$sufixo");
   IcmsTag(super.name) : super.fromTagName();
 
   /// Obtém o valor do campo orig.
@@ -1230,8 +1300,6 @@ class IcmsTag extends TagXml {
 
   /// Obtém o valor do campo cST.
   int? get cst => getValueFromNode('CST');
-
-  /// Define o valor do campo cST.
   set cst(int? value) => setTextValueForNode('CST', value?.toString());
 
   /// Obtém ou define o valor do campo modBC.
@@ -1295,48 +1363,165 @@ class IcmsTag extends TagXml {
   set vCredICMSSN(double? value) => setTextValueForNode("vCredICMSSN", value?.toStringAsFixed(2));
 }
 
-/// Classe que representa o PIS (Programa de Integração Social) em um documento XML.
-class PIS extends TagXml {
-  PIS() : super.fromTagName("PIS");
+PisTag PISNT() => PisTag.pis("NT");
+PisTag PISAliq() => PisTag.pis("Aliq");
+PisTag PISOutr() => PisTag.pis("Outr");
+PisTag PISQtde() => PisTag.pis("Qtde");
 
-  /// Obtém o objeto PISNT.
-  PISNT? get pisnt => getTagAs('PISNT', () => PISNT());
+CofinsTag COFINSNT() => CofinsTag.cofins("NT");
+CofinsTag COFINSAliq() => CofinsTag.cofins("Aliq");
+CofinsTag COFINSOutr() => CofinsTag.cofins("Outr");
+CofinsTag COFINSQtde() => CofinsTag.cofins("Qtde");
 
-  /// Define o objeto PISNT.
-  set pisnt(PISNT? value) => setTagFrom('PISNT', value);
+PisCofins PIS() => PisCofins("PIS");
+PisCofins COFINS() => PisCofins("COFINS");
+
+class PisCofins extends TagXml {
+  PisCofins(super.name) : super.fromTagName();
+
+  @override
+  Iterable<string> validate() {
+    var x = [aliq, nt, outr, qtde].whereNotNull().length;
+    return [
+      if (tagName != "PIS" && tagName != "COFINS") "$deepArrow Tag $name inválida",
+      if (x > 1) "$deepArrow Apenas uma tag de $name deve ser informada",
+      if (x == 0) "$deepArrow Tag $name não informada",
+      if (x == 1) ...tag!.validate(),
+    ];
+  }
+
+  /// Obtém o nome da tag PIS utilizada.
+  @override
+  string get tagName => (children.singleOrNull as XmlElement?)?.name.local ?? "";
+  set tagName(string value) => TagXml.mutate(tag, () => PisCofinsTag(value.toUpperCase()));
+
+  /// Obtém a tag PIS
+  PisCofinsTag? get tag => getTagAs<PisCofinsTag>(tagName, () => PisCofinsTag(tagName.toUpperCase()));
+
+  set tag(PisCofinsTag? value) {
+    var nm = value?.name.local.toUpperCase();
+    if (nm != null) {
+      setTagFrom<PisCofinsTag>(nm, value);
+    }
+  }
+
+  PisCofinsTag? get aliq => tagName.flatEqual("${tagName}Aliq") ? tag : null;
+  set aliq(PisCofinsTag? value) {
+    tag = value;
+    tagName = '${tagName}Aliq';
+  }
+
+  PisCofinsTag? get nt => tagName.flatEqual("${tagName}NT") ? tag : null;
+  set nt(PisCofinsTag? value) {
+    tag = value;
+    tagName = '${tagName}NT';
+  }
+
+  PisCofinsTag? get outr => tagName.flatEqual("${tagName}Outr") ? tag : null;
+  set outr(PisCofinsTag? value) {
+    tag = value;
+    tagName = '${tagName}Outr';
+  }
+
+  PisCofinsTag? get qtde => tagName.flatEqual("${tagName}Qtde") ? tag : null;
+  set qtde(PisCofinsTag? value) {
+    tag = value;
+    tagName = '${tagName}Qtde';
+  }
 }
 
-/// Classe que representa o PISNT (PIS não tributado) em um documento XML.
-class PISNT extends TagXml {
-  PISNT() : super.fromTagName("PISNT");
+class PisCofinsTag extends TagXml {
+  PisCofinsTag(super.tagName) : super.fromTagName();
+  PisCofinsTag.cofins(string sufixo) : super.fromTagName("COFINS${sufixo.toUpperCase()}");
+  PisCofinsTag.pis(string sufixo) : super.fromTagName("PIS${sufixo.toUpperCase()}");
 
-  /// Obtém o valor do campo cST.
-  string? get cST => getValueFromNode('CST');
+  string get pisCofinsTag {
+    if (hasParent) {
+      return parentElement!.name.local;
+    }
+    if (tagName.startsWith("PIS")) {
+      return "PIS";
+    } else if (tagName.startsWith("COFINS")) {
+      return "COFINS";
+    }
+    return "INVALIDO";
+  }
 
-  /// Define o valor do campo cST.
-  set cST(String? value) => setTextValueForNode('CST', value?.toString());
+  string get sufixo => tagName.after(pisCofinsTag);
+
+  void ajustar() {
+    if (sufixo == "NT") {
+      _vPisCofins = null;
+      _pPisCofins = null;
+      vBC = null;
+    }
+
+    if (pisCofinsTag.startsWith("PIS")) {
+      removeChildren("vCOFINS");
+      removeChildren("pCOFINS");
+    } else if (pisCofinsTag.startsWith("COFINS")) {
+      removeChildren("vPIS");
+      removeChildren("pPIS");
+    }
+  }
+
+  @override
+  Iterable<string> validate() {
+    return [
+      if (pisCofinsTag.startsWithAny(["PIS", "COFINS"]) == false) "$deepArrow Tag $tagName inválida. Deve começar com PIS ou COFINS.",
+      if (cst == null) "$deepArrow CST não informado",
+      if (sufixo != "NT") ...[
+        if (vBC == null) "$deepArrow Valor da base de cálculo não informado",
+        if (_pPisCofins == null) "$deepArrow Alíquota não informada",
+        if (_vPisCofins == null) "$deepArrow Valor não informado",
+      ] else ...[
+        if (vBC != null) "$deepArrow Valor da base de cálculo não deve ser informado para $pisCofinsTag",
+        if (_pPisCofins != null) "$deepArrow Alíquota não deve ser informada para $pisCofinsTag",
+        if (_vPisCofins != null) "$deepArrow Valor não deve ser informado para $pisCofinsTag",
+      ]
+    ];
+  }
+
+  double? get vBC => getValueFromNode('vBC');
+  set vBC(double? value) => setTextValueForNode('vBC', value?.toStringAsFixed(2));
+
+  double? get _pPisCofins => getValueFromNode('p$pisCofinsTag');
+  set _pPisCofins(double? value) => setTextValueForNode('p$pisCofinsTag', value?.toStringAsFixed(4));
+
+  double? get _vPisCofins => getValueFromNode('v$pisCofinsTag');
+  set _vPisCofins(double? value) => setTextValueForNode('v$pisCofinsTag', value?.toStringAsFixed(2));
+
+  double? get qBCProd => getValueFromNode('qBCProd');
+  set qBCProd(double? value) => setTextValueForNode('qBCProd', value?.toStringAsFixed(4));
+
+  double? get vAliqProd => getValueFromNode('vAliqProd');
+  set vAliqProd(double? value) => setTextValueForNode('vAliqProd', value?.toStringAsFixed(4));
+
+  /// Obtém ou define o valor do campo cst.
+  int? get cst => getValueFromNode("CST");
+  set cst(int? value) => setTextValueForNode("CST", value?.toString());
 }
 
-/// Classe que representa o COFINS (Contribuição para o Financiamento da Seguridade Social) em um documento XML.
-class COFINS extends TagXml {
-  COFINS() : super.fromTagName("COFINS");
+class CofinsTag extends PisCofinsTag {
+  CofinsTag(super.tagName) : super();
+  CofinsTag.cofins(string sufixo) : super.cofins(sufixo);
 
-  /// Obtém o objeto COFINSNT.
-  COFINSNT? get cofinsnt => getTagAs('COFINSNT', () => COFINSNT());
+  double? get vCOFINS => _vPisCofins;
+  set vCOFINS(double? value) => _vPisCofins = value;
 
-  /// Define o objeto COFINSNT.
-  set cofinsnt(COFINSNT? value) => setTagFrom('COFINSNT', value);
+  double? get pCOFINS => _pPisCofins;
+  set pCOFINS(double? value) => _pPisCofins = value;
 }
 
-/// Classe que representa o COFINSNT (COFINS não tributado) em um documento XML.
-class COFINSNT extends TagXml {
-  COFINSNT() : super.fromTagName("COFINSNT");
+class PisTag extends PisCofinsTag {
+  PisTag(super.tagName) : super();
+  PisTag.pis(string sufixo) : super.pis(sufixo);
 
-  /// Obtém o valor do campo cst.
-  string? get cst => getValueFromNode("CST");
+  double? get vPIS => _vPisCofins;
+  set vPIS(double? value) => _vPisCofins = value;
 
-  /// Define o valor do campo cst.
-  set cst(string? value) => setTextValueForNode("CST", value?.toString());
+  double? get pPIS => _pPisCofins;
+  set pPIS(double? value) => _pPisCofins = value;
 }
 
 /// Classe que representa o elemento Total em um documento XML da NFe.

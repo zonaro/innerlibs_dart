@@ -145,6 +145,13 @@ class TagXml extends XmlElement implements Validator {
     }
   }
 
+  void renameChildren(string oldTagName, string newTagName) {
+    while (findElements(oldTagName).isNotEmpty) {
+      var e = findElements(oldTagName).first;
+      mutate(e, () => TagXml.fromTagName(newTagName));
+    }
+  }
+
   @override
   Iterable<String> validate() {
     return [];

@@ -315,7 +315,7 @@ enum Estado implements Comparable<Estado> {
 
   /// Pesquisa um estado pelo nome, UF ou código IBGE.
   /// Retorna uma lista de estados correspondentes à pesquisa.
-  static Future<Iterable<Estado>> pesquisar(dynamic nomeOuUFOuIBGE) async => Brasil.pesquisarEstado(nomeOuUFOuIBGE);
+  static Iterable<Estado> pesquisar(dynamic nomeOuUFOuIBGE) => Brasil.pesquisarEstado(nomeOuUFOuIBGE);
 
   /// Retorna a cidade capital do estado.
   Future<Cidade> get capital async => (await cidades).singleWhere((e) => e.capital);

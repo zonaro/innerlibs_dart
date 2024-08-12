@@ -240,6 +240,7 @@ bool isNotValid<T>(T object, {List<bool> Function(T?)? customValidator}) => !isV
 /// - If the value is a DateTime object, it is formatted as a string.
 /// - If the value is a boolean, it is converted to a string.
 /// - If the value is a Map or an Iterable, the values are joined with a comma.
+///
 /// The resulting string is then processed to remove diacritics,
 /// convert to lowercase, and remove leading/trailing whitespace.
 ///
@@ -254,6 +255,20 @@ String flatString(dynamic value) {
   return "$value".removeDiacritics.toLowerCase().trimAll;
 }
 
+
+
+/// Generates a keyword from the given [value].
+///
+/// The generated keyword is based on the [value] and can be customized using optional parameters.
+///
+/// Optional Parameters:
+/// - [splitCamelCase]: Whether to split camel case words in the generated keyword. Default is `true`.
+/// - [removeWordSplitters]: Whether to remove word splitters in the generated keyword. Default is `true`.
+/// - [removeDiacritics]: Whether to remove diacritics in the generated keyword. Default is `true`.
+/// - [forceLowerCase]: Whether to force the generated keyword to be in lowercase. Default is `true`.
+///
+/// Returns the generated keyword as a [String].
+
 String generateKeyword(
   dynamic value, {
   bool splitCamelCase = true,
@@ -262,6 +277,10 @@ String generateKeyword(
   bool forceLowerCase = true,
 }) {
   if (value == null) return "";
+
+  if (value is DateTime) value = value.format();
+  if (value is Map) value = value.values.join(", ");
+  if (value is Iterable) value = value.join(", ");
 
   String keyword = value.toString();
 
@@ -286,8 +305,8 @@ String generateKeyword(
 
 /// Try change a value of any type into a value of type [R].
 ///
-/// - If the value is `null`, returns `null`.
-/// - If [value] is [R] returns the value as [R].
+/// - If the value is `null`, returns `null` if R is nullable otherwise throws an exception.
+/// - If [value] is [R] returns the value as is.
 /// - If [R] is [DateTime], converts the value to a [DateTime] using the `toDate()` method.
 /// - If [R] is [num], parses the value as a [num] using the `num.parse()` method.
 /// - If [R] is [int], parses the value as an [int] using the `int.parse()` method.
@@ -297,7 +316,7 @@ String generateKeyword(
 /// - If [R] is [Widget], converts the value to a [Widget] using the `forceWidget()` method.
 /// - If [R] is [Text], converts the value to a [Text] using the `asText()` method.
 /// - If [R] is [List], converts the value to a [List] containing the value.
-/// - if [R] is another type, returns the value as [R].
+/// - if [R] is another type, try returns the value as [R].
 /// - If none of the above conditions are met, logs an error message and returns `null`.
 R changeTo<R>(dynamic value) {
   try {
@@ -325,8 +344,6 @@ R changeTo<R>(dynamic value) {
         return (value as Object?).asNullableText() as R;
       } else if (R == List) {
         return forceList(value) as R;
-      } else {
-        return value as R;
       }
     } else {
       if (R.toString().endsWith("?")) {
@@ -364,8 +381,8 @@ R changeTo<R>(dynamic value) {
     consoleLog("Cannot change $value into $R: $e", error: e);
     try {
       return value as R;
-    } catch (e) {
-      rethrow;
+    } catch (a) {
+      throw e;
     }
   }
 }
@@ -380,6 +397,7 @@ List forceList(dynamic item) {
   if (item == null) {
     return [];
   }
+
   if (item is List) {
     return item;
   }

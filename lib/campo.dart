@@ -277,6 +277,12 @@ class _CampoListaEstadoState extends State<CampoListaEstado> {
         itemAsString: (item) => widget.modoCompacto ? item.uf : item.nome,
         clearButtonProps: const ClearButtonProps(icon: Icon(Icons.clear_all), isVisible: true),
         selectedItem: widget.estadoValue,
+        filterFn: (item, filters) =>
+            filters.isBlank ||
+            FilterFunctions.fullFilterFunction(
+              searchTerms: filters.split(";").whereValid,
+              searchOn: [item.uf, item.nome, item.ibge],
+            ),
         items: widget.regiao.estados.toList(),
         onChanged: (x) => widget.onChanged(x ?? Estado.naoDefinido),
         dropdownDecoratorProps: DropDownDecoratorProps(
@@ -544,7 +550,7 @@ class _CampoTextoState extends State<CampoTexto> {
       label: widget.label,
       icon: widget.icon,
       controller: widget.controller,
-      options: widget.options.map((e) => (e, e)),
+      options: widget.options.distinct().map((e) => (e, e)),
       asyncItems: widget.asyncItems != null ? (s) async => (await widget.asyncItems!(s)).map((e) => (e, e)).toList() : null,
       inputFormatters: widget.inputFormatters,
       onChange: (newValue) {
@@ -738,7 +744,6 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
           dropdownDecoratorProps: DropDownDecoratorProps(
             dropdownSearchDecoration: estiloCampos(widget.label, widget.icon, widget.onIconTap),
           ),
-          items: widget.options.toList(),
           asyncItems: (v) async {
             List<(string, T?)> values = widget.options.toList();
             values = widget.options

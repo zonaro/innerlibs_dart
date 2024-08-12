@@ -414,7 +414,7 @@ abstract interface class Brasil {
 
       nomeOuUFOuIBGE = "$nomeOuUFOuIBGE".toLowerCase().trim();
 
-      var l = estados.where((e) => e.nome.flatContains(nomeOuUFOuIBGE) || e.uf.flatEqual(nomeOuUFOuIBGE) || e.ibge.toString() == nomeOuUFOuIBGE.toString().first(2));
+      var l = estados.where((e) => e.nome.flatContains(nomeOuUFOuIBGE) || e.uf.flatEqual(nomeOuUFOuIBGE) || e.ibge.toString() == nomeOuUFOuIBGE.toString().onlyNumbers.first(2));
       return l.orderBy((x) {
         return [
           x.nome.getLevenshtein(nomeOuUFOuIBGE, false),
@@ -684,6 +684,7 @@ abstract interface class Brasil {
     if (ChaveNFe.validar(d)) return "Chave NFe";
     if (d.isEmail) return "Email";
     if (d.isIP) return "IP";
+    if (Brasil.validarInscricaoEstadual(d)) return "Inscrição Estadual";
     if (validarTelefone(d)) return d.onlyNumbers.length.isIn([9, 11]) ? "Celular" : "Telefone";
     return rotuloPadrao;
   }
@@ -723,9 +724,8 @@ abstract interface class Brasil {
     if (validarCNH(documento)) return formatarCNH(documento);
     if (ChaveNFe.validar(documento)) return ChaveNFe.fromString(documento).chaveFormatadaTraco;
     if (documento.toString().isEmail) return documento.toString().toLowerCase();
-    if (documento.toString().isIP) return documento.toString();
     if (validarTelefone(documento)) return formatarTelefone(documento);
-    return "";
+    return "$documento";
   }
 
   /// Retorna o valor do documento como um número inteiro.
@@ -749,7 +749,7 @@ abstract interface class Brasil {
     if (documento is Endereco) return documento.cep.onlyNumbers.toInt.nullIfZero;
     if (documento is num) return documento.floor();
 
-    if (validarCPF(documento) || validarCNPJ(documento) || validarCEP(documento) || validarEAN(documento) || validarPIS(documento) || validarCNH(documento) || ChaveNFe.validar(documento) || validarTelefone(documento)) {
+    if (validarCPF(documento) || validarCNPJ(documento) || validarCEP(documento) || validarEAN(documento) || validarPIS(documento) || validarCNH(documento) || ChaveNFe.validar(documento) || validarTelefone(documento) || validarInscricaoEstadual(documento)) {
       return int.tryParse("$documento".onlyNumbers).nullIfZero;
     }
 

@@ -552,6 +552,69 @@ enum FormaPagamento {
   /// Construtor constante que associa um valor de int a cada indicador de meio de pagamento.
   const FormaPagamento(this.value);
 
+  factory FormaPagamento.fromValue(dynamic value) {
+    if (value is FormaPagamento) {
+      return value;
+    }
+    if (value is bool) {
+      return value ? FormaPagamento.dinheiro : FormaPagamento.semPagamento;
+    }
+
+    if (value is num) {
+      return FormaPagamento.fromInt(value.floor());
+    }
+    var svalue = "$value".toLowerCase();
+
+    if (svalue.isNumericOnly) {
+      return FormaPagamento.fromInt(svalue.toNumOrZero.floor());
+    }
+
+    switch (svalue) {
+      case 'dinheiro':
+        return FormaPagamento.dinheiro;
+      case 'cheque':
+        return FormaPagamento.cheque;
+      case 'cartaocredito':
+      case 'cartaodecredito':
+        return FormaPagamento.cartaoCredito;
+      case 'cartaodebito':
+      case 'cartaodedebito':
+        return FormaPagamento.cartaoDebito;
+      case 'creditoloja':
+        return FormaPagamento.creditoLoja;
+      case 'valealimentacao':
+        return FormaPagamento.valeAlimentacao;
+      case 'valerefeicao':
+        return FormaPagamento.valeRefeicao;
+      case 'valepresente':
+        return FormaPagamento.valePresente;
+      case 'valecombustivel':
+        return FormaPagamento.valeCombustivel;
+      case 'duplicatamercantil':
+        return FormaPagamento.duplicataMercantil;
+      case 'boletobancario':
+        return FormaPagamento.boletoBancario;
+      case 'depositobancario':
+        return FormaPagamento.depositoBancario;
+      case 'pix':
+        return FormaPagamento.pix;
+      case 'transferenciabancariacarteiradigital':
+      case 'transferenciabancaria':
+      case 'carteiradigital':
+        return FormaPagamento.transferenciaBancariaCarteiraDigital;
+      case 'cashbackcartaofidelidade':
+      case 'cashback':
+      case 'cartaofidelidade':
+        return FormaPagamento.cashbackCartaoFidelidade;
+      case 'sempagamento':
+      case 'nenhum':
+        return FormaPagamento.semPagamento;
+      case 'outros':
+      default:
+        return FormaPagamento.outros;
+    }
+  }
+
   factory FormaPagamento.fromInt(int value) {
     switch (value) {
       case 1:
@@ -680,6 +743,93 @@ enum ModalidadeDeterminacaoDaBc {
         return 'Valor da operação';
       default:
         return 'Modalidade de Determinação da BC desconhecida';
+    }
+  }
+}
+
+enum SeloControle {
+  produtoNacional(971001, 'Verde combinado com marrom'),
+  produtoNacionalExportacaoTipo1(971010, 'Verde escuro combinado com marrom'),
+  produtoNacionalExportacaoTipo2(971011, 'Verde escuro combinado com marrom'),
+  produtoNacionalExportacaoTipo3(971012, 'Verde escuro combinado com marrom'),
+  produtoEstrangeiro(861009, 'Vermelho combinado com azul');
+
+  final int value;
+  final string corSelo;
+  string get valorFormatado => value.fixedLength(6)!.insertAt(4, '-');
+
+  const SeloControle(this.value, this.corSelo);
+
+  factory SeloControle.fromInt(int value) {
+    switch (value) {
+      case 971001:
+        return SeloControle.produtoNacional;
+      case 971010:
+        return SeloControle.produtoNacionalExportacaoTipo1;
+      case 971011:
+        return SeloControle.produtoNacionalExportacaoTipo2;
+      case 971012:
+        return SeloControle.produtoNacionalExportacaoTipo3;
+      case 861009:
+        return SeloControle.produtoEstrangeiro;
+      default:
+        throw ArgumentError('Selo de controle desconhecido: $value');
+    }
+  }
+
+  factory SeloControle.fromValue(dynamic value) {
+    if (value is SeloControle) {
+      return value;
+    }
+    if (value is num) {
+      return SeloControle.fromInt(value.floor());
+    }
+    if (value is String && value.isNumericOnly) {
+      return SeloControle.fromInt(value.onlyNumbersInt!);
+    }
+
+    switch (generateKeyword(value)) {
+      case "nacional":
+      case "produtonacional":
+        return SeloControle.produtoNacional;
+      case "produtoexportacaotipo1":
+      case "exportacaotipo1":
+      case "tipo1":
+      case "produtonacionalexportacaotipo1":
+        return SeloControle.produtoNacionalExportacaoTipo1;
+      case "produtoexportacaotipo2":
+      case "exportacaotipo2":
+      case "tipo2":
+      case "produtonacionalexportacaotipo2":
+        return SeloControle.produtoNacionalExportacaoTipo2;
+      case "produtoexportacaotipo3":
+      case "exportacaotipo3":
+      case "tipo3":
+      case "produtonacionalexportacaotipo3":
+        return SeloControle.produtoNacionalExportacaoTipo3;
+      case "estrangeiro":
+      case "produtoestrangeiro":
+        return SeloControle.produtoEstrangeiro;
+      default:
+        throw ArgumentError('Selo de controle desconhecido: $value');
+    }
+  }
+
+  @override
+  String toString() {
+    switch (this) {
+      case SeloControle.produtoNacional:
+        return 'Produto Nacional';
+      case SeloControle.produtoNacionalExportacaoTipo1:
+        return 'Produto Nacional para Exportação - Tipo 1';
+      case SeloControle.produtoNacionalExportacaoTipo2:
+        return 'Produto Nacional para Exportação - Tipo 2';
+      case SeloControle.produtoNacionalExportacaoTipo3:
+        return 'Produto Nacional para Exportação - Tipo 3';
+      case SeloControle.produtoEstrangeiro:
+        return 'Produto Estrangeiro';
+      default:
+        return 'Selo de controle desconhecido';
     }
   }
 }
