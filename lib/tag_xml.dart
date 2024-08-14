@@ -1,9 +1,6 @@
 import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 
- 
-
-
 /// Represents an XML tag that can behave like a POCO class and implement validations
 class TagXml extends XmlElement implements Validator {
   /// Returns the tag name.
@@ -29,7 +26,7 @@ class TagXml extends XmlElement implements Validator {
   /// Checks if this node is a descendant of the given [tag].
   bool isIn<T extends TagXml>(T tag) => tag.descendantElements.contains(this);
 
-  ///  Checks if this node is a descendant of the document thats this node is.
+  ///  Checks if this node is a descendant of the document thats [tag] is.
   bool isInDocument<T extends TagXml>(T tag) => tag.root.descendantElements.contains(this);
 
   /// Returns the text value from a specific child node with the given [tag].
