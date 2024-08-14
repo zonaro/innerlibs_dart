@@ -1,10 +1,23 @@
 import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 
+ 
+
+
 /// Represents an XML tag that can behave like a POCO class and implement validations
 class TagXml extends XmlElement implements Validator {
   /// Returns the tag name.
   string get tagName => name.local;
+
+  void compute() {}
+
+  bool computeAndValidate([bool throwException = false]) {
+    compute();
+    if (throwException) {
+      validateOrThrow((errors) => InvalidException("This $tagName is not valid:", errors));
+    }
+    return isValidInstance;
+  }
 
   /// Constructs a [TagXml] instance with the given [name].
   TagXml.fromTagName(String name) : super((XmlName(name)));

@@ -7,16 +7,7 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 import 'package:xml_crypto/xml_crypto.dart';
 
-/// Classe de exceção para representar uma Nota Fiscal Eletrônica (NFe) inválida.
-class InvalidNFeException implements Exception {
-  final Iterable<String> erros;
-
-  /// Cria uma nova instância de [InvalidNFeException] com a lista de erros fornecida.
-  InvalidNFeException(this.erros);
-
-  @override
-  String toString() => "NFe encontrou erros durante a validação:$breakLine${erros.map((e) => " - $e").join(breakLine)}";
-}
+ 
 
 /// Classe que representa um objeto NFeProc.
 ///
@@ -240,7 +231,8 @@ class NFe extends TagXml implements Validator {
   ///   nfe.calcular();
   /// }
   /// ```
-  void computar() {
+  @override
+  void compute() {
     infNFe ??= InfNFe();
     infNFe!.total ??= Total();
     infNFe!.total!.icmsTot ??= ICMSTot();
@@ -248,10 +240,10 @@ class NFe extends TagXml implements Validator {
     infNFe!.versao ??= "4.00";
 
     infNFe!.dest ??= Dest();
-    infNFe!.dest!.computar();
+    infNFe!.dest!.compute();
 
     for (var x in infNFe!.det) {
-      x.computar();
+      x.compute();
     }
 
     for (var x in infNFe!.detPag) {
@@ -309,10 +301,11 @@ class NFe extends TagXml implements Validator {
   /// Calcula e valida a Nota Fiscal Eletrônica (NF-e).
   /// Retorna `true` se a NF-e for válida, caso contrário, retorna `false`.
   /// Se o parâmetro [throwException] for `true`, uma exceção [InvalidNFeException] será lançada se a NF-e for inválida.
-  bool computarEValidar([bool throwException = false]) {
-    computar();
+  @override
+  bool computeAndValidate([bool throwException = false]) {
+    compute();
     if (throwException) {
-      validateOrThrow((errors) => InvalidNFeException(errors));
+      validateOrThrow((errors) => InvalidException("Foram encontrados error ao validar esta nota:",errors));
     }
     return notaValida;
   }
@@ -810,7 +803,8 @@ class Dest extends TagXml {
     ].whereNotNull();
   }
 
-  void computar() {
+  @override
+  void compute() {
     enderDest ??= EnderDest();
     enderDest!.uf = enderDest!.uf ?? Estado.naoDefinido;
     if (enderDest!.uf == Estado.ex) {
@@ -894,11 +888,12 @@ class Det extends TagXml {
   /// Define a tag <imposto> como um objeto da classe [Imposto].
   set imposto(Imposto? value) => setTagFrom('imposto', value);
 
-  void computar() {
+  @override
+  void compute() {
     prod ??= Prod();
-    prod!.computar();
+    prod!.compute();
     imposto ??= Imposto();
-    imposto!.computar();
+    imposto!.compute();
   }
 }
 
@@ -1035,7 +1030,8 @@ class Prod extends TagXml {
   }
 
   /// Calcula os valores totais do produto.
-  void computar() {
+  @override
+  void compute() {
     cEAN ??= "SEM GTIN"; // Garante que o cEAN seja definido
     cEANTrib ??= "SEM GTIN"; // Garante que o cEANTrib seja definido
     qCom ??= 0;
@@ -1158,9 +1154,10 @@ class Prod extends TagXml {
 class Imposto extends TagXml {
   Imposto() : super.fromTagName("imposto");
 
-  void computar() {
-    pis?.computar();
-    cofins?.computar();
+  @override
+  void compute() {
+    pis?.compute();
+    cofins?.compute();
   }
 
   double get vTotTrib => getValueFromNode('vTotTrib', double.parse) ?? 0;
@@ -1428,11 +1425,12 @@ PisCofins COFINS() => PisCofins("COFINS");
 class PisCofins extends TagXml {
   PisCofins(super.name) : super.fromTagName();
 
-  void computar() {
-    aliq?.computar();
-    nt?.computar();
-    outr?.computar();
-    qtde?.computar();
+  @override
+  void compute() {
+    aliq?.compute();
+    nt?.compute();
+    outr?.compute();
+    qtde?.compute();
   }
 
   @override
@@ -1505,7 +1503,8 @@ class PisCofinsTag extends TagXml {
 
   string get sufixo => tagName.after(pisCofinsTag);
 
-  void computar() {
+  @override
+  void compute() {
     if (sufixo == "NT") {
       _vPisCofins = null;
       _pPisCofins = null;
