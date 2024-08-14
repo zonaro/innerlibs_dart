@@ -252,6 +252,8 @@ class NFe extends TagXml implements Validator {
 
     for (var x in infNFe!.det) {
       x.computar();
+      x.imposto?.pis?.computar();
+      x.imposto?.cofins?.computar();
     }
 
     for (var x in infNFe!.detPag) {
@@ -1422,6 +1424,13 @@ PisCofins COFINS() => PisCofins("COFINS");
 class PisCofins extends TagXml {
   PisCofins(super.name) : super.fromTagName();
 
+  void computar() {
+    aliq?.computar();
+    nt?.computar();
+    outr?.computar();
+    qtde?.computar();
+  }
+
   @override
   Iterable<string> validate() {
     var x = [aliq, nt, outr, qtde].whereNotNull().length;
@@ -1433,12 +1442,12 @@ class PisCofins extends TagXml {
     ];
   }
 
-  /// Obtém o nome da tag PIS utilizada.
+  /// Obtém o nome da tag PIS ou COFINS utilizada.
   @override
   string get tagName => (children.singleOrNull as XmlElement?)?.name.local ?? "";
   set tagName(string value) => TagXml.mutate(tag, () => PisCofinsTag(value.toUpperCase()));
 
-  /// Obtém a tag PIS
+  /// Obtém a tag PIS ou COFINS.
   PisCofinsTag? get tag => getTagAs<PisCofinsTag>(tagName, () => PisCofinsTag(tagName.toUpperCase()));
 
   set tag(PisCofinsTag? value) {
