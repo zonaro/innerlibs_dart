@@ -267,12 +267,12 @@ enum OrigemProduto {
   const OrigemProduto(this.value);
 
   factory OrigemProduto.fromValue(dynamic value) {
-    if (value is num) {
+    if (value is OrigemProduto) {
+      return value;
+    } else if (value is num) {
       return OrigemProduto.fromInt(value.floor());
-    } else if (value is String) {
-      return OrigemProduto.fromInt(int.parse(value));
     } else {
-      throw ArgumentError('Tipo de impressão desconhecido: $value');
+      return OrigemProduto.fromString("$value");
     }
   }
 
@@ -306,7 +306,7 @@ enum OrigemProduto {
       case 'nacionalconteudoimportacaosuperior70':
         return OrigemProduto.nacionalConteudoImportacaoSuperior70;
       default:
-        throw ArgumentError('Tipo de impressão desconhecido: $value');
+        throw ArgumentError('Origem do Produto Desconhecida: $value');
     }
   }
 
@@ -331,7 +331,7 @@ enum OrigemProduto {
       case 8:
         return OrigemProduto.nacionalConteudoImportacaoSuperior70;
       default:
-        throw ArgumentError('Tipo de impressão desconhecido: $value');
+        throw ArgumentError('Origem do Produto Desconhecida: $value');
     }
   }
 
@@ -1365,6 +1365,8 @@ enum TipoEmissao {
     }
   }
 }
+
+typedef TipoNota = TipoOperacao;
 
 /// Enumeração que representa os tipos de operação de documentos fiscais.
 enum TipoOperacao {

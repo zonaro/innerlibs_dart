@@ -168,21 +168,19 @@ class TagXml extends XmlElement implements Validator {
     return level;
   }
 
-  string get deepArrow => identArrow(length: deepLevel, pattern: "|=>");
+  string get deepArrow => "($tagName) ${identArrow(length: deepLevel, pattern: "|=>")}";
 
   /// Returns the path of the current node.
   /// The [joiner] is used to join the path segments.
   string path([string joiner = "."]) {
-    {
-      string path = tagName;
-      var p = parent;
-      while (p != null) {
-        if (p is XmlElement) {
-          path = "${name.qualified}$joiner$path";
-          p = p.parent;
-        }
+    string path = tagName;
+    var p = parent;
+    while (p != null) {
+      if (p is XmlElement) {
+        path = "${name.qualified}$joiner$path";
+        p = p.parent;
       }
-      return path;
     }
+    return path;
   }
 }

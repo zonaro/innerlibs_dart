@@ -806,7 +806,7 @@ class Dest extends TagXml {
       if (indIEDest == null) "$deepArrow Indicador de IE do destinatário não informado",
       if (ie == null) "$deepArrow IE do destinatário não informada" else if (ie?.length.isBetweenOrEqual(2, 14) == false) "$deepArrow IE do destinatário deve ter entre 2 e 14 caracteres",
       if (enderDest == null) "$deepArrow Endereço do destinatário não informado" else ...enderDest!.validate(),
-      if (ie != null) enderDest == null || (enderDest!.uf == null || enderDest!.uf == Estado.naoDefinido) ? "$deepArrow IE informada mas UF não informada (EnderDest)" : (enderDest!.uf!.validarInscricaoEstadual(ie) ? null : "$deepArrow Inscrição estadual inválida para o estado ${enderDest!.uf}"),
+      if (ie != null) enderDest == null || (enderDest!.uf == null || enderDest!.uf == Estado.naoDefinido) ? "$deepArrow IE informada mas UF não informada" : (enderDest!.uf!.validarInscricaoEstadual(ie) ? null : "$deepArrow Inscrição estadual inválida para o estado ${enderDest!.uf}"),
     ].whereNotNull();
   }
 
@@ -898,6 +898,41 @@ class Det extends TagXml {
     prod ??= Prod();
     prod!.calcular();
   }
+}
+
+class ICMSUFDest extends TagXml {
+  ICMSUFDest() : super.fromTagName("ICMSUFDest");
+
+  @override
+  Iterable<string> validate() {
+    return [
+      if (vBCUFDest == null) "$deepArrow Valor da BC do ICMS na UF de destino não informado",
+      if (pICMSUFDest == null) "$deepArrow Percentual do ICMS Interestadual para a UF de destino não informado",
+      if (pICMSInter == null) "$deepArrow Percentual do ICMS Interestadual para a UF de destino não informado",
+      if (pICMSInterPart == null) "$deepArrow Percentual do ICMS Interestadual para a UF de destino não informado",
+      if (vICMSUFDest == null) "$deepArrow Valor do ICMS Interestadual para a UF de destino não informado",
+      if (vICMSUFRemet == null) "$deepArrow Valor do ICMS Interestadual para a UF de destino não informado",
+    ];
+  }
+
+  /// Obtém o valor da BC do ICMS na UF de destino.
+  double? get vBCUFDest => getValueFromNode('vBCUFDest');
+  set vBCUFDest(double? value) => setTextValueForNode('vBCUFDest', value?.toStringAsFixed(2));
+
+  double? get pICMSUFDest => getValueFromNode('pICMSUFDest');
+  set pICMSUFDest(double? value) => setTextValueForNode('pICMSUFDest', value?.toStringAsFixed(2));
+
+  double? get pICMSInter => getValueFromNode('pICMSInter');
+  set pICMSInter(double? value) => setTextValueForNode('pICMSInter', value?.toStringAsFixed(2));
+
+  double? get pICMSInterPart => getValueFromNode('pICMSInterPart');
+  set pICMSInterPart(double? value) => setTextValueForNode('pICMSInterPart', value?.toStringAsFixed(2));
+
+  double? get vICMSUFDest => getValueFromNode('vICMSUFDest');
+  set vICMSUFDest(double? value) => setTextValueForNode('vICMSUFDest', value?.toStringAsFixed(2));
+
+  double? get vICMSUFRemet => getValueFromNode('vICMSUFRemet');
+  set vICMSUFRemet(double? value) => setTextValueForNode('vICMSUFRemet', value?.toStringAsFixed(2));
 }
 
 class IPI extends TagXml {
@@ -1139,6 +1174,13 @@ class Imposto extends TagXml {
   /// Obtém ou define o IPI (Imposto sobre Produtos Industrializados) do imposto.
   IPI? get ipi => getTagAs<IPI>('IPI', () => IPI());
   set ipi(IPI? value) => setTagFrom<IPI>('IPI', value);
+
+  /// Obtém o ICMSUFDest.
+  ///
+  /// Retorna o ICMSUFDest, que representa o Imposto sobre Circulação de Mercadorias e Serviços
+  /// para o estado de destino da mercadoria.
+  ICMSUFDest? get icmsUFDest => getTagAs<ICMSUFDest>('ICMSUFDest', () => ICMSUFDest());
+  set icmsUFDest(ICMSUFDest? value) => setTagFrom<ICMSUFDest>('ICMSUFDest', value);
 }
 
 /// Classe que representa o ICMS (Imposto sobre Circulação de Mercadorias e Serviços) em um documento XML.
@@ -1844,7 +1886,7 @@ class DetPag extends TagXml {
   @override
   Iterable<string> validate() {
     return [
-      if (tPag != FormaPagamento.semPagamento && vPag >= 0) '$deepArrow Valor do pagamento não informado no DetPag $indexDetPag' else if (tPag == FormaPagamento.semPagamento && vPag > 0) 'Forma de pagamento não informada no DetPag $indexDetPag',
+      if (tPag != FormaPagamento.semPagamento && vPag <= 0) '$deepArrow Valor do pagamento não informado no DetPag $indexDetPag' else if (tPag == FormaPagamento.semPagamento && vPag > 0) 'Forma de pagamento não informada no DetPag $indexDetPag',
       if (vTroco < 0) 'Valor do troco não pode ser negativo no DetPag $indexDetPag',
       if (vPag < vTroco) 'Valor do troco não pode ser maior que o valor do pagamento no DetPag $indexDetPag',
       if (vPag == 0) 'Valor do pagamento não pode ser zero no DetPag $indexDetPag',
@@ -2055,11 +2097,11 @@ class InfRespTec extends TagXml {
   @override
   Iterable<string> validate() {
     return [
-      if (cnpj == null) 'CNPJ do responsável técnico não informado' else if (Brasil.validarCNPJ(cnpj!) == false) 'CNPJ do responsável técnico inválido',
-      if (xContato == null) 'Nome do contato do responsável técnico não informado' else if (xContato!.length < 2) 'Nome do contato do responsável técnico inválido',
-      if (email == null) 'E-mail do responsável técnico não informado' else if (email!.isEmail == false) 'E-mail do responsável técnico inválido',
-      if (fone == null) 'Telefone do responsável técnico não informado' else if (Brasil.validarTelefone(fone) == false) 'Telefone do responsável técnico inválido',
-    ].map((x) => "$deepArrow $x").toList();
+      if (cnpj == null) '$deepArrow CNPJ do responsável técnico não informado' else if (Brasil.validarCNPJ(cnpj!) == false) '$deepArrow CNPJ do responsável técnico inválido',
+      if (xContato == null) '$deepArrow Nome do contato do responsável técnico não informado' else if (xContato!.length < 2) '$deepArrow Nome do contato do responsável técnico inválido',
+      if (email == null) '$deepArrow E-mail do responsável técnico não informado' else if (email!.isEmail == false) '$deepArrow E-mail do responsável técnico inválido',
+      if (fone == null) '$deepArrow Telefone do responsável técnico não informado' else if (Brasil.validarTelefone(fone) == false) '$deepArrow Telefone do responsável técnico inválido',
+    ];
   }
 
   /// Obtém ou define o valor do campo CNPJ.
