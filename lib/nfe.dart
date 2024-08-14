@@ -252,8 +252,6 @@ class NFe extends TagXml implements Validator {
 
     for (var x in infNFe!.det) {
       x.computar();
-      x.imposto?.pis?.computar();
-      x.imposto?.cofins?.computar();
     }
 
     for (var x in infNFe!.detPag) {
@@ -900,6 +898,7 @@ class Det extends TagXml {
     prod ??= Prod();
     prod!.computar();
     imposto ??= Imposto();
+    imposto!.computar();
   }
 }
 
@@ -1158,6 +1157,11 @@ class Prod extends TagXml {
 /// Classe que representa a tag XML 'imposto' do documento fiscal eletrônico (NF-e/NFC-e).
 class Imposto extends TagXml {
   Imposto() : super.fromTagName("imposto");
+
+  void computar() {
+    pis?.computar();
+    cofins?.computar();
+  }
 
   double get vTotTrib => getValueFromNode('vTotTrib', double.parse) ?? 0;
   set vTotTrib(double value) => setTextValueForNode('vTotTrib', value.toStringAsFixed(2));
