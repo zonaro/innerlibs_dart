@@ -240,7 +240,7 @@ class NFe extends TagXml implements Validator {
   ///   nfe.calcular();
   /// }
   /// ```
-  void calcular() {
+  void computar() {
     infNFe ??= InfNFe();
     infNFe!.total ??= Total();
     infNFe!.total!.icmsTot ??= ICMSTot();
@@ -248,10 +248,10 @@ class NFe extends TagXml implements Validator {
     infNFe!.versao ??= "4.00";
 
     infNFe!.dest ??= Dest();
-    infNFe!.dest!.ajustar();
+    infNFe!.dest!.computar();
 
     for (var x in infNFe!.det) {
-      x.calcular();
+      x.computar();
     }
 
     for (var x in infNFe!.detPag) {
@@ -309,8 +309,8 @@ class NFe extends TagXml implements Validator {
   /// Calcula e valida a Nota Fiscal Eletrônica (NF-e).
   /// Retorna `true` se a NF-e for válida, caso contrário, retorna `false`.
   /// Se o parâmetro [throwException] for `true`, uma exceção [InvalidNFeException] será lançada se a NF-e for inválida.
-  bool calcularEValidar([bool throwException = false]) {
-    calcular();
+  bool computarEValidar([bool throwException = false]) {
+    computar();
     if (throwException) {
       validateOrThrow((errors) => InvalidNFeException(errors));
     }
@@ -810,7 +810,7 @@ class Dest extends TagXml {
     ].whereNotNull();
   }
 
-  void ajustar() {
+  void computar() {
     enderDest ??= EnderDest();
     enderDest!.uf = enderDest!.uf ?? Estado.naoDefinido;
     if (enderDest!.uf == Estado.ex) {
@@ -894,9 +894,10 @@ class Det extends TagXml {
   /// Define a tag <imposto> como um objeto da classe [Imposto].
   set imposto(Imposto? value) => setTagFrom('imposto', value);
 
-  void calcular() {
+  void computar() {
     prod ??= Prod();
-    prod!.calcular();
+    prod!.computar();
+    imposto ??= Imposto();
   }
 }
 
@@ -1033,7 +1034,7 @@ class Prod extends TagXml {
   }
 
   /// Calcula os valores totais do produto.
-  void calcular() {
+  void computar() {
     cEAN ??= "SEM GTIN"; // Garante que o cEAN seja definido
     cEANTrib ??= "SEM GTIN"; // Garante que o cEANTrib seja definido
     qCom ??= 0;
@@ -1491,7 +1492,7 @@ class PisCofinsTag extends TagXml {
 
   string get sufixo => tagName.after(pisCofinsTag);
 
-  void ajustar() {
+  void computar() {
     if (sufixo == "NT") {
       _vPisCofins = null;
       _pPisCofins = null;
