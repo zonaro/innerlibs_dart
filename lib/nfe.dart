@@ -1054,7 +1054,8 @@ class Prod extends TagXml {
     vProd = (qCom! * vUnCom!);
   }
 
-  double get vItem => vProd ?? 0 + (vFrete ?? 0) + (vOutro ?? 0) - (vDesc ?? 0);
+  /// retorna o valor total desse item (vProd + vFrete + vOutro - vDesc)
+  double get vItem => [vProd, vFrete, vOutro, vDesc?.forceNegative].whereNotNull().sum;
 
   /// Obtém ou define a tag <rastro> do produto
   Iterable<Rastro> get rastro => getTagsFrom('rastro', () => Rastro());
