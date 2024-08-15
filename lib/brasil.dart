@@ -1054,6 +1054,7 @@ abstract interface class Brasil {
   /// Para validar um estado especifico utilize a função `validarInscricaoEstadual` do estado correspondente.
   static bool validarInscricaoEstadual(dynamic value) => Estado.naoDefinido.validarInscricaoEstadual(value);
 
+  /// Valida um número de PIS.
   static bool validarPIS(dynamic numero) {
     string text = "$numero";
     if (text.isNotValid) {
