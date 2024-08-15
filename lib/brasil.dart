@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:http/http.dart' as http;
 import 'package:innerlibs/innerlibs.dart';
@@ -702,6 +703,7 @@ abstract interface class Brasil {
     if (documento is Estado) return "Estado";
     if (documento is Cidade) return "Cidade";
     if (documento is Endereco) return "Endereço";
+    if (documento is Color) return "Cor";
 
     var d = "$documento";
     if (d.isEmail) return "Email";
@@ -1123,24 +1125,29 @@ abstract interface class Brasil {
 
   /// Retorna o valor do documento como um número inteiro.
   /// Tipos:
-  /// - [date]: Retorna o valor do documento como um timestamp.
+  /// - [date]: Retorna o valor do documento como um timestamp (millisecondsSinceEpoch).
   /// - [ChaveNFe]: Retorna o valor da chave como um inteiro.
   /// - [NFe]: Retorna o número da NFe.
   /// - [Estado]: Retorna o IBGE do estado.
   /// - [Cidade]: Retorna o IBGE da cidade.
   /// - [Endereco]: Retorna o CEP do endereço.
   /// - [num]: Retorna o valor do número arredondado para baixo.
-  /// - [String]: Verifica se o documento é um CPF, CNPJ, CEP, EAN, PIS, CNH, ChaveNFe, Telefone e retorna o valor como um inteiro.
+  /// - [String]: Verifica se o documento é um CPF, CNPJ, CEP, EAN, PIS, CNH, ChaveNFe, Telefone, Inscrição Estadual e retorna o valor como um inteiro.
+  ///   - Iscrições estaduais, apenas a parte numérica é retornada como inteiro.
+  /// - [Color]: Retorna o valor da cor.
+  /// - [null]: Retorna `null`.
+  ///
   /// Se o documento for nulo ou não for um número, retorna `null`.
   static int? valorDocumento(dynamic documento) {
     if (documento == null) return null;
     if (documento is date) return documento.millisecondsSinceEpoch.nullIfZero;
-    if (documento is ChaveNFe) return documento.chave.toInt.nullIfZero;
+    if (documento is ChaveNFe) return documento.chave.toInt?.nullIfZero;
     if (documento is NFe) return documento.infNFe?.ide?.nNF?.nullIfZero;
     if (documento is Estado) return documento.ibge.nullIfZero;
     if (documento is Cidade) return documento.ibge.nullIfZero;
     if (documento is Endereco) return documento.cep.onlyNumbers.toInt.nullIfZero;
     if (documento is num) return documento.floor();
+    if (documento is Color) return documento.value;
 
     if (validarCPF(documento) ||
         validarCNPJ(documento) ||
