@@ -39,6 +39,9 @@ enum FinalidadeNFe {
 }
 
 /// Códigos de regimes tributários
+typedef CRT = RegimeTributario;
+
+/// Regimes tributários
 enum RegimeTributario {
   /// 1 - Simples Nacional
   simplesNacional(1),
@@ -63,7 +66,37 @@ enum RegimeTributario {
       case 3:
         return RegimeTributario.regimeNormal;
       default:
-        throw ArgumentError('CRT inválido: $value');
+        throw ArgumentError('Regime Tributário inválido: $value');
+    }
+  }
+
+  factory RegimeTributario.fromValue(dynamic value) {
+    if (value is RegimeTributario) {
+      return value;
+    }
+    if (value is num) {
+      return RegimeTributario.fromInt(value.floor());
+    }
+    if (value is string && value.isNumericOnly) {
+      return RegimeTributario.fromInt(value.onlyNumbersInt!);
+    }
+
+    switch (generateKeyword(value)) {
+      case '1':
+      case 'simplesnacional':
+      case 'simples':
+        return RegimeTributario.simplesNacional;
+      case '2':
+      case 'simplesnacionalexcessosublimite':
+      case 'excessosublimite':
+      case 'excesso':
+        return RegimeTributario.simplesNacionalExcessoSublimite;
+      case '3':
+      case 'regimenormal':
+      case 'normal':
+        return RegimeTributario.regimeNormal;
+      default:
+        throw ArgumentError('Regime Tributário inválido: $value');
     }
   }
 }

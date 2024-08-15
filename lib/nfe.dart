@@ -655,11 +655,20 @@ class Emit extends TagXml {
   Iterable<string> validate() {
     return [
       if (cnpj == null) "$deepArrow CNPJ do emitente não informado" else if (Brasil.validarCNPJ(cnpj!) == false) "$deepArrow CNPJ do emitente inválido",
-      if (xNome == null) "$deepArrow Razão Social do emitente não informada" else if (xNome?.length.isBetweenOrEqual(2, 60) == false) "$deepArrow Razão Social do emitente deve ter entre 2 e 60 caracteres",
-      if (xFant == null) "$deepArrow Nome Fantasia do emitente não informado" else if (xFant?.length.isBetweenOrEqual(1, 60) == false) "$deepArrow Nome Fantasia do emitente deve ter entre 1 e 60 caracteres",
+      if (xNome == null)
+        "$deepArrow Razão Social do emitente não informada"
+      else if (xNome?.length.isBetweenOrEqual(2, 60) == false)
+        "$deepArrow Razão Social do emitente deve ter entre 2 e 60 caracteres",
+      if (xFant == null)
+        "$deepArrow Nome Fantasia do emitente não informado"
+      else if (xFant?.length.isBetweenOrEqual(1, 60) == false)
+        "$deepArrow Nome Fantasia do emitente deve ter entre 1 e 60 caracteres",
       if (enderEmit == null) "$deepArrow Endereço do emitente não informado" else ...enderEmit!.validate(),
       if (crt == null) "$deepArrow CRT do emitente não informado",
-      if (ie != null) enderEmit == null || enderEmit!.uf == null ? "$deepArrow IE informada mas UF não informada (EnderEmit)" : (enderEmit!.uf!.validarInscricaoEstadual(ie) ? null : "$deepArrow Inscrição estadual inválida para o estado ${enderEmit!.uf}"),
+      if (ie != null)
+        enderEmit == null || enderEmit!.uf == null
+            ? "$deepArrow IE informada mas UF não informada (EnderEmit)"
+            : (enderEmit!.uf!.validarInscricaoEstadual(ie) ? null : "$deepArrow Inscrição estadual inválida para o estado ${enderEmit!.uf}"),
     ].whereNotNull();
   }
 
@@ -809,7 +818,10 @@ class Dest extends TagXml {
       if (indIEDest == null) "$deepArrow Indicador de IE do destinatário não informado",
       if (ie == null) "$deepArrow IE do destinatário não informada" else if (ie?.length.isBetweenOrEqual(2, 14) == false) "$deepArrow IE do destinatário deve ter entre 2 e 14 caracteres",
       if (enderDest == null) "$deepArrow Endereço do destinatário não informado" else ...enderDest!.validate(),
-      if (ie != null) enderDest == null || (enderDest!.uf == null || enderDest!.uf == Estado.naoDefinido) ? "$deepArrow IE informada mas UF não informada" : (enderDest!.uf!.validarInscricaoEstadual(ie) ? null : "$deepArrow Inscrição estadual inválida para o estado ${enderDest!.uf}"),
+      if (ie != null)
+        enderDest == null || (enderDest!.uf == null || enderDest!.uf == Estado.naoDefinido)
+            ? "$deepArrow IE informada mas UF não informada"
+            : (enderDest!.uf!.validarInscricaoEstadual(ie) ? null : "$deepArrow Inscrição estadual inválida para o estado ${enderDest!.uf}"),
     ].whereNotNull();
   }
 
@@ -1024,15 +1036,33 @@ class Prod extends TagXml {
   @override
   Iterable<string> validate() {
     return [
-      if (cProd == null) "$deepArrow Código do produto $nItem não informado" else if (cProd?.length.isBetweenOrEqual(1, 60) == false) "$deepArrow Código do produto $nItem deve ter entre 1 e 60 caracteres",
-      if (cEAN == null) "$deepArrow Código de barras (EAN) do produto $nItem não informado" else if (cEAN?.isValidEAN == false || cEAN != "SEM GTIN") "$deepArrow Código de barras (EAN) do produto $nItem inválido",
-      if (xProd == null) "$deepArrow Descrição do produto $nItem não informada" else if (xProd?.length.isBetweenOrEqual(1, 120) == false) "$deepArrow Descrição do produto $nItem deve ter entre 1 e 120 caracteres",
-      if (uCom == null) "$deepArrow Unidade comercial do produto $nItem não informada" else if (uCom?.length.isBetweenOrEqual(1, 6) == false) "$deepArrow Unidade comercial do produto $nItem deve ter entre 1 e 6 caracteres",
+      if (cProd == null)
+        "$deepArrow Código do produto $nItem não informado"
+      else if (cProd?.length.isBetweenOrEqual(1, 60) == false)
+        "$deepArrow Código do produto $nItem deve ter entre 1 e 60 caracteres",
+      if (cEAN == null)
+        "$deepArrow Código de barras (EAN) do produto $nItem não informado"
+      else if (cEAN?.isValidEAN == false || cEAN != "SEM GTIN")
+        "$deepArrow Código de barras (EAN) do produto $nItem inválido",
+      if (xProd == null)
+        "$deepArrow Descrição do produto $nItem não informada"
+      else if (xProd?.length.isBetweenOrEqual(1, 120) == false)
+        "$deepArrow Descrição do produto $nItem deve ter entre 1 e 120 caracteres",
+      if (uCom == null)
+        "$deepArrow Unidade comercial do produto $nItem não informada"
+      else if (uCom?.length.isBetweenOrEqual(1, 6) == false)
+        "$deepArrow Unidade comercial do produto $nItem deve ter entre 1 e 6 caracteres",
       if (qCom == null) "$deepArrow Quantidade comercial do produto $nItem não informada",
       if (vUnCom == null) "$deepArrow Valor unitário comercial do produto $nItem não informado",
       if (vProd == null) "$deepArrow Valor total do produto $nItem não informado",
-      if (cEANTrib == null) "$deepArrow Código de barras tributado do produto $nItem não informado" else if (cEANTrib?.isValidEAN == false || cEANTrib != "SEM GTIN") "$deepArrow Código de barras tributado do produto $nItem inválido",
-      if (uTrib == null) "$deepArrow Unidade tributável do produto $nItem não informada" else if (uTrib?.length.isBetweenOrEqual(1, 6) == false) "$deepArrow Unidade tributável do produto $nItem deve ter entre 1 e 6 caracteres",
+      if (cEANTrib == null)
+        "$deepArrow Código de barras tributado do produto $nItem não informado"
+      else if (cEANTrib?.isValidEAN == false || cEANTrib != "SEM GTIN")
+        "$deepArrow Código de barras tributado do produto $nItem inválido",
+      if (uTrib == null)
+        "$deepArrow Unidade tributável do produto $nItem não informada"
+      else if (uTrib?.length.isBetweenOrEqual(1, 6) == false)
+        "$deepArrow Unidade tributável do produto $nItem deve ter entre 1 e 6 caracteres",
       if (qTrib == null) "$deepArrow Quantidade tributável do produto $nItem não informada",
       if (vUnTrib == null) "$deepArrow Valor unitário tributado do produto $nItem não informado",
       if (indTot == null) "$deepArrow Indicador de totalização do produto $nItem não informado",
@@ -1824,8 +1854,14 @@ class Dup extends TagXml {
   @override
   Iterable<string> validate() {
     return [
-      if (nDup == null) '$deepArrow Número da parcela não informado' else if (nDup.toString().length.isBetween(1, 60) == false) '$deepArrow Número da parcela inválido. Deve ter entre 1 e 60 caracteres',
-      if (dVenc == null) '$deepArrow Data de vencimento da parcela não informada' else if (dVenc!.isBefore(DateTime(1900)) || dVenc!.isAfter(DateTime(2099))) '$deepArrow Data de vencimento da parcela inválida',
+      if (nDup == null)
+        '$deepArrow Número da parcela não informado'
+      else if (nDup.toString().length.isBetween(1, 60) == false)
+        '$deepArrow Número da parcela inválido. Deve ter entre 1 e 60 caracteres',
+      if (dVenc == null)
+        '$deepArrow Data de vencimento da parcela não informada'
+      else if (dVenc!.isBefore(DateTime(1900)) || dVenc!.isAfter(DateTime(2099)))
+        '$deepArrow Data de vencimento da parcela inválida',
       if (vDup == null) '$deepArrow Valor da parcela não informado' else if (vDup! <= 0) '$deepArrow Valor da parcela não pode ser zero ou negativo',
     ];
   }
@@ -1919,7 +1955,10 @@ class DetPag extends TagXml {
   @override
   Iterable<string> validate() {
     return [
-      if (tPag != FormaPagamento.semPagamento && vPag <= 0) '$deepArrow Valor do pagamento não informado no DetPag $indexDetPag' else if (tPag == FormaPagamento.semPagamento && vPag > 0) 'Forma de pagamento não informada no DetPag $indexDetPag',
+      if (tPag != FormaPagamento.semPagamento && vPag <= 0)
+        '$deepArrow Valor do pagamento não informado no DetPag $indexDetPag'
+      else if (tPag == FormaPagamento.semPagamento && vPag > 0)
+        'Forma de pagamento não informada no DetPag $indexDetPag',
       if (vTroco < 0) 'Valor do troco não pode ser negativo no DetPag $indexDetPag',
       if (vPag < vTroco) 'Valor do troco não pode ser maior que o valor do pagamento no DetPag $indexDetPag',
       if (vPag == 0) 'Valor do pagamento não pode ser zero no DetPag $indexDetPag',
