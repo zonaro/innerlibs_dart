@@ -253,7 +253,13 @@ class NFe extends TagXml implements Validator {
       }
     }
 
-    infNFe!.total!.icmsTot!.vNF = infNFe!.det.sum((x) => x.prod?.vProd ?? 0);
+    /// ajusta o indTot dos produtos
+    for (Det x in infNFe!.det) {
+      x.prod!.indTot = totalNota == x.prod!.vProd;
+      x.prod!.compute();
+    }
+
+    infNFe!.total!.icmsTot!.vProd = infNFe!.det.sum((x) => x.prod?.vProd ?? 0);
     infNFe!.total!.icmsTot!.vDesc = infNFe!.det.sum((x) => x.prod?.vDesc ?? 0);
     infNFe!.total!.icmsTot!.vOutro = infNFe!.det.sum((x) => x.prod?.vOutro ?? 0);
     infNFe!.total!.icmsTot!.vFrete = infNFe!.det.sum((x) => x.prod?.vFrete ?? 0);
@@ -261,12 +267,17 @@ class NFe extends TagXml implements Validator {
     infNFe!.total!.icmsTot!.vTotTrib = infNFe!.det.sum((x) => x.imposto?.vTotTrib ?? 0);
     infNFe!.total!.icmsTot!.vBC = infNFe!.det.sum((x) => x.imposto?.icms?.tag?.vBC ?? 0);
     infNFe!.total!.icmsTot!.vICMS = infNFe!.det.sum((x) => x.imposto?.icms?.tag?.vICMS ?? 0);
+    infNFe!.total!.icmsTot!.vICMSUFDest = infNFe!.det.sum((x) => x.imposto?.icmsUFDest?.vICMSUFDest ?? 0);
+    infNFe!.total!.icmsTot!.vPIS = infNFe!.det.sum((x) => x.imposto?.pis?.tag?._vPisCofins ?? 0);
+    infNFe!.total!.icmsTot!.vCOFINS = infNFe!.det.sum((x) => x.imposto?.cofins?.tag?._vPisCofins ?? 0);
+    infNFe!.total!.icmsTot!.vIPI = infNFe!.det.sum((x) => x.imposto?.ipi?.ipiTrib?.vIPI ?? 0);
+    infNFe!.total!.icmsTot!.vST = infNFe!.det.sum((x) => x.imposto?.icms?.tag?.vICMSST ?? 0);
+    infNFe!.total!.icmsTot!.vBCST = infNFe!.det.sum((x) => x.imposto?.icms?.tag?.vBCST ?? 0);
 
-    /// ajusta o indTot dos produtos
-    for (Det x in infNFe!.det) {
-      x.prod!.indTot = totalNota == x.prod!.vProd;
-    }
+    infNFe!.total!.icmsTot!.vNF = totalItem + (infNFe!.total!.icmsTot!.vST ?? 0);
   }
+
+  double get totalItem => infNFe?.det.sum((x) => x.prod?.vItem ?? 0) ?? 0;
 
   double get totalNota => infNFe?.total?.icmsTot?.vNF ?? 0;
   set totalNota(double value) {
@@ -1033,13 +1044,17 @@ class Prod extends TagXml {
   void compute() {
     cEAN ??= "SEM GTIN"; // Garante que o cEAN seja definido
     cEANTrib ??= "SEM GTIN"; // Garante que o cEANTrib seja definido
-    qCom ??= 0;
+    qCom ??= 1;
     vUnCom ??= 0;
-    vFrete = vFrete.nullIfZero;
-    vOutro = vOutro.nullIfZero;
-    vDesc = vDesc.nullIfZero;
-    vProd = (qCom! * vUnCom!) + (vFrete ?? 0) + (vOutro ?? 0) - (vDesc ?? 0);
+    qTrib ??= qCom;
+    vUnTrib ??= vUnCom;
+    vFrete = vFrete?.forcePositive.nullIfZero;
+    vOutro = vOutro?.forcePositive.nullIfZero;
+    vDesc = vDesc?.forcePositive.nullIfZero;
+    vProd = (qCom! * vUnCom!);
   }
+
+  double get vItem => vProd ?? 0 + (vFrete ?? 0) + (vOutro ?? 0) - (vDesc ?? 0);
 
   /// Obtém ou define a tag <rastro> do produto
   Iterable<Rastro> get rastro => getTagsFrom('rastro', () => Rastro());
@@ -1593,6 +1608,11 @@ class Total extends TagXml {
     return [
       if (icmsTot == null) "$deepArrow Tag ICMSTot não informada" else ...icmsTot!.validate(),
     ];
+  }
+
+  @override
+  void compute() {
+    icmsTot?.compute();
   }
 }
 
