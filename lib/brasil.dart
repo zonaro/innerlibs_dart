@@ -848,12 +848,6 @@ abstract interface class Brasil {
     }
   }
 
-  /// Separa um número de telefone em um objeto da classe Telefone.
-  ///
-  /// O parâmetro [telefone] pode ser de qualquer tipo, pois será convertido para um objeto da classe Telefone.
-  /// Retorna um objeto da classe Telefone.
-  static Telefone separarTelefone(dynamic telefone) => Telefone(telefone);
-
   /// Retorna o tipo de contribuinte com base no tipo ou documento fornecido.
   ///
   /// O parâmetro [tipoPessoaOuDocumento] representa o tipo ou documento do contribuinte.
