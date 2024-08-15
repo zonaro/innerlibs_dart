@@ -7,8 +7,6 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 import 'package:xml_crypto/xml_crypto.dart';
 
- 
-
 /// Classe que representa um objeto NFeProc.
 ///
 /// Esta classe é responsável por manipular e processar um documento XML
@@ -228,7 +226,8 @@ class NFe extends TagXml implements Validator {
   /// ```dart
   /// void main() {
   ///   NFe nfe = NFe();
-  ///   nfe.calcular();
+  ///   /// Adicione produtos, pagamentos e outras informações à NF-e
+  ///   nfe.compute();
   /// }
   /// ```
   @override
@@ -300,12 +299,12 @@ class NFe extends TagXml implements Validator {
 
   /// Calcula e valida a Nota Fiscal Eletrônica (NF-e).
   /// Retorna `true` se a NF-e for válida, caso contrário, retorna `false`.
-  /// Se o parâmetro [throwException] for `true`, uma exceção [InvalidNFeException] será lançada se a NF-e for inválida.
+  /// Se o parâmetro [throwException] for `true`, uma exceção [InvalidException] será lançada se a NF-e for inválida.
   @override
   bool computeAndValidate([bool throwException = false]) {
     compute();
     if (throwException) {
-      validateOrThrow((errors) => InvalidException("Foram encontrados error ao validar esta nota:",errors));
+      validateOrThrow((errors) => InvalidException("Foram encontrados error ao validar esta nota:", errors));
     }
     return notaValida;
   }
@@ -1194,6 +1193,7 @@ class ICMS extends TagXml {
   /// Obtém o nome da tag ICMS utilizada.
   @override
   string get tagName => (children.singleOrNull as XmlElement?)?.name.local ?? "";
+  @override
   set tagName(string value) => TagXml.mutate(tag, () => IcmsTag(value));
 
   /// Obtém o objeto ICMSBase.
@@ -1447,6 +1447,7 @@ class PisCofins extends TagXml {
   /// Obtém o nome da tag PIS ou COFINS utilizada.
   @override
   string get tagName => (children.singleOrNull as XmlElement?)?.name.local ?? "";
+  @override
   set tagName(string value) => TagXml.mutate(tag, () => PisCofinsTag(value.toUpperCase()));
 
   /// Obtém a tag PIS ou COFINS.

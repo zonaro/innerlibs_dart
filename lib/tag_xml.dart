@@ -3,9 +3,12 @@ import 'package:xml/xml.dart';
 
 /// Represents an XML tag that can behave like a POCO class and implement validations and computations
 class TagXml extends XmlElement implements Validator {
+  
   /// Returns the tag name.
   string get tagName => name.local;
+  set tagName(string value) => rename(value);
 
+  /// compute this tag
   void compute() {}
 
   bool computeAndValidate([bool throwException = false]) {
@@ -125,27 +128,27 @@ class TagXml extends XmlElement implements Validator {
   /// - If the [XmlElement] is `null`, it returns `null`.
   /// - If the [XmlElement] is already an instance of [T], it returns the [XmlElement] as [T].
   /// - If the [XmlElement] is not an instance of [T], it creates a new instance of [T] and copies the attributes and children of the [XmlElement] to the new instance, insert the new instance in the parent of the [XmlElement] and remove the [XmlElement].
-  static T? mutate<T extends TagXml>(XmlElement? n, T Function() constructor) {
-    if (n == null) return null;
-    if (n is T) return n;
-    var m = constructor();
-    while (n.children.isNotEmpty) {
-      var c = m.children.first;
+  static T? mutate<T extends TagXml>(XmlElement? element, T Function() constructor, [bool force = false]) {
+    if (element == null) return null;
+    if (element is T && force == false) return element;
+    var newTag = constructor();
+    while (element.children.isNotEmpty) {
+      var c = newTag.children.first;
       c.remove();
-      m.children.add(c);
+      newTag.children.add(c);
     }
-    while (n.attributes.isNotEmpty) {
-      var a = n.attributes.first;
-      n.removeAttribute(a.name.qualified);
-      m.setAttribute(a.name.qualified, a.value);
+    while (element.attributes.isNotEmpty) {
+      var a = element.attributes.first;
+      element.removeAttribute(a.name.qualified);
+      newTag.setAttribute(a.name.qualified, a.value);
     }
 
-    if (n.hasParent) {
-      var index = n.parent!.children.indexOf(n);
-      n.parent!.children.insert(index, m);
-      n.remove();
+    if (element.hasParent) {
+      var index = element.parent!.children.indexOf(element);
+      element.parent!.children.insert(index, newTag);
+      element.remove();
     }
-    return m;
+    return newTag;
   }
 
   /// Remove all child nodes with the given [tagName].
@@ -158,8 +161,12 @@ class TagXml extends XmlElement implements Validator {
   void renameChildren(string oldTagName, string newTagName) {
     while (findElements(oldTagName).isNotEmpty) {
       var e = findElements(oldTagName).first;
-      mutate(e, () => TagXml.fromTagName(newTagName));
+      mutate(e, () => TagXml.fromTagName(newTagName), true);
     }
+  }
+
+  void rename(string newName) {
+    mutate(this, () => TagXml.fromTagName(newName), true);
   }
 
   @override
@@ -182,7 +189,7 @@ class TagXml extends XmlElement implements Validator {
 
   /// Returns the path of the current node.
   /// The [joiner] is used to join the path segments.
-  string path([string joiner = "."]) {
+  string pathJoin([string joiner = "."]) {
     string path = tagName;
     var p = parent;
     while (p != null) {
@@ -193,4 +200,7 @@ class TagXml extends XmlElement implements Validator {
     }
     return path;
   }
+
+  /// Returns the path of the current node.
+  string get path => pathJoin("/");
 }

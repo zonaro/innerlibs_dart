@@ -1067,14 +1067,11 @@ extension StringExtensions on String {
 
   /// Returns the first [n] characters of the `String`.
   ///
-  /// n is optional, by default it returns the first character of the `String`.
+  /// [n] is optional, by default it returns the first character of the `String`.
   ///
-  /// If [n] provided is longer than the `String`'s length, the string will be returned.
+  /// - If [n] provided is longer than the `String`'s length, the string will be returned.
+  /// - If [n] is negative, it will return the string without the first [n] characters.
   ///
-  /// Faster than using
-  /// ```dart
-  /// substring(0,count)
-  /// ```
   /// ### Example 1
   /// ```dart
   /// String foo = 'hello world';
@@ -1086,11 +1083,14 @@ extension StringExtensions on String {
   /// bool firstChars = foo.first(3); // returns 'hel'
   /// ```
   String first([int n = 1]) {
-    if (isBlank || length < n) {
-      return blankIfNull;
+    if (n < 0) {
+      n = length + n;
     }
     if (n <= 0) {
       return "";
+    }
+    if (isBlank || length < n) {
+      return blankIfNull;
     }
 
     return substring(0, n);
@@ -1098,14 +1098,11 @@ extension StringExtensions on String {
 
   /// Returns the last [n] characters of the `String`.
   ///
-  /// [n] is optional, by default it returns the first character of the `String`.
+  /// [n] is optional, by default it returns the last character of the `String`.
   ///
-  /// If [n] provided is longer than the `String`'s length, the string will be returned.
+  /// - If [n] provided is longer than the `String`'s length, the string will be returned.
+  /// - If [n] is negative, it will return the string without the last [n] characters.
   ///
-  /// Faster than using
-  /// ```dart
-  /// substring(length-n,length)
-  /// ```
   /// ### Example 1
   /// ```dart
   /// String foo = 'hello world';
@@ -1117,11 +1114,15 @@ extension StringExtensions on String {
   /// bool firstChars = foo.last(3); // returns 'rld'
   /// ```
   String last([int n = 1]) {
-    if (isBlank || length < n) {
-      return blankIfNull;
+    if (n < 0) {
+      n = length + n;
     }
     if (n <= 0) {
-      return "";
+      return '';
+    }
+
+    if (isBlank || length < n) {
+      return blankIfNull;
     }
 
     return substring(length - n, length);
@@ -1183,7 +1184,7 @@ extension StringExtensions on String {
     return snakeWord;
   }
 
-  /// Returns the `String` in camelcase.
+  /// Returns the `String` in Camel Case.
   /// ### Example
   /// ```dart
   /// String foo = 'Find max of array';
@@ -1202,10 +1203,20 @@ extension StringExtensions on String {
     return result;
   }
 
+  /// Returns a string in camel case format by splitting the original string using word splitters and joining them together.
+  ///
+  /// Example:
+  /// ```dart
+  /// String input = "hello_world";
+  /// String result = input.toCamelCaseJoin;
+  /// print(result); // Output: "helloWorld"
+  /// ```
+  string get toCamelCaseJoin => toCamelCase.splitAny(StringHelpers.wordSplitters).join('');
+
   /// Returns the `String` title cased.
   ///
   /// ```dart
-  /// String foo = 'Hello dear friend how you doing ?';
+  /// String foo = 'Hello dear friend how you doing';
   /// Sting titleCased = foo.toTitleCase; // returns 'Hello Dear Friend How You Doing'.
   /// ```
   String get toTitleCase {
@@ -1225,9 +1236,7 @@ extension StringExtensions on String {
     return result.trim();
   }
 
-  /// Returns a list of the `String`'s characters.
-  ///
-  /// O(n)
+  /// Returns a list of the `String`'s characters. 
   ///
   /// ### Example
   /// ```dart

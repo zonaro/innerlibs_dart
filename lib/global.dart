@@ -255,8 +255,6 @@ String flatString(dynamic value) {
   return "$value".removeDiacritics.toLowerCase().trimAll;
 }
 
-
-
 /// Generates a keyword from the given [value].
 ///
 /// The generated keyword is based on the [value] and can be customized using optional parameters.
@@ -570,11 +568,11 @@ T? valid<T>(T value, List<bool> Function(T?)? validations, [string? throwErrorMe
 
 /// Generates a arrow or ident string with a specified length and pattern.
 ///
-/// - The `length` parameter specifies the number of arrows to generate.
+/// - The `length` parameter specifies the lenght of arrow (in characters).
 /// - The `pattern` parameter specifies the pattern of the arrows.
 /// - If the `pattern` is empty, an empty string is returned.
 /// - If the `length` is 0, an empty string is returned.
-/// - If the `length` is negative, the absolute value of `length` is used and the pattern is reversed.
+/// - If the `length` is negative, the positive value of `length` is used and the pattern is reversed.
 /// - If the `pattern` has a length of 1, the pattern is repeated `length` times.
 /// - If the `pattern` has a length of 2, the first character is repeated `length - 1` times, followed by the second character.
 /// - If the `pattern` has a length greater than 2, the first and last characters are preserved, and the middle characters are repeated until the length is reached.
@@ -622,32 +620,6 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(dynamic 
 ///
 /// This mixin contains static methods that can be used to transform strings, count search results,
 /// perform Levenshtein distance calculations, and apply filters based on search terms.
-///
-/// The mixin provides the following functions:
-/// - `transformString`: Transforms a given value into a keyword for searching.
-/// - `countSearch`: Counts the number of search terms that match a given item.
-/// - `countLevenshtein`: Counts the number of search terms that have a Levenshtein distance
-///   less than or equal to a specified threshold from a given item.
-/// - `searchFunction`: Checks if a given item matches any of the search terms.
-/// - `levenshteinFunction`: Checks if a given item has any search terms with a Levenshtein distance
-///   less than or equal to a specified threshold.
-/// - `filterFunction`: Checks if a given item matches any of the search terms or has any search terms
-///   with a Levenshtein distance less than or equal to a specified threshold.
-///
-/// Example usage:
-/// ```dart
-/// var searchTerms = ['apple', 'banana'];
-/// var item = 'I like apples';
-///
-/// var matches = FilterFunctions.searchFunction(
-///   item: item,
-///   searchTerms: searchTerms,
-///   searchOn: (String item) => [item],
-/// );
-///
-/// print(matches); // Output: true
-/// ```
-
 mixin FilterFunctions {
   /// Searches the iterable for items that match the specified search criteria.
   ///
