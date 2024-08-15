@@ -81,5 +81,10 @@ void main() {
     });
 
     // Add more test cases for other extension methods...
+
+    test("Random Word", () async {
+      var s = randomWord();
+      print(jsonEncode(s));
+    });
   });
 }

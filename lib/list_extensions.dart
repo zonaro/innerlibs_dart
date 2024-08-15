@@ -211,6 +211,11 @@ extension IterablesExtension<T> on Iterable<T> {
     return uniqueElements;
   }
 
+  Iterable<T> get orderByRandom => orderBy((x) => randomInt(0, 9999));
+
+  /// Returns a random item from the list.
+  T? get randomItem => orderByRandom.firstOrNull;
+
   /// Groups the items in the list by the item returned by the lambda function.
   ///
   /// The lambda function takes an item of type T and returns a item of type M used as key.

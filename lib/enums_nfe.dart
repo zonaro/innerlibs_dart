@@ -1,5 +1,12 @@
 import 'package:innerlibs/innerlibs.dart';
 
+/// Códigos de regimes tributários
+typedef CRT = RegimeTributario;
+
+typedef MetodoPagamento = FormaPagamento;
+
+typedef TipoNota = TipoOperacao;
+
 enum FinalidadeNFe {
   normal(1),
   complementar(2),
@@ -38,100 +45,212 @@ enum FinalidadeNFe {
   }
 }
 
-/// Códigos de regimes tributários
-typedef CRT = RegimeTributario;
+/// Enumeração que representa os indicadores de meio de pagamento para Nota Fiscal Eletrônica (NFe).
+enum FormaPagamento {
+  naoDefinido(null),
 
-/// Regimes tributários
-enum RegimeTributario {
-  /// 1 - Simples Nacional
-  simplesNacional(1),
+  /// Dinheiro
+  dinheiro(1),
 
-  /// 2 - Simples Nacional; excesso sublimite de receita bruta
-  simplesNacionalExcessoSublimite(2),
+  /// Cheque
+  cheque(2),
 
-  /// 3 - Regime Normal
-  regimeNormal(3);
+  /// Cartão de Crédito
+  cartaoCredito(3),
 
-  final int value;
-  const RegimeTributario(this.value);
+  /// Cartão de Débito
+  cartaoDebito(4),
 
-  bool get isSimplesNacional => this == RegimeTributario.simplesNacional || this == RegimeTributario.simplesNacionalExcessoSublimite;
+  /// Crédito Loja
+  creditoLoja(5),
 
-  factory RegimeTributario.fromInt(int value) {
+  /// Vale Alimentação
+  valeAlimentacao(10),
+
+  /// Vale Refeição
+  valeRefeicao(11),
+
+  /// Vale Presente
+  valePresente(12),
+
+  /// Vale Combustível
+  valeCombustivel(13),
+
+  /// Duplicata Mercantil
+  duplicataMercantil(14),
+
+  /// Boleto Bancário
+  boletoBancario(15),
+
+  /// Depósito Bancário
+  depositoBancario(16),
+
+  /// PIX
+  pix(17),
+
+  /// Transferência Bancária, Carteira Digital
+  transferenciaBancariaCarteiraDigital(18),
+
+  /// Cashback, Cartão Fidelidade
+  cashbackCartaoFidelidade(19),
+
+  /// Sem Pagamento
+  semPagamento(90),
+
+  /// Outros
+  outros(99);
+
+  final int? value;
+
+  /// Construtor constante que associa um valor de int a cada indicador de meio de pagamento.
+  const FormaPagamento(this.value);
+
+  factory FormaPagamento.fromInt(int? value) {
     switch (value) {
       case 1:
-        return RegimeTributario.simplesNacional;
+        return FormaPagamento.dinheiro;
       case 2:
-        return RegimeTributario.simplesNacionalExcessoSublimite;
+        return FormaPagamento.cheque;
       case 3:
-        return RegimeTributario.regimeNormal;
+        return FormaPagamento.cartaoCredito;
+      case 4:
+        return FormaPagamento.cartaoDebito;
+      case 5:
+        return FormaPagamento.creditoLoja;
+      case 10:
+        return FormaPagamento.valeAlimentacao;
+      case 11:
+        return FormaPagamento.valeRefeicao;
+      case 12:
+        return FormaPagamento.valePresente;
+      case 13:
+        return FormaPagamento.valeCombustivel;
+      case 14:
+        return FormaPagamento.duplicataMercantil;
+      case 15:
+        return FormaPagamento.boletoBancario;
+      case 16:
+        return FormaPagamento.depositoBancario;
+      case 17:
+        return FormaPagamento.pix;
+      case 18:
+        return FormaPagamento.transferenciaBancariaCarteiraDigital;
+      case 19:
+        return FormaPagamento.cashbackCartaoFidelidade;
+      case 90:
+        return FormaPagamento.semPagamento;
+      case 99:
+        return FormaPagamento.outros;
       default:
-        throw ArgumentError('Regime Tributário inválido: $value');
+        return FormaPagamento.naoDefinido;
     }
   }
 
-  factory RegimeTributario.fromValue(dynamic value) {
-    if (value is RegimeTributario) {
+  factory FormaPagamento.fromValue(dynamic value) {
+    if (value == null) {
+      return FormaPagamento.naoDefinido;
+    }
+    if (value is FormaPagamento) {
       return value;
     }
+    if (value is bool) {
+      return value ? FormaPagamento.dinheiro : FormaPagamento.semPagamento;
+    }
+
     if (value is num) {
-      return RegimeTributario.fromInt(value.floor());
+      return FormaPagamento.fromInt(value.floor());
     }
-    if (value is string && value.isNumericOnly) {
-      return RegimeTributario.fromInt(value.onlyNumbersInt!);
+    var svalue = "$value".toLowerCase();
+
+    if (svalue.isNumericOnly) {
+      return FormaPagamento.fromInt(svalue.toNumOrZero.floor());
     }
 
-    switch (generateKeyword(value)) {
-      case '1':
-      case 'simplesnacional':
-      case 'simples':
-        return RegimeTributario.simplesNacional;
-      case '2':
-      case 'simplesnacionalexcessosublimite':
-      case 'excessosublimite':
-      case 'excesso':
-        return RegimeTributario.simplesNacionalExcessoSublimite;
-      case '3':
-      case 'regimenormal':
-      case 'normal':
-        return RegimeTributario.regimeNormal;
+    switch (svalue) {
+      case 'dinheiro':
+        return FormaPagamento.dinheiro;
+      case 'cheque':
+        return FormaPagamento.cheque;
+      case 'cartaocredito':
+      case 'cartaodecredito':
+        return FormaPagamento.cartaoCredito;
+      case 'cartaodebito':
+      case 'cartaodedebito':
+        return FormaPagamento.cartaoDebito;
+      case 'creditoloja':
+        return FormaPagamento.creditoLoja;
+      case 'valealimentacao':
+        return FormaPagamento.valeAlimentacao;
+      case 'valerefeicao':
+        return FormaPagamento.valeRefeicao;
+      case 'valepresente':
+        return FormaPagamento.valePresente;
+      case 'valecombustivel':
+        return FormaPagamento.valeCombustivel;
+      case 'duplicatamercantil':
+        return FormaPagamento.duplicataMercantil;
+      case 'boletobancario':
+        return FormaPagamento.boletoBancario;
+      case 'depositobancario':
+        return FormaPagamento.depositoBancario;
+      case 'pix':
+        return FormaPagamento.pix;
+      case 'transferenciabancariacarteiradigital':
+      case 'transferenciabancaria':
+      case 'carteiradigital':
+        return FormaPagamento.transferenciaBancariaCarteiraDigital;
+      case 'cashbackcartaofidelidade':
+      case 'cashback':
+      case 'cartaofidelidade':
+        return FormaPagamento.cashbackCartaoFidelidade;
+      case 'sempagamento':
+      case 'nenhum':
+        return FormaPagamento.semPagamento;
+      case 'outros':
       default:
-        throw ArgumentError('Regime Tributário inválido: $value');
+        return FormaPagamento.outros;
     }
   }
-}
 
-/// Enumeração que representa os indicadores de forma de pagamento de documentos fiscais.
-enum IndicadorFormaPagamento {
-  /// Pagamento à Vista
-  pagamentoAVista(0),
-
-  /// Pagamento a Prazo
-  pagamentoAPrazo(1);
-
-  final int value;
-
-  /// Construtor constante que associa um valor inteiro a cada indicador de forma de pagamento.
-  const IndicadorFormaPagamento(this.value);
-  factory IndicadorFormaPagamento.fromInt(int value) {
-    switch (value) {
-      case 0:
-        return IndicadorFormaPagamento.pagamentoAVista;
-      case 1:
-        return IndicadorFormaPagamento.pagamentoAPrazo;
-      default:
-        throw ArgumentError('Indicador de forma de pagamento desconhecido: $value');
-    }
-  }
   @override
   String toString() {
     switch (this) {
-      case IndicadorFormaPagamento.pagamentoAVista:
-        return 'Pagamento à Vista';
-      case IndicadorFormaPagamento.pagamentoAPrazo:
-        return 'Pagamento a Prazo';
+      case FormaPagamento.dinheiro:
+        return 'Dinheiro';
+      case FormaPagamento.cheque:
+        return 'Cheque';
+      case FormaPagamento.cartaoCredito:
+        return 'Cartão de Crédito';
+      case FormaPagamento.cartaoDebito:
+        return 'Cartão de Débito';
+      case FormaPagamento.creditoLoja:
+        return 'Crédito Loja';
+      case FormaPagamento.valeAlimentacao:
+        return 'Vale Alimentação';
+      case FormaPagamento.valeRefeicao:
+        return 'Vale Refeição';
+      case FormaPagamento.valePresente:
+        return 'Vale Presente';
+      case FormaPagamento.valeCombustivel:
+        return 'Vale Combustível';
+      case FormaPagamento.duplicataMercantil:
+        return 'Duplicata Mercantil';
+      case FormaPagamento.boletoBancario:
+        return 'Boleto Bancário';
+      case FormaPagamento.depositoBancario:
+        return 'Depósito Bancário';
+      case FormaPagamento.pix:
+        return 'PIX';
+      case FormaPagamento.transferenciaBancariaCarteiraDigital:
+        return 'Transferência Bancária, Carteira Digital';
+      case FormaPagamento.cashbackCartaoFidelidade:
+        return 'Cashback, Cartão Fidelidade';
+      case FormaPagamento.semPagamento:
+        return 'Sem Pagamento';
+      case FormaPagamento.outros:
+        return 'Outros';
       default:
-        return 'Indicador de forma de pagamento desconhecido';
+        return 'Indicador de meio de pagamento desconhecido';
     }
   }
 }
@@ -174,6 +293,41 @@ enum IdentificadorDestinoOperacaoNFe {
         return 'Operação com exterior';
       default:
         return 'Tipo de operação desconhecido';
+    }
+  }
+}
+
+/// Enumeração que representa os indicadores de forma de pagamento de documentos fiscais.
+enum IndicadorFormaPagamento {
+  /// Pagamento à Vista
+  pagamentoAVista(0),
+
+  /// Pagamento a Prazo
+  pagamentoAPrazo(1);
+
+  final int value;
+
+  /// Construtor constante que associa um valor inteiro a cada indicador de forma de pagamento.
+  const IndicadorFormaPagamento(this.value);
+  factory IndicadorFormaPagamento.fromInt(int value) {
+    switch (value) {
+      case 0:
+        return IndicadorFormaPagamento.pagamentoAVista;
+      case 1:
+        return IndicadorFormaPagamento.pagamentoAPrazo;
+      default:
+        throw ArgumentError('Indicador de forma de pagamento desconhecido: $value');
+    }
+  }
+  @override
+  String toString() {
+    switch (this) {
+      case IndicadorFormaPagamento.pagamentoAVista:
+        return 'Pagamento à Vista';
+      case IndicadorFormaPagamento.pagamentoAPrazo:
+        return 'Pagamento a Prazo';
+      default:
+        return 'Indicador de forma de pagamento desconhecido';
     }
   }
 }
@@ -261,136 +415,6 @@ enum IndicadorIEDestinatario {
         return 'Não Contribuinte, que pode ou não possuir Inscrição Estadual no Cadastro de Contribuintes do ICMS';
       default:
         return 'Indicador de IE desconhecido';
-    }
-  }
-}
-
-/// Enumeração que representa os tipos de impressão de documentos fiscais.
-enum OrigemProduto {
-  /// Nacional (exceto as indicadas nos códigos 3, 4, 5 e 8).
-  nacional(0),
-
-  /// Estrangeira – Importação direta, exceto a indicada no código 6.
-  estrangeiraImportacaoDireta(1),
-
-  /// Estrangeira – Adquirida no mercado interno, exceto a indicada no código 7.
-  estrangeiraAdquiridaMercadoInterno(2),
-
-  /// Nacional, mercadoria ou bem com Conteúdo de Importação superior a 40% e inferior ou igual a 70%.
-  nacionalConteudoImportacao40a70(3),
-
-  /// Nacional, cuja produção tenha sido feita em conformidade com os processos produtivos básicos (PPB).
-  nacionalPPB(4),
-
-  /// Nacional, mercadoria ou bem com Conteúdo de Importação inferior ou igual a 40%.
-  nacionalConteudoImportacaoAte40(5),
-
-  /// Estrangeira – Importação direta, sem similar nacional, constante em lista de Resolução CAMEX e gás natural.
-  estrangeiraImportacaoDiretaSemSimilar(6),
-
-  /// Estrangeira – Adquirida no mercado interno, sem similar nacional, constante em lista de Resolução CAMEX e gás natural.
-  estrangeiraAdquiridaMercadoInternoSemSimilar(7),
-
-  /// Nacional, mercadoria ou bem com Conteúdo de Importação superior a 70%.
-  nacionalConteudoImportacaoSuperior70(8);
-
-  final int value;
-
-  /// Construtor constante que associa um valor inteiro a cada tipo de impressão.
-  const OrigemProduto(this.value);
-
-  factory OrigemProduto.fromValue(dynamic value) {
-    if (value is OrigemProduto) {
-      return value;
-    } else if (value is num) {
-      return OrigemProduto.fromInt(value.floor());
-    } else {
-      return OrigemProduto.fromString("$value");
-    }
-  }
-
-  factory OrigemProduto.fromString(string value) {
-    switch (generateKeyword(value)) {
-      case '0':
-      case 'nacional':
-        return OrigemProduto.nacional;
-      case '1':
-      case 'estrangeiraimportacaodireta':
-        return OrigemProduto.estrangeiraImportacaoDireta;
-      case '2':
-      case 'estrangeiraadquiridamercadointerno':
-        return OrigemProduto.estrangeiraAdquiridaMercadoInterno;
-      case '3':
-      case 'nacionalconteudoimportacao40a70':
-        return OrigemProduto.nacionalConteudoImportacao40a70;
-      case '4':
-      case 'nacionalppb':
-        return OrigemProduto.nacionalPPB;
-      case '5':
-      case 'nacionalconteudoimportacaoate40':
-        return OrigemProduto.nacionalConteudoImportacaoAte40;
-      case '6':
-      case 'estrangeiraimportacaodiretasemsimilar':
-        return OrigemProduto.estrangeiraImportacaoDiretaSemSimilar;
-      case '7':
-      case 'estrangeiraadquiridamercadointernosemsimilar':
-        return OrigemProduto.estrangeiraAdquiridaMercadoInternoSemSimilar;
-      case '8':
-      case 'nacionalconteudoimportacaosuperior70':
-        return OrigemProduto.nacionalConteudoImportacaoSuperior70;
-      default:
-        throw ArgumentError('Origem do Produto Desconhecida: $value');
-    }
-  }
-
-  factory OrigemProduto.fromInt(int value) {
-    switch (value) {
-      case 0:
-        return OrigemProduto.nacional;
-      case 1:
-        return OrigemProduto.estrangeiraImportacaoDireta;
-      case 2:
-        return OrigemProduto.estrangeiraAdquiridaMercadoInterno;
-      case 3:
-        return OrigemProduto.nacionalConteudoImportacao40a70;
-      case 4:
-        return OrigemProduto.nacionalPPB;
-      case 5:
-        return OrigemProduto.nacionalConteudoImportacaoAte40;
-      case 6:
-        return OrigemProduto.estrangeiraImportacaoDiretaSemSimilar;
-      case 7:
-        return OrigemProduto.estrangeiraAdquiridaMercadoInternoSemSimilar;
-      case 8:
-        return OrigemProduto.nacionalConteudoImportacaoSuperior70;
-      default:
-        throw ArgumentError('Origem do Produto Desconhecida: $value');
-    }
-  }
-
-  @override
-  String toString() {
-    switch (this) {
-      case OrigemProduto.nacional:
-        return 'Nacional (exceto as indicadas nos códigos 3, 4, 5 e 8)';
-      case OrigemProduto.estrangeiraImportacaoDireta:
-        return 'Estrangeira – Importação direta, exceto a indicada no código 6';
-      case OrigemProduto.estrangeiraAdquiridaMercadoInterno:
-        return 'Estrangeira – Adquirida no mercado interno, exceto a indicada no código 7';
-      case OrigemProduto.nacionalConteudoImportacao40a70:
-        return 'Nacional, mercadoria ou bem com Conteúdo de Importação superior a 40% e inferior ou igual a 70%';
-      case OrigemProduto.nacionalPPB:
-        return 'Nacional, cuja produção tenha sido feita em conformidade com os processos produtivos básicos (PPB)';
-      case OrigemProduto.nacionalConteudoImportacaoAte40:
-        return 'Nacional, mercadoria ou bem com Conteúdo de Importação inferior ou igual a 40%';
-      case OrigemProduto.estrangeiraImportacaoDiretaSemSimilar:
-        return 'Estrangeira – Importação direta, sem similar nacional, constante em lista de Resolução CAMEX e gás natural';
-      case OrigemProduto.estrangeiraAdquiridaMercadoInternoSemSimilar:
-        return 'Estrangeira – Adquirida no mercado interno, sem similar nacional, constante em lista de Resolução CAMEX e gás natural';
-      case OrigemProduto.nacionalConteudoImportacaoSuperior70:
-        return 'Nacional, mercadoria ou bem com Conteúdo de Importação superior a 70%';
-      default:
-        return 'Tipo de impressão desconhecido';
     }
   }
 }
@@ -525,212 +549,6 @@ enum IndicadorPresencaNFe {
   }
 }
 
-typedef MetodoPagamento = FormaPagamento;
-
-/// Enumeração que representa os indicadores de meio de pagamento para Nota Fiscal Eletrônica (NFe).
-enum FormaPagamento {
-  /// Dinheiro
-  dinheiro(1),
-
-  /// Cheque
-  cheque(2),
-
-  /// Cartão de Crédito
-  cartaoCredito(3),
-
-  /// Cartão de Débito
-  cartaoDebito(4),
-
-  /// Crédito Loja
-  creditoLoja(5),
-
-  /// Vale Alimentação
-  valeAlimentacao(10),
-
-  /// Vale Refeição
-  valeRefeicao(11),
-
-  /// Vale Presente
-  valePresente(12),
-
-  /// Vale Combustível
-  valeCombustivel(13),
-
-  /// Duplicata Mercantil
-  duplicataMercantil(14),
-
-  /// Boleto Bancário
-  boletoBancario(15),
-
-  /// Depósito Bancário
-  depositoBancario(16),
-
-  /// PIX
-  pix(17),
-
-  /// Transferência Bancária, Carteira Digital
-  transferenciaBancariaCarteiraDigital(18),
-
-  /// Cashback, Cartão Fidelidade
-  cashbackCartaoFidelidade(19),
-
-  /// Sem Pagamento
-  semPagamento(90),
-
-  /// Outros
-  outros(99);
-
-  final int value;
-
-  /// Construtor constante que associa um valor de int a cada indicador de meio de pagamento.
-  const FormaPagamento(this.value);
-
-  factory FormaPagamento.fromValue(dynamic value) {
-    if (value is FormaPagamento) {
-      return value;
-    }
-    if (value is bool) {
-      return value ? FormaPagamento.dinheiro : FormaPagamento.semPagamento;
-    }
-
-    if (value is num) {
-      return FormaPagamento.fromInt(value.floor());
-    }
-    var svalue = "$value".toLowerCase();
-
-    if (svalue.isNumericOnly) {
-      return FormaPagamento.fromInt(svalue.toNumOrZero.floor());
-    }
-
-    switch (svalue) {
-      case 'dinheiro':
-        return FormaPagamento.dinheiro;
-      case 'cheque':
-        return FormaPagamento.cheque;
-      case 'cartaocredito':
-      case 'cartaodecredito':
-        return FormaPagamento.cartaoCredito;
-      case 'cartaodebito':
-      case 'cartaodedebito':
-        return FormaPagamento.cartaoDebito;
-      case 'creditoloja':
-        return FormaPagamento.creditoLoja;
-      case 'valealimentacao':
-        return FormaPagamento.valeAlimentacao;
-      case 'valerefeicao':
-        return FormaPagamento.valeRefeicao;
-      case 'valepresente':
-        return FormaPagamento.valePresente;
-      case 'valecombustivel':
-        return FormaPagamento.valeCombustivel;
-      case 'duplicatamercantil':
-        return FormaPagamento.duplicataMercantil;
-      case 'boletobancario':
-        return FormaPagamento.boletoBancario;
-      case 'depositobancario':
-        return FormaPagamento.depositoBancario;
-      case 'pix':
-        return FormaPagamento.pix;
-      case 'transferenciabancariacarteiradigital':
-      case 'transferenciabancaria':
-      case 'carteiradigital':
-        return FormaPagamento.transferenciaBancariaCarteiraDigital;
-      case 'cashbackcartaofidelidade':
-      case 'cashback':
-      case 'cartaofidelidade':
-        return FormaPagamento.cashbackCartaoFidelidade;
-      case 'sempagamento':
-      case 'nenhum':
-        return FormaPagamento.semPagamento;
-      case 'outros':
-      default:
-        return FormaPagamento.outros;
-    }
-  }
-
-  factory FormaPagamento.fromInt(int value) {
-    switch (value) {
-      case 1:
-        return FormaPagamento.dinheiro;
-      case 2:
-        return FormaPagamento.cheque;
-      case 3:
-        return FormaPagamento.cartaoCredito;
-      case 4:
-        return FormaPagamento.cartaoDebito;
-      case 5:
-        return FormaPagamento.creditoLoja;
-      case 10:
-        return FormaPagamento.valeAlimentacao;
-      case 11:
-        return FormaPagamento.valeRefeicao;
-      case 12:
-        return FormaPagamento.valePresente;
-      case 13:
-        return FormaPagamento.valeCombustivel;
-      case 14:
-        return FormaPagamento.duplicataMercantil;
-      case 15:
-        return FormaPagamento.boletoBancario;
-      case 16:
-        return FormaPagamento.depositoBancario;
-      case 17:
-        return FormaPagamento.pix;
-      case 18:
-        return FormaPagamento.transferenciaBancariaCarteiraDigital;
-      case 19:
-        return FormaPagamento.cashbackCartaoFidelidade;
-      case 90:
-        return FormaPagamento.semPagamento;
-      case 99:
-      default:
-        return FormaPagamento.outros;
-    }
-  }
-
-  @override
-  String toString() {
-    switch (this) {
-      case FormaPagamento.dinheiro:
-        return 'Dinheiro';
-      case FormaPagamento.cheque:
-        return 'Cheque';
-      case FormaPagamento.cartaoCredito:
-        return 'Cartão de Crédito';
-      case FormaPagamento.cartaoDebito:
-        return 'Cartão de Débito';
-      case FormaPagamento.creditoLoja:
-        return 'Crédito Loja';
-      case FormaPagamento.valeAlimentacao:
-        return 'Vale Alimentação';
-      case FormaPagamento.valeRefeicao:
-        return 'Vale Refeição';
-      case FormaPagamento.valePresente:
-        return 'Vale Presente';
-      case FormaPagamento.valeCombustivel:
-        return 'Vale Combustível';
-      case FormaPagamento.duplicataMercantil:
-        return 'Duplicata Mercantil';
-      case FormaPagamento.boletoBancario:
-        return 'Boleto Bancário';
-      case FormaPagamento.depositoBancario:
-        return 'Depósito Bancário';
-      case FormaPagamento.pix:
-        return 'PIX';
-      case FormaPagamento.transferenciaBancariaCarteiraDigital:
-        return 'Transferência Bancária, Carteira Digital';
-      case FormaPagamento.cashbackCartaoFidelidade:
-        return 'Cashback, Cartão Fidelidade';
-      case FormaPagamento.semPagamento:
-        return 'Sem Pagamento';
-      case FormaPagamento.outros:
-        return 'Outros';
-      default:
-        return 'Indicador de meio de pagamento desconhecido';
-    }
-  }
-}
-
 /// Enumeração que representa as modalidades de determinação da base de cálculo do ICMS para Nota Fiscal Eletrônica (NFe).
 enum ModalidadeDeterminacaoDaBc {
   /// Margem Valor Agregado (%)
@@ -776,93 +594,6 @@ enum ModalidadeDeterminacaoDaBc {
         return 'Valor da operação';
       default:
         return 'Modalidade de Determinação da BC desconhecida';
-    }
-  }
-}
-
-enum SeloControle {
-  produtoNacional(971001, 'Verde combinado com marrom'),
-  produtoNacionalExportacaoTipo1(971010, 'Verde escuro combinado com marrom'),
-  produtoNacionalExportacaoTipo2(971011, 'Verde escuro combinado com marrom'),
-  produtoNacionalExportacaoTipo3(971012, 'Verde escuro combinado com marrom'),
-  produtoEstrangeiro(861009, 'Vermelho combinado com azul');
-
-  final int value;
-  final string corSelo;
-  string get valorFormatado => value.fixedLength(6)!.insertAt(4, '-');
-
-  const SeloControle(this.value, this.corSelo);
-
-  factory SeloControle.fromInt(int value) {
-    switch (value) {
-      case 971001:
-        return SeloControle.produtoNacional;
-      case 971010:
-        return SeloControle.produtoNacionalExportacaoTipo1;
-      case 971011:
-        return SeloControle.produtoNacionalExportacaoTipo2;
-      case 971012:
-        return SeloControle.produtoNacionalExportacaoTipo3;
-      case 861009:
-        return SeloControle.produtoEstrangeiro;
-      default:
-        throw ArgumentError('Selo de controle desconhecido: $value');
-    }
-  }
-
-  factory SeloControle.fromValue(dynamic value) {
-    if (value is SeloControle) {
-      return value;
-    }
-    if (value is num) {
-      return SeloControle.fromInt(value.floor());
-    }
-    if (value is String && value.isNumericOnly) {
-      return SeloControle.fromInt(value.onlyNumbersInt!);
-    }
-
-    switch (generateKeyword(value)) {
-      case "nacional":
-      case "produtonacional":
-        return SeloControle.produtoNacional;
-      case "produtoexportacaotipo1":
-      case "exportacaotipo1":
-      case "tipo1":
-      case "produtonacionalexportacaotipo1":
-        return SeloControle.produtoNacionalExportacaoTipo1;
-      case "produtoexportacaotipo2":
-      case "exportacaotipo2":
-      case "tipo2":
-      case "produtonacionalexportacaotipo2":
-        return SeloControle.produtoNacionalExportacaoTipo2;
-      case "produtoexportacaotipo3":
-      case "exportacaotipo3":
-      case "tipo3":
-      case "produtonacionalexportacaotipo3":
-        return SeloControle.produtoNacionalExportacaoTipo3;
-      case "estrangeiro":
-      case "produtoestrangeiro":
-        return SeloControle.produtoEstrangeiro;
-      default:
-        throw ArgumentError('Selo de controle desconhecido: $value');
-    }
-  }
-
-  @override
-  String toString() {
-    switch (this) {
-      case SeloControle.produtoNacional:
-        return 'Produto Nacional';
-      case SeloControle.produtoNacionalExportacaoTipo1:
-        return 'Produto Nacional para Exportação - Tipo 1';
-      case SeloControle.produtoNacionalExportacaoTipo2:
-        return 'Produto Nacional para Exportação - Tipo 2';
-      case SeloControle.produtoNacionalExportacaoTipo3:
-        return 'Produto Nacional para Exportação - Tipo 3';
-      case SeloControle.produtoEstrangeiro:
-        return 'Produto Estrangeiro';
-      default:
-        return 'Selo de controle desconhecido';
     }
   }
 }
@@ -1049,6 +780,136 @@ enum ModeloDFe {
   }
 }
 
+/// Enumeração que representa os tipos de impressão de documentos fiscais.
+enum OrigemProduto {
+  /// Nacional (exceto as indicadas nos códigos 3, 4, 5 e 8).
+  nacional(0),
+
+  /// Estrangeira – Importação direta, exceto a indicada no código 6.
+  estrangeiraImportacaoDireta(1),
+
+  /// Estrangeira – Adquirida no mercado interno, exceto a indicada no código 7.
+  estrangeiraAdquiridaMercadoInterno(2),
+
+  /// Nacional, mercadoria ou bem com Conteúdo de Importação superior a 40% e inferior ou igual a 70%.
+  nacionalConteudoImportacao40a70(3),
+
+  /// Nacional, cuja produção tenha sido feita em conformidade com os processos produtivos básicos (PPB).
+  nacionalPPB(4),
+
+  /// Nacional, mercadoria ou bem com Conteúdo de Importação inferior ou igual a 40%.
+  nacionalConteudoImportacaoAte40(5),
+
+  /// Estrangeira – Importação direta, sem similar nacional, constante em lista de Resolução CAMEX e gás natural.
+  estrangeiraImportacaoDiretaSemSimilar(6),
+
+  /// Estrangeira – Adquirida no mercado interno, sem similar nacional, constante em lista de Resolução CAMEX e gás natural.
+  estrangeiraAdquiridaMercadoInternoSemSimilar(7),
+
+  /// Nacional, mercadoria ou bem com Conteúdo de Importação superior a 70%.
+  nacionalConteudoImportacaoSuperior70(8);
+
+  final int value;
+
+  /// Construtor constante que associa um valor inteiro a cada tipo de impressão.
+  const OrigemProduto(this.value);
+
+  factory OrigemProduto.fromInt(int value) {
+    switch (value) {
+      case 0:
+        return OrigemProduto.nacional;
+      case 1:
+        return OrigemProduto.estrangeiraImportacaoDireta;
+      case 2:
+        return OrigemProduto.estrangeiraAdquiridaMercadoInterno;
+      case 3:
+        return OrigemProduto.nacionalConteudoImportacao40a70;
+      case 4:
+        return OrigemProduto.nacionalPPB;
+      case 5:
+        return OrigemProduto.nacionalConteudoImportacaoAte40;
+      case 6:
+        return OrigemProduto.estrangeiraImportacaoDiretaSemSimilar;
+      case 7:
+        return OrigemProduto.estrangeiraAdquiridaMercadoInternoSemSimilar;
+      case 8:
+        return OrigemProduto.nacionalConteudoImportacaoSuperior70;
+      default:
+        throw ArgumentError('Origem do Produto Desconhecida: $value');
+    }
+  }
+
+  factory OrigemProduto.fromString(string value) {
+    switch (generateKeyword(value)) {
+      case '0':
+      case 'nacional':
+        return OrigemProduto.nacional;
+      case '1':
+      case 'estrangeiraimportacaodireta':
+        return OrigemProduto.estrangeiraImportacaoDireta;
+      case '2':
+      case 'estrangeiraadquiridamercadointerno':
+        return OrigemProduto.estrangeiraAdquiridaMercadoInterno;
+      case '3':
+      case 'nacionalconteudoimportacao40a70':
+        return OrigemProduto.nacionalConteudoImportacao40a70;
+      case '4':
+      case 'nacionalppb':
+        return OrigemProduto.nacionalPPB;
+      case '5':
+      case 'nacionalconteudoimportacaoate40':
+        return OrigemProduto.nacionalConteudoImportacaoAte40;
+      case '6':
+      case 'estrangeiraimportacaodiretasemsimilar':
+        return OrigemProduto.estrangeiraImportacaoDiretaSemSimilar;
+      case '7':
+      case 'estrangeiraadquiridamercadointernosemsimilar':
+        return OrigemProduto.estrangeiraAdquiridaMercadoInternoSemSimilar;
+      case '8':
+      case 'nacionalconteudoimportacaosuperior70':
+        return OrigemProduto.nacionalConteudoImportacaoSuperior70;
+      default:
+        throw ArgumentError('Origem do Produto Desconhecida: $value');
+    }
+  }
+
+  factory OrigemProduto.fromValue(dynamic value) {
+    if (value is OrigemProduto) {
+      return value;
+    } else if (value is num) {
+      return OrigemProduto.fromInt(value.floor());
+    } else {
+      return OrigemProduto.fromString("$value");
+    }
+  }
+
+  @override
+  String toString() {
+    switch (this) {
+      case OrigemProduto.nacional:
+        return 'Nacional (exceto as indicadas nos códigos 3, 4, 5 e 8)';
+      case OrigemProduto.estrangeiraImportacaoDireta:
+        return 'Estrangeira – Importação direta, exceto a indicada no código 6';
+      case OrigemProduto.estrangeiraAdquiridaMercadoInterno:
+        return 'Estrangeira – Adquirida no mercado interno, exceto a indicada no código 7';
+      case OrigemProduto.nacionalConteudoImportacao40a70:
+        return 'Nacional, mercadoria ou bem com Conteúdo de Importação superior a 40% e inferior ou igual a 70%';
+      case OrigemProduto.nacionalPPB:
+        return 'Nacional, cuja produção tenha sido feita em conformidade com os processos produtivos básicos (PPB)';
+      case OrigemProduto.nacionalConteudoImportacaoAte40:
+        return 'Nacional, mercadoria ou bem com Conteúdo de Importação inferior ou igual a 40%';
+      case OrigemProduto.estrangeiraImportacaoDiretaSemSimilar:
+        return 'Estrangeira – Importação direta, sem similar nacional, constante em lista de Resolução CAMEX e gás natural';
+      case OrigemProduto.estrangeiraAdquiridaMercadoInternoSemSimilar:
+        return 'Estrangeira – Adquirida no mercado interno, sem similar nacional, constante em lista de Resolução CAMEX e gás natural';
+      case OrigemProduto.nacionalConteudoImportacaoSuperior70:
+        return 'Nacional, mercadoria ou bem com Conteúdo de Importação superior a 70%';
+      default:
+        return 'Tipo de impressão desconhecido';
+    }
+  }
+}
+
 /// Enumeração que representa os modos de emissão de NF-e.
 enum ProcessoEmissaoNFe {
   /// Emissão de NF-e com aplicativo do contribuinte.
@@ -1094,6 +955,153 @@ enum ProcessoEmissaoNFe {
         return 'Emissão NF-e pelo contribuinte com aplicativo fornecido pelo Fisco';
       default:
         return 'Modo de emissão desconhecido';
+    }
+  }
+}
+
+/// Regimes tributários
+enum RegimeTributario {
+  /// 1 - Simples Nacional
+  simplesNacional(1),
+
+  /// 2 - Simples Nacional; excesso sublimite de receita bruta
+  simplesNacionalExcessoSublimite(2),
+
+  /// 3 - Regime Normal
+  regimeNormal(3);
+
+  final int value;
+  const RegimeTributario(this.value);
+
+  factory RegimeTributario.fromInt(int value) {
+    switch (value) {
+      case 1:
+        return RegimeTributario.simplesNacional;
+      case 2:
+        return RegimeTributario.simplesNacionalExcessoSublimite;
+      case 3:
+        return RegimeTributario.regimeNormal;
+      default:
+        throw ArgumentError('Regime Tributário inválido: $value');
+    }
+  }
+
+  factory RegimeTributario.fromValue(dynamic value) {
+    if (value is RegimeTributario) {
+      return value;
+    }
+    if (value is num) {
+      return RegimeTributario.fromInt(value.floor());
+    }
+    if (value is string && value.isNumericOnly) {
+      return RegimeTributario.fromInt(value.onlyNumbersInt!);
+    }
+
+    switch (generateKeyword(value)) {
+      case '1':
+      case 'simplesnacional':
+      case 'simples':
+        return RegimeTributario.simplesNacional;
+      case '2':
+      case 'simplesnacionalexcessosublimite':
+      case 'excessosublimite':
+      case 'excesso':
+        return RegimeTributario.simplesNacionalExcessoSublimite;
+      case '3':
+      case 'regimenormal':
+      case 'normal':
+        return RegimeTributario.regimeNormal;
+      default:
+        throw ArgumentError('Regime Tributário inválido: $value');
+    }
+  }
+
+  bool get isSimplesNacional => this == RegimeTributario.simplesNacional || this == RegimeTributario.simplesNacionalExcessoSublimite;
+}
+
+enum SeloControle {
+  produtoNacional(971001, 'Verde combinado com marrom'),
+  produtoNacionalExportacaoTipo1(971010, 'Verde escuro combinado com marrom'),
+  produtoNacionalExportacaoTipo2(971011, 'Verde escuro combinado com marrom'),
+  produtoNacionalExportacaoTipo3(971012, 'Verde escuro combinado com marrom'),
+  produtoEstrangeiro(861009, 'Vermelho combinado com azul');
+
+  final int value;
+  final string corSelo;
+  const SeloControle(this.value, this.corSelo);
+
+  factory SeloControle.fromInt(int value) {
+    switch (value) {
+      case 971001:
+        return SeloControle.produtoNacional;
+      case 971010:
+        return SeloControle.produtoNacionalExportacaoTipo1;
+      case 971011:
+        return SeloControle.produtoNacionalExportacaoTipo2;
+      case 971012:
+        return SeloControle.produtoNacionalExportacaoTipo3;
+      case 861009:
+        return SeloControle.produtoEstrangeiro;
+      default:
+        throw ArgumentError('Selo de controle desconhecido: $value');
+    }
+  }
+
+  factory SeloControle.fromValue(dynamic value) {
+    if (value is SeloControle) {
+      return value;
+    }
+    if (value is num) {
+      return SeloControle.fromInt(value.floor());
+    }
+    if (value is String && value.isNumericOnly) {
+      return SeloControle.fromInt(value.onlyNumbersInt!);
+    }
+
+    switch (generateKeyword(value)) {
+      case "nacional":
+      case "produtonacional":
+        return SeloControle.produtoNacional;
+      case "produtoexportacaotipo1":
+      case "exportacaotipo1":
+      case "tipo1":
+      case "produtonacionalexportacaotipo1":
+        return SeloControle.produtoNacionalExportacaoTipo1;
+      case "produtoexportacaotipo2":
+      case "exportacaotipo2":
+      case "tipo2":
+      case "produtonacionalexportacaotipo2":
+        return SeloControle.produtoNacionalExportacaoTipo2;
+      case "produtoexportacaotipo3":
+      case "exportacaotipo3":
+      case "tipo3":
+      case "produtonacionalexportacaotipo3":
+        return SeloControle.produtoNacionalExportacaoTipo3;
+      case "estrangeiro":
+      case "produtoestrangeiro":
+        return SeloControle.produtoEstrangeiro;
+      default:
+        throw ArgumentError('Selo de controle desconhecido: $value');
+    }
+  }
+
+  string get valorFormatado => value.fixedLength(6)!.insertAt(4, '-');
+
+  @override
+  String toString() {
+    switch (this) {
+      case SeloControle.produtoNacional:
+        return 'Produto Nacional';
+      case SeloControle.produtoNacionalExportacaoTipo1:
+        return 'Produto Nacional para Exportação - Tipo 1';
+      case SeloControle.produtoNacionalExportacaoTipo2:
+        return 'Produto Nacional para Exportação - Tipo 2';
+      case SeloControle.produtoNacionalExportacaoTipo3:
+        return 'Produto Nacional para Exportação - Tipo 3';
+      case SeloControle.produtoEstrangeiro:
+        return 'Produto Estrangeiro';
+      default:
+        return 'Selo de controle desconhecido';
     }
   }
 }
@@ -1255,6 +1263,18 @@ enum TipoAmbiente {
   /// Construtor constante que associa um valor inteiro a cada tipo de ambiente.
   const TipoAmbiente(this.value);
 
+  /// Factory para construir os valores da enum a partir de um inteiro.
+  factory TipoAmbiente.fromInt(int value) {
+    switch (value) {
+      case 1:
+        return TipoAmbiente.producao;
+      case 2:
+        return TipoAmbiente.homologacao;
+      default:
+        throw ArgumentError('Tipo de ambiente desconhecido: $value');
+    }
+  }
+
   /// Factory para construir os valores da enum a partir de um valor dinâmico.
   /// - Retorna o ambiente de **homologação** caso o valor seja nulo.
   /// - Retorna o ambiente de **produção** caso o valor seja 1.
@@ -1283,18 +1303,6 @@ enum TipoAmbiente {
     }
 
     return (producao as Object?).asBool(everythingIsTrue: false) ? TipoAmbiente.producao : TipoAmbiente.homologacao;
-  }
-
-  /// Factory para construir os valores da enum a partir de um inteiro.
-  factory TipoAmbiente.fromInt(int value) {
-    switch (value) {
-      case 1:
-        return TipoAmbiente.producao;
-      case 2:
-        return TipoAmbiente.homologacao;
-      default:
-        throw ArgumentError('Tipo de ambiente desconhecido: $value');
-    }
   }
 
   @override
@@ -1341,9 +1349,6 @@ enum TipoEmissao {
 
   final int value;
 
-  /// Retorna verdadeiro se o tipo de emissão for diferente de normal(1).
-  bool get isContingencia => value != 1;
-
   /// Construtor constante que associa um valor inteiro a cada tipo de emissão.
   const TipoEmissao(this.value);
 
@@ -1372,6 +1377,9 @@ enum TipoEmissao {
     }
   }
 
+  /// Retorna verdadeiro se o tipo de emissão for diferente de normal(1).
+  bool get isContingencia => value != 1;
+
   @override
   String toString() {
     switch (this) {
@@ -1395,45 +1403,6 @@ enum TipoEmissao {
         return 'Contingência Offline';
       default:
         return 'Tipo de emissão desconhecido';
-    }
-  }
-}
-
-typedef TipoNota = TipoOperacao;
-
-/// Enumeração que representa os tipos de operação de documentos fiscais.
-enum TipoOperacao {
-  /// Entrada
-  entrada(0),
-
-  /// Saída
-  saida(1);
-
-  final int value;
-
-  /// Construtor constante que associa um valor inteiro a cada tipo de operação.
-  const TipoOperacao(this.value);
-
-  factory TipoOperacao.fromInt(int value) {
-    switch (value) {
-      case 0:
-        return TipoOperacao.entrada;
-      case 1:
-        return TipoOperacao.saida;
-      default:
-        throw ArgumentError('Tipo de operação desconhecido: $value');
-    }
-  }
-
-  @override
-  String toString() {
-    switch (this) {
-      case TipoOperacao.entrada:
-        return 'Entrada';
-      case TipoOperacao.saida:
-        return 'Saída';
-      default:
-        return 'Tipo de operação desconhecido';
     }
   }
 }
@@ -1485,6 +1454,122 @@ enum TipoImpressao {
         return 'DANFE Simplificado';
       default:
         return 'Tipo de impressão desconhecido';
+    }
+  }
+}
+
+/// Enumeração que representa os tipos de operação de documentos fiscais.
+enum TipoOperacao {
+  /// Entrada
+  entrada(0),
+
+  /// Saída
+  saida(1);
+
+  final int value;
+
+  /// Construtor constante que associa um valor inteiro a cada tipo de operação.
+  const TipoOperacao(this.value);
+
+  factory TipoOperacao.fromInt(int value) {
+    switch (value) {
+      case 0:
+        return TipoOperacao.entrada;
+      case 1:
+        return TipoOperacao.saida;
+      default:
+        throw ArgumentError('Tipo de operação desconhecido: $value');
+    }
+  }
+
+  @override
+  String toString() {
+    switch (this) {
+      case TipoOperacao.entrada:
+        return 'Entrada';
+      case TipoOperacao.saida:
+        return 'Saída';
+      default:
+        return 'Tipo de operação desconhecido';
+    }
+  }
+}
+
+enum TipoPessoa {
+  fisica(0),
+  juridica(1),
+  outros(99);
+
+  final int value;
+
+  const TipoPessoa(this.value);
+
+  /// Retorna o tipo de pessoa com base no tipo ou documento fornecido.
+  ///
+  /// - Se o valor estiver nulo retorna [fisica].
+  /// - Se o valor for um booleano, retorna [juridica] se for verdadeiro e [fisica] se for falso.
+  /// - Se o tipo do valor for [TipoPessoa], retorna o próprio valor.
+  /// - Se o valor for um CNPJ válido, retorna [juridica].
+  /// - Se o valor for um CPF válido, retorna [fisica].
+  /// - Se o valor for um outro número, retorna [fisica] se for 0 e [juridica] se for 1.
+  /// - Se o valor for uma string, retorna [fisica] se for 'fisica', 'cpf' ou em branco e [juridica] se for 'juridica' ou 'cnpj'.
+  ///
+  /// Parâmetros:
+  /// - [value]: O tipo ou documento a ser verificado.
+  ///
+  /// Retorna:
+  /// O tipo de pessoa correspondente ao tipo ou documento fornecido.
+  factory TipoPessoa.fromValue(dynamic value) {
+    value ??= TipoPessoa.outros;
+
+    if (value is TipoPessoa) {
+      return value;
+    }
+
+    if (value is bool) {
+      return value ? TipoPessoa.juridica : TipoPessoa.fisica;
+    }
+
+    if (Brasil.validarCNPJ(value)) {
+      return TipoPessoa.juridica;
+    }
+
+    if (Brasil.validarCPF(value)) {
+      return TipoPessoa.fisica;
+    }
+
+    if (value is num) {
+      switch (value.round()) {
+        case 0:
+          return TipoPessoa.fisica;
+        case 1:
+          return TipoPessoa.juridica;
+        default:
+          return TipoPessoa.outros;
+      }
+    }
+
+    switch (flatString(value)) {
+      case 'fisica':
+      case 'cpf':
+        return TipoPessoa.fisica;
+      case 'juridica':
+      case 'cnpj':
+        return TipoPessoa.juridica;
+      default:
+        return TipoPessoa.outros;
+    }
+  }
+
+  @override
+  String toString() {
+    switch (this) {
+      case TipoPessoa.fisica:
+        return 'Física';
+      case TipoPessoa.juridica:
+        return 'Jurídica';
+      default:
+        return 'Tipo de pessoa desconhecido';
     }
   }
 }
@@ -1593,85 +1678,6 @@ enum TipoProduto {
         return 'Outras';
       default:
         return 'Tipo de produto desconhecido';
-    }
-  }
-}
-
-enum TipoPessoa {
-  fisica(0),
-  juridica(1),
-  outros(99);
-
-  final int value;
-
-  const TipoPessoa(this.value);
-
-  /// Retorna o tipo de pessoa com base no tipo ou documento fornecido.
-  ///
-  /// - Se o valor estiver nulo retorna [fisica].
-  /// - Se o valor for um booleano, retorna [juridica] se for verdadeiro e [fisica] se for falso.
-  /// - Se o tipo do valor for [TipoPessoa], retorna o próprio valor.
-  /// - Se o valor for um CNPJ válido, retorna [juridica].
-  /// - Se o valor for um CPF válido, retorna [fisica].
-  /// - Se o valor for um outro número, retorna [fisica] se for 0 e [juridica] se for 1.
-  /// - Se o valor for uma string, retorna [fisica] se for 'fisica', 'cpf' ou em branco e [juridica] se for 'juridica' ou 'cnpj'.
-  ///
-  /// Parâmetros:
-  /// - [value]: O tipo ou documento a ser verificado.
-  ///
-  /// Retorna:
-  /// O tipo de pessoa correspondente ao tipo ou documento fornecido.
-  factory TipoPessoa.fromValue(dynamic value) {
-    value ??= TipoPessoa.outros;
-
-    if (value is TipoPessoa) {
-      return value;
-    }
-
-    if (value is bool) {
-      return value ? TipoPessoa.juridica : TipoPessoa.fisica;
-    }
-
-    if (Brasil.validarCNPJ(value)) {
-      return TipoPessoa.juridica;
-    }
-
-    if (Brasil.validarCPF(value)) {
-      return TipoPessoa.fisica;
-    }
-
-    if (value is num) {
-      switch (value.round()) {
-        case 0:
-          return TipoPessoa.fisica;
-        case 1:
-          return TipoPessoa.juridica;
-        default:
-          return TipoPessoa.outros;
-      }
-    }
-
-    switch (flatString(value)) {
-      case 'fisica':
-      case 'cpf':
-        return TipoPessoa.fisica;
-      case 'juridica':
-      case 'cnpj':
-        return TipoPessoa.juridica;
-      default:
-        return TipoPessoa.outros;
-    }
-  }
-
-  @override
-  String toString() {
-    switch (this) {
-      case TipoPessoa.fisica:
-        return 'Física';
-      case TipoPessoa.juridica:
-        return 'Jurídica';
-      default:
-        return 'Tipo de pessoa desconhecido';
     }
   }
 }

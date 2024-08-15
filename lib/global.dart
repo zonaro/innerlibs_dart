@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math' show Random;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -516,6 +517,11 @@ Widget? forceWidget(
   if (item != null && item is Widget) {
     return item;
   }
+
+  if (item is ResponsiveColumn) {
+    return item.child;
+  }
+
   if (item is IconData) {
     return (item).asIcon(
       size: style?.fontSize,
@@ -994,5 +1000,60 @@ mixin FilterFunctions {
       );
 }
 
-// ignore: non_constant_identifier_names
-final InnerLibs = Get;
+final random = Random();
+
+/// Generates a random integer between the specified [min] and [max] values.
+int randomInt([int min = 0, int max = 999999]) {
+  var n = min.compareAndSwap(max);
+  min = n.first;
+  max = n.last;
+  return min + random.nextInt(max - min + 1);
+}
+
+/// Generates a random boolean value based on the specified [trueFactor].
+/// The [trueFactor] is a percentage value between 1 and 100 that determines the likelihood of the boolean being true.
+bool randomBool([int trueFactor = 50]) => trueFactor <= 0 ? false : randomInt(1, 100) <= trueFactor.clamp(1, 100);
+
+/// Generates a random double between the specified [min] and [max] values.
+double randomDouble([double min = 0, double max = 999999]) {
+  var n = min.compareAndSwap(max);
+  min = n.first;
+  max = n.last;
+  return min + random.nextDouble() * (max - min);
+}
+
+/// Generates a random double between the specified [min] and [max] percent values.
+double randomPercent([int min = 0, int max = 100]) => randomInt(min.clamp(0, 100), max.clamp(0, 100)) / 100;
+
+/// Generates a random string of the specified [length].
+/// If the [length] is not provided, a random length between 2 and 15 is used.
+/// The generated string consists of random consonants and vowels in a pronuciable order.
+/// Returns the generated random string.
+String randomWord([int length = 0]) {
+  length = length < 1 ? randomInt(2, 15) : length;
+  String word = '';
+
+  if (length == 1) {
+    return StringHelpers.lowerVowels.randomItem!;
+  }
+
+  while (word.length < length) {
+    String consonant = StringHelpers.lowerConsonants.randomItem!;
+    if (consonant == 'q' && word.length + 3 <= length) {
+      word += 'qu';
+    } else {
+      while (consonant == 'q') {
+        consonant = StringHelpers.lowerConsonants.randomItem!;
+      }
+      if (word.length + 1 <= length) {
+        word += consonant;
+      }
+    }
+
+    if (word.length + 1 <= length) {
+      word += StringHelpers.lowerVowels.randomItem!;
+    }
+  }
+
+  return word;
+}

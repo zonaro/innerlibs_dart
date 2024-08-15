@@ -11,7 +11,7 @@ import 'package:innerlibs/innerlibs.dart';
 extension CompareAndSwap<T extends Comparable> on T {
   /// Compares the current value with the `other` value and swaps them if necessary.
   ///
-  /// Returns a tuple containing the updated values.
+  /// Returns a iterable containing the updated values in order.
   Iterable<T> compareAndSwap(T other) {
     T a = this;
     if (a.compareTo(other) > 0) {
@@ -27,9 +27,6 @@ bool _isvalid<T>(T obj, List<bool> Function(T?)? customValidator) => isValid(obj
 
 T? _valid<T>(T obj, List<bool> Function(T?)? validations, [string? throwErrorMessage]) => valid<T>(obj, validations, throwErrorMessage);
 R? _parseTo<R>(value) => changeTo<R>(value);
-
-
- 
 
 extension ObjectExtensions<T extends Object?> on T {
   bool get isNullable {
@@ -221,7 +218,8 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) == generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) ==
+      generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
 
   bool keywordContainsAny(
     Iterable<T> value, {
@@ -230,7 +228,8 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(value.map((e) => generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(
+          value.map((e) => generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
 
   /// Checks if the string contains any of the specified texts.
   ///
