@@ -1207,13 +1207,11 @@ class ICMS extends TagXml {
   ICMS() : super.fromTagName("ICMS");
 
   /// Obtém o nome da tag ICMS utilizada.
-  @override
-  string get tagName => (children.singleOrNull as XmlElement?)?.name.local ?? "";
-  @override
-  set tagName(string value) => TagXml.mutate(tag, () => IcmsTag(value));
+  string get icmsName => (children.singleOrNull as XmlElement?)?.name.local ?? "";
+  set icmsName(string value) => TagXml.mutate(tag, () => IcmsTag(value));
 
   /// Obtém o objeto ICMSBase.
-  IcmsTag? get tag => getTagAs<IcmsTag>(tagName, () => IcmsTag(tagName));
+  IcmsTag? get tag => getTagAs<IcmsTag>(icmsName, () => IcmsTag(tagName));
 
   set tag(IcmsTag? value) {
     var nm = value?.name.local;
@@ -1222,98 +1220,98 @@ class ICMS extends TagXml {
     }
   }
 
-  ICMS00? get icms00 => tagName.flatEqual("ICMS00") ? tag : null;
-  set icms00(ICMS00? value) {
+  IcmsTag? get icms00 => tagName.flatEqual("ICMS00") ? tag : null;
+  set icms00(IcmsTag? value) {
     tag = value;
     tagName = 'ICMS00';
   }
 
-  ICMS20? get icms20 => tagName.flatEqual("ICMS20") ? tag : null;
-  set icms20(ICMS20? value) {
+  IcmsTag? get icms20 => tagName.flatEqual("ICMS20") ? tag : null;
+  set icms20(IcmsTag? value) {
     tag = value;
     tagName = 'ICMS20';
   }
 
-  ICMS40? get icms40 => tagName.flatEqual("ICMS40") ? tag : null;
-  set icms40(ICMS40? value) {
+  IcmsTag? get icms40 => tagName.flatEqual("ICMS40") ? tag : null;
+  set icms40(IcmsTag? value) {
     tag = value;
     tagName = 'ICMS40';
   }
 
-  ICMS41? get icms41 => tagName.flatEqual("ICMS41") ? tag : null;
-  set icms41(ICMS41? value) {
+  IcmsTag? get icms41 => tagName.flatEqual("ICMS41") ? tag : null;
+  set icms41(IcmsTag? value) {
     tag = value;
     tagName = 'ICMS41';
   }
 
-  ICMS45? get icms45 => tagName.flatEqual("ICMS45") ? tag : null;
-  set icms45(ICMS45? value) {
+  IcmsTag? get icms45 => tagName.flatEqual("ICMS45") ? tag : null;
+  set icms45(IcmsTag? value) {
     tag = value;
     tagName = 'ICMS45';
   }
 
-  ICMS50? get icms50 => tagName.flatEqual("ICMS50") ? tag : null;
-  set icms50(ICMS50? value) {
+  IcmsTag? get icms50 => tagName.flatEqual("ICMS50") ? tag : null;
+  set icms50(IcmsTag? value) {
     tag = value;
     tagName = 'ICMS50';
   }
 
-  ICMS60? get icms60 => tagName.flatEqual("ICMS60") ? tag : null;
-  set icms60(ICMS60? value) {
+  IcmsTag? get icms60 => tagName.flatEqual("ICMS60") ? tag : null;
+  set icms60(IcmsTag? value) {
     tag = value;
     tagName = 'ICMS60';
   }
 
-  ICMS90? get icms90 => tagName.flatEqual("ICMS90") ? tag : null;
-  set icms90(ICMS90? value) {
+  IcmsTag? get icms90 => tagName.flatEqual("ICMS90") ? tag : null;
+  set icms90(IcmsTag? value) {
     tag = value;
     tagName = 'ICMS90';
   }
 
-  ICMSOutraUF? get icmsOutraUF => tagName.flatEqual("ICMSOutraUF") ? tag : null;
-  set icmsOutraUF(ICMSOutraUF? value) {
+  IcmsTag? get icmsOutraUF => tagName.flatEqual("ICMSOutraUF") ? tag : null;
+  set icmsOutraUF(IcmsTag? value) {
     tag = value;
     tagName = 'ICMSOutraUF';
   }
 
-  ICMSSN? get icmsSN => tagName.flatEqual("ICMSSN") ? tag : null;
-  set icmsSN(ICMSSN? value) {
+  IcmsTag? get icmsSN => tagName.flatEqual("ICMSSN") ? tag : null;
+  set icmsSN(IcmsTag? value) {
     tag = value;
     tagName = 'ICMSSN';
   }
 
-  ICMSvSitT? get icmsvSitT => tagName.flatEqual("ICMSvSitT") ? tag : null;
-  set icmsvSitT(ICMSvSitT? value) {
+  IcmsTag? get icmsvSitT => tagName.flatEqual("ICMSvSitT") ? tag : null;
+  set icmsvSitT(IcmsTag? value) {
     tag = value;
     tagName = 'ICMSvSitT';
   }
 
-  ICMSSN102? get icmsSN102 => tagName.flatEqual("ICMSSN102") ? tag : null;
-  set icmsSN102(ICMSSN102? value) {
+  IcmsTag? get icmsSN102 => tagName.flatEqual("ICMSSN102") ? tag : null;
+  set icmsSN102(IcmsTag? value) {
     tag = value;
     tagName = 'ICMSSN102';
   }
 
-  ICMSSN202? get icmsSN202 => tagName.flatEqual("ICMSSN202") ? tag : null;
-  set icmsSN202(ICMSSN202? value) {
+  IcmsTag? get icmsSN202 => tagName.flatEqual("ICMSSN202") ? tag : null;
+  set icmsSN202(IcmsTag? value) {
     tag = value;
     tagName = 'ICMSSN202';
   }
 }
 
-typedef ICMS00 = IcmsTag;
-typedef ICMS20 = IcmsTag;
-typedef ICMS40 = IcmsTag;
-typedef ICMS41 = IcmsTag;
-typedef ICMS45 = IcmsTag;
-typedef ICMS50 = IcmsTag;
-typedef ICMS60 = IcmsTag;
-typedef ICMS90 = IcmsTag;
-typedef ICMSOutraUF = IcmsTag;
-typedef ICMSSN = IcmsTag;
-typedef ICMSvSitT = IcmsTag;
-typedef ICMSSN102 = IcmsTag;
-typedef ICMSSN202 = IcmsTag;
+IcmsTag ICMS00() => IcmsTag.icms("00");
+IcmsTag ICMS20() => IcmsTag.icms("20");
+IcmsTag ICMS40() => IcmsTag.icms("40");
+IcmsTag ICMS41() => IcmsTag.icms("41");
+IcmsTag ICMS45() => IcmsTag.icms("45");
+IcmsTag ICMS50() => IcmsTag.icms("50");
+IcmsTag ICMS60() => IcmsTag.icms("60");
+IcmsTag ICMS90() => IcmsTag.icms("90");
+IcmsTag ICMSOutraUF() => IcmsTag.icms("OutraUF");
+IcmsTag ICMSSN() => IcmsTag.icms("SN");
+IcmsTag ICMSvSitT() => IcmsTag.icms("vSitT");
+IcmsTag ICMSSN102() => IcmsTag.icms("SN102");
+IcmsTag ICMSSN202() => IcmsTag.icms("SN202");
 
 /// Classe que representa um objeto Rastro.
 ///
