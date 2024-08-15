@@ -117,7 +117,7 @@ class NFeProc extends TagXml {
         vNF: nfe?.infNFe?.total?.icmsTot?.vNF,
         vICMS: nfe?.infNFe?.total?.icmsTot?.vICMS,
         digVal: protNFe?.infProt?.digVal,
-        cIdToken: "", //TODO como fazer o cIdToken e cHashQRCode?
+        cIdToken: "", //TODO: como fazer o cIdToken e cHashQRCode?
         cHashQRCode: "",
       );
     }
