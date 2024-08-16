@@ -1021,11 +1021,11 @@ class Imposto extends TagXml {
 
   /// Obtém ou define o PIS (Programa de Integração Social) do imposto.
   PisCofins? get pis => getTagAs<PisCofins>('PIS', () => PIS());
-
   set pis(PisCofins? value) => setTagFrom<PisCofins>('PIS', value);
-  double get vTotTrib => getValueFromNode('vTotTrib', double.parse) ?? 0;
 
+  double get vTotTrib => getValueFromNode('vTotTrib', double.parse) ?? 0;
   set vTotTrib(double value) => setTextValueForNode('vTotTrib', value.toStringAsFixed(2));
+
   @override
   void compute() {
     pis?.compute();
@@ -1877,7 +1877,7 @@ class Pag extends TagXml {
   /// A chave do mapa representa a forma de pagamento e o valor associado é uma lista de valores.
   /// Os valores são agrupados com base na forma de pagamento usando a função [groupAndMapBy].
 
-  Map<FormaPagamento, List<Pagamento>> get pagamentos => detPag.where((e) => e.tPag != null).groupAndMapBy((e) => e.tPag);
+  Map<FormaPagamento, List<Pagamento>> get pagamentos => detPag.groupAndMapBy((e) => e.tPag);
   set pagamentos(Map<FormaPagamento, List<Pagamento>> value) {
     detPag = [];
     for (var valores in value.entries) {
@@ -1976,7 +1976,6 @@ class PisCofinsTag extends TagXml {
 
   /// Obtém ou define o valor do campo cst.
   int? get cst => getValueFromNode("CST");
-
   set cst(int? value) => setTextValueForNode("CST", value?.toString());
 
   string get pisCofinsTag {
@@ -1992,8 +1991,8 @@ class PisCofinsTag extends TagXml {
   }
 
   double? get qBCProd => getValueFromNode('qBCProd');
-
   set qBCProd(double? value) => setTextValueForNode('qBCProd', value?.toStringAsFixed(4));
+
   string get sufixo => tagName.after(pisCofinsTag);
 
   double? get vAliqProd => getValueFromNode('vAliqProd');
@@ -2010,19 +2009,20 @@ class PisCofinsTag extends TagXml {
 
   @override
   void compute() {
-    if (sufixo == "NT") {
-      _vPisCofins = null;
-      _pPisCofins = null;
-      vBC = null;
-    }
     var outra = pisCofinsTag == "PIS" ? "COFINS" : "PIS";
     for (var p in ["p", "v"]) {
       if (hasChildren("$p$outra")) {
         if (hasChildren("$p$pisCofinsTag") == false) {
-          _vPisCofins ??= changeTo(getValueFromNode("$p$outra"));
+          setTextValueForNode("$p$outra", getValueFromNode("$p$outra"));
         }
         removeChildren("$p$outra");
       }
+    }
+
+    if (sufixo == "NT") {
+      _vPisCofins = null;
+      _pPisCofins = null;
+      vBC = null;
     }
   }
 
@@ -2203,42 +2203,18 @@ class Prod extends TagXml {
     vFrete = vFrete?.forcePositive.nullIfZero;
     vOutro = vOutro?.forcePositive.nullIfZero;
     vDesc = vDesc?.forcePositive.nullIfZero;
-    vProd = (qCom! * vUnCom!);
+    vProd = (qCom ?? 0.0) * (vUnCom ?? 0.0);
   }
 
   @override
   Iterable<string> validate() {
     return [
-      if (cProd == null)
-        "$deepArrow Código do produto $nItem não informado"
-      else if (cProd?.length.isBetweenOrEqual(1, 60) == false)
-        "$deepArrow Código do produto $nItem deve ter entre 1 e 60 caracteres",
-      if (cEAN == null)
-        "$deepArrow Código de barras (EAN) do produto $nItem não informado"
-      else if (cEAN?.isValidEAN == false || cEAN != "SEM GTIN")
-        "$deepArrow Código de barras (EAN) do produto $nItem inválido",
-      if (xProd == null)
-        "$deepArrow Descrição do produto $nItem não informada"
-      else if (xProd?.length.isBetweenOrEqual(1, 120) == false)
-        "$deepArrow Descrição do produto $nItem deve ter entre 1 e 120 caracteres",
-      if (uCom == null)
-        "$deepArrow Unidade comercial do produto $nItem não informada"
-      else if (uCom?.length.isBetweenOrEqual(1, 6) == false)
-        "$deepArrow Unidade comercial do produto $nItem deve ter entre 1 e 6 caracteres",
-      if (qCom == null) "$deepArrow Quantidade comercial do produto $nItem não informada",
-      if (vUnCom == null) "$deepArrow Valor unitário comercial do produto $nItem não informado",
-      if (vProd == null) "$deepArrow Valor total do produto $nItem não informado",
-      if (cEANTrib == null)
-        "$deepArrow Código de barras tributado do produto $nItem não informado"
-      else if (cEANTrib?.isValidEAN == false || cEANTrib != "SEM GTIN")
-        "$deepArrow Código de barras tributado do produto $nItem inválido",
-      if (uTrib == null)
-        "$deepArrow Unidade tributável do produto $nItem não informada"
-      else if (uTrib?.length.isBetweenOrEqual(1, 6) == false)
-        "$deepArrow Unidade tributável do produto $nItem deve ter entre 1 e 6 caracteres",
-      if (qTrib == null) "$deepArrow Quantidade tributável do produto $nItem não informada",
-      if (vUnTrib == null) "$deepArrow Valor unitário tributado do produto $nItem não informado",
-      if (indTot == null) "$deepArrow Indicador de totalização do produto $nItem não informado",
+      if (cProd == null || cProd!.length.isBetweenOrEqual(1, 60) == false) "$deepArrow Código do produto $nItem deve ter entre 1 e 60 caracteres",
+      if (cEAN == null || (cEAN!.isValidEAN == false && cEAN != "SEM GTIN")) "$deepArrow Código de barras (EAN) do produto $nItem inválido",
+      if (xProd == null || xProd?.length.isBetweenOrEqual(1, 120) == false) "$deepArrow Descrição do produto $nItem deve ter entre 1 e 120 caracteres",
+      if (uCom == null || uCom!.length.isBetweenOrEqual(1, 6) == false) "$deepArrow Unidade comercial do produto $nItem deve ter entre 1 e 6 caracteres",
+      if (cEANTrib == null || (cEANTrib!.isValidEAN == false && cEANTrib != "SEM GTIN")) "$deepArrow Código de barras tributado do produto $nItem inválido",
+      if (uTrib == null || uTrib!.length.isBetweenOrEqual(1, 6) == false) "$deepArrow Unidade tributável do produto $nItem deve ter entre 1 e 6 caracteres",
     ];
   }
 }
@@ -2305,7 +2281,7 @@ class Total extends TagXml {
   @override
   Iterable<string> validate() {
     return [
-      if (icmsTot == null) "$deepArrow Tag ICMSTot não informada" else ...icmsTot!.validate(),
+      ...icmsTot?.validate() ?? [],
     ];
   }
 }
