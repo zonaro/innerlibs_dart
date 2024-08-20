@@ -7,63 +7,143 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 import 'package:xml_crypto/xml_crypto.dart';
 
+/// Cria uma tag XML <COFINS>.
+///
+/// Se [sufixo] for informado, cria uma tag filha <COFINS$sufixo>
+///
+/// Atribuir essa tag a propriedade cofins do objeto [Imposto]
 PisCofins COFINS([string sufixo = ""]) {
   var t = PisCofins("COFINS");
   if (sufixo.isNotBlank) t.tag = CofinsTag.cofins(sufixo);
   return t;
 }
 
+/// Cria uma tag XML <COFINSAliq>.
+///
+/// Essa tag deve ser inserida dentro de uma tag COFINS.
 CofinsTag COFINSAliq() => CofinsTag.cofins("Aliq");
 
+/// Cria uma tag XML <COFINSNT>.
+///
+/// Essa tag deve ser inserida dentro de uma tag COFINS.
 CofinsTag COFINSNT() => CofinsTag.cofins("NT");
 
+/// Cria uma tag XML <COFINSOutr>.
+///
+/// Essa tag deve ser inserida dentro de uma tag COFINS.
 CofinsTag COFINSOutr() => CofinsTag.cofins("Outr");
 
+/// Cria uma tag XML <COFINSQtde>.
+///
+/// Essa tag deve ser inserida dentro de uma tag COFINS.
 CofinsTag COFINSQtde() => CofinsTag.cofins("Qtde");
 
+/// Cria uma tag XML <ICMS00>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMS00() => IcmsTag.icms("00");
 
+/// Cria uma tag XML <ICMS20>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMS20() => IcmsTag.icms("20");
 
+/// Cria uma tag XML <ICMS40>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMS40() => IcmsTag.icms("40");
 
+/// Cria uma tag XML <ICMS41>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMS41() => IcmsTag.icms("41");
 
+/// Cria uma tag XML <ICMS45>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMS45() => IcmsTag.icms("45");
 
+/// Cria uma tag XML <ICMS50>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMS50() => IcmsTag.icms("50");
 
+/// Cria uma tag XML <ICMS60>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMS60() => IcmsTag.icms("60");
 
+/// Cria uma tag XML <ICMS90>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMS90() => IcmsTag.icms("90");
 
+/// Cria uma tag XML <ICMSOutraUF>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMSOutraUF() => IcmsTag.icms("OutraUF");
 
+/// Cria uma tag XML <ICMSSN>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMSSN() => IcmsTag.icms("SN");
 
+/// Cria uma tag XML <ICMSSN102>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMSSN102() => IcmsTag.icms("SN102");
 
+/// Cria uma tag XML <ICMSSN202>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMSSN202() => IcmsTag.icms("SN202");
 
+/// Cria uma tag XML <ICMSvSitT>.
+///
+/// Essa tag deve ser inserida dentro de uma tag ICMS.
 IcmsTag ICMSvSitT() => IcmsTag.icms("vSitT");
 
+/// Cria uma tag XML <PIS>.
+///
+/// Se [sufixo] for informado, cria uma tag filha <PIS$sufixo>
+///
+/// Atribuir essa tag a propriedade pis do objeto [Imposto]
 PisCofins PIS([string sufixo = ""]) {
   var t = PisCofins("PIS");
   if (sufixo.isNotBlank) t.tag = PisTag.pis(sufixo);
   return t;
 }
 
+/// Cria uma tag XML <PISAliq>.
+///
+/// Essa tag deve ser inserida dentro de uma tag PIS.
 PisTag PISAliq() => PisTag.pis("Aliq");
+
+/// Cria uma tag XML <PISNT>.
+///
+/// Essa tag deve ser inserida dentro de uma tag PIS.
 PisTag PISNT() => PisTag.pis("NT");
+
+/// Cria uma tag XML <PISOutr>.
+///
+/// Essa tag deve ser inserida dentro de uma tag PIS.
 PisTag PISOutr() => PisTag.pis("Outr");
+
+/// Cria uma tag XML <PISQtde>.
+///
+/// Essa tag deve ser inserida dentro de uma tag PIS.
 PisTag PISQtde() => PisTag.pis("Qtde");
+
+/// Alias para a classe [DetPag].
 typedef Pagamento = DetPag;
 
 /// Classe Cobr que representa a tag XML Cobr.
 class Cobr extends TagXml {
   Cobr() : super.fromTagName("cobr");
 
-  /// Obtém uma lista de objetos Dup.
+  /// Obtém ou define uma lista de objetos [Dup].
+  ///
+  /// Cada objeto [Dup] representa uma duplicata da nota fiscal.
   Iterable<Dup> get dup => getTagsFrom('dup', () => Dup());
 
   set dup(Iterable<Dup> value) {
@@ -191,16 +271,11 @@ class Det extends TagXml {
 
   @override
   void compute() {
+    nItem;
     prod ??= Prod();
     prod!.compute();
     imposto ??= Imposto();
     imposto!.compute();
-  }
-
-  @override
-  toString() {
-    nItem; // Garante que o nItem seja definido
-    return super.toString();
   }
 
   @override
@@ -213,6 +288,8 @@ class Det extends TagXml {
 }
 
 /// Classe que representa o elemento DetPag de uma nota fiscal eletrônica.
+///
+/// O DetPag é utilizado para informar os detalhes de pagamento de uma nota fiscal eletrônica.
 class DetPag extends TagXml {
   DetPag() : super.fromTagName("detPag");
 
