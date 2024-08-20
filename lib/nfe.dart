@@ -962,6 +962,13 @@ class Ide extends TagXml {
   string? get xJust => getValueFromNode('xJust');
 
   set xJust(String? value) => setTextValueForNode('xJust', value);
+
+
+@override
+void compute() {
+ if()
+  }
+
   @override
   Iterable<string> validate() {
     return [
