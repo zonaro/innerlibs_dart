@@ -49,7 +49,7 @@ IcmsTag ICMSvSitT() => IcmsTag.icms("vSitT");
 
 PisCofins PIS([string sufixo = ""]) {
   var t = PisCofins("PIS");
-  if (sufixo.isNotBlank) t.tag = CofinsTag.cofins(sufixo);
+  if (sufixo.isNotBlank) t.tag = PisTag.pis(sufixo);
   return t;
 }
 
