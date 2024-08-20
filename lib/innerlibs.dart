@@ -132,5 +132,5 @@ typedef JsonTable = List<JsonRow>;
 /// Alias for [List<List<Map<String, dynamic>>>], used to represent a set of data tables
 typedef JsonTableSet = List<JsonTable>;
 
-/// Alias for [Map<string, List<Map<String, dynamic>>>], used to group [JsonTable]s
+/// Alias for [Map<T, List<Map<String, dynamic>>>], used to group [JsonTable]s
 typedef GroupedJsonTable<T> = Map<T, JsonTable>;
