@@ -1054,7 +1054,7 @@ class InfAdic extends TagXml {
   /// Alterar a lista através de add ou remove não altera o XML. Para alterar o XML, atribua uma nova lista através do setter.
   /// Alterar este campo, altera o campo infCpl.
   Set<String> get informacoesComplementares => infCpl?.splitAny(['\n', '\r', '\t', ';']).toSet() ?? {};
-  set informacoesComplementares(Iterable<String> value) => infCpl = value.join(';');
+  set informacoesComplementares(Iterable<String> value) => infCpl = value.whereValid.join('; ');
 
   /// Obtém ou define os valores das tags obsFisco e obsCont.
   Iterable<ObsBase> get obs => [...obsCont, ...obsFisco];
@@ -1491,6 +1491,7 @@ class NFe extends TagXml implements Validator {
   }
 
   /// Obtém ou define o regime tributário da nota fiscal.
+  /// Alterar este campo altera diretamente o campo CRT da tag emit.
   RegimeTributario? get regimeTributario => infNFe?.emit?.crt;
   set regimeTributario(RegimeTributario? value) {
     infNFe ??= InfNFe();
