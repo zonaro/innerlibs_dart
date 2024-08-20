@@ -5,15 +5,54 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
-Future<File> salvarPDF(Uint8List pdf, string diretorio, string chave) async {
-  await Directory(diretorio).create(recursive: true);
-  final file = File('$diretorio\\Cupom-$chave.pdf');
-  try {
-    await file.writeAsBytes(pdf);
-  } catch (e) {
-    consoleLog("$e");
+Widget computeItem(Det item, double pageWidth, double fontSize) {
+  final Prod? pp = item.prod;
+  if (pp == null) {
+    return SizedBox();
   }
-  return file;
+  var desc = '${pp.cProd} - ${pp.xProd}';
+  var price = '${pp.qCom} x ${pp.vUnCom!.obterRealSemSimbolo()} = ${pp.vProd!.obterRealSemSimbolo()}';
+  int charCount = desc.length + price.length + 2;
+  int charPerLine = (pageWidth / (fontSize * .5)).ceil();
+
+  if (charCount < charPerLine) {
+    return SizedBox(
+      width: pageWidth,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            desc,
+            textAlign: TextAlign.left,
+          ),
+          Text(
+            price,
+            textAlign: TextAlign.right,
+          ),
+        ],
+      ),
+    );
+  } else {
+    return SizedBox(
+      width: pageWidth,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            desc,
+            textAlign: TextAlign.left,
+          ),
+          SizedBox(
+            width: pageWidth,
+            child: Text(
+              price,
+              textAlign: TextAlign.right,
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }
 
 Future<Uint8List> gerarPDFDanfe(NFeProc cupomDanfe, [PdfPageFormat pageFormat = PdfPageFormat.roll80, Uint8List? logo]) async {
@@ -78,7 +117,7 @@ Future<Uint8List> gerarPDFDanfe(NFeProc cupomDanfe, [PdfPageFormat pageFormat = 
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('VALOR TOTAL R\$'),
-                  Text((cupomDanfe.nfe?.infNFe?.valorTotal ?? 0).obterRealSemSimbolo(), style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text((cupomDanfe.nfe?.infNFe?.valorTotalDaNota ?? 0).obterRealSemSimbolo(), style: TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
@@ -140,52 +179,13 @@ Future<Uint8List> gerarPDFDanfe(NFeProc cupomDanfe, [PdfPageFormat pageFormat = 
   return pdf.save();
 }
 
-Widget computeItem(Det item, double pageWidth, double fontSize) {
-  final Prod? pp = item.prod;
-  if (pp == null) {
-    return SizedBox();
+Future<File> salvarPDF(Uint8List pdf, string diretorio, string chave) async {
+  await Directory(diretorio).create(recursive: true);
+  final file = File('$diretorio\\Cupom-$chave.pdf');
+  try {
+    await file.writeAsBytes(pdf);
+  } catch (e) {
+    consoleLog("$e");
   }
-  var desc = '${pp.cProd} - ${pp.xProd}';
-  var price = '${pp.qCom} x ${pp.vUnCom!.obterRealSemSimbolo()} = ${pp.vProd!.obterRealSemSimbolo()}';
-  int charCount = desc.length + price.length + 2;
-  int charPerLine = (pageWidth / (fontSize * .5)).ceil();
-
-  if (charCount < charPerLine) {
-    return SizedBox(
-      width: pageWidth,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            desc,
-            textAlign: TextAlign.left,
-          ),
-          Text(
-            price,
-            textAlign: TextAlign.right,
-          ),
-        ],
-      ),
-    );
-  } else {
-    return SizedBox(
-      width: pageWidth,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            desc,
-            textAlign: TextAlign.left,
-          ),
-          SizedBox(
-            width: pageWidth,
-            child: Text(
-              price,
-              textAlign: TextAlign.right,
-            ),
-          )
-        ],
-      ),
-    );
-  }
+  return file;
 }

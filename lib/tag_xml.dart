@@ -148,7 +148,10 @@ class TagXml extends XmlElement implements Validator {
 
   /// Return the XML string representation of the node.
   @override
-  String toString() => toXmlString(pretty: true);
+  String toString() {
+    compute();
+    return toXmlString(pretty: true);
+  }
 
   @override
   Iterable<String> validate() {

@@ -7,7 +7,11 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 import 'package:xml_crypto/xml_crypto.dart';
 
-PisCofins COFINS() => PisCofins("COFINS");
+PisCofins COFINS([string sufixo = ""]) {
+  var t = PisCofins("COFINS");
+  if (sufixo.isNotBlank) t.tag = CofinsTag.cofins(sufixo);
+  return t;
+}
 
 CofinsTag COFINSAliq() => CofinsTag.cofins("Aliq");
 
@@ -42,7 +46,13 @@ IcmsTag ICMSSN102() => IcmsTag.icms("SN102");
 IcmsTag ICMSSN202() => IcmsTag.icms("SN202");
 
 IcmsTag ICMSvSitT() => IcmsTag.icms("vSitT");
-PisCofins PIS() => PisCofins("PIS");
+
+PisCofins PIS([string sufixo = ""]) {
+  var t = PisCofins("PIS");
+  if (sufixo.isNotBlank) t.tag = CofinsTag.cofins(sufixo);
+  return t;
+}
+
 PisTag PISAliq() => PisTag.pis("Aliq");
 PisTag PISNT() => PisTag.pis("NT");
 PisTag PISOutr() => PisTag.pis("Outr");
@@ -81,11 +91,11 @@ class CofinsTag extends PisCofinsTag {
   CofinsTag(super.tagName) : super();
   CofinsTag.cofins(string sufixo) : super.cofins(sufixo);
 
-  double? get pCOFINS => _pPisCofins;
-  set pCOFINS(double? value) => _pPisCofins = value;
+  double? get pCOFINS => pTag;
+  set pCOFINS(double? value) => pTag = value;
 
-  double? get vCOFINS => _vPisCofins;
-  set vCOFINS(double? value) => _vPisCofins = value;
+  double? get vCOFINS => vTag;
+  set vCOFINS(double? value) => vTag = value;
 }
 
 /// Classe que representa o destinatário de uma nota fiscal eletrônica (NFe).
@@ -846,6 +856,30 @@ class ICMSUFDest extends TagXml {
 /// Esta classe é responsável por manipular e processar as informações
 /// do campo "ide" de uma Nota Fiscal Eletrônica (NFe).
 class Ide extends TagXml {
+  /// Lista de cNFs inválidos.
+  static const strings cNFInvalido = [
+    "00000000",
+    "11111111",
+    "22222222",
+    "33333333",
+    "44444444",
+    "55555555",
+    "66666666",
+    "77777777",
+    "88888888",
+    "99999999",
+    "12345678",
+    "23456789",
+    "34567890",
+    "45678901",
+    "56789012",
+    "67890123",
+    "78901234",
+    "89012345",
+    "90123456",
+    "01234567"
+  ];
+
   Ide() : super.fromTagName("ide");
 
   /// Dígito Verificador.
@@ -963,37 +997,43 @@ class Ide extends TagXml {
 
   set xJust(String? value) => setTextValueForNode('xJust', value);
 
-
-@override
-void compute() {
- if()
+  @override
+  void compute() {
+    while (cNF == null || cNF == 0) {
+      cNF = randomInt(11111112, 99999998);
+      if (cNF.fixedLength(8).isIn(cNFInvalido)) {
+        cNF = null;
+      }
+    }
   }
 
   @override
   Iterable<string> validate() {
     return [
-      if (cUF == null) "cUF não informada",
-      if (cNF == null) "cNF não informada",
-      if (natOp == null) "natOp não informada" else if (natOp?.length.isBetweenOrEqual(1, 60) == false) "natOp deve ter entre 1 e 60 caracteres",
-      if (mod == null) "mod não informada",
-      if (serie == null) "serie não informada",
-      if (nNF == null) "nNF não informada",
-      if (dhEmi == null) "dhEmi não informada",
-      if (tpNF == null) "tpNF não informada",
-      if (idDest == null) "idDest não informada",
-      if (cMunFG == null) "cMunFG não informada",
-      if (tpImp == null) "tpImp não informada",
-      if (tpEmis == null) "tpEmis não informada",
-      if (cDV == null) "cDV não informada",
-      if (tpAmb == null) "tpAmb não informada",
-      if (finNFe == null) "finNFe não informada",
-      if (indFinal == null) "indFinal não informada",
-      if (indPres == null) "indPres não informada",
-      if (procEmi == null) "procEmi não informada",
-      if (verProc == null) "verProc não informada" else if (verProc?.length.isBetweenOrEqual(1, 20) == false) "verProc deve ter entre 1 e 20 caracteres",
+      if (cUF == null) "$deepArrow cUF não informada",
+      if (cNF == null) "$deepArrow cNF não informada" else if (cNF?.toString().length != 8) "$deepArrow cNF deve ter 8 caracteres",
+      if (cNF != null && cNF!.fixedLength(8).isIn(cNFInvalido)) "$deepArrow cNF não pode ser igual a ${cNFInvalido.join(", ")}",
+      if (natOp == null) "$deepArrow natOp não informada" else if (natOp?.length.isBetweenOrEqual(1, 60) == false) "$deepArrow natOp deve ter entre 1 e 60 caracteres",
+      if (mod == null) "$deepArrow mod não informada",
+      if (serie == null) "$deepArrow serie não informada",
+      if (nNF == null) "$deepArrow nNF não informada",
+      if (nNF != null && nNF == cNF) "$deepArrow Numero da nota fiscal (nNF) não pode ser igual ao código numérico (cNF)",
+      if (dhEmi == null) "$deepArrow dhEmi não informada",
+      if (tpNF == null) "$deepArrow tpNF não informada",
+      if (idDest == null) "$deepArrow idDest não informada",
+      if (cMunFG == null) "$deepArrow cMunFG não informada",
+      if (tpImp == null) "$deepArrow tpImp não informada",
+      if (tpEmis == null) "$deepArrow tpEmis não informada",
+      if (cDV == null) "$deepArrow cDV não informada",
+      if (tpAmb == null) "$deepArrow tpAmb não informada",
+      if (finNFe == null) "$deepArrow finNFe não informada",
+      if (indFinal == null) "$deepArrow indFinal não informada",
+      if (indPres == null) "$deepArrow indPres não informada",
+      if (procEmi == null) "$deepArrow procEmi não informada",
+      if (verProc == null) "$deepArrow verProc não informada" else if (verProc?.length.isBetweenOrEqual(1, 20) == false) "verProc deve ter entre 1 e 20 caracteres",
       if (tpEmis?.isContingencia ?? false) ...[
-        if (dhCont == null) "dhCont não informada",
-        if (xJust == null) "xJust não informada" else if (xJust?.length.isBetweenOrEqual(15, 255) == false) "xJust deve ter entre 15 e 255 caracteres",
+        if (dhCont == null) "$deepArrow dhCont não informada",
+        if (xJust == null) "$deepArrow xJust não informada" else if (xJust?.length.isBetweenOrEqual(15, 255) == false) "xJust deve ter entre 15 e 255 caracteres",
       ],
     ];
   }
@@ -1179,6 +1219,7 @@ class InfNFe extends TagXml {
 
   /// Obtém a instância da classe Cobr contida no documento XML.
   Cobr? get cobr => getTagAs("cobr", () => Cobr());
+
   set cobr(Cobr? value) => setTagFrom("cobr", value);
 
   /// Obtém o valor do desconto da NFe.
@@ -1212,6 +1253,27 @@ class InfNFe extends TagXml {
 
   set emit(Emit? value) => setTagFrom('emit', value);
 
+  Estado get estadoDestinatario => dest?.enderDest?.uf ?? Estado.naoDefinido;
+
+  set estadoDestinatario(Estado value) {
+    dest ??= Dest();
+    dest!.enderDest ??= EnderDest();
+    dest!.enderDest!.uf = value;
+  }
+
+  /// Obtém ou define o estado emitente da NFe.
+  /// Altera diretamente as tags ide.cUF e emit.enderEmit.uf.
+  Estado get estadoEmitente => ide?.cUF ?? emit?.enderEmit?.uf ?? Estado.naoDefinido;
+  set estadoEmitente(Estado value) {
+    ide ??= Ide();
+    ide!.cUF = value;
+    if (value.estadoReal) {
+      emit ??= Emit();
+      emit!.enderEmit ??= EnderEmit();
+      emit!.enderEmit!.uf = value;
+    }
+  }
+
   /// Obtém ou define a instância da classe Ide contida no documento XML.
   Ide? get ide => getTagAs('ide', () => Ide());
 
@@ -1228,7 +1290,7 @@ class InfNFe extends TagXml {
   set pag(Pag? value) => setTagFrom("pag", value);
 
   /// Obtém a quantidade de itens da NFe.
-  double get quantidadeItens => det.sum((x) => x.prod?.qCom ?? 0);
+  double get quantidadeItensComercial => det.sum((x) => x.prod?.qCom ?? 0);
 
   /// Obtém a instância da classe Total contida no documento XML.
   Total? get total => getTagAs('total', () => Total());
@@ -1240,11 +1302,13 @@ class InfNFe extends TagXml {
 
   /// Obtém a instância da classe Transp contida no documento XML.
   Transp? get transp => getTagAs("transp", () => Transp());
+
   set transp(Transp? value) => setTagFrom("transp", value);
 
   /// Obtém o valor total da NFe.
-  double get valorTotal => total?.icmsTot?.vNF ?? 0;
-  set valorTotal(double value) {
+  double get valorTotalDaNota => total?.icmsTot?.vNF ?? 0;
+
+  set valorTotalDaNota(double value) {
     total ??= Total();
     total!.icmsTot ??= ICMSTot();
     total!.icmsTot!.vNF = value;
@@ -1252,6 +1316,7 @@ class InfNFe extends TagXml {
 
   /// Obtém ou define a versão da NFe.
   string? get versao => getAttribute('versao');
+
   set versao(String? value) => setAttribute('versao', value?.toString());
 
   /// Adiciona um item ao documento XML.
@@ -1261,22 +1326,34 @@ class InfNFe extends TagXml {
   }
 
   @override
-  String toString() {
-    chave; // Garante que o ID seja definido
-    return super.toString();
+  void compute() {
+    chave;
+    versao = "4.00";
+    dest ??= Dest();
+    dest!.compute();
+
+    ide ??= Ide();
+    ide!.compute();
+
+    estadoEmitente = ide!.cUF ?? estadoEmitente;
+
+    if (estadoEmitente == estadoDestinatario) {
+      ide!.idDest = IdentificadorDestinoOperacaoNFe.operacaoInterna;
+    }
   }
 
   @override
   Iterable<string> validate() {
     return [
-      if (chave == null) "Chave da NFe não informada" else if (ChaveNFe.validar(chave)) "Chave da NFe inválida",
-      if (versao != "4.00") "Versão inválida (deve ser 4.00)",
-      if (ide == null) "Tag ide não informada" else ...ide!.validate(),
-      if (emit == null) "Tag emit não informada" else ...emit!.validate(),
-      if (dest == null) "Tag dest não informada" else ...dest!.validate(),
-      if (total == null) "Tag total não informada" else ...total!.validate(),
-      if (infAdic == null) "Tag infAdic não informada" else ...infAdic!.validate(),
-      if (det.isEmpty) "Nenhum det informado" else ...det.map((x) => x.validate()).expand((x) => x),
+      if (chave == null) "$deepArrow Chave da NFe não informada" else if (ChaveNFe.validar(chave) == false) "$deepArrow Chave da NFe inválida",
+      if (versao != "4.00") "$deepArrow Versão inválida (deve ser 4.00)",
+      if (ide == null) "$deepArrow Tag ide não informada" else ...ide!.validate(),
+      if (emit == null) "$deepArrow Tag emit não informada" else ...emit!.validate(),
+      if (dest == null) "$deepArrow Tag dest não informada" else ...dest!.validate(),
+      if (ide?.cUF != estadoEmitente) "$deepArrow Estado do emitente não corresponde ao estado da chave da NFe",
+      if (total == null) "$deepArrow Tag total não informada" else ...total!.validate(),
+      if (infAdic == null) "$deepArrow Tag infAdic não informada" else ...infAdic!.validate(),
+      if (det.isEmpty) "$deepArrow Nenhum det informado" else ...det.map((x) => x.validate()).expand((x) => x),
     ];
   }
 }
@@ -1328,12 +1405,12 @@ class InfProt extends TagXml {
   @override
   Iterable<string> validate() {
     return [
-      if (chNFe == null) 'Chave de acesso da NF-e não informada' else if (ChaveNFe.validar(chNFe) == false) 'Chave de acesso da NF-e inválida',
-      if (dhRecbto == null) 'Data e hora do recebimento da NF-e não informada',
-      if (nProt == null) 'Número do protocolo de autorização da NF-e não informado',
-      if (digVal == null) 'Valor do digest value da NF-e não informado',
-      if (cStat == StatusNFe.desconhecido) 'Código do status da NF-e não informado',
-      if (xMotivo == null) 'Descrição do motivo do status da NF-e não informada',
+      if (chNFe == null) '$deepArrow Chave de acesso da NF-e não informada' else if (ChaveNFe.validar(chNFe) == false) '$deepArrow Chave de acesso da NF-e inválida',
+      if (dhRecbto == null) '$deepArrow Data e hora do recebimento da NF-e não informada',
+      if (nProt == null) '$deepArrow Número do protocolo de autorização da NF-e não informado',
+      if (digVal == null) '$deepArrow Valor do digest value da NF-e não informado',
+      if (cStat == StatusNFe.desconhecido) '$deepArrow Código do status da NF-e não informado',
+      if (xMotivo == null) '$deepArrow Descrição do motivo do status da NF-e não informada',
     ];
   }
 }
@@ -1391,26 +1468,26 @@ class IPI extends TagXml {
 
   /// Obtém ou define o CNPJ do produtor.
   int? get cnpjProd => getValueFromNode('CNPJ');
-
   set cnpjProd(int? value) => setTextValueForNode('CNPJ', value?.fixedLength(ChaveNFe.tamanhoCNPJ));
+
   SeloControle? get cSelo => getValueFromNode('cSelo', SeloControle.fromInt);
-
   set cSelo(SeloControle? value) => setTextValueForNode('cSelo', value?.value.toString());
+
   IPINT? get ipiNT => getTagAs('IPINT', () => IPINT());
-
   set ipiNT(IPINT? value) => setTagFrom('IPINT', value);
-  IPITrib? get ipiTrib => getTagAs('IPITrib', () => IPITrib());
 
+  IPITrib? get ipiTrib => getTagAs('IPITrib', () => IPITrib());
   set ipiTrib(IPITrib? value) => setTagFrom('IPITrib', value);
 
   /// Obtém ou define a quantidade de selos.
   int? get qSelo => getValueFromNode('qSelo');
 
   set qSelo(int? value) => setTextValueForNode('qSelo', value?.toString());
+
   @override
   Iterable<string> validate() {
     return [
-      if (cEnq == null) "$deepArrow Código de Enquadramento não informado" else if (cEnq?.length.isBetweenOrEqual(3, 3) == false) "$deepArrow Código de Enquadramento deve ter 3 caracteres",
+      if (cEnq == null) "$deepArrow Código de Enquadramento não informado" else if (cEnq?.length != 3) "$deepArrow Código de Enquadramento deve ter 3 caracteres",
       if (cSelo == null) "$deepArrow Código do Selo não informado",
       if (cnpjProd == null) "$deepArrow CNPJ do produtor não informado" else if (Brasil.validarCNPJ(cnpjProd!) == false) "$deepArrow CNPJ do produtor inválido",
     ];
@@ -1582,9 +1659,7 @@ class NFe extends TagXml implements Validator {
     infNFe!.total!.icmsTot ??= ICMSTot();
     infNFe!.chave; // Garante que a chave seja definida
     infNFe!.versao ??= "4.00";
-
-    infNFe!.dest ??= Dest();
-    infNFe!.dest!.compute();
+    infNFe!.compute();
 
     for (var x in infNFe!.det) {
       x.compute();
@@ -1613,8 +1688,8 @@ class NFe extends TagXml implements Validator {
     infNFe!.total!.icmsTot!.vBC = infNFe!.det.sum((x) => x.imposto?.icms?.tag?.vBC ?? 0);
     infNFe!.total!.icmsTot!.vICMS = infNFe!.det.sum((x) => x.imposto?.icms?.tag?.vICMS ?? 0);
     infNFe!.total!.icmsTot!.vICMSUFDest = infNFe!.det.sum((x) => x.imposto?.icmsUFDest?.vICMSUFDest ?? 0);
-    infNFe!.total!.icmsTot!.vPIS = infNFe!.det.sum((x) => x.imposto?.pis?.tag?._vPisCofins ?? 0);
-    infNFe!.total!.icmsTot!.vCOFINS = infNFe!.det.sum((x) => x.imposto?.cofins?.tag?._vPisCofins ?? 0);
+    infNFe!.total!.icmsTot!.vPIS = infNFe!.det.sum((x) => x.imposto?.pis?.tag?.vTag ?? 0);
+    infNFe!.total!.icmsTot!.vCOFINS = infNFe!.det.sum((x) => x.imposto?.cofins?.tag?.vTag ?? 0);
     infNFe!.total!.icmsTot!.vIPI = infNFe!.det.sum((x) => x.imposto?.ipi?.ipiTrib?.vIPI ?? 0);
     infNFe!.total!.icmsTot!.vST = infNFe!.det.sum((x) => x.imposto?.icms?.tag?.vICMSST ?? 0);
     infNFe!.total!.icmsTot!.vBCST = infNFe!.det.sum((x) => x.imposto?.icms?.tag?.vBCST ?? 0);
@@ -1629,7 +1704,7 @@ class NFe extends TagXml implements Validator {
   bool computeAndValidate([bool throwException = false]) {
     compute();
     if (throwException) {
-      validateOrThrow((errors) => InvalidException("Foram encontrados error ao validar esta nota:", errors));
+      validateOrThrow((errors) => InvalidException("Foram encontrados ${errors.toList().length.quantityTextPt("erros", "erro")} ao validar esta nota:", errors));
     }
     return notaValida;
   }
@@ -2010,9 +2085,13 @@ class PisCofinsTag extends TagXml {
     throw Exception("Tag inválida");
   }
 
-  double? get qBCProd => getValueFromNode('qBCProd');
-  set qBCProd(double? value) => setTextValueForNode('qBCProd', value?.toStringAsFixed(4));
+  /// Obtém ou define o valor do campo pPIS ou pCOFINS.
+  double? get pTag => getValueFromNode('p$pisCofinsTag');
+  set pTag(double? value) => setTextValueForNode('p$pisCofinsTag', value?.toStringAsFixed(4));
 
+  double? get qBCProd => getValueFromNode('qBCProd');
+
+  set qBCProd(double? value) => setTextValueForNode('qBCProd', value?.toStringAsFixed(4));
   string get sufixo => tagName.after(pisCofinsTag);
 
   double? get vAliqProd => getValueFromNode('vAliqProd');
@@ -2021,27 +2100,25 @@ class PisCofinsTag extends TagXml {
   double? get vBC => getValueFromNode('vBC');
   set vBC(double? value) => setTextValueForNode('vBC', value?.toStringAsFixed(2));
 
-  double? get _pPisCofins => getValueFromNode('p$pisCofinsTag');
-  set _pPisCofins(double? value) => setTextValueForNode('p$pisCofinsTag', value?.toStringAsFixed(4));
-
-  double? get _vPisCofins => getValueFromNode('v$pisCofinsTag');
-  set _vPisCofins(double? value) => setTextValueForNode('v$pisCofinsTag', value?.toStringAsFixed(2));
+  /// Obtém ou devine o valor do campo vPIS ou vCOFINS.
+  double? get vTag => getValueFromNode('v$pisCofinsTag');
+  set vTag(double? value) => setTextValueForNode('v$pisCofinsTag', value?.toStringAsFixed(2));
 
   @override
   void compute() {
     var outra = pisCofinsTag == "PIS" ? "COFINS" : "PIS";
-    for (var p in ["p", "v"]) {
-      if (hasChildren("$p$outra")) {
-        if (hasChildren("$p$pisCofinsTag") == false) {
-          setTextValueForNode("$p$outra", getValueFromNode("$p$outra"));
+    for (var i in ["p", "v"]) {
+      if (hasChildren("$i$outra")) {
+        if (hasChildren("$i$pisCofinsTag") == false) {
+          setTextValueForNode("$i$pisCofinsTag", getValueFromNode("$i$outra"));
         }
-        removeChildren("$p$outra");
+        removeChildren("$i$outra");
       }
     }
 
     if (sufixo == "NT") {
-      _vPisCofins = null;
-      _pPisCofins = null;
+      vTag = null;
+      pTag = null;
       vBC = null;
     }
   }
@@ -2053,12 +2130,12 @@ class PisCofinsTag extends TagXml {
       if (cst == null) "$deepArrow CST não informado",
       if (sufixo != "NT") ...[
         if (vBC == null) "$deepArrow Valor da base de cálculo não informado",
-        if (_pPisCofins == null) "$deepArrow Alíquota não informada",
-        if (_vPisCofins == null) "$deepArrow Valor não informado",
+        if (pTag == null) "$deepArrow Alíquota não informada",
+        if (vTag == null) "$deepArrow Valor não informado",
       ] else ...[
         if (vBC != null) "$deepArrow Valor da base de cálculo não deve ser informado para $pisCofinsTag",
-        if (_pPisCofins != null) "$deepArrow Alíquota não deve ser informada para $pisCofinsTag",
-        if (_vPisCofins != null) "$deepArrow Valor não deve ser informado para $pisCofinsTag",
+        if (pTag != null) "$deepArrow Alíquota não deve ser informada para $pisCofinsTag",
+        if (vTag != null) "$deepArrow Valor não deve ser informado para $pisCofinsTag",
       ]
     ];
   }
@@ -2068,11 +2145,11 @@ class PisTag extends PisCofinsTag {
   PisTag(super.tagName) : super();
   PisTag.pis(string sufixo) : super.pis(sufixo);
 
-  double? get pPIS => _pPisCofins;
-  set pPIS(double? value) => _pPisCofins = value;
+  double? get pPIS => pTag;
+  set pPIS(double? value) => pTag = value;
 
-  double? get vPIS => _vPisCofins;
-  set vPIS(double? value) => _vPisCofins = value;
+  double? get vPIS => vTag;
+  set vPIS(double? value) => vTag = value;
 }
 
 /// Classe que representa a tag XML 'prod' do documento fiscal eletrônico (NF-e/NFC-e).

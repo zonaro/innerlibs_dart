@@ -1,139 +1,5 @@
 import 'package:innerlibs/innerlibs.dart';
 
-enum Regiao {
-  naoDefinido(0),
-  norte(1),
-  nordeste(2),
-  centroOeste(3),
-  sudeste(4),
-  sul(5),
-  nacional(91),
-  exportacao(99);
-
-  final int value;
-
-  const Regiao(this.value);
-
-  bool get regiaoReal => isIn(Brasil.regioes);
-
-  /// Retorna uma lista de regiões.
-  static List<Regiao> get pegarRegioes => [norte, nordeste, centroOeste, sudeste, sul];
-
-  /// Retorna uma lista de cidades desta região
-  Future<Iterable<Cidade>> get cidades async {
-    if (this == nacional) {
-      return await Brasil.cidades;
-    }
-    if (this == exportacao || this == naoDefinido) {
-      return [];
-    }
-
-    return (await Brasil.cidades).where((e) => e.regiao == this);
-  }
-
-  /// Retorna uma lista de cidades capitais desta região
-  Future<Iterable<Cidade>> get capitais async => (await cidades).where((e) => e.capital);
-
-  /// Retorna uma lista de estados desta região
-  Iterable<Estado> get estados {
-    if (this == nacional) {
-      return Estado.pegarEstados;
-    }
-    if (this == exportacao || this == naoDefinido) {
-      return [];
-    }
-
-    return Brasil.estados.where((e) => e.regiao == this);
-  }
-
-  factory Regiao.fromValue(int value) {
-    switch (value) {
-      case 1:
-        return norte;
-      case 2:
-        return nordeste;
-      case 3:
-        return centroOeste;
-      case 4:
-        return sudeste;
-      case 5:
-        return sul;
-      case 91:
-        return nacional;
-      case 99:
-        return exportacao;
-      default:
-        return naoDefinido;
-    }
-  }
-
-  @override
-  String toString() {
-    switch (this) {
-      case norte:
-        return 'Norte';
-      case nordeste:
-        return 'Nordeste';
-      case centroOeste:
-        return 'Centro-Oeste';
-      case sudeste:
-        return 'Sudeste';
-      case sul:
-        return 'Sul';
-      case nacional:
-        return 'Nacional';
-      case exportacao:
-        return 'Exportação';
-      default:
-        return 'Não definido';
-    }
-  }
-
-  static Regiao pegar(dynamic value) {
-    if (value == null) {
-      return naoDefinido;
-    }
-
-    if (value is Regiao) return value;
-
-    if (value is String) {
-      if (value.isNumericOnly) {
-        value = int.parse(value);
-      } else {
-        value = value.toLowerCase().removeAny([" ", "-", "_"]);
-      }
-    }
-    if (value is num) {
-      value = value.floor();
-    }
-    switch (value) {
-      case 1:
-      case "norte":
-        return norte;
-      case 2:
-      case "nordeste":
-        return nordeste;
-      case 3:
-      case "centrooeste":
-        return centroOeste;
-      case 4:
-      case "sudeste":
-        return sudeste;
-      case 5:
-      case "sul":
-        return sul;
-      case 91:
-      case "nacional":
-        return nacional;
-      case 99:
-      case "exportacao":
-        return exportacao;
-      default:
-        return naoDefinido;
-    }
-  }
-}
-
 /// Classe que representa um estado.
 enum Estado implements Comparable<Estado> {
   /// 12 - Acre - AC
@@ -238,32 +104,6 @@ enum Estado implements Comparable<Estado> {
   /// 0 - Não definido
   naoDefinido(0, 0, 0, 'Não definido', 'ND', Regiao.naoDefinido);
 
-  final int ibge;
-
-  /// Verifica se o estado é um estado real.
-  bool get estadoReal => isIn(Brasil.estados);
-
-  /// Constrói um [Estado] com o valor fornecido.
-  const Estado(this.ibge, this.latitude, this.longitude, this.nome, this.uf, this.regiao);
-
-  /// Nome do estado.
-  final String nome;
-
-  /// Sigla do estado.
-  final String uf;
-
-  /// Região do estado.
-  final Regiao regiao;
-
-  /// Latitude do estado.
-  final double latitude;
-
-  /// Longitude do estado.
-  final double longitude;
-
-  /// Lista de cidades pertencentes ao estado.
-  Future<Iterable<Cidade>> get cidades async => (await Brasil.cidades).where((e) => e.ibge.toString().first(2) == ibge.toString());
-
   /// Retorna uma lista de estados.
   ///
   /// Essa função estática assíncrona retorna uma lista de objetos do tipo Estado.
@@ -303,29 +143,36 @@ enum Estado implements Comparable<Estado> {
         Estado.to,
       ];
 
-  /// Retorna o estado correspondente ao nome, UF ou código IBGE fornecido.
-  ///
-  /// Parâmetros:
-  /// - nomeOuUFOuIBGE: O nome, UF ou código IBGE do estado a ser buscado.
-  ///
-  /// Retorna:
-  /// Um objeto do tipo Estado correspondente ao nome, UF ou código IBGE fornecido.
-  /// Caso nenhum estado seja encontrado, retorna naoDefinido.
-  static Estado pegar(dynamic nomeOuUFOuIBGE) => Brasil.pegarEstado(nomeOuUFOuIBGE);
+  static List<Estado> get pegarEstadosECodigosEspeciais => [
+        naoDefinido,
+        ...pegarEstados,
+        suframa,
+        an,
+        svcrs,
+        svcsp,
+        sincChavesRSparaSVSP,
+        ex,
+      ];
 
-  /// Pesquisa um estado pelo nome, UF ou código IBGE.
-  /// Retorna uma lista de estados correspondentes à pesquisa.
-  static Iterable<Estado> pesquisar(dynamic nomeOuUFOuIBGE) => Brasil.pesquisarEstado(nomeOuUFOuIBGE);
+  final int ibge;
 
-  /// Retorna a cidade capital do estado.
-  Future<Cidade> get capital async => (await cidades).singleWhere((e) => e.capital);
+  /// Nome do estado.
+  final String nome;
 
-  @override
-  int compareTo(other) => nome.compareTo(other.nome);
+  /// Sigla do estado.
+  final String uf;
 
-  /// Retorna o nome do estado.
-  @override
-  String toString() => nome;
+  /// Região do estado.
+  final Regiao regiao;
+
+  /// Latitude do estado.
+  final double latitude;
+
+  /// Longitude do estado.
+  final double longitude;
+
+  /// Constrói um [Estado] com o valor fornecido.
+  const Estado(this.ibge, this.latitude, this.longitude, this.nome, this.uf, this.regiao);
 
   /// Cria uma instância de Estado a partir do código IBGE.
   factory Estado.fromUForIbge(dynamic value) {
@@ -367,7 +214,35 @@ enum Estado implements Comparable<Estado> {
     }
   }
 
+  /// Retorna a cidade capital do estado.
+  Future<Cidade> get capital async => (await cidades).singleWhere((e) => e.capital);
+
+  /// Lista de cidades pertencentes ao estado.
+  Future<Iterable<Cidade>> get cidades async => (await Brasil.cidades).where((e) => e.ibge.toString().first(2) == ibge.toString());
+
+  /// Verifica se o estado é um código especial utilizado somente em NFe.
+  bool get codigoEspecial => !estadoReal;
+
+  /// Verifica se o estado é um estado real e não um código especial utilizado somente em NFe.
+  /// Os seguintes códigos são considerados especiais:
+  /// - 90 - SUFRAMA
+  /// - 91 - RFB - Ambiente Nacional - AN
+  /// - 94 - SVCRS - Serviço Virtual de Contingência do Rio Grande do Sul
+  /// - 95 - SVCSP - Serviço Virtual de Contingência de São Paulo
+  /// - 96 - Sincronização de chaves do estado do Rio Grande do Sul com o Sistema Virtual de São Paulo
+  /// - 99 - Exportação
+  /// - 0 - Não definido
+  ///
+  bool get estadoReal => isIn(Brasil.estados);
+
+  @override
+  int compareTo(other) => nome.compareTo(other.nome);
+
   Map<String, dynamic> toJson() => {'Nome': nome, 'UF': uf, 'IBGE': ibge, 'Regiao': regiao, 'Latitude': latitude, 'Longitude': longitude};
+
+  /// Retorna o nome do estado.
+  @override
+  String toString() => nome;
 
   bool validarInscricaoEstadual(dynamic value) {
     if (value == null) {
@@ -1105,5 +980,153 @@ enum Estado implements Comparable<Estado> {
     }
 
     return false;
+  }
+
+  /// Retorna o estado correspondente ao nome, UF ou código IBGE fornecido.
+  ///
+  /// Parâmetros:
+  /// - nomeOuUFOuIBGE: O nome, UF ou código IBGE do estado a ser buscado.
+  ///
+  /// Retorna:
+  /// Um objeto do tipo Estado correspondente ao nome, UF ou código IBGE fornecido.
+  /// Caso nenhum estado seja encontrado, retorna naoDefinido.
+  static Estado pegar(dynamic nomeOuUFOuIBGE) => Brasil.pegarEstado(nomeOuUFOuIBGE);
+
+  /// Pesquisa um estado pelo nome, UF ou código IBGE.
+  /// Retorna uma lista de estados correspondentes à pesquisa.
+  static Iterable<Estado> pesquisar(dynamic nomeOuUFOuIBGE) => Brasil.pesquisarEstado(nomeOuUFOuIBGE);
+}
+
+enum Regiao {
+  naoDefinido(0),
+  norte(1),
+  nordeste(2),
+  centroOeste(3),
+  sudeste(4),
+  sul(5),
+  nacional(91),
+  exportacao(99);
+
+  /// Retorna uma lista de regiões.
+  static List<Regiao> get pegarRegioes => [norte, nordeste, centroOeste, sudeste, sul];
+
+  final int value;
+
+  const Regiao(this.value);
+
+  factory Regiao.fromValue(int value) {
+    switch (value) {
+      case 1:
+        return norte;
+      case 2:
+        return nordeste;
+      case 3:
+        return centroOeste;
+      case 4:
+        return sudeste;
+      case 5:
+        return sul;
+      case 91:
+        return nacional;
+      case 99:
+        return exportacao;
+      default:
+        return naoDefinido;
+    }
+  }
+
+  /// Retorna uma lista de cidades capitais desta região
+  Future<Iterable<Cidade>> get capitais async => (await cidades).where((e) => e.capital);
+
+  /// Retorna uma lista de cidades desta região
+  Future<Iterable<Cidade>> get cidades async {
+    if (this == nacional) {
+      return await Brasil.cidades;
+    }
+    if (this == exportacao || this == naoDefinido) {
+      return [];
+    }
+
+    return (await Brasil.cidades).where((e) => e.regiao == this);
+  }
+
+  /// Retorna uma lista de estados desta região
+  Iterable<Estado> get estados {
+    if (this == nacional) {
+      return Estado.pegarEstados;
+    }
+    if (this == exportacao || this == naoDefinido) {
+      return [];
+    }
+
+    return Brasil.estados.where((e) => e.regiao == this);
+  }
+
+  bool get regiaoReal => isIn(Brasil.regioes);
+
+  @override
+  String toString() {
+    switch (this) {
+      case norte:
+        return 'Norte';
+      case nordeste:
+        return 'Nordeste';
+      case centroOeste:
+        return 'Centro-Oeste';
+      case sudeste:
+        return 'Sudeste';
+      case sul:
+        return 'Sul';
+      case nacional:
+        return 'Nacional';
+      case exportacao:
+        return 'Exportação';
+      default:
+        return 'Não definido';
+    }
+  }
+
+  static Regiao pegar(dynamic value) {
+    if (value == null) {
+      return naoDefinido;
+    }
+
+    if (value is Regiao) return value;
+
+    if (value is String) {
+      if (value.isNumericOnly) {
+        value = int.parse(value);
+      } else {
+        value = value.toLowerCase().removeAny([" ", "-", "_"]);
+      }
+    }
+    if (value is num) {
+      value = value.floor();
+    }
+    switch (value) {
+      case 1:
+      case "norte":
+        return norte;
+      case 2:
+      case "nordeste":
+        return nordeste;
+      case 3:
+      case "centrooeste":
+        return centroOeste;
+      case 4:
+      case "sudeste":
+        return sudeste;
+      case 5:
+      case "sul":
+        return sul;
+      case 91:
+      case "nacional":
+        return nacional;
+      case 99:
+      case "exportacao":
+        return exportacao;
+      default:
+        return naoDefinido;
+    }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:innerlibs/innerlibs.dart';
 
+typedef CodigoRegimeTributario = RegimeTributario;
+
 /// Códigos de regimes tributários
 typedef CRT = RegimeTributario;
 
@@ -1004,6 +1006,9 @@ enum RegimeTributario {
         return RegimeTributario.simplesNacional;
       case '2':
       case 'simplesnacionalexcessosublimite':
+      case 'simplesnacionalexcessosublimitereceitabruta':
+      case 'simplesnacionalexcessosublimitedereceitabruta':
+      case 'receitabruta':
       case 'excessosublimite':
       case 'excesso':
         return RegimeTributario.simplesNacionalExcessoSublimite;
@@ -1035,10 +1040,13 @@ enum SeloControle {
       case 971001:
         return SeloControle.produtoNacional;
       case 971010:
+      case 1:
         return SeloControle.produtoNacionalExportacaoTipo1;
       case 971011:
+      case 2:
         return SeloControle.produtoNacionalExportacaoTipo2;
       case 971012:
+      case 3:
         return SeloControle.produtoNacionalExportacaoTipo3;
       case 861009:
         return SeloControle.produtoEstrangeiro;
@@ -1061,6 +1069,7 @@ enum SeloControle {
     switch (generateKeyword(value)) {
       case "nacional":
       case "produtonacional":
+      case "n":
         return SeloControle.produtoNacional;
       case "produtoexportacaotipo1":
       case "exportacaotipo1":
@@ -1079,6 +1088,7 @@ enum SeloControle {
         return SeloControle.produtoNacionalExportacaoTipo3;
       case "estrangeiro":
       case "produtoestrangeiro":
+      case "ex":
         return SeloControle.produtoEstrangeiro;
       default:
         throw ArgumentError('Selo de controle desconhecido: $value');

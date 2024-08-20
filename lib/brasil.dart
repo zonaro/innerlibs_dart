@@ -20,17 +20,11 @@ abstract interface class Brasil {
   /// ```
   static Future<List<Cidade>> get cidades async => await Cidade.pegarCidades;
 
-  /// Retorna uma lista com todos os Estados do Brasil
-  ///
-  /// Esta função assíncrona carrega os dados de um arquivo JSON que contém informações sobre os Estados do Brasil.
-  /// Em seguida, os dados são convertidos em objetos do tipo Estado e adicionados a uma lista.
-  /// A lista é ordenada e retornada como resultado da função.
-  ///
-  /// Retorna:
-  ///   - Uma lista de objetos do tipo Estado, contendo informações sobre todos os Estados do Brasil.
-  ///
+  /// Retorna uma lista com todos os Estados do Brasil. Não inclui códigos especiais.
   static List<Estado> get estados => Estado.pegarEstados;
+  static List<Estado> get estadosECodigosEspeciais => Estado.pegarEstadosECodigosEspeciais;
 
+  /// Retorna uma lista com todos os nomes comuns do Brasil
   static List<string> get nomesComuns => [...nomesFemininosComuns, ...nomesMasculinosComuns];
 
   /// Lista contendo os nomes mais comuns no Brasil
