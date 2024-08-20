@@ -1050,6 +1050,12 @@ class InfAdic extends TagXml {
 
   set infCpl(String? value) => setTextValueForNode("infCpl", value?.first(2000));
 
+  /// Obtém ou define as informações complementares da NFe.
+  /// Alterar a lista através de add ou remove não altera o XML. Para alterar o XML, atribua uma nova lista através do setter.
+  /// Alterar este campo, altera o campo infCpl.
+  Set<String> get informacoesComplementares => infCpl?.splitAny(['\n', '\r', '\t', ';']).toSet() ?? {};
+  set informacoesComplementares(Iterable<String> value) => infCpl = value.join(';');
+
   /// Obtém ou define os valores das tags obsFisco e obsCont.
   Iterable<ObsBase> get obs => [...obsCont, ...obsFisco];
 
@@ -1466,6 +1472,12 @@ class NFe extends TagXml implements Validator {
   InfNFe? get infNFe => getTagAs('infNFe', () => InfNFe());
 
   set infNFe(InfNFe? value) => setTagFrom('infNFe', value);
+
+  /// Obtém ou define as informações complementares da NFe.
+  /// Alterar a lista através de add ou remove não altera o XML. Para alterar o XML, atribua uma nova lista através do setter.
+  /// Alterar este campo, altera o campo infCpl da tag infAdic.
+  Set<string> get informacoesComplementares => infNFe?.infAdic?.informacoesComplementares ?? {};
+  set informacoesComplementares(Iterable<String> value) => infNFe?.infAdic?.informacoesComplementares = value;
 
   /// Verifica se a Nota Fiscal Eletrônica (NF-e) é válida.
   bool get notaValida => validate().isEmpty;

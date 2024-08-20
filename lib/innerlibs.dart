@@ -133,4 +133,4 @@ typedef JsonTable = List<JsonRow>;
 typedef JsonTableSet = List<JsonTable>;
 
 /// Alias for [Map<string, List<Map<String, dynamic>>>], used to group [JsonTable]s
-typedef GroupedJsonTable = Map<string, JsonTable>;
+typedef GroupedJsonTable<T> = Map<T, JsonTable>;
