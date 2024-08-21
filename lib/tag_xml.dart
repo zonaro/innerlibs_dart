@@ -7,7 +7,7 @@ class TagXml extends XmlElement implements Validator {
   TagXml.fromTagName(String name) : super((XmlName(name)));
 
   /// Return a string with a arrow with length equal to [deepLevel]
-  string get deepArrow => "($tagName) ${identArrow(length: deepLevel, pattern: "|=>")}";
+  string get deepArrow => "${identArrow(length: deepLevel, pattern: "|=>")} ($tagName)".trim();
 
   /// Returns the deep level of the current node.
   int get deepLevel {

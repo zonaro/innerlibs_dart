@@ -841,47 +841,43 @@ enum OrigemProduto {
     }
   }
 
-  factory OrigemProduto.fromString(string value) {
-    switch (generateKeyword(value)) {
-      case '0':
-      case 'nacional':
-        return OrigemProduto.nacional;
-      case '1':
-      case 'estrangeiraimportacaodireta':
-        return OrigemProduto.estrangeiraImportacaoDireta;
-      case '2':
-      case 'estrangeiraadquiridamercadointerno':
-        return OrigemProduto.estrangeiraAdquiridaMercadoInterno;
-      case '3':
-      case 'nacionalconteudoimportacao40a70':
-        return OrigemProduto.nacionalConteudoImportacao40a70;
-      case '4':
-      case 'nacionalppb':
-        return OrigemProduto.nacionalPPB;
-      case '5':
-      case 'nacionalconteudoimportacaoate40':
-        return OrigemProduto.nacionalConteudoImportacaoAte40;
-      case '6':
-      case 'estrangeiraimportacaodiretasemsimilar':
-        return OrigemProduto.estrangeiraImportacaoDiretaSemSimilar;
-      case '7':
-      case 'estrangeiraadquiridamercadointernosemsimilar':
-        return OrigemProduto.estrangeiraAdquiridaMercadoInternoSemSimilar;
-      case '8':
-      case 'nacionalconteudoimportacaosuperior70':
-        return OrigemProduto.nacionalConteudoImportacaoSuperior70;
-      default:
-        throw ArgumentError('Origem do Produto Desconhecida: $value');
-    }
-  }
-
   factory OrigemProduto.fromValue(dynamic value) {
     if (value is OrigemProduto) {
       return value;
     } else if (value is num) {
       return OrigemProduto.fromInt(value.floor());
     } else {
-      return OrigemProduto.fromString("$value");
+      switch (generateKeyword(value)) {
+        case '0':
+        case 'nacional':
+          return OrigemProduto.nacional;
+        case '1':
+        case 'estrangeiraimportacaodireta':
+          return OrigemProduto.estrangeiraImportacaoDireta;
+        case '2':
+        case 'estrangeiraadquiridamercadointerno':
+          return OrigemProduto.estrangeiraAdquiridaMercadoInterno;
+        case '3':
+        case 'nacionalconteudoimportacao40a70':
+          return OrigemProduto.nacionalConteudoImportacao40a70;
+        case '4':
+        case 'nacionalppb':
+          return OrigemProduto.nacionalPPB;
+        case '5':
+        case 'nacionalconteudoimportacaoate40':
+          return OrigemProduto.nacionalConteudoImportacaoAte40;
+        case '6':
+        case 'estrangeiraimportacaodiretasemsimilar':
+          return OrigemProduto.estrangeiraImportacaoDiretaSemSimilar;
+        case '7':
+        case 'estrangeiraadquiridamercadointernosemsimilar':
+          return OrigemProduto.estrangeiraAdquiridaMercadoInternoSemSimilar;
+        case '8':
+        case 'nacionalconteudoimportacaosuperior70':
+          return OrigemProduto.nacionalConteudoImportacaoSuperior70;
+        default:
+          throw ArgumentError('Origem do Produto Desconhecida: $value');
+      }
     }
   }
 
