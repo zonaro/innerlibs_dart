@@ -15,31 +15,9 @@ extension NullStringExtension on String? {
   /// Returns the string if it is not null, otherwise returns an empty string.
   String get blankIfNull => this ?? "";
 
-  /// Returns the string if it is blank, otherwise returns "0".
-  String get zeroIfBlank => ifBlank("0")!;
-
-  /// Returns null if string is blank. Otherwise, returns the string.
-  String? get nullIfBlank => ifBlank(null);
-
   bool get isBlank => this == null || this!.isBlank;
 
   bool get isNotBlank => this != null && !isBlank;
-
-  /// Returns the string if it is not null, empty or blank, otherwise returns the specified string.
-  String? ifBlank(String? newString) => this != null && this!.isNotBlank ? this : newString;
-
-  /// Checks whether the `String` is `null`.
-  /// ### Example 1
-  /// ```dart
-  /// String? foo;
-  /// bool isNull = foo.isNull; // returns true
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = 'fff';
-  /// bool isNull = foo.isNull; // returns false
-  /// ```
-  bool get isNull => this == null;
 
   /// Checks whether the `String` is not `null`.
   /// ### Example 1
@@ -54,35 +32,38 @@ extension NullStringExtension on String? {
   /// ```
   bool get isNotNull => isNull == false;
 
+  /// Checks whether the `String` is `null`.
+  /// ### Example 1
+  /// ```dart
+  /// String? foo;
+  /// bool isNull = foo.isNull; // returns true
+  /// ```
+  /// ### Example 2
+  /// ```dart
+  /// String foo = 'fff';
+  /// bool isNull = foo.isNull; // returns false
+  /// ```
+  bool get isNull => this == null;
+
+  /// Returns null if string is blank. Otherwise, returns the string.
+  String? get nullIfBlank => ifBlank(null);
+
+  /// Returns the string if it is blank, otherwise returns "0".
+  String get zeroIfBlank => ifBlank("0")!;
+
   String blankCoalesce(List<string?> newString) {
     var x = [blankIfNull, ...newString];
     return x.firstWhereOrNull((e) => e.isNotBlank).blankIfNull;
   }
+
+  /// Returns the string if it is not null, empty or blank, otherwise returns the specified string.
+  String? ifBlank(String? newString) => this != null && this!.isNotBlank ? this : newString;
 
   /// Return left string if not blank. Otherwise return right string.
   String operator |(Object? s) => ifBlank("$s") ?? "";
 }
 
 extension StringExtensions on String {
-  /// Applies XOR operation between the [this] string and the [key] string.
-  ///
-  /// The [input] string is converted to a list of UTF-16 code units, and the [key] string is also converted to a list of UTF-16 code units.
-  /// The XOR operation is then applied between each code unit of the [input] string and the corresponding code unit of the [key] string.
-  /// If the [key] string is shorter than the [input] string, the key will be repeated cyclically.
-  ///
-  /// Returns the result of the XOR operation as a new string.
-  String applyXorEncrypt(String key) {
-    List<int> inputBytes = codeUnits;
-    List<int> keyBytes = key.codeUnits;
-    List<int> resultBytes = [];
-
-    for (int i = 0; i < inputBytes.length; i++) {
-      resultBytes[i] = inputBytes[i] ^ keyBytes[i % keyBytes.length];
-    }
-
-    return String.fromCharCodes(resultBytes);
-  }
-
   static final _defaultDiacriticsRemovalap = [
     {
       'base': 'A',
@@ -207,167 +188,6 @@ extension StringExtensions on String {
 
   static final _diacriticsRegExp = RegExp('[^\u0000-\u007E]', multiLine: true);
 
-  String? get asNullable => this;
-
-  String replaceSQLParameters(JsonRow params, [bool nullAsBlank = true, string parameterMatch = ":"]) =>
-      replaceParameters(params.map((k, v) => MapEntry(k, (v as Object?).asSqlValue(nullAsBlank))), parameterMatch);
-
-  String replaceParameters(JsonRow params, string parameterMatch) {
-    String query = this;
-
-    if (parameterMatch.isBlank) throw ArgumentError.value(parameterMatch, "parameterMatch", "parameterMatch cannot be blank");
-
-    // convert params to string
-    Map<String, dynamic> convertedParams = {};
-
-    for (final param in params.entries) {
-      convertedParams[param.key] = (param.value as Object?).toString();
-    }
-
-    // find all :placeholders, which can be substituted
-    final pattern = RegExp("$parameterMatch(\\w+)");
-
-    final matches = pattern.allMatches(query).where((match) {
-      final subString = query.substring(0, match.start);
-
-      int count = "'".allMatches(subString).length;
-      if (count > 0 && count.isOdd) {
-        return false;
-      }
-
-      count = '"'.allMatches(subString).length;
-      if (count > 0 && count.isOdd) {
-        return false;
-      }
-
-      return true;
-    }).toList();
-
-    int lengthShift = 0;
-
-    for (final match in matches) {
-      final paramName = match.group(1);
-
-      // check param exists
-      if (false == convertedParams.containsKey(paramName)) {
-        convertedParams[paramName!] = "";
-      }
-
-      final newQuery = query.replaceFirst(
-        match.group(0)!,
-        convertedParams[paramName]!.toString(),
-        match.start + lengthShift,
-      );
-
-      lengthShift += newQuery.length - query.length;
-      query = newQuery;
-    }
-
-    return query;
-  }
-
-  /// Splits the string into multiple substrings using any of the specified delimiters.
-  ///
-  /// The `delimiters` parameter is a list of strings that represent the delimiters to use for splitting the string.
-  ///
-  /// Returns a list of strings that are the result of splitting the original string using the specified delimiters.
-  List<String> splitAny(List<String> delimiters) {
-    List<String> result = [this];
-    for (String delimiter in delimiters) {
-      List<String> temp = [];
-      for (String str in result) {
-        temp.addAll(str.split(delimiter).where((x) => x.isNotEmpty));
-      }
-      result = temp;
-    }
-    return result;
-  }
-
-  /// Returns the URL-encoded version of the string.
-  ///
-  /// Example:
-  /// ```dart
-  /// String url = 'https://example.com/?q=hello world';
-  /// String encodedUrl = url.urlEncode;
-  /// print(encodedUrl); // Output: https%3A%2F%2Fexample.com%2F%3Fq%3Dhello%20world
-  /// ```
-  String get urlEncode => Uri.encodeQueryComponent(this);
-
-  /// Returns the URL-decoded version of the string.
-  ///
-  /// Example:
-  /// ```dart
-  /// String encodedUrl = 'https%3A%2F%2Fexample.com%2F%3Fq%3Dhello%20world';
-  /// String decodedUrl = encodedUrl.urlDecode;
-  /// print(decodedUrl); // Output: https://example.com/?q=hello world
-  /// ```
-  String get urlDecode => Uri.decodeQueryComponent(this);
-
-  /// Return a checksum digit for a barcode
-  String get generateBarcodeCheckSum {
-    if (isNotNumber) {
-      throw const FormatException('Code is not a number');
-    }
-
-    int i = 0;
-    int j;
-    int p = 0;
-    int t = length;
-    for (j = 1; j <= t; j++) {
-      if ((j & ~ -2) == 0) {
-        p += int.parse(substring(j - 1, j));
-      } else {
-        i += int.parse(substring(j - 1, j));
-      }
-    }
-
-    if (t == 7 || t == 11) {
-      i = i * 3 + p;
-      p = (i + 9) ~/ 10 * 10;
-      t = p - i;
-    } else {
-      p = p * 3 + i;
-      i = (p + 9) ~/ 10 * 10;
-      t = i - p;
-    }
-
-    return t.toString();
-  }
-
-  /// Checks if the string is a valid EAN (European Article Number) barcode.
-  ///
-  /// Returns `true` if the string is a valid EAN barcode, `false` otherwise.
-  /// A valid EAN barcode must meet the following conditions:
-  /// - It must not be blank.
-  /// - It must consist of only numeric characters.
-  /// - It must have a length greater than 3.
-  /// - The last character of the barcode must be the correct checksum digit.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// var barcode = '1234567890123';
-  /// if (barcode.isValidEAN) {
-  ///   print('Valid EAN barcode');
-  /// } else {
-  ///   print('Invalid EAN barcode');
-  /// }
-  /// ```
-  bool get isValidEAN {
-    if (isBlank || isNotNumber || length <= 3) {
-      return false;
-    }
-    var bar = removeLast(1);
-    var ver = last(1);
-    return bar.generateBarcodeCheckSum == ver;
-  }
-
-  /// Returns a new string with the flag of the specified country code.
-  String get countryEmoji {
-    final List<String> characters = toUpperCase().split('');
-    final Iterable<int> characterCodes = characters.map((String char) => 127397 + char.codeUnits.first);
-    return String.fromCharCodes(characterCodes);
-  }
-
   /// Converts a string to a color.
   ///
   /// - If the string is empty, it returns [Colors.transparent] as the default color.
@@ -399,38 +219,10 @@ extension StringExtensions on String {
     return Color(hash + 0xFF000000);
   }
 
-  /// Removes diacritics from the string.
-  /// Diacritics are accents or other marks added to letters in some languages.
-  /// If the string is blank, it returns a blank string.
-  /// If a diacritic is not found in the map, it keeps the original character.
-  /// Returns the modified string with diacritics removed.
-  String get removeDiacritics {
-    if (isBlank) return blankIfNull;
-    if (_diacriticsMap.isEmpty) {
-      for (int i = 0; i < _defaultDiacriticsRemovalap.length; i++) {
-        var letters = _defaultDiacriticsRemovalap[i]['letters'];
-        for (int j = 0; j < letters!.length; j++) {
-          _diacriticsMap[letters[j]] = _defaultDiacriticsRemovalap[i]['base'];
-        }
-      }
-    }
-    return replaceAllMapped(_diacriticsRegExp, (a) => _diacriticsMap[a.group(0)] ?? a.group(0));
-  }
+  String? get asNullable => this;
 
-  /// return a string in a firendly format
-  string get friendlyName => camelSplitString.replaceAll("_", " ").fixText.removeLastEqual(".").toTitleCase;
-
-  /// Returns a string with camel case split into separate words.
-  ///
-  /// The camel case string is split into separate words using a space as the separator.
-  /// For example, "camelSplitString" will be converted to "camel Split String".
-  String get camelSplitString => camelSplit.join(" ");
-
-  /// Returns a string with pascal case split into separate words.
-  ///
-  /// The pascal case string is split into separate words using a space as the separator.
-  /// For example, "PascalSplitString" will be converted to "Pascal Split String".
-  String get pascalSplitString => pascalSplit.join(" ");
+  /// Return a base64 encoded string
+  string get base64 => base64Encode(utf8.encode(this));
 
   /// Splits a camel case string into individual words.
   /// Returns a list of strings representing the words in the camel case string.
@@ -474,537 +266,11 @@ extension StringExtensions on String {
     }
   }
 
-  /// Splits a pascal case string into individual words.
-  /// Returns a list of strings representing the words in the pascal case string.
-  List<String> get pascalSplit => camelSplit.map((w) => w.capitalizeFirst).whereNotNull().toList();
-
-  /// Returns the singular form of a Portuguese word.
-  /// If the word ends with 'ões', it removes the last 3 characters and appends 'ão'.
-  /// If the word ends with 'ães', it removes the last 3 characters and appends 'ão'.
-  /// If the word ends with 's', it removes the last character.
-  /// Otherwise, it returns the original word.
-  String get singularPt {
-    if (endsWith('ões')) {
-      return '${removeLast(3)}ão';
-    } else if (endsWith('ães')) {
-      return '${removeLast(3)}ão';
-    } else if (endsWith('s')) {
-      return removeLast(1);
-    }
-    return this;
-  }
-
-  /// Returns the singular form of a plural noun.
-  /// If the string ends with 'ies', it removes the last 3 characters and appends 'y'.
-  /// If the string ends with 'es', it removes the last 2 characters.
-  /// If the string ends with 's', it removes the last character.
-  /// If none of the above conditions are met, it returns the original string.
-  String get singular {
-    if (endsWith('ies')) {
-      return '${removeLast(3)}y';
-    } else if (endsWith('es')) {
-      return removeLast(2);
-    } else if (endsWith('s')) {
-      return removeLast(1);
-    }
-    return this;
-  }
-
-  /// Checks if the [length!] of the `String` is more than the length of [s].
+  /// Returns a string with camel case split into separate words.
   ///
-  /// If the `String` is null or empty, it returns false.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello';
-  /// bool isMore = foo > 'Hi'; // returns true.
-  /// ```
-  bool operator >(String s) {
-    return length > s.length;
-  }
-
-  /// Checks if the [length!] of the `String` is more or equal than the length of [s].
-
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello';
-  /// bool isMoreOrEqual = foo >= 'Hi'; // returns true.
-  /// ```
-  bool operator >=(String s) => length >= s.length;
-
-  /// Checks if the [length!] of the `String` is less than the length of [s].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello';
-  /// bool isLess = foo < 'Hi'; // returns false.
-  /// ```
-  bool operator <(String s) => length < s.length;
-
-  /// Checks if the [length!] of the `String` is less or equal than the length of [s].
-  ///
-  /// If the `String` is null or empty, it returns false.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello';
-  /// bool isLessOrEqual = foo <= 'Hi'; // returns false.
-  /// ```
-  bool operator <=(String s) => length <= s.length;
-
-  /// Removes a text from the `String`.
-  String operator -(String? s) {
-    if (isBlank) {
-      return '';
-    }
-    if (s.isBlank) {
-      return this;
-    }
-    return replaceAll(s!, '');
-  }
-
-  /// slice a string into chunks
-  strings operator /(int chunkSize) {
-    List<String> chunks = [];
-    if (isNotBlank) {
-      for (int i = 0; i < length; i += chunkSize) {
-        chunks.add(substring(i, i + chunkSize));
-      }
-    }
-    return chunks;
-  }
-
-  /// slice a string into chunks
-  strings slice(int chunkSize) => this / chunkSize;
-
-  /// Splits the string into chunks based on the provided chunk sizes.
-  ///
-  /// The [chunkSizes] parameter is a list of integers representing the sizes of each chunk.
-  /// If the list is empty, the entire string will be considered as a single chunk.
-  ///
-  /// Returns a list of strings, where each string represents a chunk of the original string.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// var input = 'Hello, world!';
-  /// var chunkSizes = [5, 2, 6];
-  /// var chunks = input.splitChunk(chunkSizes);
-  /// print(chunks); // Output: ['Hello', ', ', 'world!']
-  /// ```
-  List<String> splitChunk(List<int> chunkSizes) {
-    List<String> chunks = [];
-    var input = this;
-    while (input.isNotEmpty) {
-      var size = chunkSizes.isNotEmpty ? chunkSizes.first : input.length;
-      if (size <= 0) size = input.length;
-      var chunk = input.substring(0, size);
-      if (chunk.isEmpty) {
-        if (input.isNotEmpty) chunks.add(input);
-        break;
-      }
-      chunks.add(chunk);
-      input = input.substring(size);
-      chunkSizes = chunkSizes.skip(1).toList();
-    }
-    return chunks;
-  }
-
-  /// Adds indentation to a string based on the specified deep level and indentation characters.
-  ///
-  /// The [deepLevel] parameter specifies the number of indentation levels to add.
-  /// The [identWith] parameter specifies the characters used for indentation. By default, it is a single space character.
-  /// - If [identWith] is a single character, it will be repeated for each indentation level.
-  /// - If [identWith] is a two-character string, the first character will be repeated for each indentation level, and the second character will be used for the last indentation level.
-  /// - If [identWith] is a multi-character string, the first character will be used for the first indentation level, the last character will be used for the last indentation level, and the middle characters will be repeated to fill the remaining space.
-  /// The [multiplier] parameter specifies the number of times to repeat the indentation characters for each level.
-  /// ## Example
-  /// ```dart
-  /// String text = ' Hello, world!';
-  /// String indentedText = text.identWith(4, '>=>');
-  /// print(indentedText); // Output: '>==> Hello, world!'
-  /// ```
-  /// ```dart
-  /// String text = ' Hello, world!';
-  /// String indentedText = text.identWith(2, '  ');
-  /// print(indentedText); // Output: '    Hello, world!'
-  /// ```
-
-  String identWith(int deepLevel, [String identWith = " ", int multiplier = 1]) {
-    if (deepLevel == 0) return this;
-    var ii = identArrow(length: deepLevel * multiplier.clampMin(1), pattern: identWith);
-    if (deepLevel > 0) {
-      return ii + this;
-    } else {
-      return this + ii;
-    }
-  }
-
-  /// Returns the average read time duration of the given `String`.
-  /// The default calculation is based on 200 words per minute.
-  ///
-  /// You can pass the [wordsPerDuration] and [duration] parameters for different read speeds.
-  /// ### Example
-  /// ```dart
-  /// String foo =  'Hello dear friend how you doing ?';
-  /// int readTime = foo.readTime(); // returns 3 seconds.
-  /// ```
-  Duration readTime({int wordsPerDuration = 200, Duration duration = const Duration(minutes: 1)}) =>
-      isBlank || wordsPerDuration == 0 ? 0.seconds : (countWords / (wordsPerDuration * duration.inSeconds)).seconds;
-
-  /// Counts the occurrences of a substring within a string.
-  ///
-  /// This function searches through the provided [String] for instances
-  /// of the [subString] and returns the total number of occurrences found.
-  ///
-  /// Parameters:
-  ///   [subString] - The substring to count within the [String].
-  ///
-  /// Returns the number of times [subString] appears in [String].
-  int count([String subString = ""]) {
-    if (subString.isBlank) {
-      return length;
-    }
-    int count = 0;
-    int startIndex = 0;
-
-    // Use indexOf to find the substring in the string
-    // Loop until the substring is not found
-    while ((startIndex = indexOf(subString, startIndex)) != -1) {
-      // Increment the count for each occurrence
-      count++;
-      // Move past the last found substring
-      startIndex += subString.length;
-    }
-
-    return count;
-  }
-
-  /// Returns the word count in the given `String`.
-  ///
-  /// The pattern is based on spaces.
-  /// ### Example
-  /// ```dart
-  /// String foo = 'Hello dear friend how you doing ?';
-  /// int count = foo.countWords; // returns 6 words.
-  /// ```
-  int get countWords => getWords.length;
-
-  /// Returns a list with distinct words of this sentence
-  strings get getUniqueWords => getWords.distinctFlat();
-
-  /// Returns a list with words of this sentence
-  strings get getWords {
-    if (isBlank) {
-      return [];
-    }
-    return splitAny(StringHelpers.wordSplitters).toList();
-  }
-
-  /// Removes only the numbers from the `String`.
-  /// ### Example 1
-  /// ```dart
-  /// String foo = 'es4e5523nt1is';
-  /// String noNumbers = foo.removeNumbers; // returns 'esentis'
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = '1244e*s*4e*5523n*t*1i*s';
-  /// String noNumbers = foo.removeNumbers; // returns 'e*s*e*n*t*i*s'
-  /// ```
-  String get removeNumbers {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    var regex = RegExp(r'(\d+)');
-    return replaceAll(regex, '');
-  }
-
-  /// Returns only the numbers from the `String`.
-  /// ### Example
-  /// ```dart
-  /// String foo = '4*%^55/es4e5523nt1is';
-  /// String onyNumbers = foo.onlyNumbers; // returns '455455231'
-  /// ```
-  String get onlyNumbers {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'([^0-9]+)');
-    return replaceAll(regex, '');
-  }
-
-  /// Returns the integer representation of the string, considering only the numeric characters.
-  /// If the string does not contain any numeric characters, it returns null.
-  int? get onlyNumbersInt => onlyNumbers.toInt;
-
-  /// Returns only the Latin OR Greek characters from the `String`.
-  /// ### Example
-  /// ```dart
-  /// String foo = '4*%^55/σοφ4e5523ια';
-  /// String onlyL1 = foo.onlyLetters; // returns 'σοφια'
-  /// String foo2 = '4*%^55/es4e5523nt1is';
-  /// String onlyL2 = foo2.onlyLetters; // returns 'esentis'
-  /// ```
-  String get onlyLetters {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'([^α-ωΑ-ΩίϊΐόάέύϋΰήώΊΪΌΆΈΎΫΉΏa-zA-Z\s]+)');
-    return replaceAll(regex, '');
-  }
-
-  /// Returns all special characters from the `String`.
-  /// ### Example
-  /// ```dart
-  /// String foo = '/!@#\$%^\-&*()+",.?":{}|<>~_-`*%^/ese?:"///ntis/!@#\$%^&*(),.?":{}|<>~_-`';
-  /// String removed = foo.removeSpecial; // returns 'esentis'
-  /// ```
-  String get removeSpecial {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'[/!@#$%^\-&*()+",.?":{}|<>~_-`]');
-    return replaceAll(regex, '');
-  }
-
-  /// Checks whether the `String` is a valid IPv6.
-  /// ### Example 1
-  /// ```dart
-  /// String foo = '2001:0db8:85a3:0000:0000:8a2e:0370:7334';
-  /// bool isIpv6 = foo.isIpv6; // returns true
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = '192.168.1.14.150.1225';
-  /// bool isIpv6 = foo.isIpv6; // returns false
-  /// ```
-  bool get isIPv6 {
-    if (isBlank) {
-      return false;
-    }
-    substring(0, 1);
-    var regex = RegExp(
-        r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
-    return regex.hasMatch(this);
-  }
-
-  /// Checks whether the `String` is a valid URL.
-  /// ### Example 1
-  /// ```dart
-  /// String foo = 'foo.1com';
-  /// bool isUrl = foo.isUrl; // returns false
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = 'google.com';
-  /// bool isUrl = foo.isUrl; // returns true
-  /// ```
-  bool get isUrl {
-    if (isBlank) {
-      return false;
-    }
-
-    var regex = RegExp(r'[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)');
-    return regex.hasMatch(this);
-  }
-
-  /// Checks whether the `String` is a valid `DateTime`:
-  ///
-  /// ### Valid formats
-  ///
-  /// * dd/mm/yyyy
-  /// * dd-mm-yyyyy
-  /// * dd.mm.yyyy
-  /// * yyyy-mm-dd
-  /// * yyyy-mm-dd hrs
-  /// * 20120227 13:27:00
-  /// * 20120227T132700
-  /// * 20120227
-  /// * +20120227
-  /// * 2012-02-27T14Z
-  /// * 2012-02-27T14+00:00
-  /// * -123450101 00:00:00 Z": in the year -12345
-  /// * 2002-02-27T14:00:00-0500": Same as "2002-02-27T19:00:00Z
-  bool get isDate {
-    if (isBlank) {
-      return false;
-    }
-    var regex = RegExp(
-        r'^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$');
-    if (regex.hasMatch(this)) {
-      return true;
-    }
-    try {
-      return DateTime.tryParse(this) != null;
-    } on Exception {
-      return false;
-    }
-  }
-
-  /// Checks whether the `String` is a number.
-  /// ### Example
-  /// ```dart
-  /// String foo = '45';
-  /// bool isNumber = foo.isNumber; // returns true
-  /// ```
-  /// ```dart
-  /// String foo = '45s';
-  /// String isNumber = foo.isNumber; // returns false
-  bool get isNumber => isNotBlank && isNumberOrBlank;
-
-  bool get isNotNumber => !isNumber;
-
-  bool get isNumberOrBlank => isBlank || num.tryParse(this) != null;
-
-  /// Checks whether the `String` complies to below rules :
-  ///  * At least 1 uppercase
-  ///  * At least 1 special character
-  ///  * At least 1 number
-  ///  * At least 8 characters in length
-  /// ### Example
-  /// ```dart
-  /// String foo = 'qwerty';
-  /// bool isStrong = foo.isStrongPassword; // returns false
-  /// ```
-  /// ```dart
-  /// String foo = 'IsTh!$Strong';
-  /// bool isStrong = foo.isStrongPassword; // returns true
-  /// ```
-  bool get isStrongPassword {
-    if (isBlank) {
-      return false;
-    }
-    var regex = RegExp(r'^(?=.*([A-Z]){1,})(?=.*[!@#$&*,;.?]{1,})(?=.*[0-9]{1,})(?=.*[a-z]{1,}).{8,100}$');
-    return regex.hasMatch(this);
-  }
-
-  /// Checks whether the `String` is a valid Guid.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = '6d64-4396-8547-1ec1b86e081e';
-  /// bool isGuid = foo.isGuid; // returns false
-  /// ```
-  /// ```dart
-  /// String foo = '887b7923-6d64-4396-8547-1ec1b86e081e';
-  /// bool isGuid = foo.isGuid; // returns true
-  /// ```
-  bool get isGuid {
-    if (isBlank) {
-      return false;
-    }
-    var regex = RegExp(r'^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$');
-    return regex.hasMatch(this);
-  }
-
-  /// Checks if the `String` exists in a given `Iterable<String>`
-  /// ### Example
-  /// ```dart
-  /// String foo = '6d64-4396-8547-1ec1b86e081e';
-  /// var iterable = ['fff','gasd'];
-  /// bool isIn = foo.isIn(iterable); // returns false
-  /// ```
-  bool isIn(Iterable<String> strings) => isNotBlank && strings.isNotEmpty && strings.contains(this);
-
-  bool isNotIn(Iterable<String> strings) => !isIn(strings);
-
-  /// Checks if the `String` has only Latin characters.
-  /// ### Example
-  /// ```dart
-  /// String foo = 'this is a τεστ';
-  /// bool isLatin = foo.isLatin; // returns false
-  /// String foo2 = 'this is hello world';
-  /// bool isLatin2 = foo2.isLatin; // returns true
-  /// ```
-  bool get isLatin {
-    if (isBlank) {
-      return false;
-    }
-    return RegExp(r'^[a-zA-Z\s]+$').hasMatch(this);
-  }
-
-  /// Checks if the `String` has only Greek characters.
-  /// ### Example
-  /// ```dart
-  /// String foo = 'this is a τεστ';
-  /// bool isGreek = foo.isGreek; // returns false
-  /// String foo2 = 'Τα αγαθά κόποις κτώνται';
-  /// bool isGreek2 = foo2.isGreek; // returns true
-  /// ```
-  bool? get isGreek {
-    if (isBlank) {
-      return false;
-    }
-
-    return RegExp(r'^[α-ωΑ-ΩίϊΐόάέύϋΰήώΊΪΌΆΈΎΫΉΏ\s]+$').hasMatch(this);
-  }
-
-  /// Checks if the `String` is a valid `json` format.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = '{"name":"John","age":30,"cars":null}';
-  /// bool isJson = foo.isJson; // returns true
-  /// ```
-  bool isJson() {
-    if (isBlank) {
-      return false;
-    }
-    try {
-      jsonDecode(this);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  /// Removes only the letters from the `String`.
-  /// ### Example 1
-  /// ```dart
-  /// String foo = 'es4e5523nt1is';
-  /// String noLetters = foo.removeLetters; // returns '455231'
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = '1244e*s*4e*5523n*t*1i*s';
-  /// String noLetters = foo.removeLetters; // returns '1244**4*5523**1*'
-  /// ```
-  String get removeLetters {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'([a-zA-Z]+)');
-    return replaceAll(regex, '');
-  }
-
-  String removeAny(List<Pattern> texts) => replaceMany(texts);
-
-  String replaceMany(List<Pattern> from, [String to = ""]) {
-    if (isEmpty) return blankIfNull;
-    String result = this;
-    for (var pattern in from) {
-      result = result.replaceAll(pattern, to);
-    }
-    return result;
-  }
-
-  /// Checks if the string starts with any of the provided strings.
-  /// Returns `true` if the string starts with any of the provided strings, `false` otherwise.
-  bool startsWithAny(Iterable<String> strings) => strings.any((element) => startsWith(element));
-
-  /// Checks if the string ends with any of the provided strings.
-  /// Returns `true` if the string ends with any of the provided strings, `false` otherwise.
-  bool endsWithAny(Iterable<String> strings) => strings.any((element) => endsWith(element));
+  /// The camel case string is split into separate words using a space as the separator.
+  /// For example, "camelSplitString" will be converted to "camel Split String".
+  String get camelSplitString => camelSplit.join(" ");
 
   /// Finds all character occurrences and returns count as:
   /// ```dart
@@ -1040,1597 +306,22 @@ extension StringExtensions on String {
     return occurrences;
   }
 
-  /// Finds the most frequent character in the `String`.
-  /// ### Example 1
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// String mostFrequent = foo.mostFrequent; // returns 'l'
-  /// ```
-  String mostFrequent({bool ignoreSpaces = false}) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    if (ignoreSpaces) {
-      return replaceAll(' ', '').mostFrequent();
-    }
-    var occurrences = <String, int>{};
-    var letters = split('')..sort();
-    var checkingLetter = letters[0];
-    var count = 0;
-
-    for (var i = 0, len = letters.length; i < len; i++) {
-      if (letters[i] == checkingLetter) {
-        count++;
-        if (i == len - 1) {
-          occurrences[checkingLetter] = count;
-        }
-      } else {
-        occurrences[checkingLetter] = count;
-        checkingLetter = letters[i];
-        count = 1;
-      }
-    }
-
-    var mostFrequent = '';
-    var occursCount = -1;
-
-    occurrences.forEach((character, occurs) {
-      if (occurs > occursCount) {
-        mostFrequent = character;
-        occursCount = occurs;
-      }
-    });
-
-    return mostFrequent;
+  /// Returns a new string with the flag of the specified country code.
+  String get countryEmoji {
+    final List<String> characters = toUpperCase().split('');
+    final Iterable<int> characterCodes = characters.map((String char) => 127397 + char.codeUnits.first);
+    return String.fromCharCodes(characterCodes);
   }
 
-  /// Returns the `String` reversed.
+  /// Returns the word count in the given `String`.
+  ///
+  /// The pattern is based on spaces.
   /// ### Example
   /// ```dart
-  /// String foo = 'Hello World';
-  /// String reversed = foo.reverse; // returns 'dlrow olleH'
+  /// String foo = 'Hello dear friend how you doing ?';
+  /// int count = foo.countWords; // returns 6 words.
   /// ```
-  String get reverse {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    var letters = split('').toList().reversed;
-    return letters.reduce((current, next) => current + next);
-  }
-
-  /// Returns the first [n] characters of the `String`.
-  ///
-  /// [n] is optional, by default it returns the first character of the `String`.
-  ///
-  /// - If [n] provided is longer than the `String`'s length, the string will be returned.
-  /// - If [n] is negative, it will return the string without the first [n] characters.
-  ///
-  /// ### Example 1
-  /// ```dart
-  /// String foo = 'hello world';
-  /// String firstChars = foo.first(); // returns 'h'
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = 'hello world';
-  /// bool firstChars = foo.first(3); // returns 'hel'
-  /// ```
-  String first([int n = 1]) {
-    if (n < 0) {
-      n = length + n;
-    }
-    if (n <= 0) {
-      return "";
-    }
-    if (isBlank || length < n) {
-      return blankIfNull;
-    }
-
-    return substring(0, n);
-  }
-
-  /// Returns the last [n] characters of the `String`.
-  ///
-  /// [n] is optional, by default it returns the last character of the `String`.
-  ///
-  /// - If [n] provided is longer than the `String`'s length, the string will be returned.
-  /// - If [n] is negative, it will return the string without the last [n] characters.
-  ///
-  /// ### Example 1
-  /// ```dart
-  /// String foo = 'hello world';
-  /// String firstChars = foo.last(); // returns 'd'
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = 'hello world';
-  /// bool firstChars = foo.last(3); // returns 'rld'
-  /// ```
-  String last([int n = 1]) {
-    if (n < 0) {
-      n = length + n;
-    }
-    if (n <= 0) {
-      return '';
-    }
-
-    if (isBlank || length < n) {
-      return blankIfNull;
-    }
-
-    return substring(length - n, length);
-  }
-
-  /// Returns the `String` to slug case.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'sLuG Case';
-  /// String fooSlug = foo.toSlug; // returns 'sLuG_Case'
-  /// ```
-  String get toSlugCase {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    var words = trim().split(RegExp(r'(\s+)'));
-    var slugWord = '';
-
-    if (length == 1) {
-      return this;
-    }
-    for (var i = 0; i <= words.length - 1; i++) {
-      if (i == words.length - 1) {
-        slugWord += words[i];
-      } else {
-        slugWord += '${words[i]}_';
-      }
-    }
-    return slugWord;
-  }
-
-  /// Returns the `String` to snake_case.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'SNAKE CASE';
-  /// String fooSNake = foo.toSnakeCase; // returns 'snake_case'
-  /// ```
-  String get toSnakeCase {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    var words = toLowerCase().trim().split(RegExp(r'(\s+)'));
-    var snakeWord = '';
-
-    if (length == 1) {
-      return this;
-    }
-    for (var i = 0; i <= words.length - 1; i++) {
-      if (i == words.length - 1) {
-        snakeWord += words[i];
-      } else {
-        snakeWord += '${words[i]}_';
-      }
-    }
-    return snakeWord;
-  }
-
-  /// Returns the `String` in Camel Case.
-  /// ### Example
-  /// ```dart
-  /// String foo = 'Find max of array';
-  /// String camelCase = foo.toCamelCase; // returns 'findMaxOfArray'
-  /// ```
-  String get toCamelCase {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    var words = trim().split(RegExp(r'(\s+)'));
-    var result = words[0].toLowerCase();
-    for (var i = 1; i < words.length; i++) {
-      result += "${words[i].substring(0, 1).toUpperCase()}${words[i].substring(1).toLowerCase()}";
-    }
-    return result;
-  }
-
-  /// Returns a string in camel case format by splitting the original string using word splitters and joining them together.
-  ///
-  /// Example:
-  /// ```dart
-  /// String input = "hello_world";
-  /// String result = input.toCamelCaseJoin;
-  /// print(result); // Output: "helloWorld"
-  /// ```
-  string get toCamelCaseJoin => toCamelCase.splitAny(StringHelpers.wordSplitters).join('');
-
-  /// Returns the `String` title cased.
-  ///
-  /// ```dart
-  /// String foo = 'Hello dear friend how you doing';
-  /// Sting titleCased = foo.toTitleCase; // returns 'Hello Dear Friend How You Doing'.
-  /// ```
-  String get toTitleCase {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    var words = trim().split(RegExp(r'\s+'));
-    var result = '';
-
-    for (var word in words) {
-      if (word.isNotEmpty) {
-        result += '${word[0].toUpperCase()}${word.substring(1).toLowerCase()} ';
-      }
-    }
-
-    return result.trim();
-  }
-
-  /// Returns a list of the `String`'s characters.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'abracadabra';
-  /// List<String> fooArray = foo.toArray; // returns '[a,b,r,a,c,a,d,a,b,r,a]'
-  /// ```
-  List<String> get toArray {
-    if (isBlank) {
-      return [];
-    }
-
-    return split('');
-  }
-
-  /// Converts a `String` to a numeric value if possible.
-  ///
-  /// If conversion fails, `null` is returned.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = '4';
-  /// int fooInt = foo.toNum(); // returns 4;
-  /// ```
-  /// ```dart
-  /// String foo = '4f';
-  /// var fooNull = foo.toNum(); // returns null;
-  /// ```
-  num? get toNum {
-    if (isBlank) {
-      return null;
-    }
-
-    return num.tryParse(this);
-  }
-
-  num get toNumOrZero => toNum ?? 0;
-
-  /// Converts a `String` to`int` if possible.
-  ///
-  /// If conversion fails, `null` is returned.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = '4';
-  /// int fooInt = foo.toInt(); // returns 4;
-  /// ```
-  /// ```dart
-  /// String foo = '4f';
-  /// var fooNull = foo.toInt(); // returns null;
-  /// ```
-  /// ```dart
-  /// String foo = '4.0';
-  /// var fooNull = foo.toInt(); // returns 4;
-  /// ```
-  int? get toInt {
-    if (isBlank) {
-      return null;
-    }
-
-    return int.tryParse(this) ?? double.tryParse(this)?.floor();
-  }
-
-  int get toIntOrZero => toInt ?? 0;
-
-  /// Converts a `String` to`double` if possible.
-  ///
-  /// If conversion fails, `null` is returned.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = '4';
-  /// int fooInt = foo.toDouble(); // returns 4.0;
-  /// ```
-  /// ```dart
-  /// String foo = '4f';
-  /// var fooNull = foo.toDouble(); // returns null;
-  /// ```
-  double? get toDouble {
-    if (isBlank) {
-      return null;
-    }
-
-    return double.tryParse(this);
-  }
-
-  double get toDoubleOrZero => toDouble ?? 0.0;
-
-  /// Adds a [replacement] character at [index] of the `String`.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'hello';
-  /// String replaced = foo.replaceAtIndex(index:2,replacement:''); // returns 'helo';
-  /// ```
-  String replaceAtIndex({required int index, required String replacement}) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    if (index > length) {
-      return blankIfNull;
-    }
-    if (index < 0) {
-      return blankIfNull;
-    }
-
-    return '${substring(0, index)}$replacement${substring(index + 1, length)}';
-  }
-
-  /// Given a pattern returns the starting indices of all occurrences of the [pattern] in the `String`.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'abracadabra';
-  /// String fooOccs = foo.findPatterns(pattern:'abr'); // returns '[0, 7]'
-  /// ```
-  List<int> findPattern({required String pattern}) {
-    if (isBlank) {
-      return [];
-    }
-
-    // ignore: omit_local_variable_types
-    List<int> occurrences = [];
-    // How many times the pattern can fit the text provided
-    var fitCount = (length / pattern.length).truncate().toInt();
-
-    if (fitCount > length) {
-      return [];
-    }
-    if (fitCount == 1) {
-      if (this == pattern) {
-        return [0];
-      }
-      return [];
-    }
-
-    for (var i = 0; i <= length; i++) {
-      if (i + pattern.length > length) {
-        return occurrences;
-      }
-      if (substring(i, i + pattern.length) == pattern) {
-        occurrences.add(i);
-      }
-    }
-
-    return occurrences;
-  }
-
-  /// Strips all HTML code from `String`.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String html = '<script>Hacky hacky.</script> <p>Here is some text. <span class="bold">This is bold. </span></p>';
-  /// String stripped = foo.stripHtml; // returns 'Hacky hacky. Here is some text. This is bold.';
-  /// ```
-  String get stripHtml {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'<[^>]*>');
-    return replaceAll(regex, '');
-  }
-
-  /// Repeats the `String` [count] times.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'foo';
-  /// String fooRepeated = foo.repeat(5); // 'foofoofoofoofoo'
-  /// ```
-  String repeat([int count = 1]) {
-    if (isBlank || count <= 0) {
-      return blankIfNull;
-    }
-    var repeated = this;
-    for (var i = 0; i < count - 1; i++) {
-      repeated += this;
-    }
-    return repeated;
-  }
-
-  /// Squeezes the `String` by removing repeats of a given character.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'foofoofoofoofoo';
-  /// String fooSqueezed = foo.squeeze('o'); // 'fofofofofo';
-  /// ```
-  String squeeze(String char) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    var sb = '';
-    for (var i = 0; i < length; i++) {
-      if (i == 0 || this[i - 1] != this[i] || (this[i - 1] == this[i] && this[i] != char)) {
-        sb += this[i];
-      }
-    }
-    return sb;
-  }
-
-  /// Checks if the `String` is consisted of same characters (ignores cases).
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo1 = 'ttttttt'
-  /// bool hasSame1 = foo.hasSameCharacters(); // true;
-  /// ```
-  /// ```dart
-  /// String foo = 'ttttttt12'
-  /// bool hasSame2 = foo.hasSameCharacters();  // false;
-  /// ```
-  bool get hasSameCharacters {
-    if (isBlank) {
-      return false;
-    }
-
-    if (length > 1) {
-      var b = this[0].toLowerCase();
-      for (var i = 1; i < length; i++) {
-        var c = this[i].toLowerCase();
-        if (c != b) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  /// Shuffles the given `String`'s characters.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo1 = 'esentis';
-  /// String shuffled = foo.shuffle; // 'tsniees'
-  /// ```
-  String get shuffle {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    var stringArray = toArray;
-    stringArray.shuffle();
-    return stringArray.join();
-  }
-
-  /// The Levenshtein distance between two words is the minimum number of single-character
-  ///
-  /// edits (insertions, deletions or substitutions) required to change one word into the other.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo1 = 'esentis';
-  /// int dist = foo.getLevenshtein('esentis2'); // 1
-  /// ```
-  int getLevenshtein(String other, [bool caseSensitive = true]) {
-    if (isBlank) {
-      return other.length;
-    }
-
-    if (other.isBlank) {
-      return length;
-    }
-
-    if (!caseSensitive) {
-      return toLowerCase().getLevenshtein(other.toLowerCase());
-    }
-
-    List<int> costs = List<int>.filled(other.length + 1, 0);
-
-    for (var j = 0; j <= other.length; j++) {
-      costs[j] = j;
-    }
-
-    for (var i = 1; i <= length; i++) {
-      int nw = costs[0];
-      costs[0] = i;
-
-      for (var j = 1; j <= other.length; j++) {
-        int cj = min(1 + min(costs[j], costs[j - 1]), this[i - 1] == other[j - 1] ? nw : nw + 1);
-        nw = costs[j];
-        costs[j] = cj;
-      }
-    }
-
-    return costs[other.length];
-  }
-
-  /// Inspired from Vincent van Proosdij.
-  ///
-  /// Formats the `String` with a specific mask.
-  ///
-  /// You can assign your own [specialChar], defaults to '#'.
-  ///
-  /// ### Example
-  /// ```dart
-  ///var string3 = 'esentisgreece';
-  ///var mask3 = 'Hello ####### you are from ######';
-  ///var masked3 = string3.formatWithMask(mask3); // returns 'Hello esentis you are from greece'
-  /// ```
-  String formatWithMask(String mask, {String specialChar = '#'}) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    //var buffer = StringBuffer();
-    var maskChars = mask.toArray;
-    var index = 0;
-    var out = '';
-    for (var m in maskChars) {
-      if (m == specialChar) {
-        if (index < length) {
-          out += this[index];
-          index++;
-        }
-      } else {
-        out += m;
-      }
-    }
-    return out;
-  }
-
-  /// Removes the first [n] characters from the `String`.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'esentis'
-  /// String newFoo = foo.removeFirst(3) // 'ntis';
-  /// ```
-  String removeFirst([int n = 1]) {
-    if (isBlank || n <= 0) {
-      return blankIfNull;
-    }
-
-    if (n >= length) {
-      return '';
-    }
-    return substring(n, length);
-  }
-
-  /// Removes the last [n] characters from the `String`.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'esentis';
-  /// String newFoo = foo.removeLast(3); // 'esen';
-  /// ```
-  String removeLast([int n = 1]) {
-    if (isBlank || n <= 0) {
-      return blankIfNull;
-    }
-
-    if (n >= length) {
-      return '';
-    }
-    return substring(0, length - n);
-  }
-
-  /// Trims the `String` to have maximum [n] characters.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo = 'esentis';
-  /// String newFoo = foo.maxChars(3); // 'esen';
-  /// ```
-  String maxChars(int n) {
-    if (isBlank || n >= length) {
-      return blankIfNull;
-    }
-
-    if (n <= 0) {
-      return '';
-    }
-
-    return substring(0, n);
-  }
-
-  /// Reverses slash in the `String`, by providing [backSlash],
-  /// - if [backSlash] is `true` it will replace all `/` with `\\`.
-  /// - if [backSlash] is `false` it will replace all `\\` with `/`.
-  /// - if [backSlash] is `null` it will replace all slashes into the most common one.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String foo1 = 'C:/Documents/user/test';
-  /// String revFoo1 = foo1.fixSlash(true); // returns 'C:\Documents\user\test'
-  ///
-  /// String foo2 = 'C:\\Documents\\user\\test';
-  /// String revFoo2 = foo1.fixSlash(false); // returns 'C:/Documents/user/test'
-  ///
-  /// String foo3 = 'C:/Documents\\user/test';
-  /// String revFoo3 = foo1.fixSlash(); // returns 'C:/Documents/user/test'
-  ///
-  /// String foo4 = 'C:/Documents\\user\\test';
-  /// String revFoo4 = foo1.fixSlash(null); // returns 'C:\\Documents\\user\\test'
-  /// ```
-  String fixSlash([bool? backSlash]) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    backSlash ??= count('\\') > count('/');
-    return backSlash ? replaceAll('/', '\\') : replaceAll('\\', '/');
-  }
-
-  /// Returns the character at [index] of the `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo1 = 'esentis';
-  /// String char1 = foo1.charAt(0); // returns 'e'
-  /// String char2 = foo1.charAt(4); // returns 'n'
-  /// String? char3 = foo1.charAt(-20); // returns ''
-  /// String? char4 = foo1.charAt(20); // returns ''
-  /// ```
-  String charAt(int index) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    if (index > length) {
-      return '';
-    }
-    if (index < 0) {
-      return '';
-    }
-    return toArray[index];
-  }
-
-  /// Appends a [suffix] to the `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'hello';
-  /// String newFoo = foo1.append(' world'); // returns 'hello world'
-  /// ```
-  String append(String? suffix) {
-    if (isBlank) {
-      return suffix ?? "";
-    }
-
-    return this + (suffix ?? "");
-  }
-
-  /// Prepends a [prefix] to the `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'world';
-  /// String newFoo = foo1.prepend('hello '); // returns 'hello world'
-  /// ```
-  String prepend(String? prefix) {
-    if (isBlank) {
-      return prefix ?? "";
-    }
-
-    return (prefix ?? "") + this;
-  }
-
-  /// Tries to format the current `String` to price amount.
-  ///
-  /// You can optionally pass the [currencySymbol] to append a symbol to the formatted text.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String price = '1234567';
-  /// String formattedPrice = foo1.toPriceAmount(currencySymbol: '€'); // returns '12.345,67 €'
-  /// ```
-  String toPriceAmount({String? currencySymbol, string? locale}) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    try {
-      var f = NumberFormat.currency(locale: locale, symbol: currencySymbol);
-      return f.format(this);
-    } catch (e) {
-      return blankIfNull;
-    }
-  }
-
-  /// Returns the day name of the date provided in `String` format.
-  ///
-  /// If the date is in `DateTime` format, you can convert it to `String` `DateTime().toString()`.
-  ///
-  /// You can provide the [locale] to filter the result to a specific language.
-  ///
-  /// Defaults to 'en-US'.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String date = '2021-10-23';
-  /// String day = date.getDayFromDate(); // returns 'Saturday'
-  /// String grDay = date.getDayFromDate(locale:'el'); // returns 'Σάββατο'
-  /// ```
-  String getDayFromDate({String? format, String? locale}) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    return toDate(format, locale).format('EEEE');
-  }
-
-  /// Returns the month name of the date provided in `String` format.
-  ///
-  /// If the date is in `DateTime` format, you can convert it to `String` `DateTime().toString()`.
-  ///
-  /// You can provide the [locale] to filter the result to a specific language.
-  ///
-  /// Defaults to 'en-US'.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String date = '2021-10-23';
-  /// String month = date.getMonthFromDate(); // returns 'August'
-  /// String grMonth = date.getMonthFromDate(locale:'el'); // returns 'Αυγούστου'
-  /// ```
-  String getMonthFromDate({String? format, String? locale}) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    return toDate(format, locale).format('MMMM');
-  }
-
-  /// Returns the first day of the month from the provided `DateTime` in `String` format.
-  ///
-  /// If the date is in `DateTime` format, you can convert it to `String` `DateTime().toString()`.
-  ///
-  /// You can provide the [locale] to filter the result to a specific language.
-  ///
-  /// Defaults to 'en-US'.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String date = '2021-10-23';
-  /// String day = date.firstDayOfDate(); // returns 'Friday'
-  /// String grDay = date.firstDayOfDate(locale:'el'); // returns 'Παρασκευή'
-  /// ```
-  String firstDayOfMonth({String? format, String? locale}) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    return toDate(format, locale).firstDayOfMonth.format('EEEE');
-  }
-
-  /// Returns the last day of the month from the provided `DateTime` in `String` format.
-  ///
-  /// If the date is in `DateTime` format, you can convert it to `String` `DateTime().toString()`.
-  ///
-  /// You can provide the [locale] to filter the result to a specific language.
-  ///
-  /// Defaults to 'en-US'.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String date = '2021-10-23';
-  /// String day = date.firstDayOfDate(); // returns 'Friday'
-  /// String grDay = date.firstDayOfDate(locale:'el'); // returns 'Παρασκευή'
-  /// ```
-  String? lastDayOfMonth({String? format, String? locale}) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    return toDate(format, locale).lastDayOfMonth.format('EEEE');
-  }
-
-  /// Returns the left side of the `String` starting from [char].
-  ///
-  /// If [char] doesn't exist, `null` is returned.
-  /// ### Example
-  ///
-  /// ```dart
-  ///  String s = 'peanutbutter';
-  ///  String foo = s.getBefore('butter'); // returns 'peanut'
-  /// ```
-  String before(String char) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    int index = indexOf(char);
-    if (index == -1) {
-      return "";
-    }
-
-    return substring(0, index);
-  }
-
-  /// Returns the right side of the `String` starting from [char].
-  ///
-  /// If [char] doesn't exist, `null` is returned.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  ///  String s = 'peanutbutter';
-  ///  String foo = s.rightOf('peanut'); // returns 'butter'
-  /// ```
-  String after(String char) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    int index = indexOf(char);
-
-    if (index == -1) {
-      return "";
-    }
-    return substring(index + char.length, length);
-  }
-
-  /// Returns the text between [before] and [after] strings.
-  ///
-  /// If [before] or [after] are not found, an empty string is returned.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String text = 'Hello [world]!';
-  /// String result = text.between('[', ']'); // returns 'world'
-  /// ```
-  String between(String before, String after) => this.before(before).after(after);
-
-  /// Truncates a long `String` in the middle while retaining the beginning and the end.
-  ///
-  /// [maxChars] must be more than 0.
-  ///
-  /// If [maxChars] > String.length the same `String` is returned without truncation.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String f = 'congratulations';
-  /// String truncated = f.truncateMiddle(5); // Returns 'con...ns'
-  /// ```
-  String truncateMiddle(int maxChars) {
-    if (isBlank || maxChars <= 0 || maxChars > length) {
-      return blankIfNull;
-    }
-
-    int leftChars = (maxChars / 2).round();
-    int rightChars = maxChars - leftChars;
-    return '${first(leftChars)}...${last(rightChars)}';
-  }
-
-  /// Quotes the `String` adding "" at the start & at the end.
-  ///
-  /// Removes all " characters from the `String` before adding the quotes.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String text = '"""Is this real"';
-  /// String quote = text.quote; // "Is this real"
-  /// ```
-  String get quote {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    String normalizedString = replaceAll('"', '');
-
-    return normalizedString.wrap('"');
-  }
-
-  /// Trims leading and trailing spaces from the `String`, so as extra spaces in between words.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String text = '    esentis    thinks   ';
-  /// String trimmed = text.trimAll ; // returns 'esentis thinks'
-  /// ```
-  String get trimAll {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    return splitLines.where((x) => x.isNotBlank).map((value) {
-      // Remove spaces before any of this chars (using replaceAllMapped):
-      //:,.;?!.,)]}
-      value = value.replaceAllMapped(RegExp(r'\s+([\%:,.;?!\)\]})])'), (match) {
-        return match.group(1) ?? '';
-      });
-
-      // Remove spaces after any of this chars (using replaceAllMapped):
-      // ([{
-      value = value.replaceAllMapped(RegExp(r'([\(\[\{])\s+'), (match) {
-        return match.group(1) ?? '';
-      });
-
-      // Remove extra spaces between words
-      value = value.replaceAll(RegExp(r'\s+'), ' ');
-
-      return value.trim();
-    }).join("\r\n");
-  }
-
-  /// Try parse a bool value. See [asBool] to convert strings into [bool] in a more efficient way
-  bool? get toBool => bool.tryParse(this, caseSensitive: false);
-
-  /// The Jaro distance is a measure of edit distance between two strings
-  ///
-  /// its inverse, called the Jaro similarity, is a measure of two `String`'s similarity:
-  ///
-  /// the higher the value, the more similar the strings are.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String t1 = 'esentis';
-  /// String t2 = 'esen';
-  /// print(t1.getJaro(t2)); // prints 0.8571428571428571
-  /// ```
-  double getJaro(String other, [bool caseSensitive = true]) {
-    if (other == this) {
-      return 1;
-    }
-
-    if (other.isBlank || isBlank) {
-      return 0;
-    }
-
-    if (!caseSensitive) {
-      return toLowerCase().getJaro(other.toLowerCase());
-    }
-    int len1 = length;
-    int len2 = other.length;
-
-    // Maximum allowed matching distance
-    int matchDistance = (max(len1, len2) ~/ 2) - 1;
-
-    // Arrays to track character matches
-    List<bool> s1Matches = List.filled(len1, false);
-    List<bool> s2Matches = List.filled(len2, false);
-
-    int commonMatches = 0;
-    for (int i = 0; i < len1; i++) {
-      int start = max(0, i - matchDistance);
-      int end = min(len2 - 1, i + matchDistance);
-
-      for (int j = start; j <= end; j++) {
-        if (!s2Matches[j] && this[i] == other[j]) {
-          s1Matches[i] = true;
-          s2Matches[j] = true;
-          commonMatches++;
-          break;
-        }
-      }
-    }
-
-    if (commonMatches == 0) {
-      return 0.0;
-    }
-
-    // Calculate transpositions
-    int transpositions = 0;
-    int k = 0;
-    for (int i = 0; i < len1; i++) {
-      if (s1Matches[i]) {
-        while (!s2Matches[k]) {
-          k++;
-        }
-        if (this[i] != other[k]) {
-          transpositions++;
-        }
-        k++;
-      }
-    }
-
-    return (commonMatches.toDouble() / len1 + commonMatches.toDouble() / len2 + (commonMatches - transpositions).toDouble() / commonMatches) / 3.0;
-  }
-
-  /// Checks if the `String` is Blank (null, empty or only white spaces).
-  bool get isBlank => trim().isEmpty;
-
-  /// Checks if the `String` is not blank (null, empty or only white spaces).
-  bool get isNotBlank => !isBlank;
-
-  /// Return a empty `String` if [this] equals [comparisonString]. Otherwise return [this].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String t = 'OK'.emptyIf("OK"); // returns "";
-  /// String f = 'NO'.emptyIf("YES"); // returns "NO";
-  /// ```
-  String emptyIf(String? comparisonString) => asIf((s) => s == comparisonString, "", this).blankIfNull;
-
-  /// Return null if [this] equals [comparisonString]. Otherwise return [this].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String t = 'OK'.nullIf("OK"); // returns null;
-  /// String f = 'NO'.nullIf("YES"); // returns "NO";
-  /// ```
-  String? nullIfEqual(String? comparisonString) => nullIf((s) => s == comparisonString);
-
-  String? blankIfEqual(String? comparisonString) => blankIf((s) => s == comparisonString);
-
-  String? nullIf(bool Function(String? s) fn) => asIf(fn, null, this);
-
-  String blankIf(bool Function(String? s) fn) => asIf(fn, "", this) ?? "";
-
-  /// Return [this] if not blank. Otherwise return [newString].
-  S ifBlank<S extends string>(S newString) => asIf((s) => (s ?? "").isNotBlank, this, newString) as S;
-
-  /// Compares [this] using [comparison] and returns [trueString] if true, otherwise return [falseString].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String s = 'OK'.asIf((s) => s == "OK", "is OK", "is not OK"); // returns "is OK";
-  /// ```
-  String? asIf(bool Function(String?) comparison, String? trueString, String? falseString) => comparison(this) ? trueString : falseString;
-
-  /// Wraps the `String` between two strings. If [before] is a wrap char and [after] is omitted, the method resolve [after] using [getOppositeWrap].
-
-  String wrap(String? before, [String? after]) {
-    if (before.isBlank && after.isBlank) return blankIfNull;
-    before = before.ifBlank("")!;
-
-    if (after.isBlank && before.isNotBlank) {
-      if (before.isMultipleCloseWrap || before.isCloseWrap) {
-        before = before.getOppositeWrap;
-      }
-      after = before.getOppositeWrap;
-    }
-
-    if (after.isNotBlank && before.isBlank) {
-      if (after!.isMultipleOpenWrap || after.isOpenWrap) {
-        after = after.getOppositeWrap;
-      }
-      before = after.getOppositeWrap;
-    }
-
-    return "$before$this${after.ifBlank(before)!}";
-  }
-
-  /// Returns the opposite wrap char of the `String` if possible, otherwise returns the same `String`.
-  ///
-  /// ## Example
-  ///
-  /// ```dart
-  /// String foo = '(';
-  /// String oppositeFood = foo.getOppositeChar(); // returns ')';
-  /// ```
-  String get getOppositeWrap {
-    if (length > 1 && (toArray.all((x) => x.isOpenWrap) || toArray.all((x) => x.isCloseWrap))) {
-      return toArray.map((x) => x.getOppositeWrap).join();
-    }
-
-    switch (this) {
-      case "(":
-        return ")";
-      case ")":
-        return "(";
-      case "[":
-        return "]";
-      case "]":
-        return "[";
-      case "{":
-        return "}";
-      case "}":
-        return "{";
-      case "<":
-        return ">";
-      case ">":
-        return "<";
-      case "\\":
-        return "/";
-      case "/":
-        return "\\";
-      case "/*":
-        return "*/";
-      case "*/":
-        return "/*";
-      case "¿":
-        return "?";
-      case "?":
-        return "¿";
-      case "!":
-        return "¡";
-      case "¡":
-        return "!";
-      default:
-        return blankIfNull;
-    }
-  }
-
-  /// Check if `String` is a open wrap char: `<`, `{`, `[`, `"`, `'`.
-  /// ### Example
-  ///
-  /// ```dart
-  /// bool isOpenWrap = "(".isOpenWrapChar(); // returns true;
-  /// ```
-  bool get isOpenWrap => isNotNull && StringHelpers.openWrappers.contains(this);
-
-  bool get isMultipleOpenWrap => (length > 1 && (toArray.all((x) => x.isOpenWrap)));
-
-  /// Check if the `String` is a close wrap char: `>`, `}`, `]`, `"`, `'`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// bool isCloseWrap = ")".isCloseWrapChar(); // returns true;
-  /// ```
-  bool get isCloseWrap => isNotNull && StringHelpers.closeWrappers.contains(this);
-
-  bool get isMultipleCloseWrap => (length > 1 && (toArray.all((x) => x.isCloseWrap)));
-
-  /// Continuously removes from the beginning of the `String` any match in [patterns].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String s = "esentis".removeFirstAny(["s", "ng"]);// returns "esentis";
-  /// ```
-  String removeFirstAny(List<String?> patterns) {
-    var from = this;
-    if (from.isNotBlank) {
-      for (var pattern in patterns) {
-        if (pattern != null && pattern.isNotEmpty) {
-          while (from.startsWith(pattern)) {
-            from = from.removeFirst(pattern.length);
-          }
-        }
-      }
-    }
-    return from.blankIfNull;
-  }
-
-  /// Continuously removes from the end of the `String`, any match in [patterns].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String s = "esentisfs12".removeLastAny(["12","s","ng","f",]); // returns "esentis";
-  /// ```
-  String removeLastAny(List<String?> patterns) {
-    var from = this;
-    if (from.isNotBlank) {
-      for (var pattern in patterns) {
-        if (pattern != null && pattern.isNotEmpty) {
-          while (from.endsWith(pattern)) {
-            from = from.removeLast(pattern.length);
-          }
-        }
-      }
-    }
-    return from.blankIfNull;
-  }
-
-  /// Continuously removes from the beginning & the end of the `String`, any match in [patterns].
-  String removeFirstAndLastAny(List<String?> patterns) => removeFirstAny(patterns).removeLastAny(patterns);
-
-  /// Removes the [pattern] from the end of the `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String s = "coolboy".removeLastEqual("y"); // returns "coolbo";
-  /// ```
-  String removeLastEqual(String? pattern) => removeLastAny([pattern]);
-
-  /// Removes any [pattern] match from the beginning of the `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String s = "djing".removeFirstEqual("dj"); // returns "ing"
-  /// ```
-  String removeFirstEqual(String? pattern) => removeFirstAny([pattern]);
-
-  /// Removes any [pattern] match from the beginning & the end of the `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String edited = "abracadabra".removeFirstAndLastEqual("a"); // returns "bracadabr";
-  /// ```
-  String removeFirstAndLastEqual(String? pattern) => removeFirstEqual(pattern).removeLastEqual(pattern);
-
-  /// Removes everything in the `String` after the first match of the [pattern].
-  ///
-  /// ### Example
-  /// ```dart
-  /// String test = 'hello brother what a day today';
-  /// String afterString = test.removeAfter('brother'); // returns 'hello ';
-  /// ```
-  String removeAfter(String pattern) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    if (!contains(pattern)) {
-      return '';
-    }
-
-    List<String> patternWords = pattern.split(' ');
-
-    if (patternWords.isEmpty) {
-      return '';
-    }
-    int indexOfLastPatternWord = indexOf(patternWords.last);
-
-    if (patternWords.last.isEmpty) {
-      return '';
-    }
-
-    return substring(0, indexOfLastPatternWord);
-  }
-
-  /// Removes everything in the `String` before the match of the [pattern].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String test = 'hello brother what a day today';
-  /// String afterString = test.removeBefore('brother'); // returns 'brother what a day today';
-  /// ```
-  String removeBefore(String pattern) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    if (!contains(pattern)) {
-      return '';
-    }
-
-    List<String> patternWords = pattern.split(' ');
-
-    if (patternWords.isEmpty) {
-      return '';
-    }
-    int indexOfFirstPatternWord = indexOf(patternWords.first);
-
-    if (patternWords.last.isEmpty) {
-      return '';
-    }
-
-    return substring(
-      indexOfFirstPatternWord + 1,
-      length,
-    );
-  }
-
-  /// Adds a `String` after the first match of the [pattern]. The [pattern] should not be `null`.
-  ///
-  /// If there is no match, the `String` is returned unchanged.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String test = 'hello brother what a day today';
-  /// String afterString = test.addAfter('brother', ' sam '); // returns 'hello brother sam what a day today ';
-  /// ```
-  String addAfter(String pattern, String addition) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    if (!contains(pattern)) {
-      return blankIfNull;
-    }
-
-    List<String> patternWords = pattern.split(' ');
-
-    if (patternWords.isEmpty) {
-      return '';
-    }
-    int indexOfLastPatternWord = indexOf(patternWords.last);
-
-    if (patternWords.last.isEmpty) {
-      return '';
-    }
-
-    return substring(0, indexOfLastPatternWord + 1) + addition + substring(indexOfLastPatternWord + 1, length);
-  }
-
-  /// Adds a `String` before the first match of the [pattern]. The [pattern] should not be `null`.
-  ///
-  /// If there is no match, the `String` is returned unchanged.
-  ///
-  /// ### Example
-  /// ```dart
-  /// String test = 'hello brother what a day today';
-  /// String afterString = test.addBefore('brother', 'big '); // returns 'hello big brother what a day today';
-  /// ```
-  String addBefore(String pattern, String adition) {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    if (!contains(pattern)) {
-      return blankIfNull;
-    }
-
-    List<String> patternWords = pattern.split(' ');
-
-    if (patternWords.isEmpty) {
-      return '';
-    }
-    int indexOfFirstPatternWord = indexOf(patternWords.first);
-
-    if (patternWords.last.isEmpty) {
-      return '';
-    }
-
-    return substring(0, indexOfFirstPatternWord) +
-        adition +
-        substring(
-          indexOfFirstPatternWord,
-          length,
-        );
-  }
-
-  /// Checks if the `String` matches **ANY** of the given [patterns].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// bool contains = "abracadabra".containsAny(["a", "p"]); // returns true;
-  /// ```
-  bool containsAny(Iterable<string?> patterns) {
-    if (isNotBlank) {
-      for (String? item in patterns.where((element) => element.isNotBlank)) {
-        if (contains(item!)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /// Checks if the `String` matches **ALL** given [patterns].
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// bool contains = "abracadabra".containsAll(["abra", "cadabra"]; // returns true;
-  /// ```
-  bool containsAll(Iterable<string?> patterns) {
-    for (String? item in patterns.where((element) => element.isNotBlank)) {
-      if (isBlank || contains(item!) == false) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /// Returns the MD5 hash of the `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String md5 = '123456'.md5; // returns "e10adc3949ba59abbe56e057f20f883e";
-  /// ```
-  String get md5 {
-    String data = this;
-    if (data.isNotBlank) {
-      var content = const Utf8Encoder().convert(data);
-      var md5 = crypto.md5;
-      var digest = md5.convert(content);
-      data = hex.encode(digest.bytes);
-    }
-    return data;
-  }
-
-  /// Formats the `String` to show its proper file size.
-  ///
-  /// If the `String` is not a valid integer, it is returned unchanged.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = '24117248';
-  /// String formatted = foo.formatFileSize; // returns '23 MB';
-  /// ```
-  String get formatFileSize {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    if (isNumber) {
-      return toDouble!.formatFileSize;
-    }
-    return this;
-  }
-
-  /// Transforms the `String` to 1337 alphabet.
-  ///
-  /// The letters are randomized since each letter can have multiple variations.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'esentis';
-  /// String leet = foo.toLeet ; // returns '€5£п+!$';
-  /// ```
-  String get toLeet {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    final letters = split('');
-
-    final leetLetters = [];
-    for (var e in letters) {
-      final count = StringHelpers.leetAlphabet[e].length;
-      final random = Random().nextInt(count);
-      leetLetters.add(StringHelpers.leetAlphabet[e][random]);
-    }
-
-    return leetLetters.join();
-  }
-
-  /// Checks if the `String` provided is a valid credit card number using Luhn Algorithm.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String cc = '5104 4912 8031 9406';
-  /// bool isCreditCard = cc.isCreditCard ; returns true;
-  /// ```
-  bool get isCreditCard {
-    if (isBlank) {
-      return false;
-    }
-
-    String trimmed = removeWhiteSpace;
-
-    int sum = 0;
-    bool alternate = false;
-    for (int i = trimmed.length - 1; i >= 0; i--) {
-      List<String> nx = trimmed.toArray;
-      int n = int.parse(nx[i]);
-
-      if (alternate) {
-        n *= 2;
-
-        if (n > 9) {
-          n = (n % 10) + 1;
-        }
-      }
-      sum += n;
-      alternate = !alternate;
-    }
-    return (sum % 10 == 0);
-  }
-
-  /// Removes all whitespace from the `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = '   Hel l o W   orld';
-  /// String striped = foo.removeWhiteSpace; // returns 'HelloWorld';
-  /// ```
-  String get removeWhiteSpace {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    return removeAny(StringHelpers.whiteSpaceChars);
-  }
-
-  /// Removes all word splitters from the `String`.
-  string get removeWordSplitters {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    return removeAny(StringHelpers.wordSplitters);
-  }
-
-  /// remove all break lines from the `String`.
-  string get removeBreakLines {
-    if (isBlank) {
-      return blankIfNull;
-    }
-    return removeAny(StringHelpers.breakLineChars);
-  }
-
-  bool get isIP => isIPv4 || isIPv6;
-
-  bool get isIPv4 {
-    if (isBlank) return false;
-    // Divide a string em partes usando o ponto como delimitador
-    final parts = split('.');
-
-    // Deve haver exatamente 4 partes
-    if (parts.length != 4) {
-      return false;
-    }
-
-    // Verifica se cada parte é um número inteiro entre 0 e 255
-    for (final part in parts) {
-      final intValue = int.tryParse(part);
-      if (intValue == null || intValue < 0 || intValue > 255) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  /// Checks whether the `String` is in lowercase.
-  bool get isLowerCase {
-    if (isBlank) {
-      return false;
-    }
-    return this == toLowerCase();
-  }
-
-  /// Checks whether the `String` is in uppercase.
-  bool get isUpperCase {
-    if (isBlank) {
-      return false;
-    }
-    return this == toUpperCase();
-  }
-
-  /// Swaps the case in the `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// String swapped = foo.swapCase(); // returns 'hELLO wORLD';
-  /// ```
-  String swapCase() {
-    if (isBlank) {
-      return blankIfNull;
-    }
-
-    List<String> letters = toArray;
-
-    String swapped = '';
-
-    for (final l in letters) {
-      if (l.isUpperCase) {
-        swapped += l.toLowerCase();
-      } else {
-        swapped += l.toUpperCase();
-      }
-    }
-    return swapped;
-  }
-
-  /// Checks whether the provided `String` is a valid Swift code.
-  bool? get isSwiftCode {
-    var regex = RegExp(r'(^[A-Za-z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$)');
-    return regex.hasMatch(this);
-  }
+  int get countWords => getWords.length;
 
   /// Returns the digit count of the `String`.
   ///
@@ -2651,495 +342,6 @@ extension StringExtensions on String {
     }
     RegExp digitsOnly = RegExp(r'\d');
     return digitsOnly.allMatches(this).length;
-  }
-
-  /// Checks whether the `String` is a valid ASCII string.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// bool isAscii = foo.isAscii; // returns true;
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'œ∑´®†¥¨ˆøπ';
-  /// bool isAscii = foo.isAscii; // returns false;
-  /// ```
-  bool get isAscii {
-    if (isEmpty) {
-      return true;
-    }
-    final ascii = RegExp(r'^[\x00-\x7F]+$');
-    return ascii.hasMatch(this);
-  }
-
-  /// Checks whether the `String` is an anagram of the provided `String`.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// bool isAnagram = foo.isAnagram('World Hello'); // returns true;
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// bool isAnagram = foo.isAnagram('World Hello!'); // returns false;
-  /// ```
-  bool isAnagramOf(String s) {
-    if (isBlank || s.isBlank) {
-      return false;
-    }
-    final String word1 = removeWhiteSpace;
-
-    final String word2 = s.removeWhiteSpace;
-
-    if (word1.length != word2.length) {
-      return false;
-    }
-
-    Map<String, int> charCount = {};
-
-    word1.split('').forEach((char) => charCount[char] = (charCount[char] ?? 0) + 1);
-
-    word2.split('').forEach((char) => charCount[char] = (charCount[char] ?? 0) - 1);
-
-    return charCount.values.every((count) => count == 0);
-  }
-
-  /// Checks whether the `String` is a palindrome.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// bool isPalindrome = foo.isPalindrome; // returns false;
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'racecar';
-  /// bool isPalindrome = foo.isPalindrome; // returns true;
-  /// ```
-  bool get isPalindrome {
-    if (isBlank) {
-      return false;
-    }
-    return this == reverse;
-  }
-
-  /// Checks whether the `String` is consisted of both upper and lower case letters.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// bool isMixedCase = foo.isMixedCase; // returns true;
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'hello world';
-  /// bool isMixedCase = foo.isMixedCase; // returns false;
-  ///
-  bool get isMixedCase {
-    if (isBlank) {
-      return false;
-    }
-    return toUpperCase() != this && toLowerCase() != this;
-  }
-
-  /// Checks whether the `String` is consisted of only unique characters.
-
-  bool get isUnique {
-    if (isBlank) {
-      return true;
-    }
-    final word = this;
-    final wordSplit = word.toUpperCase().split('').toSet();
-    return word.length == wordSplit.length;
-  }
-
-  /// Returns a `Set` of the common characters between the two `String`s.
-  ///
-  /// The `String` is case sensitive & sorted by default.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// List<String> commonLetters = foo.commonCharacters('World Hello'); // returns ['H', 'e', 'l', 'o', 'r', 'w', 'd'];
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// List<String> commonLetters = foo.commonCharacters('World Hello!'); // returns ['H', 'e', 'l', 'o', 'r', 'w', 'd'];
-  /// ```
-  Set<String> commonCharacters(
-    String otherString, {
-    bool caseSensitive = true,
-    bool sort = true,
-    bool includeSpaces = false,
-  }) {
-    if (isBlank) {
-      return {};
-    }
-
-    String processString(String input) {
-      return (caseSensitive ? input : input.toLowerCase()).split('').where((char) => includeSpaces || char != ' ').join('');
-    }
-
-    final Set<String> commonLettersSet = {};
-    final Set<String> otherStringSet = processString(otherString).split('').toSet();
-
-    for (final letter in processString(this).split('')) {
-      if (otherStringSet.contains(letter)) {
-        commonLettersSet.add(letter);
-      }
-    }
-
-    if (sort) {
-      final List<String> sortedList = commonLettersSet.toList()..sort();
-      return sortedList.toSet();
-    } else {
-      return commonLettersSet;
-    }
-  }
-
-  /// Returns a Set of the uncommon characters between the two `String`s.
-  ///
-  /// The `String` is case sensitive & sorted by default.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// List<String> uncommonLetters = foo.uncommonCharacters('World Hello'); // returns {};
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// List<String> uncommonLetters = foo.uncommonCharacters('World Hello!'); // returns {'!'};
-  /// ```
-  Set<String> uncommonCharacters(
-    String otherString, {
-    bool caseSensitive = true,
-    bool includeSpaces = false,
-  }) {
-    if (isBlank) {
-      return {};
-    }
-
-    String processString(String input) => (caseSensitive ? input : input.toLowerCase()).split('').where((char) => includeSpaces || char != ' ').join('');
-
-    final Set<String> thisSet = processString(this).split('').toSet();
-    final Set<String> otherStringSet = processString(otherString).split('').toSet();
-
-    final Set<String> uncommonSet = thisSet.union(otherStringSet).difference(thisSet.intersection(otherStringSet));
-
-    return uncommonSet;
-  }
-
-  /// Checks whether all characters are contained in the `String`.
-  ///
-  /// The method is case sensitive by default.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// bool containsAll = foo.containsAllCharacters('Hello'); // returns true;
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// bool containsAll = foo.containsAllCharacters('Hello!'); // returns false;
-  /// ```
-  bool containsAllCharacters(String characters) {
-    if (isBlank) {
-      return false;
-    }
-    final Map<String, int> letterCounts = {};
-
-    for (var letter in toArray) {
-      letterCounts[letter] = (letterCounts[letter] ?? 0) + 1;
-    }
-
-    for (final letter in characters.toArray) {
-      if (letterCounts[letter] == null || letterCounts[letter]! <= 0) {
-        return false;
-      }
-      letterCounts[letter] = letterCounts[letter]! - 1;
-    }
-
-    return true;
-  }
-
-  /// Checks whether the `String` has any whitespace characters.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = 'Hello World';
-  /// bool hasWhitespace = foo.hasWhitespace; // returns true;
-  /// ```
-  ///
-  /// ```dart
-  /// String foo = 'HelloWorld';
-  /// bool hasWhitespace = foo.hasWhitespace; // returns false;
-  /// ```
-  bool get hasWhitespace {
-    if (isBlank) {
-      return false;
-    }
-    return contains(RegExp(r'\s'));
-  }
-
-  /// Returns `true` if the `String` contains only letters (Latin or Greek).
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String text = 'hello world';
-  /// bool isLettersOnly = text.isLettersOnly(); // Returns true
-  /// ```
-  bool get isLettersOnly {
-    if (isBlank) {
-      return false;
-    }
-    final onlyLetters = this.onlyLetters;
-
-    return onlyLetters.length == length;
-  }
-
-  /// Inserts a `String` at the specified index.
-  ///
-  /// If the `String` is `null`, an `ArgumentError` is thrown.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String text = 'hello world';
-  /// String newText = text.insertAt(5, '!');
-  /// print(newText); // prints 'hello! world'
-  /// ```
-  String insertAt(int i, String value) {
-    if (i < 0) {
-      i = 0;
-    }
-    if (i > length) {
-      i = length;
-    }
-    final start = substring(0, i);
-    final end = substring(i);
-    return start + value + end;
-  }
-
-  /// Splits the `String` into a `List` of lines ('\r\n' or '\n').
-  ///
-  /// If the `String` is `null`, an `ArgumentError` is thrown.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String text = 'hello\nworld';
-  /// List<String> lines = text.splitLines();
-  /// print(lines); // prints ['hello', 'world']
-  /// ```
-  List<String> get splitLines => split(RegExp(r'\r?\n'));
-
-  /// Returns a new `String` with the first occurrence of the given pattern replaced with the replacement `String`.
-  ///
-  /// If the `String` is `null`, an `ArgumentError` is thrown.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String s = "esentis".replaceFirst("s", "S"); // returns "eSentis";
-  /// ```
-  String replaceFirst(String pattern, String replacement) {
-    int index = indexOf(pattern);
-    if (index == -1) {
-      return this;
-    }
-    return replaceRange(index, index + pattern.length, replacement);
-  }
-
-  /// Returns a new `String` with the last occurrence of the given pattern replaced with the replacement `String`.
-  ///
-  /// If the `String` is `null`, an `ArgumentError` is thrown.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String s = "esentis".replaceLast("s", "S"); // returns "esentiS";
-  /// ```
-  String replaceLast(String pattern, String replacement) {
-    int index = lastIndexOf(pattern);
-    if (index == -1) {
-      return this;
-    }
-    return replaceRange(index, index + pattern.length, replacement);
-  }
-
-  String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{{');
-
-  String replaceMustachesWithMap(Map<String, dynamic> params) => replaceWrappedWithMap(values: params, openWrapChar: "{{");
-
-  String replaceWrappedWithMap({required Map<String, dynamic> values, required String openWrapChar, String? closeWrapChar}) {
-    if (isBlank) return blankIfNull;
-
-    string text = this;
-    values.forEach((key, value) {
-      String wrappedKey = key.wrap(openWrapChar, closeWrapChar);
-      text = text.replaceAll(wrappedKey, value?.toString() ?? "");
-    });
-    return text;
-  }
-
-  String replaceWrappedWithList({required List<dynamic> values, required String openWrapChar, String? closeWrapChar}) {
-    if (isBlank) return blankIfNull;
-    return replaceWrappedWithMap(values: values.toMap((x) => MapEntry(values.indexOf(x).toString(), x)), openWrapChar: openWrapChar, closeWrapChar: closeWrapChar);
-  }
-
-  bool hasMatch(String pattern) => RegExp(pattern).hasMatch(this);
-
-  /// Checks if string contains at least one Capital Letter
-  bool get hasCapitalLetter => hasMatch(r'[A-Z]');
-
-  /// Checks if string is boolean.
-  bool get isBool => (this == 'true' || this == 'false');
-
-  /// return a date from string
-  date toDate([string? format, string? locale]) {
-    try {
-      initializeDateFormatting(locale);
-      return DateFormat(format, locale).parse(this);
-    } catch (e) {
-      return date.parse(this);
-    }
-  }
-
-  /// Checks if a given [value] matches a [mask] pattern.
-  ///
-  /// The [mask] pattern can contain wildcard characters:
-  /// - `*` matches any sequence of characters (including an empty sequence).
-  /// - `?` matches any single character.
-  ///
-  /// Returns `true` if the [value] matches the [mask] pattern, `false` otherwise.
-  bool isLike(string mask, [bool caseSensitive = false]) =>
-      RegExp('^${RegExp.escape(mask).replaceAll('\\*', '.*').replaceAll('\\?', '.').toString()}\$', multiLine: true, caseSensitive: caseSensitive).hasMatch(this);
-
-  /// change a date string from a format to another format
-  string changeDateFormat(string toFormat, [string? fromFormat, string? locale]) => toDate(fromFormat, locale).format(toFormat);
-
-  /// Interprets a string in various ways and transforms it into a `Size` object.
-  ///
-  /// Returns a `Size` object.
-  Size get toSize {
-    var text = this;
-    text = text.replaceMany(["px", ";"], " ").toLowerCase().trimAll;
-    text = text.replaceMany(["largura", "width", "a "], "w ");
-    text = text.replaceMany(["altura", "height", "l "], "h ");
-
-    try {
-      if (text.isNumber) {
-        return Size(text.trimAll.toDoubleOrZero, text.trimAll.toDoubleOrZero);
-      } else if (text.isLike("width*") && !text.isLike("*height*")) {
-        return Size(text.after("width").trimAll.toDoubleOrZero, text.after("width").trimAll.toDoubleOrZero);
-      } else if (text.isLike("height*") && !text.isLike("*width*")) {
-        return Size(text.after("height").trimAll.toDoubleOrZero, text.after("height").trimAll.toDoubleOrZero);
-      } else if (text.isLike("w*") && !text.isLike("*h*")) {
-        return Size(text.after("w").trimAll.toDoubleOrZero, text.after("w").trimAll.toDoubleOrZero);
-      } else if (text.isLike("h*") && !text.isLike("*w*")) {
-        return Size(text.after("h").trimAll.toDoubleOrZero, text.after("h").trimAll.toDoubleOrZero);
-      } else if (text.isLike("width*height*")) {
-        return Size(text.between("width", "height").trimAll.toDoubleOrZero, text.after("height").trimAll.toDoubleOrZero);
-      } else if (text.isLike("height*width*")) {
-        return Size(text.between("height", "width").trimAll.toDoubleOrZero, text.after("width").trimAll.toDoubleOrZero);
-      } else if (text.isLike("w*h*")) {
-        return Size(text.between("w", "h").trimAll.toDoubleOrZero, text.after("h").trimAll.toDoubleOrZero);
-      } else if (text.isLike("h*w*")) {
-        return Size(text.between("h", "w").trimAll.toDoubleOrZero, text.after("w").trimAll.toDoubleOrZero);
-      } else if (text.isLike("*x*")) {
-        return Size(text.split("x").first.trimAll.toDoubleOrZero, text.split("x").last.trimAll.toDoubleOrZero);
-      } else if (text.isLike("*by*")) {
-        return Size(text.split("by").first.trimAll.toDoubleOrZero, text.split("by").last.trimAll.toDoubleOrZero);
-      } else if (text.isLike("*por*")) {
-        return Size(text.split("por").first.trimAll.toDoubleOrZero, text.split("por").last.trimAll.toDoubleOrZero);
-      } else if (text.isLike("*,*")) {
-        return Size(text.split(",").first.trimAll.toDoubleOrZero, text.split(",").last.toDoubleOrZero);
-      } else if (text.isLike("*-*")) {
-        return Size(text.split("-").first.trimAll.toDoubleOrZero, text.split("-").last.trimAll.toDoubleOrZero);
-      } else if (text.isLike("*_*")) {
-        return Size(text.split("_").first.trimAll.toDoubleOrZero, text.split("_").last.trimAll.toDoubleOrZero);
-      } else if (text.isLike("*:*")) {
-        return Size(text.split("_").first.trimAll.toDoubleOrZero, text.split("_").last.trimAll.toDoubleOrZero);
-      } else {
-        return Size(text.split(" ").first.trimAll.toDoubleOrZero, text.split(" ").last.trimAll.toDoubleOrZero);
-      }
-    } catch (e) {
-      return Size.zero;
-    }
-  }
-
-  /// Returns the first element after splitting the string using the specified [pattern].
-  /// If the string cannot be split, it returns the original string.
-  string firstSplit(Pattern pattern) => split(pattern).first;
-
-  /// Returns the last element after splitting the string using the specified [pattern].
-  /// If the string cannot be split, it returns the original string.
-  string lastSplit(Pattern pattern) => split(pattern).last;
-
-  /// Splits the string using the specified [pattern] and returns a list containing the last element and the remaining elements joined by the [pattern].
-  /// If the string cannot be split, it returns a list containing the original string.
-  List<string> splitLast(string pattern) {
-    var parts = split(pattern);
-    if (parts.length < 2) {
-      return [this];
-    }
-    var last = parts.removeLast();
-    return [parts.join(pattern), last];
-  }
-
-  /// Splits the string using the specified [pattern] and returns a list containing the first element and the remaining elements joined by the [pattern].
-  /// If the string cannot be split, it returns a list containing the original string.
-  List<string> splitFirst(string pattern) {
-    var parts = split(pattern);
-    if (parts.length < 2) {
-      return [this];
-    }
-    var first = parts.removeAt(0);
-    return [first, parts.join(pattern)];
-  }
-
-  /// Fetches Google suggestions based on the given language.
-  /// Returns a list of suggestions as strings.
-  /// If the language is not provided, it defaults to an empty string.
-  Future<List<String>> fetchGoogleSuggestions({String language = ""}) async {
-    if (isNotBlank) {
-      final url = Uri.https('suggestqueries.google.com', '/complete/search', {
-        'output': 'toolbar',
-        if (language.isNotBlank) 'hl': language,
-        'q': this,
-        'gl': 'in',
-      });
-      try {
-        final response = await http.get(url);
-        if (response.statusCode == 200) {
-          // Parse the XML response
-          final xmlData = response.body;
-          // Extract suggestions from the XML (you can use an XML parsing library)
-          // For simplicity, let's assume the suggestions are separated by '<suggestion data="..."/>'
-          final suggestionRegex = RegExp(r'<suggestion data="([^"]+)"');
-          final matches = suggestionRegex.allMatches(xmlData);
-          final suggestions = matches.map((match) => match.group(1)?.urlDecode.trimAll).distinct().toList();
-          return suggestions.whereNotNull().toList();
-        }
-      } catch (e) {
-        consoleLog('Error fetching suggestions: $e');
-      }
-    }
-    return [];
   }
 
   /// Fix the whitespaces in a string by removing spaces after opening a quote and before closing a quote.
@@ -3219,8 +421,2827 @@ extension StringExtensions on String {
     return value;
   }
 
-  /// Return a base64 encoded string
-  string get base64 => base64Encode(utf8.encode(this));
+  /// Formats the `String` to show its proper file size.
+  ///
+  /// If the `String` is not a valid integer, it is returned unchanged.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = '24117248';
+  /// String formatted = foo.formatFileSize; // returns '23 MB';
+  /// ```
+  String get formatFileSize {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    if (isNumber) {
+      return toDouble!.formatFileSize;
+    }
+    return this;
+  }
+
+  /// return a string in a firendly format
+  string get friendlyName => camelSplitString.replaceAll("_", " ").fixText.removeLastEqual(".").toTitleCase;
+
+  /// Return a checksum digit for a barcode
+  String get generateBarcodeCheckSum {
+    if (isNotNumber) {
+      throw const FormatException('Code is not a number');
+    }
+
+    int i = 0;
+    int j;
+    int p = 0;
+    int t = length;
+    for (j = 1; j <= t; j++) {
+      if ((j & ~ -2) == 0) {
+        p += int.parse(substring(j - 1, j));
+      } else {
+        i += int.parse(substring(j - 1, j));
+      }
+    }
+
+    if (t == 7 || t == 11) {
+      i = i * 3 + p;
+      p = (i + 9) ~/ 10 * 10;
+      t = p - i;
+    } else {
+      p = p * 3 + i;
+      i = (p + 9) ~/ 10 * 10;
+      t = i - p;
+    }
+
+    return t.toString();
+  }
+
+  /// Returns the opposite wrap char of the `String` if possible, otherwise returns the same `String`.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// String foo = '(';
+  /// String oppositeFood = foo.getOppositeChar(); // returns ')';
+  /// ```
+  String get getOppositeWrap {
+    if (length > 1 && (toArray.all((x) => x.isOpenWrap) || toArray.all((x) => x.isCloseWrap))) {
+      return toArray.map((x) => x.getOppositeWrap).join();
+    }
+
+    switch (this) {
+      case "(":
+        return ")";
+      case ")":
+        return "(";
+      case "[":
+        return "]";
+      case "]":
+        return "[";
+      case "{":
+        return "}";
+      case "}":
+        return "{";
+      case "<":
+        return ">";
+      case ">":
+        return "<";
+      case "\\":
+        return "/";
+      case "/":
+        return "\\";
+      case "/*":
+        return "*/";
+      case "*/":
+        return "/*";
+      case "¿":
+        return "?";
+      case "?":
+        return "¿";
+      case "!":
+        return "¡";
+      case "¡":
+        return "!";
+      default:
+        return blankIfNull;
+    }
+  }
+
+  /// Returns a list with distinct words of this sentence
+  strings get getUniqueWords => getWords.distinctFlat();
+
+  /// Returns a list with words of this sentence
+  strings get getWords {
+    if (isBlank) {
+      return [];
+    }
+    return splitAny(StringHelpers.wordSplitters).toList();
+  }
+
+  /// Checks if string contains at least one Capital Letter
+  bool get hasCapitalLetter => hasMatch(r'[A-Z]');
+
+  /// Checks if the `String` is consisted of same characters (ignores cases).
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo1 = 'ttttttt'
+  /// bool hasSame1 = foo.hasSameCharacters(); // true;
+  /// ```
+  /// ```dart
+  /// String foo = 'ttttttt12'
+  /// bool hasSame2 = foo.hasSameCharacters();  // false;
+  /// ```
+  bool get hasSameCharacters {
+    if (isBlank) {
+      return false;
+    }
+
+    if (length > 1) {
+      var b = this[0].toLowerCase();
+      for (var i = 1; i < length; i++) {
+        var c = this[i].toLowerCase();
+        if (c != b) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /// Checks whether the `String` has any whitespace characters.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// bool hasWhitespace = foo.hasWhitespace; // returns true;
+  /// ```
+  ///
+  /// ```dart
+  /// String foo = 'HelloWorld';
+  /// bool hasWhitespace = foo.hasWhitespace; // returns false;
+  /// ```
+  bool get hasWhitespace {
+    if (isBlank) {
+      return false;
+    }
+    return contains(RegExp(r'\s'));
+  }
+
+  /// Checks whether the `String` is a valid ASCII string.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// bool isAscii = foo.isAscii; // returns true;
+  /// ```
+  ///
+  /// ```dart
+  /// String foo = 'œ∑´®†¥¨ˆøπ';
+  /// bool isAscii = foo.isAscii; // returns false;
+  /// ```
+  bool get isAscii {
+    if (isEmpty) {
+      return true;
+    }
+    final ascii = RegExp(r'^[\x00-\x7F]+$');
+    return ascii.hasMatch(this);
+  }
+
+  /// Checks if the `String` is Blank (null, empty or only white spaces).
+  bool get isBlank => trim().isEmpty;
+
+  /// Checks if string is boolean.
+  bool get isBool => (this == 'true' || this == 'false');
+
+  /// Check if the `String` is a close wrap char: `>`, `}`, `]`, `"`, `'`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// bool isCloseWrap = ")".isCloseWrapChar(); // returns true;
+  /// ```
+  bool get isCloseWrap => isNotNull && StringHelpers.closeWrappers.contains(this);
+
+  /// Checks if the `String` provided is a valid credit card number using Luhn Algorithm.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String cc = '5104 4912 8031 9406';
+  /// bool isCreditCard = cc.isCreditCard ; returns true;
+  /// ```
+  bool get isCreditCard {
+    if (isBlank) {
+      return false;
+    }
+
+    String trimmed = removeWhiteSpace;
+
+    int sum = 0;
+    bool alternate = false;
+    for (int i = trimmed.length - 1; i >= 0; i--) {
+      List<String> nx = trimmed.toArray;
+      int n = int.parse(nx[i]);
+
+      if (alternate) {
+        n *= 2;
+
+        if (n > 9) {
+          n = (n % 10) + 1;
+        }
+      }
+      sum += n;
+      alternate = !alternate;
+    }
+    return (sum % 10 == 0);
+  }
+
+  /// Checks whether the `String` is a valid `DateTime`:
+  ///
+  /// ### Valid formats
+  ///
+  /// * dd/mm/yyyy
+  /// * dd-mm-yyyyy
+  /// * dd.mm.yyyy
+  /// * yyyy-mm-dd
+  /// * yyyy-mm-dd hrs
+  /// * 20120227 13:27:00
+  /// * 20120227T132700
+  /// * 20120227
+  /// * +20120227
+  /// * 2012-02-27T14Z
+  /// * 2012-02-27T14+00:00
+  /// * -123450101 00:00:00 Z": in the year -12345
+  /// * 2002-02-27T14:00:00-0500": Same as "2002-02-27T19:00:00Z
+  bool get isDate {
+    if (isBlank) {
+      return false;
+    }
+    var regex = RegExp(
+        r'^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$');
+    if (regex.hasMatch(this)) {
+      return true;
+    }
+    try {
+      return DateTime.tryParse(this) != null;
+    } on Exception {
+      return false;
+    }
+  }
+
+  /// Checks if the `String` has only Greek characters.
+  /// ### Example
+  /// ```dart
+  /// String foo = 'this is a τεστ';
+  /// bool isGreek = foo.isGreek; // returns false
+  /// String foo2 = 'Τα αγαθά κόποις κτώνται';
+  /// bool isGreek2 = foo2.isGreek; // returns true
+  /// ```
+  bool? get isGreek {
+    if (isBlank) {
+      return false;
+    }
+
+    return RegExp(r'^[α-ωΑ-ΩίϊΐόάέύϋΰήώΊΪΌΆΈΎΫΉΏ\s]+$').hasMatch(this);
+  }
+
+  /// Checks whether the `String` is a valid Guid.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = '6d64-4396-8547-1ec1b86e081e';
+  /// bool isGuid = foo.isGuid; // returns false
+  /// ```
+  /// ```dart
+  /// String foo = '887b7923-6d64-4396-8547-1ec1b86e081e';
+  /// bool isGuid = foo.isGuid; // returns true
+  /// ```
+  bool get isGuid {
+    if (isBlank) {
+      return false;
+    }
+    var regex = RegExp(r'^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$');
+    return regex.hasMatch(this);
+  }
+
+  bool get isIP => isIPv4 || isIPv6;
+
+  bool get isIPv4 {
+    if (isBlank) return false;
+    // Divide a string em partes usando o ponto como delimitador
+    final parts = split('.');
+
+    // Deve haver exatamente 4 partes
+    if (parts.length != 4) {
+      return false;
+    }
+
+    // Verifica se cada parte é um número inteiro entre 0 e 255
+    for (final part in parts) {
+      final intValue = int.tryParse(part);
+      if (intValue == null || intValue < 0 || intValue > 255) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /// Checks whether the `String` is a valid IPv6.
+  /// ### Example 1
+  /// ```dart
+  /// String foo = '2001:0db8:85a3:0000:0000:8a2e:0370:7334';
+  /// bool isIpv6 = foo.isIpv6; // returns true
+  /// ```
+  /// ### Example 2
+  /// ```dart
+  /// String foo = '192.168.1.14.150.1225';
+  /// bool isIpv6 = foo.isIpv6; // returns false
+  /// ```
+  bool get isIPv6 {
+    if (isBlank) {
+      return false;
+    }
+    substring(0, 1);
+    var regex = RegExp(
+        r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
+    return regex.hasMatch(this);
+  }
+
+  /// Checks if the `String` has only Latin characters.
+  /// ### Example
+  /// ```dart
+  /// String foo = 'this is a τεστ';
+  /// bool isLatin = foo.isLatin; // returns false
+  /// String foo2 = 'this is hello world';
+  /// bool isLatin2 = foo2.isLatin; // returns true
+  /// ```
+  bool get isLatin {
+    if (isBlank) {
+      return false;
+    }
+    return RegExp(r'^[a-zA-Z\s]+$').hasMatch(this);
+  }
+
+  /// Returns `true` if the `String` contains only letters (Latin or Greek).
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String text = 'hello world';
+  /// bool isLettersOnly = text.isLettersOnly(); // Returns true
+  /// ```
+  bool get isLettersOnly {
+    if (isBlank) {
+      return false;
+    }
+    final onlyLetters = this.onlyLetters;
+
+    return onlyLetters.length == length;
+  }
+
+  /// Checks whether the `String` is in lowercase.
+  bool get isLowerCase {
+    if (isBlank) {
+      return false;
+    }
+    return this == toLowerCase();
+  }
+
+  /// Checks whether the `String` is consisted of both upper and lower case letters.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// bool isMixedCase = foo.isMixedCase; // returns true;
+  /// ```
+  ///
+  /// ```dart
+  /// String foo = 'hello world';
+  /// bool isMixedCase = foo.isMixedCase; // returns false;
+  ///
+  bool get isMixedCase {
+    if (isBlank) {
+      return false;
+    }
+    return toUpperCase() != this && toLowerCase() != this;
+  }
+
+  bool get isMultipleCloseWrap => (length > 1 && (toArray.all((x) => x.isCloseWrap)));
+
+  bool get isMultipleOpenWrap => (length > 1 && (toArray.all((x) => x.isOpenWrap)));
+
+  /// Checks if the `String` is not blank (null, empty or only white spaces).
+  bool get isNotBlank => !isBlank;
+
+  bool get isNotNumber => !isNumber;
+
+  /// Checks whether the `String` is a number.
+  /// ### Example
+  /// ```dart
+  /// String foo = '45';
+  /// bool isNumber = foo.isNumber; // returns true
+  /// ```
+  /// ```dart
+  /// String foo = '45s';
+  /// String isNumber = foo.isNumber; // returns false
+  bool get isNumber => isNotBlank && isNumberOrBlank;
+
+  bool get isNumberOrBlank => isBlank || num.tryParse(this) != null;
+
+  /// Check if `String` is a open wrap char: `<`, `{`, `[`, `"`, `'`.
+  /// ### Example
+  ///
+  /// ```dart
+  /// bool isOpenWrap = "(".isOpenWrapChar(); // returns true;
+  /// ```
+  bool get isOpenWrap => isNotNull && StringHelpers.openWrappers.contains(this);
+
+  /// Checks whether the `String` is a palindrome.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// bool isPalindrome = foo.isPalindrome; // returns false;
+  /// ```
+  ///
+  /// ```dart
+  /// String foo = 'racecar';
+  /// bool isPalindrome = foo.isPalindrome; // returns true;
+  /// ```
+  bool get isPalindrome {
+    if (isBlank) {
+      return false;
+    }
+    return this == reverse;
+  }
+
+  /// Checks whether the `String` complies to below rules :
+  ///  * At least 1 uppercase
+  ///  * At least 1 special character
+  ///  * At least 1 number
+  ///  * At least 8 characters in length
+  /// ### Example
+  /// ```dart
+  /// String foo = 'qwerty';
+  /// bool isStrong = foo.isStrongPassword; // returns false
+  /// ```
+  /// ```dart
+  /// String foo = 'IsTh!$Strong';
+  /// bool isStrong = foo.isStrongPassword; // returns true
+  /// ```
+  bool get isStrongPassword {
+    if (isBlank) {
+      return false;
+    }
+    var regex = RegExp(r'^(?=.*([A-Z]){1,})(?=.*[!@#$&*,;.?]{1,})(?=.*[0-9]{1,})(?=.*[a-z]{1,}).{8,100}$');
+    return regex.hasMatch(this);
+  }
+
+  /// Checks whether the provided `String` is a valid Swift code.
+  bool? get isSwiftCode {
+    var regex = RegExp(r'(^[A-Za-z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$)');
+    return regex.hasMatch(this);
+  }
+
+  /// Checks whether the `String` is consisted of only unique characters.
+
+  bool get isUnique {
+    if (isBlank) {
+      return true;
+    }
+    final word = this;
+    final wordSplit = word.toUpperCase().split('').toSet();
+    return word.length == wordSplit.length;
+  }
+
+  /// Checks whether the `String` is in uppercase.
+  bool get isUpperCase {
+    if (isBlank) {
+      return false;
+    }
+    return this == toUpperCase();
+  }
+
+  /// Checks whether the `String` is a valid URL.
+  /// ### Example 1
+  /// ```dart
+  /// String foo = 'foo.1com';
+  /// bool isUrl = foo.isUrl; // returns false
+  /// ```
+  /// ### Example 2
+  /// ```dart
+  /// String foo = 'google.com';
+  /// bool isUrl = foo.isUrl; // returns true
+  /// ```
+  bool get isUrl {
+    if (isBlank) {
+      return false;
+    }
+
+    var regex = RegExp(r'[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)');
+    return regex.hasMatch(this);
+  }
+
+  /// Checks if the string is a valid EAN (European Article Number) barcode.
+  ///
+  /// Returns `true` if the string is a valid EAN barcode, `false` otherwise.
+  /// A valid EAN barcode must meet the following conditions:
+  /// - It must not be blank.
+  /// - It must consist of only numeric characters.
+  /// - It must have a length greater than 3.
+  /// - The last character of the barcode must be the correct checksum digit.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// var barcode = '1234567890123';
+  /// if (barcode.isValidEAN) {
+  ///   print('Valid EAN barcode');
+  /// } else {
+  ///   print('Invalid EAN barcode');
+  /// }
+  /// ```
+  bool get isValidEAN {
+    if (isBlank || isNotNumber || length <= 3) {
+      return false;
+    }
+    var bar = removeLast(1);
+    var ver = last(1);
+    return bar.generateBarcodeCheckSum == ver;
+  }
+
+  /// Returns the MD5 hash of the `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String md5 = '123456'.md5; // returns "e10adc3949ba59abbe56e057f20f883e";
+  /// ```
+  String get md5 {
+    String data = this;
+    if (data.isNotBlank) {
+      var content = const Utf8Encoder().convert(data);
+      var md5 = crypto.md5;
+      var digest = md5.convert(content);
+      data = hex.encode(digest.bytes);
+    }
+    return data;
+  }
+
+  /// Returns only the Latin OR Greek characters from the `String`.
+  /// ### Example
+  /// ```dart
+  /// String foo = '4*%^55/σοφ4e5523ια';
+  /// String onlyL1 = foo.onlyLetters; // returns 'σοφια'
+  /// String foo2 = '4*%^55/es4e5523nt1is';
+  /// String onlyL2 = foo2.onlyLetters; // returns 'esentis'
+  /// ```
+  String get onlyLetters {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    // ignore: unnecessary_raw_strings
+    var regex = RegExp(r'([^α-ωΑ-ΩίϊΐόάέύϋΰήώΊΪΌΆΈΎΫΉΏa-zA-Z\s]+)');
+    return replaceAll(regex, '');
+  }
+
+  /// Returns only the numbers from the `String`.
+  /// ### Example
+  /// ```dart
+  /// String foo = '4*%^55/es4e5523nt1is';
+  /// String onyNumbers = foo.onlyNumbers; // returns '455455231'
+  /// ```
+  String get onlyNumbers {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    // ignore: unnecessary_raw_strings
+    var regex = RegExp(r'([^0-9]+)');
+    return replaceAll(regex, '');
+  }
+
+  /// Returns the integer representation of the string, considering only the numeric characters.
+  /// If the string does not contain any numeric characters, it returns null.
+  int? get onlyNumbersInt => onlyNumbers.toInt;
+
+  /// Splits a pascal case string into individual words.
+  /// Returns a list of strings representing the words in the pascal case string.
+  List<String> get pascalSplit => camelSplit.map((w) => w.capitalizeFirst).whereNotNull().toList();
+
+  /// Returns a string with pascal case split into separate words.
+  ///
+  /// The pascal case string is split into separate words using a space as the separator.
+  /// For example, "PascalSplitString" will be converted to "Pascal Split String".
+  String get pascalSplitString => pascalSplit.join(" ");
+
+  /// Quotes the `String` adding "" at the start & at the end.
+  ///
+  /// Removes all " characters from the `String` before adding the quotes.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String text = '"""Is this real"';
+  /// String quote = text.quote; // "Is this real"
+  /// ```
+  String get quote {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    String normalizedString = replaceAll('"', '');
+
+    return normalizedString.wrap('"');
+  }
+
+  /// remove all break lines from the `String`.
+  string get removeBreakLines {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return removeAny(StringHelpers.breakLineChars);
+  }
+
+  /// Removes diacritics from the string.
+  /// Diacritics are accents or other marks added to letters in some languages.
+  /// If the string is blank, it returns a blank string.
+  /// If a diacritic is not found in the map, it keeps the original character.
+  /// Returns the modified string with diacritics removed.
+  String get removeDiacritics {
+    if (isBlank) return blankIfNull;
+    if (_diacriticsMap.isEmpty) {
+      for (int i = 0; i < _defaultDiacriticsRemovalap.length; i++) {
+        var letters = _defaultDiacriticsRemovalap[i]['letters'];
+        for (int j = 0; j < letters!.length; j++) {
+          _diacriticsMap[letters[j]] = _defaultDiacriticsRemovalap[i]['base'];
+        }
+      }
+    }
+    return replaceAllMapped(_diacriticsRegExp, (a) => _diacriticsMap[a.group(0)] ?? a.group(0));
+  }
+
+  /// Removes only the letters from the `String`.
+  /// ### Example 1
+  /// ```dart
+  /// String foo = 'es4e5523nt1is';
+  /// String noLetters = foo.removeLetters; // returns '455231'
+  /// ```
+  /// ### Example 2
+  /// ```dart
+  /// String foo = '1244e*s*4e*5523n*t*1i*s';
+  /// String noLetters = foo.removeLetters; // returns '1244**4*5523**1*'
+  /// ```
+  String get removeLetters {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    // ignore: unnecessary_raw_strings
+    var regex = RegExp(r'([a-zA-Z]+)');
+    return replaceAll(regex, '');
+  }
+
+  /// Removes only the numbers from the `String`.
+  /// ### Example 1
+  /// ```dart
+  /// String foo = 'es4e5523nt1is';
+  /// String noNumbers = foo.removeNumbers; // returns 'esentis'
+  /// ```
+  /// ### Example 2
+  /// ```dart
+  /// String foo = '1244e*s*4e*5523n*t*1i*s';
+  /// String noNumbers = foo.removeNumbers; // returns 'e*s*e*n*t*i*s'
+  /// ```
+  String get removeNumbers {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    var regex = RegExp(r'(\d+)');
+    return replaceAll(regex, '');
+  }
+
+  /// Returns all special characters from the `String`.
+  /// ### Example
+  /// ```dart
+  /// String foo = '/!@#\$%^\-&*()+",.?":{}|<>~_-`*%^/ese?:"///ntis/!@#\$%^&*(),.?":{}|<>~_-`';
+  /// String removed = foo.removeSpecial; // returns 'esentis'
+  /// ```
+  String get removeSpecial {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    // ignore: unnecessary_raw_strings
+    var regex = RegExp(r'[/!@#$%^\-&*()+",.?":{}|<>~_-`]');
+    return replaceAll(regex, '');
+  }
+
+  /// Removes all whitespace from the `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = '   Hel l o W   orld';
+  /// String striped = foo.removeWhiteSpace; // returns 'HelloWorld';
+  /// ```
+  String get removeWhiteSpace {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return removeAny(StringHelpers.whiteSpaceChars);
+  }
+
+  /// Removes all word splitters from the `String`.
+  string get removeWordSplitters {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return removeAny(StringHelpers.wordSplitters);
+  }
+
+  /// Returns the `String` reversed.
+  /// ### Example
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// String reversed = foo.reverse; // returns 'dlrow olleH'
+  /// ```
+  String get reverse {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    var letters = split('').toList().reversed;
+    return letters.reduce((current, next) => current + next);
+  }
+
+  /// Shuffles the given `String`'s characters.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo1 = 'esentis';
+  /// String shuffled = foo.shuffle; // 'tsniees'
+  /// ```
+  String get shuffle {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    var stringArray = toArray;
+    stringArray.shuffle();
+    return stringArray.join();
+  }
+
+  /// Returns the singular form of a plural noun.
+  /// If the string ends with 'ies', it removes the last 3 characters and appends 'y'.
+  /// If the string ends with 'es', it removes the last 2 characters.
+  /// If the string ends with 's', it removes the last character.
+  /// If none of the above conditions are met, it returns the original string.
+  String get singular {
+    if (endsWith('ies')) {
+      return '${removeLast(3)}y';
+    } else if (endsWith('es')) {
+      return removeLast(2);
+    } else if (endsWith('s')) {
+      return removeLast(1);
+    }
+    return this;
+  }
+
+  /// Returns the singular form of a Portuguese word.
+  /// If the word ends with 'ões', it removes the last 3 characters and appends 'ão'.
+  /// If the word ends with 'ães', it removes the last 3 characters and appends 'ão'.
+  /// If the word ends with 's', it removes the last character.
+  /// Otherwise, it returns the original word.
+  String get singularPt {
+    if (endsWith('ões')) {
+      return '${removeLast(3)}ão';
+    } else if (endsWith('ães')) {
+      return '${removeLast(3)}ão';
+    } else if (endsWith('s')) {
+      return removeLast(1);
+    }
+    return this;
+  }
+
+  /// Splits the `String` into a `List` of lines ('\r\n' or '\n').
+  ///
+  /// If the `String` is `null`, an `ArgumentError` is thrown.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String text = 'hello\nworld';
+  /// List<String> lines = text.splitLines();
+  /// print(lines); // prints ['hello', 'world']
+  /// ```
+  List<String> get splitLines => split(RegExp(r'\r?\n'));
+
+  /// Strips all HTML code from `String`.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String html = '<script>Hacky hacky.</script> <p>Here is some text. <span class="bold">This is bold. </span></p>';
+  /// String stripped = foo.stripHtml; // returns 'Hacky hacky. Here is some text. This is bold.';
+  /// ```
+  String get stripHtml {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    // ignore: unnecessary_raw_strings
+    var regex = RegExp(r'<[^>]*>');
+    return replaceAll(regex, '');
+  }
+
+  /// Returns a list of the `String`'s characters.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'abracadabra';
+  /// List<String> fooArray = foo.toArray; // returns '[a,b,r,a,c,a,d,a,b,r,a]'
+  /// ```
+  List<String> get toArray {
+    if (isBlank) {
+      return [];
+    }
+
+    return split('');
+  }
+
+  /// Try parse a bool value. See [asBool] to convert strings into [bool] in a more efficient way
+  bool? get toBool => bool.tryParse(this, caseSensitive: false);
+
+  /// Returns the `String` in Camel Case.
+  /// ### Example
+  /// ```dart
+  /// String foo = 'Find max of array';
+  /// String camelCase = foo.toCamelCase; // returns 'findMaxOfArray'
+  /// ```
+  String get toCamelCase {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    var words = trim().split(RegExp(r'(\s+)'));
+    var result = words[0].toLowerCase();
+    for (var i = 1; i < words.length; i++) {
+      result += "${words[i].substring(0, 1).toUpperCase()}${words[i].substring(1).toLowerCase()}";
+    }
+    return result;
+  }
+
+  /// Returns a string in camel case format by splitting the original string using word splitters and joining them together.
+  ///
+  /// Example:
+  /// ```dart
+  /// String input = "hello_world";
+  /// String result = input.toCamelCaseJoin;
+  /// print(result); // Output: "helloWorld"
+  /// ```
+  string get toCamelCaseJoin => toCamelCase.splitAny(StringHelpers.wordSplitters).join('');
+
+  /// Converts a `String` to`double` if possible.
+  ///
+  /// If conversion fails, `null` is returned.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = '4';
+  /// int fooInt = foo.toDouble(); // returns 4.0;
+  /// ```
+  /// ```dart
+  /// String foo = '4f';
+  /// var fooNull = foo.toDouble(); // returns null;
+  /// ```
+  double? get toDouble {
+    if (isBlank) {
+      return null;
+    }
+
+    return double.tryParse(this);
+  }
+
+  double get toDoubleOrZero => toDouble ?? 0.0;
+
+  /// Converts a `String` to`int` if possible.
+  ///
+  /// If conversion fails, `null` is returned.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = '4';
+  /// int fooInt = foo.toInt(); // returns 4;
+  /// ```
+  /// ```dart
+  /// String foo = '4f';
+  /// var fooNull = foo.toInt(); // returns null;
+  /// ```
+  /// ```dart
+  /// String foo = '4.0';
+  /// var fooNull = foo.toInt(); // returns 4;
+  /// ```
+  int? get toInt {
+    if (isBlank) {
+      return null;
+    }
+
+    return int.tryParse(this) ?? double.tryParse(this)?.floor();
+  }
+
+  int get toIntOrZero => toInt ?? 0;
+
+  /// Transforms the `String` to 1337 alphabet.
+  ///
+  /// The letters are randomized since each letter can have multiple variations.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'esentis';
+  /// String leet = foo.toLeet ; // returns '€5£п+!$';
+  /// ```
+  String get toLeet {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    final letters = split('');
+
+    final leetLetters = [];
+    for (var e in letters) {
+      final count = StringHelpers.leetAlphabet[e].length;
+      final random = Random().nextInt(count);
+      leetLetters.add(StringHelpers.leetAlphabet[e][random]);
+    }
+
+    return leetLetters.join();
+  }
+
+  /// Converts a `String` to a numeric value if possible.
+  ///
+  /// If conversion fails, `null` is returned.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = '4';
+  /// int fooInt = foo.toNum(); // returns 4;
+  /// ```
+  /// ```dart
+  /// String foo = '4f';
+  /// var fooNull = foo.toNum(); // returns null;
+  /// ```
+  num? get toNum {
+    if (isBlank) {
+      return null;
+    }
+
+    return num.tryParse(this);
+  }
+
+  num get toNumOrZero => toNum ?? 0;
+
+  /// Interprets a string in various ways and transforms it into a `Size` object.
+  ///
+  /// Returns a `Size` object.
+  Size get toSize {
+    var text = this;
+    text = text.replaceMany(["px", ";"], " ").toLowerCase().trimAll;
+    text = text.replaceMany(["largura", "width", "a "], "w ");
+    text = text.replaceMany(["altura", "height", "l "], "h ");
+
+    try {
+      if (text.isNumber) {
+        return Size(text.trimAll.toDoubleOrZero, text.trimAll.toDoubleOrZero);
+      } else if (text.isLike("width*") && !text.isLike("*height*")) {
+        return Size(text.after("width").trimAll.toDoubleOrZero, text.after("width").trimAll.toDoubleOrZero);
+      } else if (text.isLike("height*") && !text.isLike("*width*")) {
+        return Size(text.after("height").trimAll.toDoubleOrZero, text.after("height").trimAll.toDoubleOrZero);
+      } else if (text.isLike("w*") && !text.isLike("*h*")) {
+        return Size(text.after("w").trimAll.toDoubleOrZero, text.after("w").trimAll.toDoubleOrZero);
+      } else if (text.isLike("h*") && !text.isLike("*w*")) {
+        return Size(text.after("h").trimAll.toDoubleOrZero, text.after("h").trimAll.toDoubleOrZero);
+      } else if (text.isLike("width*height*")) {
+        return Size(text.between("width", "height").trimAll.toDoubleOrZero, text.after("height").trimAll.toDoubleOrZero);
+      } else if (text.isLike("height*width*")) {
+        return Size(text.between("height", "width").trimAll.toDoubleOrZero, text.after("width").trimAll.toDoubleOrZero);
+      } else if (text.isLike("w*h*")) {
+        return Size(text.between("w", "h").trimAll.toDoubleOrZero, text.after("h").trimAll.toDoubleOrZero);
+      } else if (text.isLike("h*w*")) {
+        return Size(text.between("h", "w").trimAll.toDoubleOrZero, text.after("w").trimAll.toDoubleOrZero);
+      } else if (text.isLike("*x*")) {
+        return Size(text.split("x").first.trimAll.toDoubleOrZero, text.split("x").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*by*")) {
+        return Size(text.split("by").first.trimAll.toDoubleOrZero, text.split("by").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*por*")) {
+        return Size(text.split("por").first.trimAll.toDoubleOrZero, text.split("por").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*,*")) {
+        return Size(text.split(",").first.trimAll.toDoubleOrZero, text.split(",").last.toDoubleOrZero);
+      } else if (text.isLike("*-*")) {
+        return Size(text.split("-").first.trimAll.toDoubleOrZero, text.split("-").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*_*")) {
+        return Size(text.split("_").first.trimAll.toDoubleOrZero, text.split("_").last.trimAll.toDoubleOrZero);
+      } else if (text.isLike("*:*")) {
+        return Size(text.split("_").first.trimAll.toDoubleOrZero, text.split("_").last.trimAll.toDoubleOrZero);
+      } else {
+        return Size(text.split(" ").first.trimAll.toDoubleOrZero, text.split(" ").last.trimAll.toDoubleOrZero);
+      }
+    } catch (e) {
+      return Size.zero;
+    }
+  }
+
+  /// Returns the `String` to slug case.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'sLuG Case';
+  /// String fooSlug = foo.toSlug; // returns 'sLuG_Case'
+  /// ```
+  String get toSlugCase {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    var words = trim().split(RegExp(r'(\s+)'));
+    var slugWord = '';
+
+    if (length == 1) {
+      return this;
+    }
+    for (var i = 0; i <= words.length - 1; i++) {
+      if (i == words.length - 1) {
+        slugWord += words[i];
+      } else {
+        slugWord += '${words[i]}_';
+      }
+    }
+    return slugWord;
+  }
+
+  /// Returns the `String` to snake_case.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'SNAKE CASE';
+  /// String fooSNake = foo.toSnakeCase; // returns 'snake_case'
+  /// ```
+  String get toSnakeCase {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    var words = toLowerCase().trim().split(RegExp(r'(\s+)'));
+    var snakeWord = '';
+
+    if (length == 1) {
+      return this;
+    }
+    for (var i = 0; i <= words.length - 1; i++) {
+      if (i == words.length - 1) {
+        snakeWord += words[i];
+      } else {
+        snakeWord += '${words[i]}_';
+      }
+    }
+    return snakeWord;
+  }
+
+  /// Returns the `String` title cased.
+  ///
+  /// ```dart
+  /// String foo = 'Hello dear friend how you doing';
+  /// Sting titleCased = foo.toTitleCase; // returns 'Hello Dear Friend How You Doing'.
+  /// ```
+  String get toTitleCase {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    var words = trim().split(RegExp(r'\s+'));
+    var result = '';
+
+    for (var word in words) {
+      if (word.isNotEmpty) {
+        result += '${word[0].toUpperCase()}${word.substring(1).toLowerCase()} ';
+      }
+    }
+
+    return result.trim();
+  }
+
+  /// Trims leading and trailing spaces from the `String`, so as extra spaces in between words.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String text = '    esentis    thinks   ';
+  /// String trimmed = text.trimAll ; // returns 'esentis thinks'
+  /// ```
+  String get trimAll {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return splitLines.where((x) => x.isNotBlank).map((value) {
+      // Remove spaces before any of this chars (using replaceAllMapped):
+      //:,.;?!.,)]}
+      value = value.replaceAllMapped(RegExp(r'\s+([\%:,.;?!\)\]})])'), (match) {
+        return match.group(1) ?? '';
+      });
+
+      // Remove spaces after any of this chars (using replaceAllMapped):
+      // ([{
+      value = value.replaceAllMapped(RegExp(r'([\(\[\{])\s+'), (match) {
+        return match.group(1) ?? '';
+      });
+
+      // Remove extra spaces between words
+      value = value.replaceAll(RegExp(r'\s+'), ' ');
+
+      return value.trim();
+    }).join("\r\n");
+  }
+
+  /// Returns the URL-decoded version of the string.
+  ///
+  /// Example:
+  /// ```dart
+  /// String encodedUrl = 'https%3A%2F%2Fexample.com%2F%3Fq%3Dhello%20world';
+  /// String decodedUrl = encodedUrl.urlDecode;
+  /// print(decodedUrl); // Output: https://example.com/?q=hello world
+  /// ```
+  String get urlDecode => Uri.decodeQueryComponent(this);
+
+  /// Returns the URL-encoded version of the string.
+  ///
+  /// Example:
+  /// ```dart
+  /// String url = 'https://example.com/?q=hello world';
+  /// String encodedUrl = url.urlEncode;
+  /// print(encodedUrl); // Output: https%3A%2F%2Fexample.com%2F%3Fq%3Dhello%20world
+  /// ```
+  String get urlEncode => Uri.encodeQueryComponent(this);
+
+  /// Removes a text from the `String`.
+  String operator -(String? s) {
+    if (isBlank) {
+      return '';
+    }
+    if (s.isBlank) {
+      return this;
+    }
+    return replaceAll(s!, '');
+  }
+
+  /// slice a string into chunks
+  strings operator /(int chunkSize) {
+    List<String> chunks = [];
+    if (isNotBlank) {
+      for (int i = 0; i < length; i += chunkSize) {
+        chunks.add(substring(i, i + chunkSize));
+      }
+    }
+    return chunks;
+  }
+
+  /// Checks if the [length!] of the `String` is less than the length of [s].
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello';
+  /// bool isLess = foo < 'Hi'; // returns false.
+  /// ```
+  bool operator <(String s) => length < s.length;
+
+  /// Checks if the [length!] of the `String` is less or equal than the length of [s].
+  ///
+  /// If the `String` is null or empty, it returns false.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello';
+  /// bool isLessOrEqual = foo <= 'Hi'; // returns false.
+  /// ```
+  bool operator <=(String s) => length <= s.length;
+
+  /// Checks if the [length!] of the `String` is more than the length of [s].
+  ///
+  /// If the `String` is null or empty, it returns false.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello';
+  /// bool isMore = foo > 'Hi'; // returns true.
+  /// ```
+  bool operator >(String s) {
+    return length > s.length;
+  }
+
+  /// Checks if the [length!] of the `String` is more or equal than the length of [s].
+
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello';
+  /// bool isMoreOrEqual = foo >= 'Hi'; // returns true.
+  /// ```
+  bool operator >=(String s) => length >= s.length;
+
+  /// Adds a `String` after the first match of the [pattern]. The [pattern] should not be `null`.
+  ///
+  /// If there is no match, the `String` is returned unchanged.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String test = 'hello brother what a day today';
+  /// String afterString = test.addAfter('brother', ' sam '); // returns 'hello brother sam what a day today ';
+  /// ```
+  String addAfter(String pattern, String addition) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    if (!contains(pattern)) {
+      return blankIfNull;
+    }
+
+    List<String> patternWords = pattern.split(' ');
+
+    if (patternWords.isEmpty) {
+      return '';
+    }
+    int indexOfLastPatternWord = indexOf(patternWords.last);
+
+    if (patternWords.last.isEmpty) {
+      return '';
+    }
+
+    return substring(0, indexOfLastPatternWord + 1) + addition + substring(indexOfLastPatternWord + 1, length);
+  }
+
+  /// Adds a `String` before the first match of the [pattern]. The [pattern] should not be `null`.
+  ///
+  /// If there is no match, the `String` is returned unchanged.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String test = 'hello brother what a day today';
+  /// String afterString = test.addBefore('brother', 'big '); // returns 'hello big brother what a day today';
+  /// ```
+  String addBefore(String pattern, String adition) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    if (!contains(pattern)) {
+      return blankIfNull;
+    }
+
+    List<String> patternWords = pattern.split(' ');
+
+    if (patternWords.isEmpty) {
+      return '';
+    }
+    int indexOfFirstPatternWord = indexOf(patternWords.first);
+
+    if (patternWords.last.isEmpty) {
+      return '';
+    }
+
+    return substring(0, indexOfFirstPatternWord) +
+        adition +
+        substring(
+          indexOfFirstPatternWord,
+          length,
+        );
+  }
+
+  /// Returns the right side of the `String` starting from [char].
+  ///
+  /// If [char] doesn't exist, `null` is returned.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  ///  String s = 'peanutbutter';
+  ///  String foo = s.rightOf('peanut'); // returns 'butter'
+  /// ```
+  String after(String char) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    int index = indexOf(char);
+
+    if (index == -1) {
+      return "";
+    }
+    return substring(index + char.length, length);
+  }
+
+  /// Appends a [suffix] to the `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'hello';
+  /// String newFoo = foo1.append(' world'); // returns 'hello world'
+  /// ```
+  String append(String? suffix) {
+    if (isBlank) {
+      return suffix ?? "";
+    }
+
+    return this + (suffix ?? "");
+  }
+
+  /// Applies XOR operation between the [this] string and the [key] string.
+  ///
+  /// The [input] string is converted to a list of UTF-16 code units, and the [key] string is also converted to a list of UTF-16 code units.
+  /// The XOR operation is then applied between each code unit of the [input] string and the corresponding code unit of the [key] string.
+  /// If the [key] string is shorter than the [input] string, the key will be repeated cyclically.
+  ///
+  /// Returns the result of the XOR operation as a new string.
+  String applyXorEncrypt(String key) {
+    List<int> inputBytes = codeUnits;
+    List<int> keyBytes = key.codeUnits;
+    List<int> resultBytes = [];
+
+    for (int i = 0; i < inputBytes.length; i++) {
+      resultBytes[i] = inputBytes[i] ^ keyBytes[i % keyBytes.length];
+    }
+
+    return String.fromCharCodes(resultBytes);
+  }
+
+  /// Compares [this] using [comparison] and returns [trueString] if true, otherwise return [falseString].
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String s = 'OK'.asIf((s) => s == "OK", "is OK", "is not OK"); // returns "is OK";
+  /// ```
+  String? asIf(bool Function(String?) comparison, String? trueString, String? falseString) => comparison(this) ? trueString : falseString;
+
+  /// Returns the left side of the `String` starting from [char].
+  ///
+  /// If [char] doesn't exist, `null` is returned.
+  /// ### Example
+  ///
+  /// ```dart
+  ///  String s = 'peanutbutter';
+  ///  String foo = s.getBefore('butter'); // returns 'peanut'
+  /// ```
+  String before(String char) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    int index = indexOf(char);
+    if (index == -1) {
+      return "";
+    }
+
+    return substring(0, index);
+  }
+
+  /// Returns the text between [before] and [after] strings.
+  ///
+  /// If [before] or [after] are not found, an empty string is returned.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String text = 'Hello [world]!';
+  /// String result = text.between('[', ']'); // returns 'world'
+  /// ```
+  String between(String before, String after) => this.before(before).after(after);
+
+  String blankIf(bool Function(String? s) fn) => asIf(fn, "", this) ?? "";
+
+  String? blankIfEqual(String? comparisonString) => blankIf((s) => s == comparisonString);
+
+  /// change a date string from a format to another format
+  string changeDateFormat(string toFormat, [string? fromFormat, string? locale]) => toDate(fromFormat, locale).format(toFormat);
+
+  /// Returns the character at [index] of the `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo1 = 'esentis';
+  /// String char1 = foo1.charAt(0); // returns 'e'
+  /// String char2 = foo1.charAt(4); // returns 'n'
+  /// String? char3 = foo1.charAt(-20); // returns ''
+  /// String? char4 = foo1.charAt(20); // returns ''
+  /// ```
+  String charAt(int index) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    if (index > length) {
+      return '';
+    }
+    if (index < 0) {
+      return '';
+    }
+    return toArray[index];
+  }
+
+  /// Returns a `Set` of the common characters between the two `String`s.
+  ///
+  /// The `String` is case sensitive & sorted by default.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// List<String> commonLetters = foo.commonCharacters('World Hello'); // returns ['H', 'e', 'l', 'o', 'r', 'w', 'd'];
+  /// ```
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// List<String> commonLetters = foo.commonCharacters('World Hello!'); // returns ['H', 'e', 'l', 'o', 'r', 'w', 'd'];
+  /// ```
+  Set<String> commonCharacters(
+    String otherString, {
+    bool caseSensitive = true,
+    bool sort = true,
+    bool includeSpaces = false,
+  }) {
+    if (isBlank) {
+      return {};
+    }
+
+    String processString(String input) {
+      return (caseSensitive ? input : input.toLowerCase()).split('').where((char) => includeSpaces || char != ' ').join('');
+    }
+
+    final Set<String> commonLettersSet = {};
+    final Set<String> otherStringSet = processString(otherString).split('').toSet();
+
+    for (final letter in processString(this).split('')) {
+      if (otherStringSet.contains(letter)) {
+        commonLettersSet.add(letter);
+      }
+    }
+
+    if (sort) {
+      final List<String> sortedList = commonLettersSet.toList()..sort();
+      return sortedList.toSet();
+    } else {
+      return commonLettersSet;
+    }
+  }
+
+  /// Checks if the `String` matches **ALL** given [patterns].
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// bool contains = "abracadabra".containsAll(["abra", "cadabra"]; // returns true;
+  /// ```
+  bool containsAll(Iterable<string?> patterns) {
+    for (String? item in patterns.where((element) => element.isNotBlank)) {
+      if (isBlank || contains(item!) == false) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Checks whether all characters are contained in the `String`.
+  ///
+  /// The method is case sensitive by default.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// bool containsAll = foo.containsAllCharacters('Hello'); // returns true;
+  /// ```
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// bool containsAll = foo.containsAllCharacters('Hello!'); // returns false;
+  /// ```
+  bool containsAllCharacters(String characters) {
+    if (isBlank) {
+      return false;
+    }
+    final Map<String, int> letterCounts = {};
+
+    for (var letter in toArray) {
+      letterCounts[letter] = (letterCounts[letter] ?? 0) + 1;
+    }
+
+    for (final letter in characters.toArray) {
+      if (letterCounts[letter] == null || letterCounts[letter]! <= 0) {
+        return false;
+      }
+      letterCounts[letter] = letterCounts[letter]! - 1;
+    }
+
+    return true;
+  }
+
+  /// Checks if the `String` matches **ANY** of the given [patterns].
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// bool contains = "abracadabra".containsAny(["a", "p"]); // returns true;
+  /// ```
+  bool containsAny(Iterable<string?> patterns) {
+    if (isNotBlank) {
+      for (String? item in patterns.where((element) => element.isNotBlank)) {
+        if (contains(item!)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /// Counts the occurrences of a substring within a string.
+  ///
+  /// This function searches through the provided [String] for instances
+  /// of the [subString] and returns the total number of occurrences found.
+  ///
+  /// Parameters:
+  ///   [subString] - The substring to count within the [String].
+  ///
+  /// Returns the number of times [subString] appears in [String].
+  int count([String subString = ""]) {
+    if (subString.isBlank) {
+      return length;
+    }
+    int count = 0;
+    int startIndex = 0;
+
+    // Use indexOf to find the substring in the string
+    // Loop until the substring is not found
+    while ((startIndex = indexOf(subString, startIndex)) != -1) {
+      // Increment the count for each occurrence
+      count++;
+      // Move past the last found substring
+      startIndex += subString.length;
+    }
+
+    return count;
+  }
+
+  /// Return a empty `String` if [this] equals [comparisonString]. Otherwise return [this].
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String t = 'OK'.emptyIf("OK"); // returns "";
+  /// String f = 'NO'.emptyIf("YES"); // returns "NO";
+  /// ```
+  String emptyIf(String? comparisonString) => asIf((s) => s == comparisonString, "", this).blankIfNull;
+
+  /// Checks if the string ends with any of the provided strings.
+  /// Returns `true` if the string ends with any of the provided strings, `false` otherwise.
+  bool endsWithAny(Iterable<String> strings) => strings.any((element) => endsWith(element));
+
+  /// Fetches Google suggestions based on the given language.
+  /// Returns a list of suggestions as strings.
+  /// If the language is not provided, it defaults to an empty string.
+  Future<List<String>> fetchGoogleSuggestions({String language = ""}) async {
+    if (isNotBlank) {
+      final url = Uri.https('suggestqueries.google.com', '/complete/search', {
+        'output': 'toolbar',
+        if (language.isNotBlank) 'hl': language,
+        'q': this,
+        'gl': 'in',
+      });
+      try {
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          // Parse the XML response
+          final xmlData = response.body;
+          // Extract suggestions from the XML (you can use an XML parsing library)
+          // For simplicity, let's assume the suggestions are separated by '<suggestion data="..."/>'
+          final suggestionRegex = RegExp(r'<suggestion data="([^"]+)"');
+          final matches = suggestionRegex.allMatches(xmlData);
+          final suggestions = matches.map((match) => match.group(1)?.urlDecode.trimAll).distinct().toList();
+          return suggestions.whereNotNull().toList();
+        }
+      } catch (e) {
+        consoleLog('Error fetching suggestions: $e');
+      }
+    }
+    return [];
+  }
+
+  /// Procura valores em uma string usando expressões regulares
+  List<String> findByRegex(String pattern, {bool caseSensitive = true, bool multiLine = false}) {
+    RegExp regExp = RegExp(
+      pattern,
+      caseSensitive: caseSensitive,
+      multiLine: multiLine,
+    );
+
+    return regExp.allMatches(this).map((match) => match.group(0)!).toList();
+  }
+
+  /// Procura numeros em uma string e retorna uma lista deles
+  List<String> findNumbers() {
+    var l = <String>[];
+    var numbers = split(RegExp(r'\D+'));
+    for (var value in numbers) {
+      if (value.isNotEmpty) {
+        l.add(value);
+      }
+    }
+    return l;
+  }
+
+  /// Given a pattern returns the starting indices of all occurrences of the [pattern] in the `String`.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'abracadabra';
+  /// String fooOccs = foo.findPatterns(pattern:'abr'); // returns '[0, 7]'
+  /// ```
+  List<int> findPattern({required String pattern}) {
+    if (isBlank) {
+      return [];
+    }
+
+    // ignore: omit_local_variable_types
+    List<int> occurrences = [];
+    // How many times the pattern can fit the text provided
+    var fitCount = (length / pattern.length).truncate().toInt();
+
+    if (fitCount > length) {
+      return [];
+    }
+    if (fitCount == 1) {
+      if (this == pattern) {
+        return [0];
+      }
+      return [];
+    }
+
+    for (var i = 0; i <= length; i++) {
+      if (i + pattern.length > length) {
+        return occurrences;
+      }
+      if (substring(i, i + pattern.length) == pattern) {
+        occurrences.add(i);
+      }
+    }
+
+    return occurrences;
+  }
+
+  /// Returns the first [n] characters of the `String`.
+  ///
+  /// [n] is optional, by default it returns the first character of the `String`.
+  ///
+  /// - If [n] provided is longer than the `String`'s length, the string will be returned.
+  /// - If [n] is negative, it will return the string without the first [n] characters.
+  ///
+  /// ### Example 1
+  /// ```dart
+  /// String foo = 'hello world';
+  /// String firstChars = foo.first(); // returns 'h'
+  /// ```
+  /// ### Example 2
+  /// ```dart
+  /// String foo = 'hello world';
+  /// bool firstChars = foo.first(3); // returns 'hel'
+  /// ```
+  String first([int n = 1]) {
+    if (n < 0) {
+      n = length + n;
+    }
+    if (n <= 0) {
+      return "";
+    }
+    if (isBlank || length < n) {
+      return blankIfNull;
+    }
+
+    return substring(0, n);
+  }
+
+  /// Returns the first day of the month from the provided `DateTime` in `String` format.
+  ///
+  /// If the date is in `DateTime` format, you can convert it to `String` `DateTime().toString()`.
+  ///
+  /// You can provide the [locale] to filter the result to a specific language.
+  ///
+  /// Defaults to 'en-US'.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String date = '2021-10-23';
+  /// String day = date.firstDayOfDate(); // returns 'Friday'
+  /// String grDay = date.firstDayOfDate(locale:'el'); // returns 'Παρασκευή'
+  /// ```
+  String firstDayOfMonth({String? format, String? locale}) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return toDate(format, locale).firstDayOfMonth.format('EEEE');
+  }
+
+  /// Returns the first element after splitting the string using the specified [pattern].
+  /// If the string cannot be split, it returns the original string.
+  string firstSplit(Pattern pattern) => split(pattern).first;
+
+  /// Reverses slash in the `String`, by providing [backSlash],
+  /// - if [backSlash] is `true` it will replace all `/` with `\\`.
+  /// - if [backSlash] is `false` it will replace all `\\` with `/`.
+  /// - if [backSlash] is `null` it will replace all slashes into the most common one.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo1 = 'C:/Documents/user/test';
+  /// String revFoo1 = foo1.fixSlash(true); // returns 'C:\Documents\user\test'
+  ///
+  /// String foo2 = 'C:\\Documents\\user\\test';
+  /// String revFoo2 = foo1.fixSlash(false); // returns 'C:/Documents/user/test'
+  ///
+  /// String foo3 = 'C:/Documents\\user/test';
+  /// String revFoo3 = foo1.fixSlash(); // returns 'C:/Documents/user/test'
+  ///
+  /// String foo4 = 'C:/Documents\\user\\test';
+  /// String revFoo4 = foo1.fixSlash(null); // returns 'C:\\Documents\\user\\test'
+  /// ```
+  String fixSlash([bool? backSlash]) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    backSlash ??= count('\\') > count('/');
+    return backSlash ? replaceAll('/', '\\') : replaceAll('\\', '/');
+  }
+
+  /// Inspired from Vincent van Proosdij.
+  ///
+  /// Formats the `String` with a specific mask.
+  ///
+  /// You can assign your own [specialChar], defaults to '#'.
+  ///
+  /// ### Example
+  /// ```dart
+  ///var string3 = 'esentisgreece';
+  ///var mask3 = 'Hello ####### you are from ######';
+  ///var masked3 = string3.formatWithMask(mask3); // returns 'Hello esentis you are from greece'
+  /// ```
+  String formatWithMask(String mask, {String specialChar = '#'}) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    //var buffer = StringBuffer();
+    var maskChars = mask.toArray;
+    var index = 0;
+    var out = '';
+    for (var m in maskChars) {
+      if (m == specialChar) {
+        if (index < length) {
+          out += this[index];
+          index++;
+        }
+      } else {
+        out += m;
+      }
+    }
+    return out;
+  }
+
+  /// Returns the day name of the date provided in `String` format.
+  ///
+  /// If the date is in `DateTime` format, you can convert it to `String` `DateTime().toString()`.
+  ///
+  /// You can provide the [locale] to filter the result to a specific language.
+  ///
+  /// Defaults to 'en-US'.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String date = '2021-10-23';
+  /// String day = date.getDayFromDate(); // returns 'Saturday'
+  /// String grDay = date.getDayFromDate(locale:'el'); // returns 'Σάββατο'
+  /// ```
+  String getDayFromDate({String? format, String? locale}) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return toDate(format, locale).format('EEEE');
+  }
+
+  /// The Jaro distance is a measure of edit distance between two strings
+  ///
+  /// its inverse, called the Jaro similarity, is a measure of two `String`'s similarity:
+  ///
+  /// the higher the value, the more similar the strings are.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String t1 = 'esentis';
+  /// String t2 = 'esen';
+  /// print(t1.getJaro(t2)); // prints 0.8571428571428571
+  /// ```
+  double getJaro(String other, [bool caseSensitive = true]) {
+    if (other == this) {
+      return 1;
+    }
+
+    if (other.isBlank || isBlank) {
+      return 0;
+    }
+
+    if (!caseSensitive) {
+      return toLowerCase().getJaro(other.toLowerCase());
+    }
+    int len1 = length;
+    int len2 = other.length;
+
+    // Maximum allowed matching distance
+    int matchDistance = (max(len1, len2) ~/ 2) - 1;
+
+    // Arrays to track character matches
+    List<bool> s1Matches = List.filled(len1, false);
+    List<bool> s2Matches = List.filled(len2, false);
+
+    int commonMatches = 0;
+    for (int i = 0; i < len1; i++) {
+      int start = max(0, i - matchDistance);
+      int end = min(len2 - 1, i + matchDistance);
+
+      for (int j = start; j <= end; j++) {
+        if (!s2Matches[j] && this[i] == other[j]) {
+          s1Matches[i] = true;
+          s2Matches[j] = true;
+          commonMatches++;
+          break;
+        }
+      }
+    }
+
+    if (commonMatches == 0) {
+      return 0.0;
+    }
+
+    // Calculate transpositions
+    int transpositions = 0;
+    int k = 0;
+    for (int i = 0; i < len1; i++) {
+      if (s1Matches[i]) {
+        while (!s2Matches[k]) {
+          k++;
+        }
+        if (this[i] != other[k]) {
+          transpositions++;
+        }
+        k++;
+      }
+    }
+
+    return (commonMatches.toDouble() / len1 + commonMatches.toDouble() / len2 + (commonMatches - transpositions).toDouble() / commonMatches) / 3.0;
+  }
+
+  /// The Levenshtein distance between two words is the minimum number of single-character
+  ///
+  /// edits (insertions, deletions or substitutions) required to change one word into the other.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo1 = 'esentis';
+  /// int dist = foo.getLevenshtein('esentis2'); // 1
+  /// ```
+  int getLevenshtein(String other, [bool caseSensitive = true]) {
+    if (isBlank) {
+      return other.length;
+    }
+
+    if (other.isBlank) {
+      return length;
+    }
+
+    if (!caseSensitive) {
+      return toLowerCase().getLevenshtein(other.toLowerCase());
+    }
+
+    List<int> costs = List<int>.filled(other.length + 1, 0);
+
+    for (var j = 0; j <= other.length; j++) {
+      costs[j] = j;
+    }
+
+    for (var i = 1; i <= length; i++) {
+      int nw = costs[0];
+      costs[0] = i;
+
+      for (var j = 1; j <= other.length; j++) {
+        int cj = min(1 + min(costs[j], costs[j - 1]), this[i - 1] == other[j - 1] ? nw : nw + 1);
+        nw = costs[j];
+        costs[j] = cj;
+      }
+    }
+
+    return costs[other.length];
+  }
+
+  /// Returns the month name of the date provided in `String` format.
+  ///
+  /// If the date is in `DateTime` format, you can convert it to `String` `DateTime().toString()`.
+  ///
+  /// You can provide the [locale] to filter the result to a specific language.
+  ///
+  /// Defaults to 'en-US'.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String date = '2021-10-23';
+  /// String month = date.getMonthFromDate(); // returns 'August'
+  /// String grMonth = date.getMonthFromDate(locale:'el'); // returns 'Αυγούστου'
+  /// ```
+  String getMonthFromDate({String? format, String? locale}) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return toDate(format, locale).format('MMMM');
+  }
+
+  bool hasMatch(String pattern) => RegExp(pattern).hasMatch(this);
+
+  /// Adds indentation to a string based on the specified deep level and indentation characters.
+  ///
+  /// The [deepLevel] parameter specifies the number of indentation levels to add.
+  /// The [identWith] parameter specifies the characters used for indentation. By default, it is a single space character.
+  /// - If [identWith] is a single character, it will be repeated for each indentation level.
+  /// - If [identWith] is a two-character string, the first character will be repeated for each indentation level, and the second character will be used for the last indentation level.
+  /// - If [identWith] is a multi-character string, the first character will be used for the first indentation level, the last character will be used for the last indentation level, and the middle characters will be repeated to fill the remaining space.
+  /// The [multiplier] parameter specifies the number of times to repeat the indentation characters for each level.
+  /// ## Example
+  /// ```dart
+  /// String text = ' Hello, world!';
+  /// String indentedText = text.identWith(4, '>=>');
+  /// print(indentedText); // Output: '>==> Hello, world!'
+  /// ```
+  /// ```dart
+  /// String text = ' Hello, world!';
+  /// String indentedText = text.identWith(2, '  ');
+  /// print(indentedText); // Output: '    Hello, world!'
+  /// ```
+
+  String identWith(int deepLevel, [String identWith = " ", int multiplier = 1]) {
+    if (deepLevel == 0) return this;
+    var ii = identArrow(length: deepLevel * multiplier.clampMin(1), pattern: identWith);
+    if (deepLevel > 0) {
+      return ii + this;
+    } else {
+      return this + ii;
+    }
+  }
+
+  /// Return [this] if not blank. Otherwise return [newString].
+  S ifBlank<S extends string>(S newString) => asIf((s) => (s ?? "").isNotBlank, this, newString) as S;
+
+  /// Inserts a `String` at the specified index.
+  ///
+  /// If the `String` is `null`, an `ArgumentError` is thrown.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String text = 'hello world';
+  /// String newText = text.insertAt(5, '!');
+  /// print(newText); // prints 'hello! world'
+  /// ```
+  String insertAt(int i, String value) {
+    if (i < 0) {
+      i = 0;
+    }
+    if (i > length) {
+      i = length;
+    }
+    final start = substring(0, i);
+    final end = substring(i);
+    return start + value + end;
+  }
+
+  /// Checks whether the `String` is an anagram of the provided `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// bool isAnagram = foo.isAnagram('World Hello'); // returns true;
+  /// ```
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// bool isAnagram = foo.isAnagram('World Hello!'); // returns false;
+  /// ```
+  bool isAnagramOf(String s) {
+    if (isBlank || s.isBlank) {
+      return false;
+    }
+    final String word1 = removeWhiteSpace;
+
+    final String word2 = s.removeWhiteSpace;
+
+    if (word1.length != word2.length) {
+      return false;
+    }
+
+    Map<String, int> charCount = {};
+
+    word1.split('').forEach((char) => charCount[char] = (charCount[char] ?? 0) + 1);
+
+    word2.split('').forEach((char) => charCount[char] = (charCount[char] ?? 0) - 1);
+
+    return charCount.values.every((count) => count == 0);
+  }
+
+  /// Checks if the `String` exists in a given `Iterable<String>`
+  /// ### Example
+  /// ```dart
+  /// String foo = '6d64-4396-8547-1ec1b86e081e';
+  /// var iterable = ['fff','gasd'];
+  /// bool isIn = foo.isIn(iterable); // returns false
+  /// ```
+  bool isIn(Iterable<String> strings) => isNotBlank && strings.isNotEmpty && strings.contains(this);
+
+  /// Checks if the `String` is a valid `json` format.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = '{"name":"John","age":30,"cars":null}';
+  /// bool isJson = foo.isJson; // returns true
+  /// ```
+  bool isJson() {
+    if (isBlank) {
+      return false;
+    }
+    try {
+      jsonDecode(this);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Checks if a given [value] matches a [mask] pattern.
+  ///
+  /// The [mask] pattern can contain wildcard characters:
+  /// - `*` matches any sequence of characters (including an empty sequence).
+  /// - `?` matches any single character.
+  ///
+  /// Returns `true` if the [value] matches the [mask] pattern, `false` otherwise.
+  bool isLike(string mask, [bool caseSensitive = false]) =>
+      RegExp('^${RegExp.escape(mask).replaceAll('\\*', '.*').replaceAll('\\?', '.').toString()}\$', multiLine: true, caseSensitive: caseSensitive).hasMatch(this);
+
+  bool isNotIn(Iterable<String> strings) => !isIn(strings);
+
+  /// Returns the last [n] characters of the `String`.
+  ///
+  /// [n] is optional, by default it returns the last character of the `String`.
+  ///
+  /// - If [n] provided is longer than the `String`'s length, the string will be returned.
+  /// - If [n] is negative, it will return the string without the last [n] characters.
+  ///
+  /// ### Example 1
+  /// ```dart
+  /// String foo = 'hello world';
+  /// String firstChars = foo.last(); // returns 'd'
+  /// ```
+  /// ### Example 2
+  /// ```dart
+  /// String foo = 'hello world';
+  /// bool firstChars = foo.last(3); // returns 'rld'
+  /// ```
+  String last([int n = 1]) {
+    if (n < 0) {
+      n = length + n;
+    }
+    if (n <= 0) {
+      return '';
+    }
+
+    if (isBlank || length < n) {
+      return blankIfNull;
+    }
+
+    return substring(length - n, length);
+  }
+
+  /// Returns the last day of the month from the provided `DateTime` in `String` format.
+  ///
+  /// If the date is in `DateTime` format, you can convert it to `String` `DateTime().toString()`.
+  ///
+  /// You can provide the [locale] to filter the result to a specific language.
+  ///
+  /// Defaults to 'en-US'.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String date = '2021-10-23';
+  /// String day = date.firstDayOfDate(); // returns 'Friday'
+  /// String grDay = date.firstDayOfDate(locale:'el'); // returns 'Παρασκευή'
+  /// ```
+  String? lastDayOfMonth({String? format, String? locale}) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    return toDate(format, locale).lastDayOfMonth.format('EEEE');
+  }
+
+  /// Returns the last element after splitting the string using the specified [pattern].
+  /// If the string cannot be split, it returns the original string.
+  string lastSplit(Pattern pattern) => split(pattern).last;
+
+  /// Trims the `String` to have maximum [n] characters.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'esentis';
+  /// String newFoo = foo.maxChars(3); // 'esen';
+  /// ```
+  String maxChars(int n) {
+    if (isBlank || n >= length) {
+      return blankIfNull;
+    }
+
+    if (n <= 0) {
+      return '';
+    }
+
+    return substring(0, n);
+  }
+
+  /// Finds the most frequent character in the `String`.
+  /// ### Example 1
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// String mostFrequent = foo.mostFrequent; // returns 'l'
+  /// ```
+  String mostFrequent({bool ignoreSpaces = false}) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    if (ignoreSpaces) {
+      return replaceAll(' ', '').mostFrequent();
+    }
+    var occurrences = <String, int>{};
+    var letters = split('')..sort();
+    var checkingLetter = letters[0];
+    var count = 0;
+
+    for (var i = 0, len = letters.length; i < len; i++) {
+      if (letters[i] == checkingLetter) {
+        count++;
+        if (i == len - 1) {
+          occurrences[checkingLetter] = count;
+        }
+      } else {
+        occurrences[checkingLetter] = count;
+        checkingLetter = letters[i];
+        count = 1;
+      }
+    }
+
+    var mostFrequent = '';
+    var occursCount = -1;
+
+    occurrences.forEach((character, occurs) {
+      if (occurs > occursCount) {
+        mostFrequent = character;
+        occursCount = occurs;
+      }
+    });
+
+    return mostFrequent;
+  }
+
+  String? nullIf(bool Function(String? s) fn) => asIf(fn, null, this);
+
+  /// Return null if [this] equals [comparisonString]. Otherwise return [this].
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String t = 'OK'.nullIf("OK"); // returns null;
+  /// String f = 'NO'.nullIf("YES"); // returns "NO";
+  /// ```
+  String? nullIfEqual(String? comparisonString) => nullIf((s) => s == comparisonString);
+
+  /// Prepends a [prefix] to the `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'world';
+  /// String newFoo = foo1.prepend('hello '); // returns 'hello world'
+  /// ```
+  String prepend(String? prefix) {
+    if (isBlank) {
+      return prefix ?? "";
+    }
+
+    return (prefix ?? "") + this;
+  }
+
+  /// Returns the average read time duration of the given `String`.
+  /// The default calculation is based on 200 words per minute.
+  ///
+  /// You can pass the [wordsPerDuration] and [duration] parameters for different read speeds.
+  /// ### Example
+  /// ```dart
+  /// String foo =  'Hello dear friend how you doing ?';
+  /// int readTime = foo.readTime(); // returns 3 seconds.
+  /// ```
+  Duration readTime({int wordsPerDuration = 200, Duration duration = const Duration(minutes: 1)}) =>
+      isBlank || wordsPerDuration == 0 ? 0.seconds : (countWords / (wordsPerDuration * duration.inSeconds)).seconds;
+
+  /// Removes everything in the `String` after the first match of the [pattern].
+  ///
+  /// ### Example
+  /// ```dart
+  /// String test = 'hello brother what a day today';
+  /// String afterString = test.removeAfter('brother'); // returns 'hello ';
+  /// ```
+  String removeAfter(String pattern) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    if (!contains(pattern)) {
+      return '';
+    }
+
+    List<String> patternWords = pattern.split(' ');
+
+    if (patternWords.isEmpty) {
+      return '';
+    }
+    int indexOfLastPatternWord = indexOf(patternWords.last);
+
+    if (patternWords.last.isEmpty) {
+      return '';
+    }
+
+    return substring(0, indexOfLastPatternWord);
+  }
+
+  String removeAny(List<Pattern> texts) => replaceMany(texts);
+
+  /// Removes everything in the `String` before the match of the [pattern].
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String test = 'hello brother what a day today';
+  /// String afterString = test.removeBefore('brother'); // returns 'brother what a day today';
+  /// ```
+  String removeBefore(String pattern) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    if (!contains(pattern)) {
+      return '';
+    }
+
+    List<String> patternWords = pattern.split(' ');
+
+    if (patternWords.isEmpty) {
+      return '';
+    }
+    int indexOfFirstPatternWord = indexOf(patternWords.first);
+
+    if (patternWords.last.isEmpty) {
+      return '';
+    }
+
+    return substring(
+      indexOfFirstPatternWord + 1,
+      length,
+    );
+  }
+
+  /// Removes the first [n] characters from the `String`.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'esentis'
+  /// String newFoo = foo.removeFirst(3) // 'ntis';
+  /// ```
+  String removeFirst([int n = 1]) {
+    if (isBlank || n <= 0) {
+      return blankIfNull;
+    }
+
+    if (n >= length) {
+      return '';
+    }
+    return substring(n, length);
+  }
+
+  /// Continuously removes from the beginning & the end of the `String`, any match in [patterns].
+  String removeFirstAndLastAny(List<String?> patterns) => removeFirstAny(patterns).removeLastAny(patterns);
+
+  /// Removes any [pattern] match from the beginning & the end of the `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String edited = "abracadabra".removeFirstAndLastEqual("a"); // returns "bracadabr";
+  /// ```
+  String removeFirstAndLastEqual(String? pattern) => removeFirstEqual(pattern).removeLastEqual(pattern);
+
+  /// Continuously removes from the beginning of the `String` any match in [patterns].
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String s = "esentis".removeFirstAny(["s", "ng"]);// returns "esentis";
+  /// ```
+  String removeFirstAny(List<String?> patterns) {
+    var from = this;
+    if (from.isNotBlank) {
+      for (var pattern in patterns) {
+        if (pattern != null && pattern.isNotEmpty) {
+          while (from.startsWith(pattern)) {
+            from = from.removeFirst(pattern.length);
+          }
+        }
+      }
+    }
+    return from.blankIfNull;
+  }
+
+  /// Removes any [pattern] match from the beginning of the `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String s = "djing".removeFirstEqual("dj"); // returns "ing"
+  /// ```
+  String removeFirstEqual(String? pattern) => removeFirstAny([pattern]);
+
+  /// Removes the last [n] characters from the `String`.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'esentis';
+  /// String newFoo = foo.removeLast(3); // 'esen';
+  /// ```
+  String removeLast([int n = 1]) {
+    if (isBlank || n <= 0) {
+      return blankIfNull;
+    }
+
+    if (n >= length) {
+      return '';
+    }
+    return substring(0, length - n);
+  }
+
+  /// Continuously removes from the end of the `String`, any match in [patterns].
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String s = "esentisfs12".removeLastAny(["12","s","ng","f",]); // returns "esentis";
+  /// ```
+  String removeLastAny(List<String?> patterns) {
+    var from = this;
+    if (from.isNotBlank) {
+      for (var pattern in patterns) {
+        if (pattern != null && pattern.isNotEmpty) {
+          while (from.endsWith(pattern)) {
+            from = from.removeLast(pattern.length);
+          }
+        }
+      }
+    }
+    return from.blankIfNull;
+  }
+
+  /// Removes the [pattern] from the end of the `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String s = "coolboy".removeLastEqual("y"); // returns "coolbo";
+  /// ```
+  String removeLastEqual(String? pattern) => removeLastAny([pattern]);
+
+  /// Repeats the `String` [count] times.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'foo';
+  /// String fooRepeated = foo.repeat(5); // 'foofoofoofoofoo'
+  /// ```
+  String repeat([int count = 1]) {
+    if (isBlank || count <= 0) {
+      return blankIfNull;
+    }
+    var repeated = this;
+    for (var i = 0; i < count - 1; i++) {
+      repeated += this;
+    }
+    return repeated;
+  }
+
+  /// Adds a [replacement] character at [index] of the `String`.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'hello';
+  /// String replaced = foo.replaceAtIndex(index:2,replacement:''); // returns 'helo';
+  /// ```
+  String replaceAtIndex({required int index, required String replacement}) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    if (index > length) {
+      return blankIfNull;
+    }
+    if (index < 0) {
+      return blankIfNull;
+    }
+
+    return '${substring(0, index)}$replacement${substring(index + 1, length)}';
+  }
+
+  /// Returns a new `String` with the first occurrence of the given pattern replaced with the replacement `String`.
+  ///
+  /// If the `String` is `null`, an `ArgumentError` is thrown.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String s = "esentis".replaceFirst("s", "S"); // returns "eSentis";
+  /// ```
+  String replaceFirst(String pattern, String replacement) {
+    int index = indexOf(pattern);
+    if (index == -1) {
+      return this;
+    }
+    return replaceRange(index, index + pattern.length, replacement);
+  }
+
+  /// Returns a new `String` with the last occurrence of the given pattern replaced with the replacement `String`.
+  ///
+  /// If the `String` is `null`, an `ArgumentError` is thrown.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String s = "esentis".replaceLast("s", "S"); // returns "esentiS";
+  /// ```
+  String replaceLast(String pattern, String replacement) {
+    int index = lastIndexOf(pattern);
+    if (index == -1) {
+      return this;
+    }
+    return replaceRange(index, index + pattern.length, replacement);
+  }
+
+  String replaceMany(List<Pattern> from, [String to = ""]) {
+    if (isEmpty) return blankIfNull;
+    String result = this;
+    for (var pattern in from) {
+      result = result.replaceAll(pattern, to);
+    }
+    return result;
+  }
+
+  String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{{');
+
+  String replaceMustachesWithMap(Map<String, dynamic> params) => replaceWrappedWithMap(values: params, openWrapChar: "{{");
+
+  String replaceParameters(JsonRow params, string parameterMatch) {
+    String query = this;
+
+    if (parameterMatch.isBlank) throw ArgumentError.value(parameterMatch, "parameterMatch", "parameterMatch cannot be blank");
+
+    // convert params to string
+    Map<String, dynamic> convertedParams = {};
+
+    for (final param in params.entries) {
+      convertedParams[param.key] = (param.value as Object?).toString();
+    }
+
+    // find all :placeholders, which can be substituted
+    final pattern = RegExp("$parameterMatch(\\w+)");
+
+    final matches = pattern.allMatches(query).where((match) {
+      final subString = query.substring(0, match.start);
+
+      int count = "'".allMatches(subString).length;
+      if (count > 0 && count.isOdd) {
+        return false;
+      }
+
+      count = '"'.allMatches(subString).length;
+      if (count > 0 && count.isOdd) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+
+    int lengthShift = 0;
+
+    for (final match in matches) {
+      final paramName = match.group(1);
+
+      // check param exists
+      if (false == convertedParams.containsKey(paramName)) {
+        convertedParams[paramName!] = "";
+      }
+
+      final newQuery = query.replaceFirst(
+        match.group(0)!,
+        convertedParams[paramName]!.toString(),
+        match.start + lengthShift,
+      );
+
+      lengthShift += newQuery.length - query.length;
+      query = newQuery;
+    }
+
+    return query;
+  }
+
+  String replaceSQLParameters(JsonRow params, [bool nullAsBlank = true, string parameterMatch = ":"]) =>
+      replaceParameters(params.map((k, v) => MapEntry(k, (v as Object?).asSqlValue(nullAsBlank))), parameterMatch);
+
+  String replaceWrappedWithList({required List<dynamic> values, required String openWrapChar, String? closeWrapChar}) {
+    if (isBlank) return blankIfNull;
+    return replaceWrappedWithMap(values: values.toMap((x) => MapEntry(values.indexOf(x).toString(), x)), openWrapChar: openWrapChar, closeWrapChar: closeWrapChar);
+  }
+
+  String replaceWrappedWithMap({required Map<String, dynamic> values, required String openWrapChar, String? closeWrapChar}) {
+    if (isBlank) return blankIfNull;
+
+    string text = this;
+    values.forEach((key, value) {
+      String wrappedKey = key.wrap(openWrapChar, closeWrapChar);
+      text = text.replaceAll(wrappedKey, value?.toString() ?? "");
+    });
+    return text;
+  }
+
+  /// slice a string into chunks
+  strings slice(int chunkSize) => this / chunkSize;
+
+  /// Splits the string into multiple substrings using any of the specified delimiters.
+  ///
+  /// The `delimiters` parameter is a list of strings that represent the delimiters to use for splitting the string.
+  ///
+  /// Returns a list of strings that are the result of splitting the original string using the specified delimiters.
+  List<String> splitAny(List<String> delimiters) {
+    List<String> result = [this];
+    for (String delimiter in delimiters) {
+      List<String> temp = [];
+      for (String str in result) {
+        temp.addAll(str.split(delimiter).where((x) => x.isNotEmpty));
+      }
+      result = temp;
+    }
+    return result;
+  }
+
+  /// Splits the string into chunks based on the provided chunk sizes.
+  ///
+  /// The [chunkSizes] parameter is a list of integers representing the sizes of each chunk.
+  /// If the list is empty, the entire string will be considered as a single chunk.
+  ///
+  /// Returns a list of strings, where each string represents a chunk of the original string.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// var input = 'Hello, world!';
+  /// var chunkSizes = [5, 2, 6];
+  /// var chunks = input.splitChunk(chunkSizes);
+  /// print(chunks); // Output: ['Hello', ', ', 'world!']
+  /// ```
+  List<String> splitChunk(List<int> chunkSizes) {
+    List<String> chunks = [];
+    var input = this;
+    while (input.isNotEmpty) {
+      var size = chunkSizes.isNotEmpty ? chunkSizes.first : input.length;
+      if (size <= 0) size = input.length;
+      var chunk = input.substring(0, size);
+      if (chunk.isEmpty) {
+        if (input.isNotEmpty) chunks.add(input);
+        break;
+      }
+      chunks.add(chunk);
+      input = input.substring(size);
+      chunkSizes = chunkSizes.skip(1).toList();
+    }
+    return chunks;
+  }
+
+  /// Splits the string using the specified [pattern] and returns a list containing the first element and the remaining elements joined by the [pattern].
+  /// If the string cannot be split, it returns a list containing the original string.
+  List<string> splitFirst(string pattern) {
+    var parts = split(pattern);
+    if (parts.length < 2) {
+      return [this];
+    }
+    var first = parts.removeAt(0);
+    return [first, parts.join(pattern)];
+  }
+
+  /// Splits the string using the specified [pattern] and returns a list containing the last element and the remaining elements joined by the [pattern].
+  /// If the string cannot be split, it returns a list containing the original string.
+  List<string> splitLast(string pattern) {
+    var parts = split(pattern);
+    if (parts.length < 2) {
+      return [this];
+    }
+    var last = parts.removeLast();
+    return [parts.join(pattern), last];
+  }
+
+  /// Squeezes the `String` by removing repeats of a given character.
+  ///
+  /// ### Example
+  /// ```dart
+  /// String foo = 'foofoofoofoofoo';
+  /// String fooSqueezed = foo.squeeze('o'); // 'fofofofofo';
+  /// ```
+  String squeeze(String char) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    var sb = '';
+    for (var i = 0; i < length; i++) {
+      if (i == 0 || this[i - 1] != this[i] || (this[i - 1] == this[i] && this[i] != char)) {
+        sb += this[i];
+      }
+    }
+    return sb;
+  }
+
+  /// Checks if the string starts with any of the provided strings.
+  /// Returns `true` if the string starts with any of the provided strings, `false` otherwise.
+  bool startsWithAny(Iterable<String> strings) => strings.any((element) => startsWith(element));
+
+  /// Swaps the case in the `String`.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// String swapped = foo.swapCase(); // returns 'hELLO wORLD';
+  /// ```
+  String swapCase() {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    List<String> letters = toArray;
+
+    String swapped = '';
+
+    for (final l in letters) {
+      if (l.isUpperCase) {
+        swapped += l.toLowerCase();
+      } else {
+        swapped += l.toUpperCase();
+      }
+    }
+    return swapped;
+  }
+
+  /// return a date from string
+  date toDate([string? format, string? locale]) {
+    try {
+      initializeDateFormatting(locale);
+      return DateFormat(format, locale).parse(this);
+    } catch (e) {
+      return date.parse(this);
+    }
+  }
+
+  /// Tries to format the current `String` to price amount.
+  ///
+  /// You can optionally pass the [currencySymbol] to append a symbol to the formatted text.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String price = '1234567';
+  /// String formattedPrice = foo1.toPriceAmount(currencySymbol: '€'); // returns '12.345,67 €'
+  /// ```
+  String toPriceAmount({String? currencySymbol, string? locale}) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    try {
+      var f = NumberFormat.currency(locale: locale, symbol: currencySymbol);
+      return f.format(this);
+    } catch (e) {
+      return blankIfNull;
+    }
+  }
+
+  /// Truncates a long `String` in the middle while retaining the beginning and the end.
+  ///
+  /// [maxChars] must be more than 0.
+  ///
+  /// If [maxChars] > String.length the same `String` is returned without truncation.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String f = 'congratulations';
+  /// String truncated = f.truncateMiddle(5); // Returns 'con...ns'
+  /// ```
+  String truncateMiddle(int maxChars) {
+    if (isBlank || maxChars <= 0 || maxChars > length) {
+      return blankIfNull;
+    }
+
+    int leftChars = (maxChars / 2).round();
+    int rightChars = maxChars - leftChars;
+    return '${first(leftChars)}...${last(rightChars)}';
+  }
+
+  /// Returns a Set of the uncommon characters between the two `String`s.
+  ///
+  /// The `String` is case sensitive & sorted by default.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// List<String> uncommonLetters = foo.uncommonCharacters('World Hello'); // returns {};
+  /// ```
+  ///
+  /// ```dart
+  /// String foo = 'Hello World';
+  /// List<String> uncommonLetters = foo.uncommonCharacters('World Hello!'); // returns {'!'};
+  /// ```
+  Set<String> uncommonCharacters(
+    String otherString, {
+    bool caseSensitive = true,
+    bool includeSpaces = false,
+  }) {
+    if (isBlank) {
+      return {};
+    }
+
+    String processString(String input) => (caseSensitive ? input : input.toLowerCase()).split('').where((char) => includeSpaces || char != ' ').join('');
+
+    final Set<String> thisSet = processString(this).split('').toSet();
+    final Set<String> otherStringSet = processString(otherString).split('').toSet();
+
+    final Set<String> uncommonSet = thisSet.union(otherStringSet).difference(thisSet.intersection(otherStringSet));
+
+    return uncommonSet;
+  }
+
+  /// Wraps the `String` between two strings. If [before] is a wrap char and [after] is omitted, the method resolve [after] using [getOppositeWrap].
+
+  String wrap(String? before, [String? after]) {
+    if (before.isBlank && after.isBlank) return blankIfNull;
+    before = before.ifBlank("")!;
+
+    if (after.isBlank && before.isNotBlank) {
+      if (before.isMultipleCloseWrap || before.isCloseWrap) {
+        before = before.getOppositeWrap;
+      }
+      after = before.getOppositeWrap;
+    }
+
+    if (after.isNotBlank && before.isBlank) {
+      if (after!.isMultipleOpenWrap || after.isOpenWrap) {
+        after = after.getOppositeWrap;
+      }
+      before = after.getOppositeWrap;
+    }
+
+    return "$before$this${after.ifBlank(before)!}";
+  }
 }
-
-

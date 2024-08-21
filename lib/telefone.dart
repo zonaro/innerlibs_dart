@@ -12,6 +12,12 @@ class Telefone {
   /// Se [numero] for fornecido e for válido, o número será formatado e
   /// atribuído às propriedades [ddd], [prefixo] e [sufixo].
   Telefone([dynamic numero]) {
+    if (numero is Telefone) {
+      ddd = numero.ddd;
+      prefixo = numero.prefixo;
+      sufixo = numero.sufixo;
+      return;
+    }
     ddd = "";
     prefixo = "";
     sufixo = "";
@@ -39,12 +45,6 @@ class Telefone {
     }
   }
 
-  /// Retorna o número de telefone.
-  String get numero => "$prefixo$sufixo";
-
-  /// Retorna o número de telefone formatado com máscara.
-  String get numeroMascara => "$prefixo-$sufixo".nullIf((s) => s == "-").blankIfNull;
-
   /// Retorna o número de telefone completo, incluindo o DDD.
   String get completo => "$ddd$numero";
 
@@ -54,9 +54,11 @@ class Telefone {
   @override
   int get hashCode => Object.hash(ddd, prefixo, sufixo);
 
-  /// Retorna uma representação em string do número de telefone.
-  @override
-  String toString() => completoMascara;
+  /// Retorna o número de telefone.
+  String get numero => "$prefixo$sufixo";
+
+  /// Retorna o número de telefone formatado com máscara.
+  String get numeroMascara => "$prefixo-$sufixo".nullIf((s) => s == "-").blankIfNull;
 
   /// Compara se dois números de telefone são iguais.
   @override
@@ -73,4 +75,8 @@ class Telefone {
 
     return false;
   }
+
+  /// Retorna uma representação em string do número de telefone.
+  @override
+  String toString() => completoMascara;
 }

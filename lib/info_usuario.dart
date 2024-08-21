@@ -2,18 +2,6 @@ import 'package:innerlibs/innerlibs.dart';
 
 /// Classe que representa as informações de um usuário.
 class InfoUsuario implements Validator {
-  InfoUsuario({
-    this.nome = "",
-    this.sobrenome = "",
-    this.cpfCnpj = "",
-    this.rg = "",
-    this.cnh = "",
-    this.pis = "",
-    this.emails = const [],
-    this.telefones = const [],
-    this.enderecos = const [],
-  });
-
   /// Nome do usuário.
   String nome = "";
 
@@ -41,11 +29,76 @@ class InfoUsuario implements Validator {
   /// Lista de endereços do usuário.
   List<Endereco> enderecos = [];
 
+  JsonMap informacoesComplementares = {};
+
+  InfoUsuario({
+    this.nome = "",
+    this.sobrenome = "",
+    this.cpfCnpj = "",
+    this.rg = "",
+    this.cnh = "",
+    this.pis = "",
+    this.emails = const [],
+    this.telefones = const [],
+    this.enderecos = const [],
+    this.informacoesComplementares = const {},
+  });
+
   @override
   int get hashCode => Object.hash(cpfCnpj, 1);
 
   @override
   bool operator ==(Object other) => hashCode == other.hashCode;
+
+  operator []=(String key, dynamic value) {
+    if (key.isBlank) return;
+    if (value == null) {
+      informacoesComplementares.removeWhere((k, v) => k == key);
+      return;
+    }
+    if (key == "nome") {
+      nome = value;
+    }
+    if (key == "sobrenome") {
+      sobrenome = value;
+    }
+    if (key == "cpfCnpj") {
+      cpfCnpj = value;
+    }
+    if (key == "rg") {
+      rg = value;
+    }
+    if (key == "cnh") {
+      cnh = value;
+    }
+    if (key == "pis") {
+      pis = value;
+    }
+
+    if (key == "emails") {
+      emails = forceListOf(value);
+    }
+    if (key == "telefones") {
+      telefones = forceListOf(value).map((e) => Telefone(e)).toList();
+    }
+    if (key == "enderecos") {
+      enderecos = forceListOf(value);
+    }
+    informacoesComplementares[key] = value;
+  }
+
+  JsonMap toJson() => {
+        "nome": nome,
+        "sobrenome": sobrenome,
+        "cpfCnpj": cpfCnpj,
+        "rg": rg,
+        "cnh": cnh,
+        "pis": pis,
+        "emails": emails,
+        "telefones": telefones.map((e) => e.toString()).toList(),
+        "enderecos": enderecos.map((e) => e.toJson()).toList(),
+        ...informacoesComplementares,
+      };
 
   @override
   List<String> validate() {
@@ -62,6 +115,11 @@ class InfoUsuario implements Validator {
       for (var telefone in telefones) ...[
         if (telefone.numero.isBlank) "O telefone é obrigatório",
       ],
+      for (var endereco in enderecos) ...[
+        if (endereco.logradouro.isBlank) "O logradouro é obrigatório",
+        if (endereco.cidade == null) "A cidade é obrigatória",
+        if (endereco.estado == null) "O estado é obrigatório",
+      ]
     ];
   }
 }

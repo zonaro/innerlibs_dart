@@ -842,7 +842,9 @@ enum OrigemProduto {
   }
 
   factory OrigemProduto.fromValue(dynamic value) {
-    if (value is OrigemProduto) {
+    if (value == null) {
+      return OrigemProduto.nacional;
+    } else if (value is OrigemProduto) {
       return value;
     } else if (value is string && value.isNumericOnly) {
       return OrigemProduto.fromInt(value.toNumOrZero.floor());
