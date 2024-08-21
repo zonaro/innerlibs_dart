@@ -65,83 +65,74 @@ date get yesterday => now.subtract(1.days);
 /// - if [R] is another type, try returns the value as [R].
 /// - If none of the above conditions are met, logs an error message and returns `null`.
 R changeTo<R>(dynamic value) {
-  try {
-    if (value is R) return value;
-    if (value != null) {
-      consoleLog("Changing $value from ${value.runtimeType} to $R");
-      if (isType<R, DateTime>()) {
-        return "$value".toDate() as R;
-      } else if (isType<R, int>()) {
-        if (value is DateTime) {
-          return changeTo(value.millisecondsSinceEpoch);
-        } else if (value is num) {
-          return value.toInt() as R;
-        } else {
-          return int.parse("$value".ifBlank("0").onlyNumbers) as R;
-        }
-      } else if (isType<R, double>()) {
-        if (value is DateTime) {
-          return changeTo(value.millisecondsSinceEpoch);
-        } else if (value is num) {
-          return value.toDouble() as R;
-        } else {
-          return double.parse("$value".ifBlank("0").removeLetters) as R;
-        }
-      } else if (isType<R, num>()) {
-        if (value is DateTime) {
-          return changeTo(value.millisecondsSinceEpoch);
-        } else {
-          return num.parse("$value".ifBlank("0").removeLetters) as R;
-        }
-      } else if (isType<R, String>()) {
-        if (value is DateTime) {
-          return value.format() as R;
-        }
-        return "$value" as R;
-      } else if (isType<R, bool>()) {
-        return "$value".asBool() as R;
-      } else if (isType<R, Uri>()) {
-        return Uri.parse("$value") as R;
-      } else if (isType<R, Widget>()) {
-        return forceWidget(value) as R;
-      } else if (isType<R, Text>()) {
-        return (value as Object?).asNullableText() as R;
-      } else if (isType<R, List>()) {
-        return forceList(value) as R;
+  if (value is R) return value;
+  if (value != null) {
+    consoleLog("Changing $value from ${value.runtimeType} to $R");
+    if (isSameType<R, DateTime>()) {
+      return "$value".toDate() as R;
+    } else if (isSameType<R, int>()) {
+      if (value is DateTime) {
+        return changeTo(value.millisecondsSinceEpoch);
+      } else if (value is num) {
+        return value.toInt() as R;
+      } else {
+        return int.parse("$value".ifBlank("0").onlyNumbers) as R;
       }
-    } else {
-      consoleLog("Changing NULL to $R");
-      if (isNullable<R>()) {
-        return null as R;
-      } else if (isType<R, string>()) {
-        return "" as R;
-      } else if (isType<R, bool>()) {
-        return false as R;
-      } else if (isType<R, int>()) {
-        return 0 as R;
-      } else if (isType<R, num>()) {
-        return 0.0 as R;
-      } else if (isType<R, double>()) {
-        return 0.0 as R;
-      } else if (isType<R, DateTime>()) {
-        return minDate as R;
-      } else if (isType<R, List>()) {
-        return [] as R;
-      } else if (isType<R, Text>()) {
-        return const Text("NULL") as R;
-      } else if (isType<R, Widget>()) {
-        return nil as R;
+    } else if (isSameType<R, double>()) {
+      if (value is DateTime) {
+        return changeTo(value.millisecondsSinceEpoch);
+      } else if (value is num) {
+        return value.toDouble() as R;
+      } else {
+        return double.parse("$value".ifBlank("0").removeLetters) as R;
       }
+    } else if (isSameType<R, num>()) {
+      if (value is DateTime) {
+        return changeTo(value.millisecondsSinceEpoch);
+      } else {
+        return num.parse("$value".ifBlank("0").removeLetters) as R;
+      }
+    } else if (isSameType<R, String>()) {
+      if (value is DateTime) {
+        return value.format() as R;
+      }
+      return "$value" as R;
+    } else if (isSameType<R, bool>()) {
+      return "$value".asBool() as R;
+    } else if (isSameType<R, Uri>()) {
+      return Uri.parse("$value") as R;
+    } else if (isSameType<R, Widget>()) {
+      return forceWidget(value) as R;
+    } else if (isSameType<R, Text>()) {
+      return (value as Object?).asNullableText() as R;
+    } else if (isSameType<R, List>()) {
+      return forceList(value) as R;
     }
-    throw Exception("Incompatible conversion");
-  } catch (e) {
-    consoleLog("Cannot change $value into $R: $e", error: e);
-    try {
-      return value as R;
-    } catch (a) {
-      throw e;
+  } else {
+    consoleLog("Changing NULL to $R");
+    if (isNullable<R>()) {
+      return null as R;
+    } else if (isSameType<R, string>()) {
+      return "" as R;
+    } else if (isSameType<R, bool>()) {
+      return false as R;
+    } else if (isSameType<R, int>()) {
+      return 0 as R;
+    } else if (isSameType<R, num>()) {
+      return 0.0 as R;
+    } else if (isSameType<R, double>()) {
+      return 0.0 as R;
+    } else if (isSameType<R, DateTime>()) {
+      return minDate as R;
+    } else if (isSameType<R, List>()) {
+      return [] as R;
+    } else if (isSameType<R, Text>()) {
+      return const Text("NULL") as R;
+    } else if (isSameType<R, Widget>()) {
+      return nil as R;
     }
   }
+  throw Exception("Incompatible conversion");
 }
 
 /// Logs a message to the console if the app is running in debug mode.
@@ -192,29 +183,27 @@ String flatString(dynamic value) {
   return "$value".removeDiacritics.toLowerCase().trimAll;
 }
 
-/// Converts the given [item] into a list.
+/// Ensure the given [item] is a List.
 ///
 /// If [item] is `null`, an empty list is returned.
-/// If [item] is already a list, it is returned as is.
-/// If [item] is an [Iterable], it is converted to a list.
+/// If [item] is already a Iterable, a copy of items is returned.
 /// Otherwise, [item] is wrapped in a list and returned.
 List forceList(dynamic item) {
-  if (item == null) {
-    return [];
-  }
-
-  if (item is List) {
-    return item;
-  }
-
-  if (item is Iterable) {
-    return [...item];
-  }
-
-  return [item];
+  return [
+    if (item != null)
+      if (item is List) ...item else if (item is Iterable) ...item else item
+  ];
 }
 
-List<T?> forceListOf<T>(dynamic item) => forceList(item).map((e) => changeTo<T>(e)).toList();
+/// Ensure the given [item] is a List of type [T].
+///
+/// If [item] is `null`, an empty list is returned.
+/// If [item] is already a List, a copy of items converted into [T] is returned.
+/// Otherwise, return [item] converted into [T] and wrapped in a list.
+List<T> forceListOf<T>(dynamic item) => forceList(item).map((e) => changeTo<T>(e)).toList();
+
+Set forceSet(dynamic item) => forceList(item).toSet();
+Set<T> forceSetOf<T>(dynamic item) => forceListOf<T>(item) .toSet();
 
 /// A utility extension method that allows forcing a widget to be returned,
 /// with optional customization of its properties.
@@ -507,7 +496,7 @@ bool isNullable<T>() => typeOf<T?>() == typeOf<T>();
 /// Checks if the types `T` and `S` are equal. Ignore nullability.
 ///
 /// Returns `true` if the types `T` and `S` are equal, otherwise returns `false`.
-bool isType<T, S>() => typeOf<T>() == typeOf<S?>() || typeOf<T>() == typeOf<S>() || typeOf<T?>() == typeOf<S?>() || typeOf<T?>() == typeOf<S>();
+bool isSameType<T, S>() => typeOf<T>() == typeOf<S?>() || typeOf<T>() == typeOf<S>() || typeOf<T?>() == typeOf<S?>() || typeOf<T?>() == typeOf<S>();
 
 /// Checks if [object] has a valid value.
 ///
