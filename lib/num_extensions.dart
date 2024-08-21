@@ -5,7 +5,60 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
+extension DurationExtensions on Duration {
+  String get formatted => getFormatted();
+
+  string getFormatted({
+    bool includeMilliseconds = false,
+    bool includeMicroseconds = false,
+  }) {
+    var hours = inHours;
+    var minutes = inMinutes.remainder(60);
+    var seconds = inSeconds.remainder(60);
+    var milliseconds = inMilliseconds.remainder(1000);
+    var microseconds = inMicroseconds.remainder(1000);
+
+    var formatted = "";
+    if (hours > 0) {
+      formatted += "$hours h ";
+    }
+    if (minutes > 0) {
+      formatted += "$minutes min ";
+    }
+    if (seconds > 0) {
+      formatted += "$seconds s ";
+    }
+    if (includeMilliseconds && milliseconds > 0) {
+      formatted += "$milliseconds ms ";
+    }
+    if (includeMilliseconds && microseconds > 0) {
+      formatted += "$microseconds µs";
+    }
+    return formatted.trim();
+  }
+}
+
 extension NumExtensions2<T extends num> on T {
+  Duration get days => Duration(
+      days: floor(),
+      hours: ((this % 1) * 24).floor(),
+      minutes: (((this % 1) * 24 % 1) * 60).floor(),
+      seconds: ((((this % 1) * 24 % 1) * 60 % 1) * 60).floor(),
+      milliseconds: (((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(),
+      microseconds: ((((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+
+  /// Transform number of days into hours
+  double get daysToHours {
+    if (isNullOrZero) {
+      return 0;
+    } else {
+      return (this * Duration.hoursPerDay).toDouble();
+    }
+  }
+
+  T get forceNegative => (-1 * this.forcePositive) as T;
+  T get forcePositive => this < 0 ? -this as T : this;
+
   string get formatFileSize {
     if (this < 1024) {
       return "$this bytes";
@@ -22,56 +75,120 @@ extension NumExtensions2<T extends num> on T {
     }
   }
 
-  SizedBox get widthBox => SizedBox(width: toDouble());
+  bool get hasDecimal => this % 1 != 0;
 
   SizedBox get heightBox => SizedBox(height: toDouble());
-  SizedBox get squareBox => SizedBox.square(dimension: toDouble());
 
-  Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: round()).delay(callback);
+  Duration get hours => Duration(
+      hours: floor(),
+      minutes: ((this % 1) * 60).floor(),
+      seconds: (((this % 1) * 60 % 1) * 60).floor(),
+      milliseconds: ((((this % 1) * 60 % 1) * 60 % 1) * 1000).floor(),
+      microseconds: (((((this % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
-  Duration get milliseconds => Duration(milliseconds: floor()) + Duration(microseconds: ((this % 1) * 1000).round());
+  /// Transform number of hours into days
+  double get hoursToDays {
+    // 24 hours = 1 day
+    if (isNullOrZero) {
+      return 0;
+    } else {
+      return (this * Duration.hoursPerDay).toDouble();
+    }
+  }
+
+  /// Transform number of hours into minutes
+  double get hoursToMinutes {
+    // 60 seconds = 1 minute
+    if (isNullOrZero) {
+      return 0;
+    } else {
+      return (this * Duration.minutesPerHour).toDouble();
+    }
+  }
 
   Duration get microseconds => Duration(microseconds: round());
 
+  Duration get milliseconds => Duration(milliseconds: floor()) + Duration(microseconds: ((this % 1) * 1000).round());
+
+  Duration get minutes =>
+      Duration(minutes: floor(), seconds: ((this % 1) * 60).floor(), milliseconds: (((this % 1) * 60 % 1) * 1000).floor(), microseconds: ((((this % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+
+  /// Transform number of minutes into hours
+  double get minutesToHours {
+    if (isNullOrZero) {
+      return 0;
+    } else {
+      return this / Duration.minutesPerHour;
+    }
+  }
+
   Duration get seconds => Duration(seconds: floor(), milliseconds: ((this % 1) * 1000).floor(), microseconds: (((this % 1) * 1000 % 1) * 1000).round());
 
-  Duration get minutes => Duration(minutes: floor(), seconds: ((this % 1) * 60).floor(), milliseconds: (((this % 1) * 60 % 1) * 1000).floor(), microseconds: ((((this % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  /// Transform number of seconds into hours
+  double get secondsToHours {
+    // 3600 seconds = 1 hour
+    if (isNullOrZero) {
+      return 0;
+    } else {
+      return this / Duration.secondsPerHour;
+    }
+  }
 
-  Duration get hours => Duration(hours: floor(), minutes: ((this % 1) * 60).floor(), seconds: (((this % 1) * 60 % 1) * 60).floor(), milliseconds: ((((this % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((this % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  /// Transform number of seconds into minutes
+  double get secondsToMinutes {
+    // 60 seconds = 1 minute
+    if (isNullOrZero) {
+      return 0;
+    } else {
+      return this / Duration.secondsPerMinute;
+    }
+  }
 
-  Duration get days => Duration(days: floor(), hours: ((this % 1) * 24).floor(), minutes: (((this % 1) * 24 % 1) * 60).floor(), seconds: ((((this % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: (((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: ((((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  SizedBox get squareBox => SizedBox.square(dimension: toDouble());
 
-  Duration get weeks => Duration(days: (this * 7).floor(), hours: (((this * 7) % 1) * 24).floor(), minutes: ((((this * 7) % 1) * 24 % 1) * 60).floor(), seconds: (((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: ((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  Duration get weeks => Duration(
+      days: (this * 7).floor(),
+      hours: (((this * 7) % 1) * 24).floor(),
+      minutes: ((((this * 7) % 1) * 24 % 1) * 60).floor(),
+      seconds: (((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60).floor(),
+      milliseconds: ((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(),
+      microseconds: (((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
-  Duration get years => Duration(days: (this * 365.25).floor(), hours: (((this * 365.25) % 1) * 24).floor(), minutes: ((((this * 365.25) % 1) * 24 % 1) * 60).floor(), seconds: (((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: ((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  SizedBox get widthBox => SizedBox(width: toDouble());
 
-  T get forcePositive => this < 0 ? -this as T : this;
-  T get forceNegative => (-1 * this.forcePositive) as T;
+  Duration get years => Duration(
+      days: (this * 365.25).floor(),
+      hours: (((this * 365.25) % 1) * 24).floor(),
+      minutes: ((((this * 365.25) % 1) * 24 % 1) * 60).floor(),
+      seconds: (((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60).floor(),
+      milliseconds: ((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(),
+      microseconds: (((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
-  T clampMin(T minValue) => ([this, minValue]).max();
   T clampMax(T maxValue) => ([this, maxValue]).min();
 
-  bool isLowerThan(num b) => this < b;
+  T clampMin(T minValue) => ([this, minValue]).max();
 
-  bool isGreaterThan(num b) => this > b;
+  Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: round()).delay(callback);
 
-  bool isEqual(num b) => this == b;
+  int findGreatestCommonDivisor(int b) {
+    int a = round();
+    while (b != 0) {
+      var t = b;
+      b = a % b;
+      a = t;
+    }
+    return a;
+  }
 
   bool isBetween(num start, num end) => isGreaterThan(start) && isLowerThan(end);
 
   bool isBetweenOrEqual(num start, num end) => isBetween(start, end) || this == start || this == end;
 
-  String quantityTextPt(String plural, [String singular = "", bool includeNumber = true]) {
-    var pre = (includeNumber ? toString() : "");
-    if (plural.length > 1) {
-      if ((round() == 1 || round() == -1)) {
-        pre = "$pre ${singular.ifBlank(plural.singularPt)}";
-      } else {
-        pre = "$pre $plural";
-      }
-    }
-    return pre;
-  }
+  bool isEqual(num b) => this == b;
+
+  bool isGreaterThan(num b) => this > b;
+
+  bool isLowerThan(num b) => this < b;
 
   String quantityText(String plural, [String singular = "", bool includeNumber = true]) {
     var pre = (includeNumber ? toString() : "");
@@ -85,17 +202,17 @@ extension NumExtensions2<T extends num> on T {
     return pre;
   }
 
-  int findGreatestCommonDivisor(int b) {
-    int a = round();
-    while (b != 0) {
-      var t = b;
-      b = a % b;
-      a = t;
+  String quantityTextPt(String plural, [String singular = "", bool includeNumber = true]) {
+    var pre = (includeNumber ? toString() : "");
+    if (plural.length > 1) {
+      if ((round() == 1 || round() == -1)) {
+        pre = "$pre ${singular.ifBlank(plural.singularPt)}";
+      } else {
+        pre = "$pre $plural";
+      }
     }
-    return a;
+    return pre;
   }
-
-  bool get hasDecimal => this % 1 != 0;
 
   /// Num to locale currency with symbol or not
   String? toCurrency({bool? withSymbol, string? locale}) {
@@ -128,79 +245,21 @@ extension NumExtensions2<T extends num> on T {
       return ((this * mod).round().toDouble() / mod);
     }
   }
-
-  /// Transform number of days into hours
-  double get daysToHours {
-    if (isNullOrZero) {
-      return -1;
-    } else {
-      return (this * Duration.hoursPerDay).toDouble();
-    }
-  }
-
-  /// Transform number of minutes into hours
-  double get minutesToHours {
-    if (isNullOrZero) {
-      return -1;
-    } else {
-      return this / Duration.minutesPerHour;
-    }
-  }
-
-  /// Transform number of seconds into hours
-  double get secondsToHours {
-    // 3600 seconds = 1 hour
-    if (isNullOrZero) {
-      return -1;
-    } else {
-      return this / Duration.secondsPerHour;
-    }
-  }
-
-  /// Transform number of hours into days
-  double get hoursToDays {
-    // 24 hours = 1 day
-    if (isNullOrZero) {
-      return -1;
-    } else {
-      return (this * Duration.hoursPerDay).toDouble();
-    }
-  }
-
-  /// Transform number of seconds into minutes
-  double get secondsToMinutes {
-    // 60 seconds = 1 minute
-    if (isNullOrZero) {
-      return -1;
-    } else {
-      return this / Duration.secondsPerMinute;
-    }
-  }
-
-  /// Transform number of hours into minutes
-  double get hoursToMinutes {
-    // 60 seconds = 1 minute
-    if (isNullOrZero) {
-      return -1;
-    } else {
-      return (this * Duration.minutesPerHour).toDouble();
-    }
-  }
 }
 
 /// Extension methods for nullable numbers.
 extension NumNullExtensions<T extends num?> on T {
+  /// Checks whether the number is a non-zero negative number.
+  bool get isNonZeroNegative => this != null && this! < 0;
+
+  /// Checks whether the number is a non-zero positive number.
+  bool get isNonZeroPositive => this != null && this! > 0;
+
   /// Checks whether the number is 0 or null.
   bool get isNullOrZero => this == null || this == 0;
 
   /// Returns null if the number is 0, otherwise returns the number itself.
   T? get nullIfZero => this == 0 ? null : this;
-
-  /// Checks whether the number is a non-zero positive number.
-  bool get isNonZeroPositive => this != null && this! > 0;
-
-  /// Checks whether the number is a non-zero negative number.
-  bool get isNonZeroNegative => this != null && this! < 0;
 
   /// Returns a string representation of the number with a fixed length, including the decimal separator if needed.
   ///
@@ -208,37 +267,4 @@ extension NumNullExtensions<T extends num?> on T {
   /// The [fill] parameter specifies the character used to fill the remaining space.
   /// The [fractionDigits] parameter specifies the number of digits after the decimal point.
   String? fixedLength(int length, {String fill = "0", int fractionDigits = 0}) => this?.toStringAsFixed(fractionDigits).padLeft(length, fill);
-}
-
-extension DurationExtensions on Duration {
-  string getFormatted({
-    bool includeMilliseconds = false,
-    bool includeMicroseconds = false,
-  }) {
-    var hours = inHours;
-    var minutes = inMinutes.remainder(60);
-    var seconds = inSeconds.remainder(60);
-    var milliseconds = inMilliseconds.remainder(1000);
-    var microseconds = inMicroseconds.remainder(1000);
-
-    var formatted = "";
-    if (hours > 0) {
-      formatted += "$hours h ";
-    }
-    if (minutes > 0) {
-      formatted += "$minutes min ";
-    }
-    if (seconds > 0) {
-      formatted += "$seconds s ";
-    }
-    if (includeMilliseconds && milliseconds > 0) {
-      formatted += "$milliseconds ms ";
-    }
-    if (includeMilliseconds && microseconds > 0) {
-      formatted += "$microseconds µs";
-    }
-    return formatted.trim();
-  }
-
-  String get formatted => getFormatted();
 }

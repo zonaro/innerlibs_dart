@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-final random = Random();
+final _random = Random();
 
 bool get isAndroid => GetPlatform.isAndroid;
 
@@ -40,11 +40,11 @@ bool get isWindows => GetPlatform.isWindows;
 date get lastWeek => now.lastDayOfWeek - 7.days;
 
 DateTime get maxDate => DateTime.utc(9999, 12, 31, 23, 59, 59);
-DateTime get minDate => DateTime.utc(1970, 1, 1);
+DateTime get minDate => DateTime.fromMicrosecondsSinceEpoch(0);
 date get now => DateTime.now();
 int get thisYear => now.year;
 
-date get today => DateTime(thisYear, now.month, now.day);
+date get today => now.at(hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0);
 date get tomorrow => now.add(1.days);
 
 date get yesterday => now.subtract(1.days);
@@ -203,7 +203,7 @@ List forceList(dynamic item) {
 List<T> forceListOf<T>(dynamic item) => forceList(item).map((e) => changeTo<T>(e)).toList();
 
 Set forceSet(dynamic item) => forceList(item).toSet();
-Set<T> forceSetOf<T>(dynamic item) => forceListOf<T>(item) .toSet();
+Set<T> forceSetOf<T>(dynamic item) => forceListOf<T>(item).toSet();
 
 /// A utility extension method that allows forcing a widget to be returned,
 /// with optional customization of its properties.
@@ -627,7 +627,7 @@ double randomDouble([double min = 0, double max = 999999]) {
   var n = min.compareAndSwap(max);
   min = n.first;
   max = n.last;
-  return min + random.nextDouble() * (max - min);
+  return min + _random.nextDouble() * (max - min);
 }
 
 /// Generates a random integer between the specified [min] and [max] values.
@@ -635,7 +635,7 @@ int randomInt([int min = 0, int max = 999999]) {
   var n = min.compareAndSwap(max);
   min = n.first;
   max = n.last;
-  return min + random.nextInt(max - min + 1);
+  return min + _random.nextInt(max - min + 1);
 }
 
 /// Generates a random double between the specified [min] and [max] percent values.

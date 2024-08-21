@@ -416,14 +416,14 @@ abstract interface class Brasil {
   /// Retorna uma string no formato "XX.XXX.XXX/XXXX-XX".
   static String gerarCNPJFake() {
     int n = 9;
-    int n1 = random.nextInt(n);
-    int n2 = random.nextInt(n);
-    int n3 = random.nextInt(n);
-    int n4 = random.nextInt(n);
-    int n5 = random.nextInt(n);
-    int n6 = random.nextInt(n);
-    int n7 = random.nextInt(n);
-    int n8 = random.nextInt(n);
+    int n1 = randomInt(0, n);
+    int n2 = randomInt(0, n);
+    int n3 = randomInt(0, n);
+    int n4 = randomInt(0, n);
+    int n5 = randomInt(0, n);
+    int n6 = randomInt(0, n);
+    int n7 = randomInt(0, n);
+    int n8 = randomInt(0, n);
     int n9 = 0;
     int n10 = 0;
     int n11 = 0;
@@ -447,15 +447,15 @@ abstract interface class Brasil {
   /// N representa um dígito numérico e D representa um dígito verificador.
   static String gerarCPFFake() {
     int n = 9;
-    int n1 = random.nextInt(n);
-    int n2 = random.nextInt(n);
-    int n3 = random.nextInt(n);
-    int n4 = random.nextInt(n);
-    int n5 = random.nextInt(n);
-    int n6 = random.nextInt(n);
-    int n7 = random.nextInt(n);
-    int n8 = random.nextInt(n);
-    int n9 = random.nextInt(n);
+    int n1 = randomInt(0, n);
+    int n2 = randomInt(0, n);
+    int n3 = randomInt(0, n);
+    int n4 = randomInt(0, n);
+    int n5 = randomInt(0, n);
+    int n6 = randomInt(0, n);
+    int n7 = randomInt(0, n);
+    int n8 = randomInt(0, n);
+    int n9 = randomInt(0, n);
     int d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;
     d1 = 11 - (d1 % 11);
     if (d1 >= 10) d1 = 0;
@@ -469,7 +469,7 @@ abstract interface class Brasil {
   ///
   /// Retorna uma string contendo um CPF falso se o valor aleatório gerado for verdadeiro,
   /// caso contrário, retorna uma string contendo um CNPJ falso.
-  static String gerarCPFouCNPJFake() => random.nextBool() ? gerarCPFFake() : gerarCNPJFake();
+  static String gerarCPFouCNPJFake() => randomBool() ? gerarCPFFake() : gerarCNPJFake();
 
   /// Gera um código EAN a partir de uma lista de partes.
   ///
@@ -498,9 +498,9 @@ abstract interface class Brasil {
 
   static Future<Endereco> gerarEnderecoAleatorio() async {
     return Endereco(
-      cep: random.nextInt(99999999).toString().padLeft(8, "0"),
+      cep: randomInt(0, 99999999).fixedLength(8)!,
       logradouro: "${["Rua", "Avenida", "Alameda", "Travessa", "Praça"].randomize().first} ${gerarNomeAleatorioString()}",
-      numero: random.nextInt(999).toString(),
+      numero: randomInt(0, 999).toString(),
       bairro: "${["Jardim", "Campos", ""].randomize().first} ${gerarNomeAleatorioString()}",
       cidade: await cidades.then((c) => c.randomize().first),
     );
@@ -529,17 +529,17 @@ abstract interface class Brasil {
 
   static strings gerarNomeAleatorio({bool sobrenomeUnico = false, bool nomeComposto = false, bool masculino = true, bool feminino = true}) {
     if (masculino == false && feminino == false) {
-      masculino = random.nextBool();
+      masculino = randomBool();
       feminino = !masculino;
     }
     var l = nomesComuns;
     if (masculino == false) l = nomesFemininosComuns;
     if (feminino == false) l = nomesMasculinosComuns;
-    var s1 = sobrenomesComuns[random.nextInt(sobrenomesComuns.length)];
-    var s2 = sobrenomesComuns[random.nextInt(sobrenomesComuns.length)];
-    var n1 = l[random.nextInt(l.length)];
-    var n2 = l[random.nextInt(l.length)].blankIf((s) => nomeComposto == false || random.nextBool() || n1 == s);
-    if (random.nextBool() || s1 == s2 || sobrenomeUnico) s2 = "";
+    var s1 = sobrenomesComuns[randomInt(0, sobrenomesComuns.length)];
+    var s2 = sobrenomesComuns[randomInt(0, sobrenomesComuns.length)];
+    var n1 = l[randomInt(0, l.length)];
+    var n2 = l[randomInt(0, l.length)].blankIf((s) => nomeComposto == false || randomBool(30) || n1 == s);
+    if (randomBool() || s1 == s2 || sobrenomeUnico) s2 = "";
     return [
       [n1, n2].whereValid.join(" "),
       [s1, s2].whereValid.join(" ")
@@ -551,7 +551,7 @@ abstract interface class Brasil {
 
   static Future<InfoUsuario> gerarPessoaAleatoria({bool sobrenomeUnico = false, bool nomeComposto = false, bool masculino = true, bool feminino = true}) async {
     if (masculino == feminino) {
-      masculino = random.nextBool();
+      masculino = randomBool();
       feminino = !masculino;
     } else {
       masculino = !feminino;
@@ -583,24 +583,24 @@ abstract interface class Brasil {
   /// Retorna o número de PIS fictício gerado.
   static String gerarPISFake() {
     int n = 9;
-    int n1 = random.nextInt(n);
-    int n2 = random.nextInt(n);
-    int n3 = random.nextInt(n);
-    int n4 = random.nextInt(n);
-    int n5 = random.nextInt(n);
-    int n6 = random.nextInt(n);
-    int n7 = random.nextInt(n);
-    int n8 = random.nextInt(n);
-    int n9 = random.nextInt(n);
-    int n10 = random.nextInt(n);
-    int n11 = random.nextInt(n);
+    int n1 = randomInt(0, n);
+    int n2 = randomInt(0, n);
+    int n3 = randomInt(0, n);
+    int n4 = randomInt(0, n);
+    int n5 = randomInt(0, n);
+    int n6 = randomInt(0, n);
+    int n7 = randomInt(0, n);
+    int n8 = randomInt(0, n);
+    int n9 = randomInt(0, n);
+    int n10 = randomInt(0, n);
+    int n11 = randomInt(0, n);
     int d1 = n11 * 3 + n10 * 2 + n9 * 9 + n8 * 8 + n7 * 7 + n6 * 6 + n5 * 5 + n4 * 4 + n3 * 3 + n2 * 2 + n1 * 1;
     d1 = 11 - (d1 % 11);
     if (d1 >= 10) d1 = 0;
     return "$n1$n2$n3$n4$n5$n6$n7$n8$n9$n10$n11$d1";
   }
 
-  static Telefone gerarTelefone({Cidade? cidade}) => Telefone((cidade?.ddd.toString() ?? random.nextInt(99).toString().padLeft(2, "0")) + random.nextInt(99999999).toString().padLeft(8, "9").first(9));
+  static Telefone gerarTelefone({Cidade? cidade}) => Telefone((cidade?.ddd.toString() ?? randomInt(0, 99).fixedLength(2)!) + randomInt(0, 99999999).toString().padLeft(8, "9").first(9));
 
   /// Retorna uma data a partir de uma string no formato especificado no manual da SEFAZ
   static DateTime? parseDataXML(String data) => data.toDate("yyyy-MM-ddTHH:mm:ssZ", "pt-BR");
