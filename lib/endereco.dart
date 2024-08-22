@@ -177,6 +177,9 @@ class Endereco implements Comparable<Endereco> {
     );
   }
 
+  /// Tenta converter uma string em um endereço.
+  /// A conversão é feita a partir da string fornecida, que é analisada e dividida em partes.
+  /// As partes são então usadas para preencher os campos do endereço.
   static Future<Endereco> tryParse(string address) async {
     string postalCode = "";
     string state = "";
@@ -192,11 +195,11 @@ class Endereco implements Comparable<Endereco> {
       postalCode = Brasil.formatarCEP(ceps.first);
     }
 
-    address = address.fixText.trimAny(["-", ",", "/"]); // arruma os espacos do endereco
+    address = address.fixText.trimAny(["-", ",", "/", "."]); // arruma os espacos do endereco
     if (address.contains(" - ")) {
       var parts = address.split(" - ");
       if (parts.length == 1) {
-        address = parts.first.ifBlank("").trimAny([" ", ",", "-"]);
+        address = parts.first.ifBlank("").trimAny([" ", ",", "-", "."]);
       }
 
       if (parts.length == 2) {
@@ -276,7 +279,7 @@ class Endereco implements Comparable<Endereco> {
       bairro: neighborhood,
       cidade: await Cidade.pegar(city, state),
     );
-    // d["original_string"] = original;
+
     return d;
   }
 }
