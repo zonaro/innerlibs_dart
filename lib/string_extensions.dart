@@ -797,7 +797,6 @@ extension StringExtensions on String {
     if (isBlank) {
       return false;
     }
-    final onlyLetters = this.onlyLetters;
 
     return onlyLetters.length == length;
   }
@@ -2839,8 +2838,6 @@ extension StringExtensions on String {
     return from.blankIfNull;
   }
 
-  string trimAny(List<String?> patterns) => removeLastAny(patterns).removeFirstAny(patterns);
-
   /// Removes the [pattern] from the end of the `String`.
   ///
   /// ### Example
@@ -3167,6 +3164,8 @@ extension StringExtensions on String {
       return blankIfNull;
     }
   }
+
+  string trimAny(List<String?> patterns) => removeLastAny(patterns).removeFirstAny(patterns);
 
   /// Truncates a long `String` in the middle while retaining the beginning and the end.
   ///
