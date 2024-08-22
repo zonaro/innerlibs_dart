@@ -2839,6 +2839,8 @@ extension StringExtensions on String {
     return from.blankIfNull;
   }
 
+  string trimAny(List<String?> patterns) => removeLastAny(patterns).removeFirstAny(patterns);
+
   /// Removes the [pattern] from the end of the `String`.
   ///
   /// ### Example
