@@ -2,39 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 class IconCard extends StatelessWidget {
-  const IconCard({
-    Key? key,
-    required this.title,
-    required this.icon,
-    this.height = 100,
-    this.textScaleFactor = 1,
-    this.accentColor,
-    this.description,
-    this.onTap,
-    this.elevation,
-    this.onTapDown,
-    this.onTapUp,
-    this.onTapCancel,
-    this.onDoubleTap,
-    this.onLongPress,
-    this.onSecondaryTap,
-    this.onSecondaryTapDown,
-    this.onSecondaryTapUp,
-    this.onSecondaryTapCancel,
-    this.onHighlightChanged,
-    this.onHover,
-    this.mouseCursor,
-    this.enableFeedback = true,
-    this.onFocusChange,
-    this.autofocus = false,
-    this.focusNode,
-    this.canRequestFocus = true,
-    this.statesController,
-    this.hoverDuration,
-    this.tooltip,
-  }) : super(key: key);
-
   final String title;
+
   final IconData icon;
   final Color? accentColor;
   final String? description;
@@ -159,45 +128,103 @@ class IconCard extends StatelessWidget {
 
   final string? tooltip;
 
+  final double radius;
+
+  const IconCard({
+    super.key,
+    required this.title,
+    required this.icon,
+    this.height = 100,
+    this.textScaleFactor = 1,
+    this.accentColor,
+    this.description,
+    this.onTap,
+    this.elevation,
+    this.onTapDown,
+    this.onTapUp,
+    this.onTapCancel,
+    this.onDoubleTap,
+    this.onLongPress,
+    this.onSecondaryTap,
+    this.onSecondaryTapDown,
+    this.onSecondaryTapUp,
+    this.onSecondaryTapCancel,
+    this.onHighlightChanged,
+    this.onHover,
+    this.mouseCursor,
+    this.enableFeedback = true,
+    this.onFocusChange,
+    this.autofocus = false,
+    this.focusNode,
+    this.canRequestFocus = true,
+    this.statesController,
+    this.hoverDuration,
+    this.tooltip,
+    this.radius = 5,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Tooltip(
       message: tooltip.blankCoalesce([description, title]),
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
+          ),
+        ),
         elevation: elevation,
         child: ClipPath(
-          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+          clipper: ShapeBorderClipper(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(radius),
+                bottomRight: Radius.circular(radius),
+              ),
+            ),
+          ),
           child: LayoutBuilder(builder: (context, cs) {
-            return Container(
-              height: height,
-              decoration: accentColor != null ? BoxDecoration(border: Border(right: BorderSide(color: accentColor!, width: 8))) : null,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(5),
-                splashColor: accentColor,
-                autofocus: autofocus,
-                canRequestFocus: canRequestFocus,
-                focusColor: accentColor?.withOpacity(.7),
-                enableFeedback: enableFeedback,
-                hoverColor: accentColor?.withOpacity(.7),
-                mouseCursor: mouseCursor,
-                focusNode: focusNode,
-                hoverDuration: hoverDuration,
-                highlightColor: accentColor,
-                onTap: onTap,
-                onDoubleTap: onDoubleTap,
-                onLongPress: onLongPress,
-                onSecondaryTap: onSecondaryTap,
-                onFocusChange: onFocusChange,
-                onHighlightChanged: onHighlightChanged,
-                onHover: onHover,
-                onSecondaryTapCancel: onSecondaryTapCancel,
-                onSecondaryTapDown: onSecondaryTapDown,
-                onSecondaryTapUp: onSecondaryTapUp,
-                onTapCancel: onTapCancel,
-                onTapDown: onTapDown,
-                onTapUp: onTapUp,
-                statesController: statesController,
+            return InkWell(
+              borderRadius: BorderRadius.circular(radius),
+              splashColor: accentColor?.withOpacity(.7),
+              autofocus: autofocus,
+              canRequestFocus: canRequestFocus,
+              focusColor: accentColor?.withOpacity(.3),
+              enableFeedback: enableFeedback,
+              hoverColor: accentColor?.withOpacity(.3),
+              mouseCursor: mouseCursor,
+              focusNode: focusNode,
+              hoverDuration: hoverDuration,
+              highlightColor: accentColor,
+              onTap: onTap,
+              onDoubleTap: onDoubleTap,
+              onLongPress: onLongPress,
+              onSecondaryTap: onSecondaryTap,
+              onFocusChange: onFocusChange,
+              onHighlightChanged: onHighlightChanged,
+              onHover: onHover,
+              onSecondaryTapCancel: onSecondaryTapCancel,
+              onSecondaryTapDown: onSecondaryTapDown,
+              onSecondaryTapUp: onSecondaryTapUp,
+              onTapCancel: onTapCancel,
+              onTapDown: onTapDown,
+              onTapUp: onTapUp,
+              statesController: statesController,
+              child: Container(
+                height: height,
+                decoration: accentColor != null
+                    ? BoxDecoration(
+                        color: accentColor?.withOpacity(.1),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(radius),
+                          bottomLeft: Radius.circular(radius),
+                        ),
+                        border: Border(
+                          right: BorderSide(color: accentColor!, width: 8),
+                        ),
+                      )
+                    : null,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Stack(

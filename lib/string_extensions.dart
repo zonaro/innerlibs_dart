@@ -2178,13 +2178,20 @@ extension StringExtensions on String {
   /// String foo4 = 'C:/Documents\\user\\test';
   /// String revFoo4 = foo1.fixSlash(null); // returns 'C:\\Documents\\user\\test'
   /// ```
-  String fixSlash([bool? backSlash]) {
+
+  string fixSlash([bool? backSlash]) {
     if (isBlank) {
       return blankIfNull;
     }
-
+    var path = trim();
+    bool hasFirstSlash = path.startsWith('/') || path.startsWith('\\');
     backSlash ??= count('\\') > count('/');
-    return backSlash ? replaceAll('/', '\\') : replaceAll('\\', '/');
+    if (backSlash) {
+      path = (hasFirstSlash ? "\\" : "") + splitAny(['/', '\\']).join('\\');
+    } else {
+      path = (hasFirstSlash ? "/" : "") + splitAny(['/', '\\']).join('/');
+    }
+    return path;
   }
 
   /// Inspired from Vincent van Proosdij.
