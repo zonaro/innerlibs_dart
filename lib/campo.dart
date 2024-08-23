@@ -43,8 +43,14 @@ Widget pesquisaVazia(string searchEntry, string label) {
   );
 }
 
-PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder, IconData? icon, void Function()? onIconTap, Color? color}) {
-  var tt = "${"Pesquisar".blankIf((x) => options == null || options.length <= 4)} $title:".trim();
+PopupProps<T> popupCampos<T>(
+  string? title, {
+  Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder,
+  IconData? icon,
+  void Function()? onIconTap,
+  Color? color,
+}) {
+  var tt = "Pesquisar $title:".trim();
   return Get.screenTier < ScreenTier.xs
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
@@ -64,13 +70,13 @@ PopupProps<T> popupCampos<T>(string? title, {List<T>? options, Widget Function(B
             ),
           ),
           modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: Get.context?.colorScheme.surfaceBright),
-          showSearchBox: options != null ? options.length > 4 : true,
+          showSearchBox: true,
           emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
           itemBuilder: itemBuilder,
         )
       : PopupProps.menu(
           fit: FlexFit.tight,
-          showSearchBox: options != null ? options.length > 4 : true,
+          showSearchBox: true,
           emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
           itemBuilder: itemBuilder,
           searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap, color)),
@@ -82,6 +88,8 @@ typedef CampoDecimal = CampoNumerico<decimal>;
 typedef CampoDouble = CampoNumerico<double>;
 
 typedef CampoInteiro = CampoNumerico<int>;
+
+typedef CampoTexto = CampoValor<string>;
 
 class BotaoTexto extends StatelessWidget {
   final String label;
@@ -178,7 +186,7 @@ class CampoEnum<T extends Enum> extends StatefulWidget {
   final IconData? icon;
   final int? maxLen;
   final List<T> values;
-  final string? Function(T)? itemAsString;
+  final string Function(T?)? itemAsString;
 
   CampoEnum({
     super.key,
@@ -257,7 +265,7 @@ class CampoNumerico<T extends num> extends StatefulWidget {
   final string? Function(T? newValue)? validator;
   final T? defaultValue;
   final bool readOnly;
-  final List<(string, T)> options;
+  final List<T> options;
   final Color? color;
   final TextAlign textAlign;
   final FocusNode? focusNode;
@@ -268,6 +276,9 @@ class CampoNumerico<T extends num> extends StatefulWidget {
   final List<NumberInputFormatter> inputFormatters;
   final Future<List<T>> Function(string)? asyncItems;
 
+  final String Function(T?)? itemAsString;
+
+  final Widget Function(BuildContext context, T?, bool isSelected)? itemBuilder;
   const CampoNumerico({
     super.key,
     this.label,
@@ -287,6 +298,8 @@ class CampoNumerico<T extends num> extends StatefulWidget {
     this.maxLen,
     this.inputFormatters = const [],
     this.asyncItems,
+    this.itemAsString,
+    this.itemBuilder,
   });
 
   @override
@@ -325,58 +338,6 @@ class CampoTelefone extends StatefulWidget {
   createState() => _CampoTelefoneState();
 }
 
-class CampoTexto extends StatefulWidget {
-  final String? label;
-  final TextEditingController? controller;
-  final Iterable<String> options;
-  final List<TextInputFormatter> inputFormatters;
-  final void Function(String? newValue)? onChange;
-  final void Function()? onEditingComplete;
-  final String? Function(String? newValue)? validator;
-  final int? maxLen;
-  final int lines;
-  final String defaultValue;
-  final bool readOnly;
-  final bool isAutoComplete;
-  final TextInputType? keyboardType;
-  final TextAlign textAlign;
-  final bool obscureText;
-  final FocusNode? focusNode;
-  final bool autofocus;
-  final IconData? icon;
-  final Future<List<String>> Function(String)? asyncItems;
-  final void Function()? onIconTap;
-  final Color? color;
-
-  const CampoTexto({
-    super.key,
-    this.label,
-    this.controller,
-    this.options = const [],
-    this.inputFormatters = const [],
-    this.onChange,
-    this.onEditingComplete,
-    this.validator,
-    this.maxLen,
-    this.lines = 1,
-    this.defaultValue = "",
-    this.readOnly = false,
-    this.isAutoComplete = false,
-    this.keyboardType,
-    this.textAlign = TextAlign.start,
-    this.obscureText = false,
-    this.focusNode,
-    this.autofocus = false,
-    this.icon,
-    this.asyncItems,
-    this.onIconTap,
-    this.color,
-  });
-
-  @override
-  createState() => _CampoTextoState();
-}
-
 class CampoTipoPessoa extends StatefulWidget {
   final TextEditingController tipoController;
   final TextEditingController? cnpjCpfController;
@@ -393,17 +354,17 @@ class CampoTipoPessoa extends StatefulWidget {
   createState() => _CampoTipoPessoaState();
 }
 
-class CampoValor<T> extends StatefulWidget {
+class CampoValor<T extends Object> extends StatefulWidget {
   final String? label;
   final TextEditingController? controller;
-  final Iterable<(String, T?)> options;
+  final Iterable<T> options;
   final List<TextInputFormatter> inputFormatters;
-  final void Function((String, T?)? newValue)? onChange;
+  final void Function(T?)? onChange;
   final void Function()? onEditingComplete;
-  final String? Function((String, T?)? newValue)? validator;
+  final String? Function(T?)? validator;
   final int? maxLen;
   final int lines;
-  final T? defaultValue;
+  final T? initialValue;
   final bool readOnly;
   final bool isAutoComplete;
   final TextInputType? keyboardType;
@@ -412,10 +373,11 @@ class CampoValor<T> extends StatefulWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final IconData? icon;
-  final Future<List<(String, T?)>> Function(String)? asyncItems;
+  final Future<List<T>> Function(String)? asyncItems;
   final void Function()? onIconTap;
   final Color? color;
-  final String Function((string, T?))? itemAsString;
+  final String Function(T?)? itemAsString;
+  final Widget Function(BuildContext context, T?, bool isSelected)? itemBuilder;
 
   const CampoValor({
     super.key,
@@ -428,7 +390,7 @@ class CampoValor<T> extends StatefulWidget {
     this.validator,
     this.maxLen,
     this.lines = 1,
-    this.defaultValue,
+    this.initialValue,
     this.readOnly = false,
     this.isAutoComplete = false,
     this.keyboardType,
@@ -441,6 +403,7 @@ class CampoValor<T> extends StatefulWidget {
     this.onIconTap,
     this.color,
     this.itemAsString,
+    this.itemBuilder,
   });
 
   @override
@@ -535,7 +498,7 @@ class _CampoDataState extends State<CampoData> {
 }
 
 class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
-  String? Function(T) get itemAsString => widget.itemAsString ?? ((e) => e.toString().split(".").last.pascalSplitString);
+  String Function(T?) get itemAsString => widget.itemAsString ?? ((e) => e.toString().split(".").last.pascalSplitString);
 
   @override
   Widget build(BuildContext context) {
@@ -546,23 +509,23 @@ class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
       controller: widget.controller,
       onChange: (newValue) {
         if (widget.onChange != null) {
-          (widget.onChange)!(changeTo<T>(newValue?.$2));
+          (widget.onChange)!(changeTo<T>(newValue));
         }
       },
       onEditingComplete: widget.onEditingComplete,
       validator: (v) {
         if (widget.validator != null) {
-          return (widget.validator)!(changeTo(v?.$2));
+          return (widget.validator)!(changeTo(v));
         }
         return null;
       },
-      defaultValue: changeTo(widget.defaultValue),
+      initialValue: changeTo(widget.defaultValue),
       readOnly: widget.readOnly,
       textAlign: widget.textAlign,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
-      options: widget.values.map((e) => (itemAsString(e)!, e)),
-      itemAsString: (i) => itemAsString(i.$2!)!,
+      options: widget.values,
+      itemAsString: itemAsString,
     );
   }
 }
@@ -679,17 +642,17 @@ class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
       controller: widget.controller,
       onChange: (newValue) {
         if (widget.onChange != null) {
-          widget.onChange!(changeTo<T>(newValue?.$2));
+          widget.onChange!(changeTo<T>(newValue));
         }
       },
       onEditingComplete: widget.onEditingComplete,
       validator: (v) {
         if (widget.validator != null) {
-          return widget.validator!(changeTo(v?.$2));
+          return widget.validator!(changeTo(v));
         }
         return null;
       },
-      defaultValue: changeTo(widget.defaultValue ?? 0),
+      initialValue: changeTo(widget.defaultValue ?? 0),
       readOnly: widget.readOnly,
       isAutoComplete: widget.isAutoComplete,
       options: widget.options,
@@ -697,7 +660,7 @@ class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
       textAlign: widget.textAlign,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
-      asyncItems: widget.asyncItems != null ? (s) async => (await widget.asyncItems!(s)).map((e) => (changeTo<string>(e), changeTo<T?>(e))).toList() : null,
+      asyncItems: widget.asyncItems,
     );
   }
 }
@@ -768,44 +731,6 @@ class _CampoTelefoneState extends State<CampoTelefone> {
   }
 }
 
-class _CampoTextoState extends State<CampoTexto> {
-  @override
-  Widget build(BuildContext context) {
-    return CampoValor<String>(
-      label: widget.label,
-      icon: widget.icon,
-      controller: widget.controller,
-      options: widget.options.distinct().map((e) => (e, e)),
-      asyncItems: widget.asyncItems != null ? (s) async => (await widget.asyncItems!(s)).map((e) => (e, e)).toList() : null,
-      inputFormatters: widget.inputFormatters,
-      onChange: (newValue) {
-        if (widget.onChange != null) {
-          widget.onChange!(newValue?.$2);
-        }
-      },
-      onEditingComplete: widget.onEditingComplete,
-      validator: (v) {
-        if (widget.validator != null) {
-          return widget.validator!(v?.$2);
-        }
-        return null;
-      },
-      maxLen: widget.maxLen,
-      lines: widget.lines,
-      defaultValue: widget.defaultValue,
-      readOnly: widget.readOnly,
-      isAutoComplete: widget.isAutoComplete,
-      color: widget.color,
-      keyboardType: widget.keyboardType,
-      textAlign: widget.textAlign,
-      obscureText: widget.obscureText,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      onIconTap: widget.onIconTap,
-    );
-  }
-}
-
 class _CampoTipoPessoaState extends State<CampoTipoPessoa> {
   @override
   Widget build(BuildContext context) {
@@ -838,12 +763,12 @@ class _CampoTipoPessoaState extends State<CampoTipoPessoa> {
   }
 }
 
-class _CampoValorState<T> extends State<CampoValor<T>> {
+class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
   FocusNode? _focusNode;
   TextEditingController? _controller;
-  (String, T?)? _dropdownValue;
+  final ValueNotifier<T?> _dropdownValue = ValueNotifier<T?>(null);
 
-  String Function((string, T?)) get itemAsString => widget.itemAsString ?? (e) => e.$1;
+  String Function(T?) get itemAsString => widget.itemAsString ?? (e) => changeTo<string>(e);
 
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
 
@@ -853,28 +778,40 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
       return Padding(
         padding: paddingCampos,
         child: widget.options.isNotEmpty
-            ? Autocomplete<(String, T?)>(
+            ? Autocomplete<T>(
                 initialValue: _controller!.value,
+                optionsViewBuilder: widget.itemBuilder != null
+                    ? (context, onSelected, options) {
+                        var opt = options.toList();
+                        return ListView.builder(
+                            itemBuilder: (context, i) => itemBuilder(
+                                  context,
+                                  opt[i],
+                                  _dropdownValue.value != null ? (i == opt.indexOf(_dropdownValue.value!)) : false,
+                                ),
+                            itemCount: options.length);
+                      }
+                    : null,
                 onSelected: (newValue) {
-                  _controller!.text = newValue.$2?.toString() ?? "";
+                  _controller!.text = itemAsString(newValue);
                   if (widget.onChange != null) {
                     widget.onChange!(newValue);
                   }
                 },
                 displayStringForOption: (v) => itemAsString(v),
                 optionsBuilder: (v) async {
-                  List<(string, T?)> values = widget.options.toList();
+                  List<T> values = widget.options.toList();
                   values = widget.options
                       .search(
                         searchTerms: v.text.split(";").whereValid,
-                        searchOn: (e) => [e.$1, flatString(e.$2)],
+                        searchOn: (e) => [flatString(e), itemAsString(e)],
                         levenshteinDistance: 2,
                       )
                       .toList();
                   if (widget.asyncItems != null) {
                     values = [...values, ...(await widget.asyncItems!(v.text))];
                   }
-                  return values.distinct();
+                  return values.distinct().toList();
                 },
                 fieldViewBuilder: (context, textEditingController, fn, onFieldSubmitted) {
                   textEditingController.text = _controller!.text;
@@ -893,30 +830,31 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
             : field(_focusNode!, _controller!),
       );
     } else {
-      _dropdownValue = widget.options.where((e) => _controller!.text.isNotBlank && "${e.$2}".flatEqual(_controller!.text)).firstOrNull ??
-          widget.options.where((e) => e.$2 == widget.defaultValue).firstOrNull ??
-          widget.options.firstOrNull;
       return Padding(
         padding: paddingCampos,
-        child: DropdownSearch<(String, T?)>(
+        child: DropdownSearch<T>(
           filterFn: (item, filters) =>
               filters.isBlank ||
               FilterFunctions.fullFilterFunction(
                 searchTerms: filters.split(";").whereValid,
-                searchOn: [item.$1, flatString(item.$2)],
+                searchOn: [flatString(item)],
               ),
-          compareFn: (item1, item2) => item1.$2.flatEqual(item2.$2),
-          popupProps: popupCampos(widget.label, options: widget.options.toList()),
-          selectedItem: _dropdownValue,
+          // compareFn: (item1, item2) => item1 == item2,
+          popupProps: popupCampos(
+            widget.label,
+            itemBuilder: itemBuilder,
+          ),
+          selectedItem: _dropdownValue.value,
           dropdownDecoratorProps: DropDownDecoratorProps(
             dropdownSearchDecoration: estiloCampos(widget.label, widget.icon, widget.onIconTap),
           ),
+          items: [if (_dropdownValue.value != null) _dropdownValue.value!],
           asyncItems: (v) async {
-            List<(string, T?)> values = widget.options.toList();
+            List<T> values = widget.options.toList();
             values = widget.options
                 .search(
                   searchTerms: v.split(";").whereValid,
-                  searchOn: (e) => [e.$1, flatString(e.$2)],
+                  searchOn: (e) => [flatString(e), itemAsString(e)],
                   levenshteinDistance: 2,
                 )
                 .toList();
@@ -927,12 +865,12 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
           },
           itemAsString: itemAsString,
           onChanged: (newValue) {
-            var nv = newValue?.$2?.toString() ?? "";
-            if (_controller!.text == nv) {
+            if (_dropdownValue.value == newValue) {
               _controller!.text = "";
-              _dropdownValue = null;
+              _dropdownValue.value = null;
             } else {
-              _controller!.text = nv;
+              _controller!.text = itemAsString(newValue);
+              _dropdownValue.value = newValue;
             }
             if (widget.onChange != null) {
               widget.onChange!(newValue);
@@ -951,7 +889,7 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
         onChanged: (newValue) {
           _controller!.text = newValue;
           if (widget.onChange != null) {
-            widget.onChange!((newValue, newValue.parseTo<T>()));
+            widget.onChange!(newValue.changeTo<T>());
           }
         },
         onEditingComplete: widget.onEditingComplete,
@@ -961,7 +899,7 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
         validator: (s) {
           if (widget.validator != null) {
             try {
-              return widget.validator!((s ?? "", s.parseTo<T>()));
+              return widget.validator!(s.changeTo<T>());
             } catch (e) {
               return "$e";
             }
@@ -977,11 +915,37 @@ class _CampoValorState<T> extends State<CampoValor<T>> {
   @override
   void initState() {
     _controller ??= widget.controller ?? TextEditingController();
-    string v = _controller!.text | widget.defaultValue?.toString() | "";
-    if (v.isNotBlank) {
-      _controller!.text = v;
+    _dropdownValue.value = widget.initialValue;
+    if (_controller!.text.isBlank) {
+      if (widget.initialValue is string) {
+        _controller!.text = changeTo(widget.initialValue);
+      } else {
+        _controller!.text = itemAsString(widget.initialValue);
+      }
+    } else {
+      //TODO: como resolver isso aqui?
+      // talvez criar um valueSelector que mapeia um valor do item pora string no controller
+      _dropdownValue.value = widget.options.firstWhereOrNull((e) => itemAsString(e) == _controller!.text);
     }
+
     _focusNode = widget.focusNode ?? FocusNode();
     super.initState();
+  }
+
+  Widget itemBuilder(BuildContext context, T? item, bool isSelected) {
+    isSelected = isSelected || item == _dropdownValue.value;
+    if (widget.itemBuilder != null) {
+      return widget.itemBuilder!(context, item, isSelected);
+    }
+    return ListTile(
+      leading: Visibility(
+        visible: isSelected,
+        child: Icon(
+          Icons.check,
+          color: context.colorScheme.primary,
+        ),
+      ),
+      title: Text(itemAsString(item)),
+    );
   }
 }
