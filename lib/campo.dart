@@ -359,7 +359,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
   final TextEditingController? controller;
   final Iterable<T> options;
   final List<TextInputFormatter> inputFormatters;
-  final void Function(T?)? onChange;
+  final void Function(T?)? onChanged;
   final void Function()? onEditingComplete;
   final String? Function(T?)? validator;
   final int? maxLen;
@@ -376,8 +376,9 @@ class CampoValor<T extends Object> extends StatefulWidget {
   final Future<List<T>> Function(String)? asyncItems;
   final void Function()? onIconTap;
   final Color? color;
-  final String Function(T?)? itemAsString;
-  final Widget Function(BuildContext context, T?, bool isSelected)? itemBuilder;
+  final (String, String) Function(T)? textValueSelector;
+  final Widget Function(BuildContext context, T, bool isSelected)? itemBuilder;
+  final List<dynamic> Function(T?)? searchOn;
 
   const CampoValor({
     super.key,
@@ -385,7 +386,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
     this.controller,
     this.options = const [],
     this.inputFormatters = const [],
-    this.onChange,
+    this.onChanged,
     this.onEditingComplete,
     this.validator,
     this.maxLen,
@@ -402,8 +403,9 @@ class CampoValor<T extends Object> extends StatefulWidget {
     this.asyncItems,
     this.onIconTap,
     this.color,
-    this.itemAsString,
+    this.textValueSelector,
     this.itemBuilder,
+    this.searchOn,
   });
 
   @override
@@ -472,7 +474,7 @@ class _CampoCPFouCNPJState extends State<CampoCPFouCNPJ> {
       ],
       keyboardType: const TextInputType.numberWithOptions(),
       validator: (newValue) => Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!",
-      onChange: widget.onChange,
+      onChanged: widget.onChange,
       readOnly: widget.readOnly,
     );
   }
@@ -507,7 +509,7 @@ class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
       maxLen: widget.maxLen,
       label: widget.label,
       controller: widget.controller,
-      onChange: (newValue) {
+      onChanged: (newValue) {
         if (widget.onChange != null) {
           (widget.onChange)!(changeTo<T>(newValue));
         }
@@ -525,7 +527,7 @@ class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
       options: widget.values,
-      itemAsString: itemAsString,
+      textValueSelector: (x) => (itemAsString(x), x.toString()),
     );
   }
 }
@@ -533,47 +535,44 @@ class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
 class _CampoListaCidadeState extends State<CampoListaCidade> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: paddingCampos,
-      child: DropdownSearch<Cidade>(
-        asyncItems: (s) async => (await Brasil.pesquisarCidade(s, widget.nomeEstadoOuUFOuIBGEouRegiao)).toList(),
-        validator: widget.validator,
-        compareFn: (item1, item2) => item1.ibge == item2.ibge,
-        itemAsString: (item) => "${item.nome} - ${item.estado.uf}",
-        filterFn: (item, filters) =>
-            filters.isBlank ||
-            FilterFunctions.fullFilterFunction(searchTerms: <dynamic>[
-              ...filters.split(";").whereValid
-            ], searchOn: [
-              item.ibge,
-              item.estado.uf,
-              item.nome,
-              filters.flatEqual('capital') && item.capital ? filters : "",
-            ]),
-        popupProps: popupCampos(
-          widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
-          itemBuilder: (context, item, isSelected) {
-            isSelected = isSelected || item.ibge == widget.value?.ibge;
-            return ListTile(
-              leading: Visibility(
-                visible: isSelected,
-                child: Icon(
-                  Icons.check,
-                  color: context.colorScheme.primary,
-                ),
+    return DropdownSearch<Cidade>(
+      asyncItems: (s) async => (await Brasil.pesquisarCidade(s, widget.nomeEstadoOuUFOuIBGEouRegiao)).toList(),
+      validator: widget.validator,
+      compareFn: (item1, item2) => item1.ibge == item2.ibge,
+      itemAsString: (item) => "${item.nome} - ${item.estado.uf}",
+      filterFn: (item, filters) =>
+          filters.isBlank ||
+          FilterFunctions.fullFilterFunction(searchTerms: <dynamic>[
+            ...filters.split(";").whereValid
+          ], searchOn: [
+            item.ibge,
+            item.estado.uf,
+            item.nome,
+            filters.flatEqual('capital') && item.capital ? filters : "",
+          ]),
+      popupProps: popupCampos(
+        widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
+        itemBuilder: (context, item, isSelected) {
+          isSelected = isSelected || item.ibge == widget.value?.ibge;
+          return ListTile(
+            leading: Visibility(
+              visible: isSelected,
+              child: Icon(
+                Icons.check,
+                color: context.colorScheme.primary,
               ),
-              title: Text(item.nome),
-              subtitle: Text("Estado: ${item.estado.nome} | IBGE: ${item.ibge} ${item.capital ? '| Capital' : ""}"),
-              trailing: Text(item.estado.uf).fontSize(20),
-            );
-          },
-        ),
-        selectedItem: widget.value,
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: estiloCampos(widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"), Icons.map),
-        ),
-        onChanged: widget.onChanged,
+            ),
+            title: Text(item.nome),
+            subtitle: Text("Estado: ${item.estado.nome} | IBGE: ${item.ibge} ${item.capital ? '| Capital' : ""}"),
+            trailing: Text(item.estado.uf).fontSize(20),
+          );
+        },
       ),
+      selectedItem: widget.value,
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: estiloCampos(widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"), Icons.map),
+      ),
+      onChanged: widget.onChanged,
     );
   }
 }
@@ -581,51 +580,37 @@ class _CampoListaCidadeState extends State<CampoListaCidade> {
 class _CampoListaEstadoState extends State<CampoListaEstado> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: paddingCampos,
-      child: DropdownSearch<Estado>(
-        compareFn: (item1, item2) => item1.ibge == item2.ibge,
-        dropdownButtonProps: DropdownButtonProps(isVisible: widget.modoCompacto == false),
-        popupProps: popupCampos(
-          widget.modoCompacto ? "UF" : "Estado",
-          itemBuilder: (context, item, isSelected) {
-            isSelected = isSelected || item.ibge == widget.estadoValue.ibge;
-            if (widget.modoCompacto) {
-              return ListTile(
-                title: item.uf.asText().fontSize(15).textColor(isSelected ? context.colorScheme.primary : null),
-                subtitle: Text("IBGE: ${item.ibge}").fontSize(10),
-              );
-            } else {
-              return ListTile(
-                leading: Visibility(
-                  visible: isSelected,
-                  child: Icon(
-                    Icons.check,
-                    color: context.colorScheme.primary,
-                  ),
-                ),
-                trailing: item.uf.asText().fontSize(20),
-                title: item.nome.asText(),
-                subtitle: Text("IBGE: ${item.ibge}"),
-              );
-            }
-          },
-        ),
-        itemAsString: (item) => widget.modoCompacto ? item.uf : item.nome,
-        clearButtonProps: const ClearButtonProps(icon: Icon(Icons.clear_all), isVisible: true),
-        selectedItem: widget.estadoValue,
-        filterFn: (item, filters) =>
-            filters.isBlank ||
-            FilterFunctions.fullFilterFunction(
-              searchTerms: filters.split(";").whereValid,
-              searchOn: [item.uf, item.nome, item.ibge],
+    return CampoValor<Estado>(
+      label: widget.modoCompacto ? "UF" : "Estado",
+      itemBuilder: (context, item, isSelected) {
+        isSelected = isSelected || item.ibge == widget.estadoValue.ibge;
+        if (widget.modoCompacto) {
+          return ListTile(
+            title: item.uf.asText().fontSize(15).textColor(isSelected ? context.colorScheme.primary : null),
+            subtitle: Text("IBGE: ${item.ibge}").fontSize(10),
+          );
+        } else {
+          return ListTile(
+            leading: Visibility(
+              visible: isSelected,
+              child: Icon(
+                Icons.check,
+                color: context.colorScheme.primary,
+              ),
             ),
-        items: widget.regiao.estados.toList(),
-        onChanged: (x) => widget.onChanged(x ?? Estado.naoDefinido),
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: estiloCampos(widget.modoCompacto ? "UF" : "Estado", widget.icon, widget.onIconTap),
-        ),
-      ),
+            trailing: item.uf.asText().fontSize(20),
+            title: item.nome.asText(),
+            subtitle: Text("IBGE: ${item.ibge}"),
+          );
+        }
+      },
+      textValueSelector: (item) => widget.modoCompacto ? (item.uf, item.uf) : (item.nome, item.nome),
+      initialValue: widget.estadoValue,
+      searchOn: (item) => [item?.uf, item?.nome, item?.ibge],
+      options: widget.regiao.estados,
+      onChanged: (x) => widget.onChanged(x ?? Estado.naoDefinido),
+      icon: widget.icon,
+      onIconTap: widget.onIconTap,
     );
   }
 }
@@ -640,7 +625,7 @@ class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
       inputFormatters: widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters,
       label: widget.label,
       controller: widget.controller,
-      onChange: (newValue) {
+      onChanged: (newValue) {
         if (widget.onChange != null) {
           widget.onChange!(changeTo<T>(newValue));
         }
@@ -674,7 +659,7 @@ class _CampoSimNaoState extends State<CampoSimNao> {
       label: widget.label,
       controller: controller,
       options: const ["Sim", "Não"],
-      onChange: widget.onChange,
+      onChanged: widget.onChange,
       validator: (newValue) {
         if (newValue.isBlank) {
           controller.text = "Não";
@@ -707,7 +692,7 @@ class _CampoTelefoneState extends State<CampoTelefone> {
         TelefoneInputFormatter(),
       ],
       keyboardType: const TextInputType.numberWithOptions(),
-      onChange: (newValue) {
+      onChanged: (newValue) {
         var formatado = Brasil.formatarTelefone(newValue);
         if (controller.text != formatado) {
           controller.text = formatado;
@@ -744,7 +729,7 @@ class _CampoTipoPessoaState extends State<CampoTipoPessoa> {
         }
         return null;
       }),
-      onChange: widget.onChange,
+      onChanged: widget.onChange,
     );
   }
 
@@ -768,7 +753,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
   TextEditingController? _controller;
   final ValueNotifier<T?> _dropdownValue = ValueNotifier<T?>(null);
 
-  String Function(T?) get itemAsString => widget.itemAsString ?? (e) => changeTo<string>(e);
+  (String, string) Function(T) get textValueSelector => widget.textValueSelector ?? (e) => (changeTo<string>(e), changeTo<string>(e));
 
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
 
@@ -784,27 +769,28 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
                     ? (context, onSelected, options) {
                         var opt = options.toList();
                         return ListView.builder(
+                            shrinkWrap: true,
                             itemBuilder: (context, i) => itemBuilder(
                                   context,
                                   opt[i],
                                   _dropdownValue.value != null ? (i == opt.indexOf(_dropdownValue.value!)) : false,
                                 ),
-                            itemCount: options.length);
+                            itemCount: opt.length);
                       }
                     : null,
                 onSelected: (newValue) {
-                  _controller!.text = itemAsString(newValue);
-                  if (widget.onChange != null) {
-                    widget.onChange!(newValue);
+                  _controller!.text = textValueSelector(newValue).$2;
+                  if (widget.onChanged != null) {
+                    widget.onChanged!(newValue);
                   }
                 },
-                displayStringForOption: (v) => itemAsString(v),
+                displayStringForOption: (v) => textValueSelector(v).$2,
                 optionsBuilder: (v) async {
                   List<T> values = widget.options.toList();
                   values = widget.options
                       .search(
                         searchTerms: v.text.split(";").whereValid,
-                        searchOn: (e) => [flatString(e), itemAsString(e)],
+                        searchOn: searchOn,
                         levenshteinDistance: 2,
                       )
                       .toList();
@@ -837,9 +823,9 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
               filters.isBlank ||
               FilterFunctions.fullFilterFunction(
                 searchTerms: filters.split(";").whereValid,
-                searchOn: [flatString(item)],
+                searchOn: searchOn(item),
               ),
-          // compareFn: (item1, item2) => item1 == item2,
+          compareFn: (item1, item2) => textValueSelector(item1).$2 == textValueSelector(item2).$2,
           popupProps: popupCampos(
             widget.label,
             itemBuilder: itemBuilder,
@@ -854,7 +840,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
             values = widget.options
                 .search(
                   searchTerms: v.split(";").whereValid,
-                  searchOn: (e) => [flatString(e), itemAsString(e)],
+                  searchOn: searchOn,
                   levenshteinDistance: 2,
                 )
                 .toList();
@@ -863,17 +849,17 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
             }
             return values.distinct().toList();
           },
-          itemAsString: itemAsString,
+          itemAsString: (x) => textValueSelector(x).$1,
           onChanged: (newValue) {
-            if (_dropdownValue.value == newValue) {
+            if (_dropdownValue.value == newValue || newValue == null) {
               _controller!.text = "";
               _dropdownValue.value = null;
             } else {
-              _controller!.text = itemAsString(newValue);
+              _controller!.text = textValueSelector(newValue).$2;
               _dropdownValue.value = newValue;
             }
-            if (widget.onChange != null) {
-              widget.onChange!(newValue);
+            if (widget.onChanged != null) {
+              widget.onChanged!(newValue);
             }
           },
         ),
@@ -888,8 +874,8 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         controller: textEditingController,
         onChanged: (newValue) {
           _controller!.text = newValue;
-          if (widget.onChange != null) {
-            widget.onChange!(newValue.changeTo<T>());
+          if (widget.onChanged != null) {
+            widget.onChanged!(newValue.changeTo<T>());
           }
         },
         onEditingComplete: widget.onEditingComplete,
@@ -919,21 +905,19 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
     if (_controller!.text.isBlank) {
       if (widget.initialValue is string) {
         _controller!.text = changeTo(widget.initialValue);
-      } else {
-        _controller!.text = itemAsString(widget.initialValue);
+      } else if (widget.initialValue != null) {
+        _controller!.text = textValueSelector(widget.initialValue!).$2;
       }
     } else {
-      //TODO: como resolver isso aqui?
-      // talvez criar um valueSelector que mapeia um valor do item pora string no controller
-      _dropdownValue.value = widget.options.firstWhereOrNull((e) => itemAsString(e) == _controller!.text);
+      _dropdownValue.value = widget.options.firstWhereOrNull((e) => textValueSelector(e).$2 == _controller!.text);
     }
 
     _focusNode = widget.focusNode ?? FocusNode();
     super.initState();
   }
 
-  Widget itemBuilder(BuildContext context, T? item, bool isSelected) {
-    isSelected = isSelected || item == _dropdownValue.value;
+  Widget itemBuilder(BuildContext context, T item, bool isSelected) {
+    isSelected = isSelected || item == _dropdownValue.value || textValueSelector(item).$2 == _controller!.text;
     if (widget.itemBuilder != null) {
       return widget.itemBuilder!(context, item, isSelected);
     }
@@ -942,10 +926,18 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         visible: isSelected,
         child: Icon(
           Icons.check,
-          color: context.colorScheme.primary,
+          color: widget.color ?? context.colorScheme.primary,
         ),
       ),
-      title: Text(itemAsString(item)),
+      title: Text(textValueSelector(item).$1),
+      subtitle: Text(textValueSelector(item).$2),
     );
+  }
+
+  List<dynamic> searchOn(T x) {
+    if (widget.searchOn != null) {
+      return widget.searchOn!(x);
+    }
+    return [textValueSelector(x).$1, textValueSelector(x).$2, flatString(x)];
   }
 }
