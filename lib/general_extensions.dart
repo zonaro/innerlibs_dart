@@ -346,10 +346,12 @@ extension ObjectExtensions<T extends Object?> on T {
       return this != null && items.containsValue(this);
     }
     if (items is String) {
-      return this != null && items.getWords.contains(toString());
+      return this != null && items.contains(toString());
     }
     return false;
   }
+
+  bool isNotIn(dynamic items) => !isIn(items);
 
   /// Checks if [Object] has a valid value.
   ///

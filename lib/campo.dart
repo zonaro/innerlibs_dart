@@ -324,13 +324,13 @@ class CampoSimNao extends StatefulWidget {
 
 class CampoTelefone extends StatefulWidget {
   final TextEditingController? controller;
-  final void Function(String?)? onChange;
+  final void Function(String?)? onChanged;
   final String label;
 
   const CampoTelefone({
     super.key,
     required this.controller,
-    this.onChange,
+    this.onChanged,
     this.label = "",
   });
 
@@ -535,43 +535,32 @@ class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
 class _CampoListaCidadeState extends State<CampoListaCidade> {
   @override
   Widget build(BuildContext context) {
-    return DropdownSearch<Cidade>(
+    return CampoValor<Cidade>(
       asyncItems: (s) async => (await Brasil.pesquisarCidade(s, widget.nomeEstadoOuUFOuIBGEouRegiao)).toList(),
       validator: widget.validator,
-      compareFn: (item1, item2) => item1.ibge == item2.ibge,
-      itemAsString: (item) => "${item.nome} - ${item.estado.uf}",
-      filterFn: (item, filters) =>
-          filters.isBlank ||
-          FilterFunctions.fullFilterFunction(searchTerms: <dynamic>[
-            ...filters.split(";").whereValid
-          ], searchOn: [
-            item.ibge,
-            item.estado.uf,
-            item.nome,
-            filters.flatEqual('capital') && item.capital ? filters : "",
-          ]),
-      popupProps: popupCampos(
-        widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
-        itemBuilder: (context, item, isSelected) {
-          isSelected = isSelected || item.ibge == widget.value?.ibge;
-          return ListTile(
-            leading: Visibility(
-              visible: isSelected,
-              child: Icon(
-                Icons.check,
-                color: context.colorScheme.primary,
-              ),
+      textValueSelector: (item) => ("${item.nome} - ${item.estado.uf}", item.ibge.toString()),
+      searchOn: (item) => [
+        item?.nome,
+        item?.ibge,
+        item?.estado.uf,
+      ],
+      label: widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
+      itemBuilder: (context, item, isSelected) {
+        isSelected = isSelected || item.ibge == widget.value?.ibge;
+        return ListTile(
+          leading: Visibility(
+            visible: isSelected,
+            child: Icon(
+              Icons.check,
+              color: context.colorScheme.primary,
             ),
-            title: Text(item.nome),
-            subtitle: Text("Estado: ${item.estado.nome} | IBGE: ${item.ibge} ${item.capital ? '| Capital' : ""}"),
-            trailing: Text(item.estado.uf).fontSize(20),
-          );
-        },
-      ),
-      selectedItem: widget.value,
-      dropdownDecoratorProps: DropDownDecoratorProps(
-        dropdownSearchDecoration: estiloCampos(widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"), Icons.map),
-      ),
+          ),
+          title: Text(item.nome),
+          subtitle: Text("Estado: ${item.estado.nome} | IBGE: ${item.ibge} ${item.capital ? '| Capital' : ""}"),
+          trailing: Text(item.estado.uf).fontSize(20),
+        );
+      },
+      initialValue: widget.value,
       onChanged: widget.onChanged,
     );
   }
@@ -697,7 +686,7 @@ class _CampoTelefoneState extends State<CampoTelefone> {
         if (controller.text != formatado) {
           controller.text = formatado;
         }
-        widget.onChange?.call(formatado);
+        if (widget.onChanged != null) widget.onChanged!(formatado);
       },
       validator: (newValue) {
         if (!Brasil.validarTelefone(newValue)) {
@@ -752,6 +741,8 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
   FocusNode? _focusNode;
   TextEditingController? _controller;
   final ValueNotifier<T?> _dropdownValue = ValueNotifier<T?>(null);
+
+  Iterable<T> get options => [_dropdownValue.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).$2).toList();
 
   (String, string) Function(T) get textValueSelector => widget.textValueSelector ?? (e) => (changeTo<string>(e), changeTo<string>(e));
 
@@ -834,7 +825,6 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
           dropdownDecoratorProps: DropDownDecoratorProps(
             dropdownSearchDecoration: estiloCampos(widget.label, widget.icon, widget.onIconTap),
           ),
-          items: [if (_dropdownValue.value != null) _dropdownValue.value!],
           asyncItems: (v) async {
             List<T> values = widget.options.toList();
             values = widget.options
@@ -847,7 +837,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
             if (widget.asyncItems != null) {
               values = [...values, ...(await widget.asyncItems!(v))];
             }
-            return values.distinct().toList();
+            return values.distinctBy((x) => textValueSelector(x)).toList();
           },
           itemAsString: (x) => textValueSelector(x).$1,
           onChanged: (newValue) {
@@ -873,12 +863,17 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         maxLength: widget.maxLen,
         controller: textEditingController,
         onChanged: (newValue) {
-          _controller!.text = newValue;
           if (widget.onChanged != null) {
             widget.onChanged!(newValue.changeTo<T>());
           }
         },
-        onEditingComplete: widget.onEditingComplete,
+        onEditingComplete: () {
+          _controller!.text = textEditingController.text;
+
+          if (widget.onEditingComplete != null) {
+            widget.onEditingComplete!();
+          }
+        },
         inputFormatters: widget.inputFormatters,
         keyboardType: widget.keyboardType,
         decoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color),
@@ -909,7 +904,10 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         _controller!.text = textValueSelector(widget.initialValue!).$2;
       }
     } else {
-      _dropdownValue.value = widget.options.firstWhereOrNull((e) => textValueSelector(e).$2 == _controller!.text);
+      _dropdownValue.value = options.firstWhereOrNull((e) => textValueSelector(e).$2 == _controller!.text);
+    }
+    if (_dropdownValue.value == null && isSameType<T, string>() && _controller!.text.isNotBlank) {
+      _dropdownValue.value = changeTo(_controller!.text);
     }
 
     _focusNode = widget.focusNode ?? FocusNode();
@@ -930,7 +928,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         ),
       ),
       title: Text(textValueSelector(item).$1),
-      subtitle: Text(textValueSelector(item).$2),
+      subtitle: textValueSelector(item).$2 != textValueSelector(item).$1 ? Text(textValueSelector(item).$2) : null,
     );
   }
 
@@ -938,6 +936,11 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
     if (widget.searchOn != null) {
       return widget.searchOn!(x);
     }
-    return [textValueSelector(x).$1, textValueSelector(x).$2, flatString(x)];
+    return [
+      textValueSelector(x).$1,
+      textValueSelector(x).$2,
+      flatString(x),
+      if (T is JsonMap) ...(x as JsonMap).values,
+    ];
   }
 }

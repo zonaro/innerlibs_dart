@@ -7,6 +7,10 @@ typedef CRT = RegimeTributario;
 
 typedef MetodoPagamento = FormaPagamento;
 
+typedef ModalidadeFrete = ModalidadeFreteNFe;
+
+typedef TipoFrete = ModalidadeFreteNFe;
+
 typedef TipoNota = TipoOperacao;
 
 enum FinalidadeNFe {
