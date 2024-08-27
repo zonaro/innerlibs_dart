@@ -889,27 +889,38 @@ extension StringExtensions on String {
     return this == toUpperCase();
   }
 
-  /// Checks whether the `String` is a valid URL.
-  /// ### Example 1
+  /// Checks if the `String` is a valid URL or IP address.
+  /// Allow URls and IPs with or without http:// or https:// and with or without port.
+  /// ### Example
   /// ```dart
-  /// String foo = 'foo.1com';
-  /// bool isUrl = foo.isUrl; // returns false
+  ///
+  /// String foo = 'https://www.google.com';
+  /// bool isURL = foo.isURLOrIP; // returns true
+  ///
+  /// String foo2 = 'http://www.google.com:8080';
+  /// bool isURL2 = foo2.isURLOrIP; // returns true
+  ///
+  /// String foo3 = 'google.com';
+  /// bool isURL3 = foo3.isURLOrIP; // returns true
+  ///
+  /// String foo4 = '192.168.110.15';
+  /// bool isURL4 = foo4.isURLOrIP; // returns true
+  ///
+  /// String foo5 = 'http://192.168.15.66';
+  /// bool isURL5 = foo5.isURLOrIP; // returns true
+  ///
+  /// String foo6 = '192.168.10.10:8080';
+  /// bool isURL6 = foo6.isURLOrIP; // returns true
   /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = 'google.com';
-  /// bool isUrl = foo.isUrl; // returns true
-  /// ```
-  bool get isUrl {
+
+  bool get isURLOrIP {
     if (isBlank) {
       return false;
     }
-
-    var regex = RegExp(r'[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)');
-    return regex.hasMatch(this);
+    // uses regex for url (with or without port) or IP (with or withou port)
+    return RegExp(r'^((http|https):\/\/)?(www\.)?([a-zA-Z0-9]+([a-zA-Z0-9-]+[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(:[0-9]{1,5})?$|^((http|https):\/\/)?([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,5})?$')
+        .hasMatch(this);
   }
-
-  bool get isURLOrIP => isURL || isIP;
 
   /// Checks if the string is a valid EAN (European Article Number) barcode.
   ///
