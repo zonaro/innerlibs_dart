@@ -728,47 +728,7 @@ extension StringExtensions on String {
 
   bool get isIP => isIPv4 || isIPv6;
 
-  bool get isIPv4 {
-    if (isBlank) return false;
-    // Divide a string em partes usando o ponto como delimitador
-    final parts = split('.');
-
-    // Deve haver exatamente 4 partes
-    if (parts.length != 4) {
-      return false;
-    }
-
-    // Verifica se cada parte é um número inteiro entre 0 e 255
-    for (final part in parts) {
-      final intValue = int.tryParse(part);
-      if (intValue == null || intValue < 0 || intValue > 255) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  /// Checks whether the `String` is a valid IPv6.
-  /// ### Example 1
-  /// ```dart
-  /// String foo = '2001:0db8:85a3:0000:0000:8a2e:0370:7334';
-  /// bool isIpv6 = foo.isIpv6; // returns true
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = '192.168.1.14.150.1225';
-  /// bool isIpv6 = foo.isIpv6; // returns false
-  /// ```
-  bool get isIPv6 {
-    if (isBlank) {
-      return false;
-    }
-    substring(0, 1);
-    var regex = RegExp(
-        r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))');
-    return regex.hasMatch(this);
-  }
+  bool get isURLOrIP => isURL || isIP;
 
   /// Checks if the `String` has only Latin characters.
   /// ### Example
