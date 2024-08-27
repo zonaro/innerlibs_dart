@@ -201,8 +201,8 @@ extension StringExtensions on String {
     }
 
     // Check if the string is a valid hexadecimal color
-    final hexColorRegex = RegExp(r'^#?([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})$');
-    if (hexColorRegex.hasMatch(this)) {
+
+    if (isHexadecimal) {
       final hexColor = replaceFirst('#', ''); // Remove any leading '#'
       final alpha = hexColor.length == 8 ? hexColor.substring(0, 2) : 'FF'; // Extract alpha value or use default 'FF'
       final color = hexColor.substring(hexColor.length - 6); // Extract RGB value
@@ -726,9 +726,12 @@ extension StringExtensions on String {
     return regex.hasMatch(this);
   }
 
-  bool get isIP => isIPv4 || isIPv6;
+  bool get isHexadecimal {
+    final hexColorRegex = RegExp(r'^#?([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})$');
+    return hexColorRegex.hasMatch(this);
+  }
 
-  bool get isURLOrIP => isURL || isIP;
+  bool get isIP => isIPv4 || isIPv6;
 
   /// Checks if the `String` has only Latin characters.
   /// ### Example
@@ -905,6 +908,8 @@ extension StringExtensions on String {
     var regex = RegExp(r'[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)');
     return regex.hasMatch(this);
   }
+
+  bool get isURLOrIP => isURL || isIP;
 
   /// Checks if the string is a valid EAN (European Article Number) barcode.
   ///

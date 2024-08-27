@@ -985,28 +985,6 @@ mixin FilterFunctions {
           ignoreWordSplitters: ignoreWordSplitters,
           splitCamelCase: splitCamelCase,
         ));
-
-    // return l
-    //     .orderByDescending(
-    //       (item) => FilterFunctions.countSearch(
-    //         item: item,
-    //         searchTerms: searchTerms,
-    //         searchOn: searchOn,
-    //         ignoreCase: ignoreCase,
-    //         ignoreDiacritics: ignoreDiacritics,
-    //         ignoreWordSplitters: ignoreWordSplitters,
-    //         splitCamelCase: splitCamelCase,
-    //         useWildcards: useWildcards,
-    //       ),
-    //     )
-    //     .thenBy(
-    //       (item) => FilterFunctions.countLevenshtein(
-    //         item: item,
-    //         searchTerms: searchTerms,
-    //         searchOn: searchOn,
-    //         levenshteinDistance: levenshteinDistance,
-    //       ),
-    //     );
   }
 
   /// Searches for a specific item in an iterable based on given search terms and criteria.
@@ -1067,3 +1045,5 @@ mixin FilterFunctions {
         allIfEmpty: allIfEmpty);
   }
 }
+
+    
