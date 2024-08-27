@@ -131,12 +131,14 @@ class HSVColor implements Color, Comparable<HSVColor> {
     }
   }
 
-  HSVColor complementary() => modColor([180]).first;
+  HSVColor complementary() => modColor(180);
 
   @override
   double computeLuminance() => _scolor.computeLuminance();
 
-  Iterable<HSVColor> modColor(ints degrees) => degrees.map((x) {
+  HSVColor modColor(int degrees) => modColors([degrees]).first;
+
+  Iterable<HSVColor> modColors(ints degrees) => degrees.map((x) {
         return HSVColor()
           ..hue = (hue + x) % 360
           ..saturation = saturation
