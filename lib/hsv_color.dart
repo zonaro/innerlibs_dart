@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 class HSVColor implements Color, Comparable<HSVColor> {
-  // Campos privados
   late double _h, _s, _v;
   late String _name;
   late Color _scolor;
@@ -13,20 +12,19 @@ class HSVColor implements Color, Comparable<HSVColor> {
     _loadColor(color);
     _name = name ?? color.alphaHexadecimal;
   }
-  HSVColor.fromARGB(int argb) : this(Color(argb));
-  factory HSVColor.fromImage(Image img, {int reduce = 16}) {
-    // Implementar lógica para extrair cor vibrante de uma imagem
-    return HSVColor();
-  }
-  HSVColor.fromRGB(int r, int g, int b) : this.fromARGB(255 << 24 | r << 16 | g << 8 | b);
-  HSVColor.fromRGBA(int a, int r, int g, int b) : this(Color.fromARGB(a, r, g, b));
+
+  @override
+  HSVColor.fromARGB(int a, int r, int g, int b) : this(Color.fromARGB(a, r, g, b));
+
+  HSVColor.fromInt(int argb) : this(Color(argb));
+
+  HSVColor.fromRGB(int r, int g, int b) : this.fromInt(255 << 24 | r << 16 | g << 8 | b);
 
   HSVColor.fromString(String color, [string? name]) {
     _loadColor(color.asColor);
     _name = name ?? color;
   }
 
-  // Propriedades públicas
   @override
   int get alpha => _scolor.alpha;
   set alpha(int value) => _loadColor(_scolor.withAlpha(value));
@@ -56,13 +54,10 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   @override
   int get green => _scolor.green;
-
   set green(int value) => _loadColor(_scolor.withGreen(value));
-  String get hexadecimal => _scolor.hexadecimal;
 
-  set hexadecimal(String value) {
-    _loadColor(value.asColor);
-  }
+  String get hexadecimal => _scolor.hexadecimal;
+  set hexadecimal(String value) => _loadColor(value.asColor);
 
   double get hue => _h;
 
@@ -106,6 +101,7 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   @override
   int get value => _scolor.value;
+  set value(int value) => _loadColor(Color(value));
 
   HSVColor addictive(HSVColor color) {
     var n = clone();
@@ -115,7 +111,10 @@ class HSVColor implements Color, Comparable<HSVColor> {
     return n;
   }
 
-  HSVColor clone() => HSVColor(_scolor, _name);
+  HSVColor clone() => HSVColor(_scolor, _name)..description = description;
+
+
+  
 
   // Operadores sobrecarregados
   @override
@@ -138,27 +137,27 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   HSVColor modColor(int degrees) => modColors([degrees]).first;
 
-  Iterable<HSVColor> modColors(ints degrees) => degrees.map((x) {
-        return HSVColor()
-          ..hue = (hue + x) % 360
-          ..saturation = saturation
-          ..brightness = brightness;
-      }).orderBy((x) => x.hue);
+  Iterable<HSVColor> modColors(ints degrees) => degrees
+      .map((x) => HSVColor()
+        ..hue = (hue + x) % 360
+        ..saturation = saturation
+        ..brightness = brightness)
+      .orderBy((x) => x.hue);
 
   @override
-  Color withAlpha(int a) => _scolor.withAlpha(a);
+  HSVColor withAlpha(int a) => _scolor.withAlpha(a).hsv;
 
   @override
-  Color withBlue(int b) => _scolor.withBlue(b);
+  HSVColor withBlue(int b) => _scolor.withBlue(b).hsv;
 
   @override
-  Color withGreen(int g) => _scolor.withGreen(g);
+  HSVColor withGreen(int g) => _scolor.withGreen(g).hsv;
 
   @override
-  Color withOpacity(double opacity) => _scolor.withOpacity(opacity);
+  HSVColor withOpacity(double opacity) => _scolor.withOpacity(opacity).hsv;
 
   @override
-  Color withRed(int r) => _scolor.withRed(r);
+  HSVColor withRed(int r) => _scolor.withRed(r).hsv;
 
   String _getClosestColorName() {
     // return the most similar color from dart Colors by comparing this.color with all colors
@@ -231,13 +230,9 @@ class HSVColor implements Color, Comparable<HSVColor> {
     }
   }
 
-  String _toCssRGB() {
-    return 'rgb($red, $green, $blue)';
-  }
+  String _toCssRGB() => 'rgb($red, $green, $blue)';
 
-  String _toCssRGBA() {
-    return 'rgba($red, $green, $blue, $opacity)';
-  }
+  String _toCssRGBA() => 'rgba($red, $green, $blue, $opacity)';
 
   // Métodos públicos
   static List<HSVColor> createColors(List<String> colors) => colors.map((color) => HSVColor.fromString(color)).toList();
