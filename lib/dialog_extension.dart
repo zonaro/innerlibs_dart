@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -185,6 +187,7 @@ extension DialogExt on BuildContext {
   }) async {
     final bool? isConfirm = await showDialog<bool>(
       context: this,
+      barrierDismissible: canPop,
       builder: (BuildContext context) {
         textOK ??= context.localizations.okButtonLabel;
         textCancel ??= context.localizations.cancelButtonLabel;
@@ -193,18 +196,18 @@ extension DialogExt on BuildContext {
           canPop: canPop,
           onPopInvokedWithResult: onPopInvoked,
           child: AlertDialog(
-            title: (title as Object?).asNullableText(),
+            title: forceWidget(title),
             content: SingleChildScrollView(
-              child: (content as Object?).asText(),
+              child: forceWidget(content),
             ),
             actions: <Widget>[
               TextButton(
-                child: (textCancel as Object?).asText(),
-                onPressed: () => context.pop(false),
+                child: forceWidget(textOK)!,
+                onPressed: () => context.pop(true),
               ),
               TextButton(
-                child: (textOK as Object?).asText(),
-                onPressed: () => context.pop(true),
+                child: forceWidget(textCancel)!,
+                onPressed: () => context.pop(false),
               ),
             ],
           ),
@@ -218,46 +221,48 @@ extension DialogExt on BuildContext {
   ///
   /// The [confirmTaskMessage] parameter represents the content of the confirmation dialog.
   /// The [title] parameter represents the title of the confirmation dialog.
-  /// The [textOK] parameter represents the text for the OK button in the confirmation dialog.
-  /// The [textCancel] parameter represents the text for the Cancel button in the confirmation dialog.
+  /// The [yesButton] parameter represents the text for the OK button in the confirmation dialog.
+  /// The [noButton] parameter represents the text for the Cancel button in the confirmation dialog.
   /// The [canPop] parameter determines whether the dialog can be dismissed by popping the route.
   /// The [onPopInvoked] parameter is a callback function that is invoked when the dialog is popped.
   /// The [task] parameter is a function that returns a future representing the task to be performed.
-  /// The [cancelTaskButtonText] parameter represents the text for the Cancel button in the loader.
+  /// The [cancelTaskButton] parameter represents the text for the Cancel button in the loader.
   /// The [loadingText] parameter represents the text to be displayed while the task is loading.
-  /// The [cancelConfirmationMessage] parameter represents the message to be displayed in the confirmation dialog.
+  /// The [cancelConfirmationText] parameter represents the message to be displayed in the confirmation dialog.
   ///
   /// Returns the result of the task if the user confirms, otherwise returns null.
   Future<T?> confirmTask<T>({
     dynamic confirmTaskMessage,
     dynamic title,
-    dynamic textOK,
-    dynamic textCancel,
+    dynamic yesButton,
+    dynamic noButton,
     bool canPop = false,
     void Function(bool, dynamic)? onPopInvoked,
-    Future<T?> Function()? task,
-    dynamic cancelTaskButtonText,
+    required Future<T?> Function() task,
+    dynamic cancelTaskButton,
     dynamic loadingText,
-    dynamic cancelConfirmationMessage,
+    dynamic cancelConfirmationText,
     void Function(Object?)? onError,
+    void Function()? onCancel,
   }) async {
     bool isConfirmed = await confirm(
       confirmTaskMessage,
       title: title,
-      textOK: textOK,
-      textCancel: textCancel,
+      textOK: yesButton,
+      textCancel: noButton,
       canPop: canPop,
       onPopInvoked: onPopInvoked,
     );
     if (isConfirmed) {
       return await showTaskLoader(
         task: task,
-        cancelTaskButton: cancelTaskButtonText,
+        cancelTaskButton: cancelTaskButton,
         loadingText: loadingText,
-        yesButton: textOK,
-        noButton: textCancel,
-        cancelConfirmationText: cancelConfirmationMessage,
+        yesButton: yesButton,
+        noButton: noButton,
+        cancelConfirmationText: cancelConfirmationText,
         onError: onError,
+        onCancel: onCancel,
       );
     }
     return null;
@@ -469,60 +474,54 @@ extension DialogExt on BuildContext {
   ///
   /// The [cancelConfirmationText] parameter is an optional message to be displayed before canceling the task. If provided, the user will be prompted to confirm the cancellation.
   ///
+  /// The [onError] parameter is a callback function that is invoked when an error occurs during the task execution.
+  ///
   /// The function returns a future that resolves to the result of the task execution, or `null` if the task was canceled.
   ///
-  /// Example usage:
-  /// ```dart
-  /// final result = await showTaskLoader(
-  ///   task: () async {
-  ///     // Perform some asynchronous task
-  ///     return await fetchData();
-  ///   },
-  ///   cancelTaskButtonText: 'Cancel',
-  ///   loadingText: 'Loading...',
-  ///   textOK: 'OK',
-  ///   textCancel: 'Cancel',
-  ///   confirmationMessage: 'Are you sure you want to cancel the task?',
-  /// );
-  /// ```
-
   Future<T?> showTaskLoader<T>({
-    Future<T?> Function()? task,
+    required Future<T?> Function() task,
+    Duration? timeout,
     dynamic cancelTaskButton,
     dynamic loadingText,
     dynamic yesButton,
     dynamic noButton,
     dynamic cancelConfirmationText,
     void Function(Object?)? onError,
+    void Function()? onCancel,
+    Widget? Function(Duration)? remainTimeWidget,
   }) async {
-    T? result;
-    CancelableOperation<T?>? operation;
-
-    bool cancellable = forceWidget(cancelTaskButton) != null && task != null;
-
-    cancelTask() async {
-      if (cancellable) {
-        if (cancelConfirmationText == null || await confirm(cancelConfirmationText, textCancel: noButton, textOK: yesButton)) {
-          await operation?.cancel();
-        }
-        if (canPop()) {
-          pop(result);
-        }
-      }
-    }
-
+    late CancelableOperation<T?> operation;
+    Duration? remainTime = timeout;
+    Timer? timer;
     showDialog(
       context: this,
       barrierDismissible: false,
-      builder: (BuildContext context) => PopScope(
-        canPop: cancellable,
-        onPopInvokedWithResult: (f, r) => cancelTask(),
-        child: AlertDialog(
+      builder: (BuildContext context) => StatefulBuilder(builder: (BuildContext context, setState) {
+        if (cancelTaskButton == null && onCancel != null) {
+          cancelTaskButton = context.localizations.cancelButtonLabel;
+        }
+        if (timeout != null && timeout.inSeconds > 0) {
+          timer ??= Timer.periodic(1.seconds, (timer) {
+            if (remainTime != null) {
+              remainTime = remainTime! - 1.seconds;
+              if (remainTime!.inSeconds <= 0) {
+                timer.cancel();
+                operation.cancel();
+              } else {
+                setState(() {});
+              }
+            }
+          });
+        }
+        return AlertDialog.adaptive(
           actions: [
-            if (cancellable) ...[
-              const SizedBox(height: 20),
+            if (cancelTaskButton != null) ...[
               ElevatedButton(
-                onPressed: cancelTask,
+                onPressed: () async {
+                  if (cancelConfirmationText == null || await context.confirm(cancelConfirmationText, textCancel: noButton, textOK: yesButton)) {
+                    await operation.cancel();
+                  }
+                },
                 child: forceWidget(cancelTaskButton),
               ),
             ],
@@ -532,40 +531,34 @@ extension DialogExt on BuildContext {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const CircularProgressIndicator(),
-                if (loadingText != null) ...[
-                  const SizedBox(height: 20),
-                  forceWidget(loadingText)!,
-                ],
-              ],
+                remainTime != null && remainTime!.inSeconds > 0
+                    ? CircularProgressIndicator(
+                        value: 1 - (remainTime!.inSeconds / timeout!.inSeconds),
+                        backgroundColor: Colors.grey.withOpacity(.1),
+                      )
+                    : const CircularProgressIndicator(),
+                if (loadingText != null) forceWidget(loadingText)!,
+                if (remainTimeWidget != null && remainTime != null && remainTime!.inSeconds > 0) forceWidget(remainTimeWidget(remainTime!))!,
+              ].whereNotNull().toList()
+                ..insertBetween(const Gap(20)),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
-
-    if (task != null) {
-      Future<T?> tryf() async {
-        T? r;
-        try {
-          r = await task();
-        } catch (e) {
-          if (onError != null) {
-            (onError).call(e); // Call onError function if provided
-          }
-          await operation?.cancel();
-          r = null;
+    operation = CancelableOperation.fromFuture(() async {
+      try {
+        var result = await task();
+        pop(result);
+        return result;
+      } catch (e) {
+        if (onError != null) {
+          pop(null);
+          onError(e); // Call onError function if provided
         }
-        if (canPop()) {
-          pop(result);
-        }
-        return r;
       }
-
-      operation = CancelableOperation.fromFuture(tryf());
-      result = await operation.valueOrCancellation();
-    }
-
-    return result;
+      return null;
+    }(), onCancel: onCancel);
+    return await operation.valueOrCancellation();
   }
 }

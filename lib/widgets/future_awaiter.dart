@@ -6,7 +6,27 @@ import 'package:innerlibs/innerlibs.dart';
 
 /// Holds and validate the data loaded by a [FutureAwaiter]. Optionally expires after [expireDataAfter]
 class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
+  date? loadedAt;
+
+  Duration? expireDataAfter;
+
+  /// When true, validate the snapshot data against the [Object.IsValid] function.
+  /// Empty [List] or [Map], [Map] with all values empty, [num] = 0, empty or blank [String] will be considered empty data if this is true.
+  final bool validateData;
+
+  Object? error;
+
+  List<string? Function(T?)> validations;
+
   AwaiterData({this.validateData = true, T? value, this.expireDataAfter, this.validations = const []}) : super(value);
+  T? get data {
+    if (hasData) {
+      return value!;
+    }
+    return null;
+  }
+
+  date? get expireAt => expireDataAfter != null && loadedAt != null ? loadedAt!.add(expireDataAfter!) : null;
 
   /// return true if last [expireAt] is less than [now]
   bool get expired {
@@ -21,24 +41,6 @@ class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
       clear();
     }
   }
-
-  T? get data {
-    if (hasData) {
-      return value!;
-    }
-    return null;
-  }
-
-  date? loadedAt;
-
-  Duration? expireDataAfter;
-  date? get expireAt => expireDataAfter != null && loadedAt != null ? loadedAt!.add(expireDataAfter!) : null;
-
-  /// When true, validate the snapshot data against the [Object.IsValid] function.
-  /// Empty [List] or [Map], [Map] with all values empty, [num] = 0, empty or blank [String] will be considered empty data if this is true.
-  final bool validateData;
-
-  Object? error;
 
   bool get hasData {
     if (value != null) {
@@ -58,8 +60,6 @@ class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
     loadedAt = null;
   }
 
-  List<string? Function(T?)> validations;
-
   @override
   Iterable<String> validate() {
     if (this.validateData) {
@@ -76,15 +76,6 @@ class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
 class FutureAwaiter<T> extends StatelessWidget {
   /// The asynchronous computation to which this builder is currently connected, possibly null.
   final Future<T> Function() future;
-
-  /// The data that will be used to create the snapshots provided until a
-  /// non-null [future] has completed.
-  ///
-  /// If the future completes with an error, the data in the [AsyncSnapshot]
-  /// provided to the [builder] will become null, regardless of [initialData].
-  /// (The error itself will be available in [AsyncSnapshot.error], and
-  /// [AsyncSnapshot.hasError] will be true.)
-  final T? initialData;
 
   /// When defined, store the data returned by [FutureBuilder] and prevent repeated calls to [future] function
   late AwaiterData<T> data;
@@ -107,6 +98,10 @@ class FutureAwaiter<T> extends StatelessWidget {
 
   final Widget? child;
 
+  final void Function(T?)? afterLoad;
+
+  final void Function()? beforeLoad;
+
   /// Wraps a [FutureBuilder] into a more readable widget
 
   FutureAwaiter({
@@ -116,7 +111,6 @@ class FutureAwaiter<T> extends StatelessWidget {
     this.loading,
     this.errorChild,
     this.supressError = kReleaseMode,
-    this.initialData,
     AwaiterData<T>? data,
     this.afterLoad,
     this.beforeLoad,
@@ -129,6 +123,43 @@ class FutureAwaiter<T> extends StatelessWidget {
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    if (beforeLoad != null) {
+      beforeLoad!();
+    }
+    late Widget rt;
+    if (data.expired) {
+      data.loadedAt = null;
+      consoleLog("Loading data...");
+      return FutureBuilder<T>(
+        future: future.call(),
+        builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            rt = loading ?? const Center(child: CircularProgressIndicator());
+          } else {
+            rt = _buildWidget(snapshot);
+          }
+          if (afterLoad != null) {
+            afterLoad!(data.value);
+          }
+          return rt;
+        },
+      );
+    } else {
+      consoleLog("Using previous loaded data...");
+      consoleLog("Creation date: ${data.loadedAt?.toIso8601String()}");
+      consoleLog("Expire at: ${data.expireAt?.toIso8601String() ?? "never"}");
+      rt = _buildWidget(AsyncSnapshot.withData(ConnectionState.none, data.value as T));
+
+      if (afterLoad != null) {
+        afterLoad!(data.value);
+      }
+      return rt;
+    }
+  }
+
+  empty() => emptyChild ?? nil;
   error(Object e) {
     consoleLog("Error: $e", error: e);
     return errorChild != null
@@ -137,8 +168,6 @@ class FutureAwaiter<T> extends StatelessWidget {
             ? empty()
             : ErrorWidget(e);
   }
-
-  empty() => emptyChild ?? nil;
 
   Widget _buildWidget(AsyncSnapshot<T> snapshot) {
     try {
@@ -162,46 +191,6 @@ class FutureAwaiter<T> extends StatelessWidget {
     } catch (e) {
       data.error = e;
       return error(e);
-    }
-  }
-
-  final void Function()? afterLoad;
-  final void Function()? beforeLoad;
-
-  @override
-  Widget build(BuildContext context) {
-    if (beforeLoad != null) {
-      beforeLoad!();
-    }
-    late Widget rt;
-    if (data.expired) {
-      data.loadedAt = null;
-      consoleLog("Loading data...");
-      return FutureBuilder<T>(
-        future: future.call(),
-        initialData: initialData,
-        builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            rt = loading ?? const Center(child: CircularProgressIndicator());
-          } else {
-            rt = _buildWidget(snapshot);
-          }
-          if (afterLoad != null) {
-            afterLoad!();
-          }
-          return rt;
-        },
-      );
-    } else {
-      consoleLog("Using previous loaded data...");
-      consoleLog("Creation date: ${data.loadedAt?.toIso8601String()}");
-      consoleLog("Expire at: ${data.expireAt?.toIso8601String() ?? "never"}");
-      rt = _buildWidget(AsyncSnapshot.withData(ConnectionState.none, data.value as T));
-
-      if (afterLoad != null) {
-        afterLoad!();
-      }
-      return rt;
     }
   }
 }
