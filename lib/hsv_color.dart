@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:innerlibs/colornames.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 class HSVColor implements Color, Comparable<HSVColor> {
@@ -21,6 +22,12 @@ class HSVColor implements Color, Comparable<HSVColor> {
   HSVColor.fromRGB(int r, int g, int b) : this.fromInt(255 << 24 | r << 16 | g << 8 | b);
 
   HSVColor.fromString(String color, [string? name]) {
+
+    if (ColorNames.isNamedColor(color)) {
+      var named = ColorNames.fromValue(color);
+      color = named.hexadecimal;
+      name ??= named.name;
+    }
     _loadColor(color.asColor);
     _name = name ?? color;
   }
