@@ -202,7 +202,7 @@ extension StringExtensions on String {
 
     // Check if the string is a valid hexadecimal color
 
-    if (isHexadecimal) {
+    if (isHexadecimalColor) {
       final hexColor = replaceFirst('#', ''); // Remove any leading '#'
       final alpha = hexColor.length == 8 ? hexColor.substring(0, 2) : 'FF'; // Extract alpha value or use default 'FF'
       final color = hexColor.substring(hexColor.length - 6); // Extract RGB value
@@ -726,7 +726,7 @@ extension StringExtensions on String {
     return regex.hasMatch(this);
   }
 
-  bool get isHexadecimal {
+  bool get isHexadecimalColor {
     final hexColorRegex = RegExp(r'^#?([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})$');
     return hexColorRegex.hasMatch(this);
   }

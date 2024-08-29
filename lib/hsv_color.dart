@@ -29,11 +29,13 @@ class HSVColor implements Color, Comparable<HSVColor> {
   int get alpha => _scolor.alpha;
   set alpha(int value) => _loadColor(_scolor.withAlpha(value));
 
+  Iterable<HSVColor> get analogousColors => modColors([30, -30]);
   int get argb => _scolor.value;
-  set argb(int value) => _loadColor(Color(value));
 
+  set argb(int value) => _loadColor(Color(value));
   @override
   int get blue => _scolor.blue;
+
   set blue(int value) => _loadColor(_scolor.withBlue(value));
 
   double get brightness => _v;
@@ -48,8 +50,9 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   String get closestColorName => _getClosestColorName();
 
-  String get css => alpha == 255 ? _toCssRGB() : _toCssRGBA();
+  HSVColor get complementaryColor => modColor(180);
 
+  String get css => alpha == 255 ? _toCssRGB() : _toCssRGBA();
   int get dominantValue => [red, green, blue].max;
 
   @override
@@ -57,7 +60,8 @@ class HSVColor implements Color, Comparable<HSVColor> {
   set green(int value) => _loadColor(_scolor.withGreen(value));
 
   String get hexadecimal => _scolor.hexadecimal;
-  set hexadecimal(String value) => _loadColor(value.asColor);
+
+  set hexadecimal(String value) => value.isHexadecimalColor ? _loadColor(value.asColor) : throw ArgumentError('Invalid hexadecimal color: $value');
 
   double get hue => _h;
 
@@ -87,7 +91,6 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   @override
   int get red => _scolor.red;
-
   set red(int value) => _loadColor(_scolor.withRed(value));
 
   double get saturation => _s;
@@ -101,6 +104,7 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   @override
   int get value => _scolor.value;
+
   set value(int value) => _loadColor(Color(value));
 
   HSVColor addictive(HSVColor color) {
@@ -113,10 +117,6 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   HSVColor clone() => HSVColor(_scolor, _name)..description = description;
 
-
-  
-
-  // Operadores sobrecarregados
   @override
   int compareTo(dynamic other) {
     if (other is int) {
@@ -129,8 +129,6 @@ class HSVColor implements Color, Comparable<HSVColor> {
       throw ArgumentError('Cannot compare HSVColor with ${other.runtimeType}');
     }
   }
-
-  HSVColor complementary() => modColor(180);
 
   @override
   double computeLuminance() => _scolor.computeLuminance();
@@ -164,7 +162,6 @@ class HSVColor implements Color, Comparable<HSVColor> {
     return "";
   }
 
-  // Métodos privados
   void _loadColor(Color color) {
     _scolor = color;
     _name = _scolor.toString();
