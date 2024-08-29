@@ -40,6 +40,7 @@ export 'gerar_pdf_danfe.dart';
 export 'gesture_detector_extension.dart';
 export 'global.dart';
 export 'haptic_feedback_type.dart';
+export 'hsv_color.dart';
 export 'icon_extensions.dart';
 export 'info_usuario.dart';
 export 'keyed_json_table.dart';
@@ -87,7 +88,6 @@ export 'widgets/responsive_grid.dart';
 export 'widgets/restart_widget.dart';
 export 'widgets/scaffold_builder.dart';
 export 'widgets/shimmer.dart';
-export 'hsv_color.dart';
 
 typedef bytes = Uint8List;
 
