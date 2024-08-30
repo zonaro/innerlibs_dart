@@ -2161,11 +2161,14 @@ extension StringExtensions on String {
     }
     var path = trim();
     bool hasFirstSlash = path.startsWith('/') || path.startsWith('\\');
+    bool hasLastSlash = path.endsWith('/') || path.endsWith('\\');
     backSlash ??= count('\\') > count('/');
     if (backSlash) {
       path = (hasFirstSlash ? "\\" : "") + splitAny(['/', '\\']).join('\\');
+      path = (hasLastSlash ? "$path\\" : path);
     } else {
       path = (hasFirstSlash ? "/" : "") + splitAny(['/', '\\']).join('/');
+      path = (hasLastSlash ? "$path/" : path);
     }
     return path;
   }
