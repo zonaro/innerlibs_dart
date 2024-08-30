@@ -76,9 +76,7 @@ class PageTabController with ChangeNotifier {
   ///
   /// The [pageIndex] and [tabIndex] parameters specify the initial page and tab
   /// indices respectively. By default, both indices are set to 0.
-  PageTabController({this.defaultPageIndex = 0, this.defaultTabIndex = 0}) {
-    navigate(pageIndex: defaultPageIndex, tabIndex: defaultTabIndex);
-  }
+  PageTabController({this.defaultPageIndex = 0, this.defaultTabIndex = 0});
 
   /// Returns a boolean value indicating whether there is a previous index in the
   /// history list.
@@ -136,6 +134,7 @@ class PageTabController with ChangeNotifier {
   /// indices are updated. Additionally, a log message is printed to the console
   /// indicating the navigation change.
   void navigate({int? pageIndex, int? tabIndex}) {
+    if (_items.isEmpty) return;
     int back = 0;
 
     pageIndex ??= this.pageIndex;
