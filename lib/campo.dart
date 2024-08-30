@@ -17,9 +17,15 @@ Widget botaoSalvar(void Function()? onPressed) => BotaoTexto(
       onPressed: onPressed,
     );
 
-InputDecoration estiloCampos([string? label, IconData? icon, void Function()? onIconTap, Color? color]) => InputDecoration(
-      icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
+InputDecoration estiloCampos([string? label, IconData? icon, void Function()? onIconTap, Color? color, IconData? suffixIcon, void Function()? onSuffixIconTap]) => InputDecoration(
       label: label.asNullableText(),
+      icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
+      suffixIcon: suffixIcon == null
+          ? null
+          : Padding(
+              padding: 15.fromRight,
+              child: forceWidget(suffixIcon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onSuffixIconTap),
+            ),
       border: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(5)),
         borderSide: BorderSide(color: color ?? Get.context!.colorScheme.primary, width: 20),
@@ -49,12 +55,14 @@ PopupProps<T> popupCampos<T>(
   IconData? icon,
   void Function()? onIconTap,
   Color? color,
+  IconData? suffixIcon,
+  void Function()? onSuffixIconTap,
 }) {
   var tt = "Pesquisar $title:".trim();
   return Get.screenTier < ScreenTier.xs
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap, color)),
+          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
           title: InkWell(
             onTap: () => Get.back(),
             child: Padding(
@@ -79,7 +87,7 @@ PopupProps<T> popupCampos<T>(
           showSearchBox: true,
           emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
           itemBuilder: itemBuilder,
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap, color)),
+          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
         );
 }
 
@@ -373,12 +381,14 @@ class CampoValor<T extends Object> extends StatefulWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final IconData? icon;
-  final Future<List<T>> Function(String)? asyncItems;
+  final IconData? suffixIcon;
   final void Function()? onIconTap;
+  final void Function()? onSuffixIconTap;
+  final Future<List<T>> Function(String)? asyncItems;
   final Color? color;
   final (String, String) Function(T)? textValueSelector;
   final Widget Function(BuildContext context, T, bool isSelected)? itemBuilder;
-  final List<dynamic> Function(T?)? searchOn;
+  final List<dynamic> Function(T)? searchOn;
 
   const CampoValor({
     super.key,
@@ -400,12 +410,14 @@ class CampoValor<T extends Object> extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.icon,
-    this.asyncItems,
     this.onIconTap,
+    this.asyncItems,
     this.color,
     this.textValueSelector,
     this.itemBuilder,
     this.searchOn,
+    this.suffixIcon,
+    this.onSuffixIconTap,
   });
 
   @override
@@ -491,7 +503,7 @@ class _CampoDataState extends State<CampoData> {
         outOfRangeMessage: "Data fora dos limites",
         initialDate: widget.initialDate ?? DateTime.now(),
         fromDate: widget.fromDate ?? minDate,
-        toDate: widget.toDate ?? now.sum(years: 100),
+        toDate: widget.toDate ?? now.sum(years: 999),
         dateController: widget.controller,
         onChange: widget.onChange,
       ),
@@ -540,9 +552,9 @@ class _CampoListaCidadeState extends State<CampoListaCidade> {
       validator: widget.validator,
       textValueSelector: (item) => ("${item.nome} - ${item.estado.uf}", item.ibge.toString()),
       searchOn: (item) => [
-        item?.nome,
-        item?.ibge,
-        item?.estado.uf,
+        item.nome,
+        item.ibge,
+        item.estado.uf,
       ],
       label: widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
       itemBuilder: (context, item, isSelected) {
@@ -595,7 +607,7 @@ class _CampoListaEstadoState extends State<CampoListaEstado> {
       },
       textValueSelector: (item) => widget.modoCompacto ? (item.uf, item.uf) : (item.nome, item.nome),
       initialValue: widget.estadoValue,
-      searchOn: (item) => [item?.uf, item?.nome, item?.ibge],
+      searchOn: (item) => [item.uf, item.nome, item.ibge],
       options: widget.regiao.estados,
       onChanged: (x) => widget.onChanged(x ?? Estado.naoDefinido),
       icon: widget.icon,
@@ -748,27 +760,45 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
 
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
 
+  Future<List<T>> allOptions(string v) async {
+    List<T> values = widget.options.toList();
+    if (widget.asyncItems != null) {
+      var asyncOptions = (await widget.asyncItems!(v)).toList();
+      values = [...values, ...asyncOptions];
+    }
+    values = values
+        .search(
+          searchTerms: v.split(";").whereValid,
+          searchOn: searchOn,
+          levenshteinDistance: 2,
+        )
+        .toList();
+    return values.distinct().toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.isAutoComplete || (useOptionsList == false)) {
       return Padding(
         padding: paddingCampos,
-        child: widget.options.isNotEmpty
+        child: useOptionsList
             ? Autocomplete<T>(
                 initialValue: _controller!.value,
-                optionsViewBuilder: widget.itemBuilder != null
-                    ? (context, onSelected, options) {
-                        var opt = options.toList();
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            itemBuilder: (context, i) => itemBuilder(
-                                  context,
-                                  opt[i],
-                                  _dropdownValue.value != null ? (i == opt.indexOf(_dropdownValue.value!)) : false,
-                                ),
-                            itemCount: opt.length);
-                      }
-                    : null,
+                optionsViewBuilder: (context, onSelected, options) {
+                  var opt = options.toList();
+                  return Container(
+                    color: context.colorScheme.surface,
+                    width: 100,
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemBuilder: (context, i) => itemBuilder(
+                              context,
+                              opt[i],
+                              _dropdownValue.value != null ? (i == opt.indexOf(_dropdownValue.value!)) : false,
+                            ).onTap(() => onSelected(opt[i])),
+                        itemCount: opt.length),
+                  );
+                },
                 onSelected: (newValue) {
                   _controller!.text = textValueSelector(newValue).$2;
                   if (widget.onChanged != null) {
@@ -777,18 +807,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
                 },
                 displayStringForOption: (v) => textValueSelector(v).$2,
                 optionsBuilder: (v) async {
-                  List<T> values = widget.options.toList();
-                  values = widget.options
-                      .search(
-                        searchTerms: v.text.split(";").whereValid,
-                        searchOn: searchOn,
-                        levenshteinDistance: 2,
-                      )
-                      .toList();
-                  if (widget.asyncItems != null) {
-                    values = [...values, ...(await widget.asyncItems!(v.text))];
-                  }
-                  return values.distinct().toList();
+                  return await allOptions(v.text);
                 },
                 fieldViewBuilder: (context, textEditingController, fn, onFieldSubmitted) {
                   textEditingController.text = _controller!.text;
@@ -823,21 +842,10 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
           ),
           selectedItem: _dropdownValue.value,
           dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: estiloCampos(widget.label, widget.icon, widget.onIconTap),
+            dropdownSearchDecoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
           ),
           asyncItems: (v) async {
-            List<T> values = widget.options.toList();
-            values = widget.options
-                .search(
-                  searchTerms: v.split(";").whereValid,
-                  searchOn: searchOn,
-                  levenshteinDistance: 2,
-                )
-                .toList();
-            if (widget.asyncItems != null) {
-              values = [...values, ...(await widget.asyncItems!(v))];
-            }
-            return values.distinctBy((x) => textValueSelector(x)).toList();
+            return await allOptions(v);
           },
           itemAsString: (x) => textValueSelector(x).$1,
           onChanged: (newValue) {
@@ -862,9 +870,11 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         textAlign: widget.textAlign,
         maxLength: widget.maxLen,
         controller: textEditingController,
-        onChanged: (newValue) {
+        onChanged: (newValue) async {
           if (widget.onChanged != null) {
-            widget.onChanged!(newValue.changeTo<T>());
+            var opt = await allOptions("");
+            var item = opt.where((e) => textValueSelector(e).$2 == newValue).firstOrNull;
+            widget.onChanged!(item);
           }
         },
         onEditingComplete: () {
@@ -876,7 +886,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         },
         inputFormatters: widget.inputFormatters,
         keyboardType: widget.keyboardType,
-        decoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color),
+        decoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
         validator: (s) {
           if (widget.validator != null) {
             try {

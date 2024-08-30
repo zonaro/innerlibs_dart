@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 
 extension AlignmentExtensions on Alignment {
-  TextAlign get toTextAlign {
-    if (this == Alignment.topLeft || this == Alignment.centerLeft || this == Alignment.bottomLeft) {
-      return TextAlign.left;
-    } else if (this == Alignment.topRight || this == Alignment.centerRight || this == Alignment.bottomRight) {
-      return TextAlign.right;
-    } else {
-      return TextAlign.center;
-    }
-  }
+  Alignment sum({double x = 0, double y = 0}) => Alignment(this.x + x, this.y + y);
+}
 
+extension AlignmentGeometryExtensions on AlignmentGeometry {
   CrossAxisAlignment get toCrossAxisAlignment {
     if (this == Alignment.topLeft || this == Alignment.centerLeft || this == Alignment.bottomLeft) {
       return CrossAxisAlignment.start;
@@ -32,5 +26,13 @@ extension AlignmentExtensions on Alignment {
     return MainAxisAlignment.spaceBetween;
   }
 
-  Alignment sum({double x = 0, double y = 0}) => Alignment(this.x + x, this.y + y);
+  TextAlign get toTextAlign {
+    if (this == Alignment.topLeft || this == Alignment.centerLeft || this == Alignment.bottomLeft) {
+      return TextAlign.left;
+    } else if (this == Alignment.topRight || this == Alignment.centerRight || this == Alignment.bottomRight) {
+      return TextAlign.right;
+    } else {
+      return TextAlign.center;
+    }
+  }
 }

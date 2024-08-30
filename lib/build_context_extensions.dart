@@ -4,17 +4,38 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
+typedef ScreenTierMap<T> = Map<T, ScreenTier>;
+
 extension BuildContextExtensions on BuildContext {
-  MaterialLocalizations get localizations => MaterialLocalizations.of(this);
+  bool get alwaysUse24HourFormat => mediaQuery.alwaysUse24HourFormat;
 
-  /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
-  ColorScheme get colorScheme => theme.colorScheme;
+  /// performs a simple [Theme.of(context).appBarTheme] action and returns given [appBarTheme]
+  AppBarTheme get appBarTheme => theme.appBarTheme;
 
-  /// performs a simple [Theme.of(context).textTheme] action and returns given [textTheme]
-  TextTheme get textTheme => theme.textTheme;
+  double get aspectRatio => width / height;
 
-  /// performs a simple [Theme.of(context).primaryTextTheme] action and returns given [primaryTextTheme]
-  TextTheme get primaryTextTheme => theme.primaryTextTheme;
+  string get aspectRatioString => screenSize.getAspectRatioString();
+
+  /// Middle size of the body styles.
+  ///
+  /// Body styles are used for longer passages of text.
+  ///
+  /// The default text style for [Material].
+  TextStyle? get bodyLarge => textTheme.bodyLarge;
+
+  /// Middle size of the body styles.
+  ///
+  /// Body styles are used for longer passages of text.
+  ///
+  /// The default text style for [Material].
+  TextStyle? get bodyMedium => textTheme.bodyMedium;
+
+  /// Smallest of the body styles.
+  ///
+  /// Body styles are used for longer passages of text.
+  TextStyle? get bodySmall => textTheme.bodySmall;
+
+  // COLOR
 
   /// performs a simple [Theme.of(context).bottomAppBarTheme] action and returns given [bottomAppBarTheme]
   BottomAppBarTheme get bottomAppBarTheme => theme.bottomAppBarTheme;
@@ -22,70 +43,31 @@ extension BuildContextExtensions on BuildContext {
   /// performs a simple [Theme.of(context).bottomSheetTheme] action and returns given [bottomSheetTheme]
   BottomSheetThemeData get bottomSheetTheme => theme.bottomSheetTheme;
 
-  /// performs a simple [Theme.of(context).appBarTheme] action and returns given [appBarTheme]
-  AppBarTheme get appBarTheme => theme.appBarTheme;
+  /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
+  ColorScheme get colorScheme => theme.colorScheme;
 
-  // COLOR
+  CupertinoLocalizations get cupertinoLocalizations => CupertinoLocalizations.of(this);
 
-  /// performs a simple [Theme.of(context).backgroundColor] action and returns given [surfaceColor]
-  Color get surfaceColor => theme.colorScheme.surface;
+  /// similar to [MediaQuery.devicePixelRatioOf(context)]
+  double get devicePixelRatio => MediaQuery.devicePixelRatioOf(this);
 
-  /// performs a simple [Theme.of(context).primaryColor] action and returns given [primaryColor]
-  Color get primaryColor => theme.primaryColor;
-
-  /// A lighter version of the [primaryColor].
-  Color get primaryColorLight => theme.primaryColorLight;
-
-  /// A darker version of the [primaryColor].
-  Color get primaryColorDark => theme.primaryColorDark;
-
-  /// The focus color used indicate that a component has the input focus.
-  Color get focusColor => theme.focusColor;
-
-  /// The hover color used to indicate when a pointer is hovering over a
-  /// component.
-  Color get hoverColor => theme.hoverColor;
-
-  /// Returns the color for displaying text on the primary color.
-  Color get onPrimaryColor => theme.colorScheme.onPrimary;
-
-  /// Returns the color for the secondary element's text, based on the current theme.
-  Color get onSecondaryColor => theme.colorScheme.onSecondary;
-
-  /// Returns the color of the surface text on the current theme.
-  Color get onSurfaceColor => theme.colorScheme.onSurface;
-
-  /// Returns the error color from the current theme's color scheme.
-  Color get onErrorColor => theme.colorScheme.onError;
-
-  /// The default color of the [Material] that underlies the [Scaffold]. The
-  /// background color for a typical material app or a page within the app.
-  Color get scaffoldBackgroundColor => theme.scaffoldBackgroundColor;
-
-  ScaffoldState get scaffold => Scaffold.of(this);
-
-  ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
-
-  /// Shows a [SnackBar] with the given [content] in the current [Scaffold].
+  /// Largest of the display styles.
   ///
-  /// If the [content] is a [String], it will be converted to a [Text] widget.
-  /// If the [content] is not a [SnackBar] and is a [Widget], it will be wrapped
-  /// in a [SnackBar] widget.
-  /// If the [content] is a [SnackBar], it will be shown using the [scaffoldMessenger].
-  /// If none of the above conditions are met, the [content] will be converted to
-  /// a [String] and shown as a [SnackBar].
+  /// As the largest text on the screen, display styles are reserved for short,
+  /// important text or numerals. They work best on large screens.
+  TextStyle? get displayLarge => textTheme.displayLarge;
+
+  /// Middle size of the display styles.
   ///
-  /// Returns the [ScaffoldFeatureController] for the shown [SnackBar].
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(dynamic content) {
-    if (content is String) content = content.asText();
-    if ((content is SnackBar == false) && content is Widget) {
-      content = SnackBar(content: content);
-    }
-    if (content is SnackBar) {
-      return scaffoldMessenger.showSnackBar(content);
-    }
-    return showSnackBar("$content");
-  }
+  /// As the largest text on the screen, display styles are reserved for short,
+  /// important text or numerals. They work best on large screens.
+  TextStyle? get displayMedium => textTheme.displayMedium;
+
+  /// Smallest of the display styles.
+  ///
+  /// As the largest text on the screen, display styles are reserved for short,
+  /// important text or numerals. They work best on large screens.
+  TextStyle? get displaySmall => textTheme.displaySmall;
 
   /// The color of [Divider]s and [PopupMenuDivider]s, also used
   /// between [ListTile]s, between rows in [DataTable]s, and so forth.
@@ -93,6 +75,33 @@ extension BuildContextExtensions on BuildContext {
   /// To create an appropriate [BorderSide] that uses this color, consider
   /// [Divider.createBorderSide].
   Color get dividerColor => theme.dividerColor;
+
+  FlutterView get flutterView => View.of(this);
+
+  /// The focus color used indicate that a component has the input focus.
+  Color get focusColor => theme.focusColor;
+
+  /// Largest of the headline styles.
+  ///
+  /// Headline styles are smaller than display styles. They're best-suited for
+  /// short, high-emphasis text on smaller screens.
+  TextStyle? get headlineLarge => textTheme.headlineLarge;
+
+  /// Middle size of the headline styles.
+  ///
+  /// Headline styles are smaller than display styles. They're best-suited for
+  /// short, high-emphasis text on smaller screens.
+  TextStyle? get headlineMedium => textTheme.headlineMedium;
+
+  /// Smallest of the headline styles.
+  ///
+  /// Headline styles are smaller than display styles. They're best-suited for
+  /// short, high-emphasis text on smaller screens.
+  TextStyle? get headlineSmall => textTheme.headlineSmall;
+
+  /// The hover color used to indicate when a pointer is hovering over a
+  /// component.
+  Color get hoverColor => theme.hoverColor;
 
   // // TYPOGRAPHY 2018
 
@@ -137,78 +146,49 @@ extension BuildContextExtensions on BuildContext {
 
   // TYPOGRAPHY 2021
 
-  /// Largest of the display styles.
-  ///
-  /// As the largest text on the screen, display styles are reserved for short,
-  /// important text or numerals. They work best on large screens.
-  TextStyle? get displayLarge => textTheme.displayLarge;
+  bool get is16x9 => aspectRatioString == "16:9";
 
-  /// Middle size of the display styles.
-  ///
-  /// As the largest text on the screen, display styles are reserved for short,
-  /// important text or numerals. They work best on large screens.
-  TextStyle? get displayMedium => textTheme.displayMedium;
+  bool get is1x1 => aspectRatioString == "1:1";
 
-  /// Smallest of the display styles.
-  ///
-  /// As the largest text on the screen, display styles are reserved for short,
-  /// important text or numerals. They work best on large screens.
-  TextStyle? get displaySmall => textTheme.displaySmall;
+  bool get is21x9 => aspectRatioString == "4:3";
 
-  /// Largest of the headline styles.
-  ///
-  /// Headline styles are smaller than display styles. They're best-suited for
-  /// short, high-emphasis text on smaller screens.
-  TextStyle? get headlineLarge => textTheme.headlineLarge;
+  bool get is3x2 => aspectRatioString == "3:2";
 
-  /// Middle size of the headline styles.
-  ///
-  /// Headline styles are smaller than display styles. They're best-suited for
-  /// short, high-emphasis text on smaller screens.
-  TextStyle? get headlineMedium => textTheme.headlineMedium;
+  bool get is4x3 => aspectRatioString == "4:3";
 
-  /// Smallest of the headline styles.
-  ///
-  /// Headline styles are smaller than display styles. They're best-suited for
-  /// short, high-emphasis text on smaller screens.
-  TextStyle? get headlineSmall => textTheme.headlineSmall;
+  bool get is5x4 => aspectRatioString == "5:4";
 
-  /// Largest of the title styles.
-  ///
-  /// Titles are smaller than headline styles and should be used for shorter,
-  /// medium-emphasis text.
-  TextStyle? get titleLarge => textTheme.titleLarge;
+  /// is dark mode currently enabled?
+  bool get isDarkMode => themeBrightness == Brightness.dark;
 
-  /// Middle size of the title styles.
-  ///
-  /// Titles are smaller than headline styles and should be used for shorter,
-  /// medium-emphasis text.
-  TextStyle? get titleMedium => textTheme.titleMedium;
+  /// True if the shortestSide is largest than 720p
+  bool get isLargeTabletSize => (shortestSide >= 720);
 
-  /// Smallest of the title styles.
-  ///
-  /// Titles are smaller than headline styles and should be used for shorter,
-  /// medium-emphasis text.
-  TextStyle? get titleSmall => textTheme.titleSmall;
+  /// is light mode currently enabled?
+  bool get isLightMode => themeBrightness == Brightness.light;
 
-  /// Middle size of the body styles.
-  ///
-  /// Body styles are used for longer passages of text.
-  ///
-  /// The default text style for [Material].
-  TextStyle? get bodyLarge => textTheme.bodyLarge;
+  bool get isOldTV => is4x3;
 
-  /// Middle size of the body styles.
-  ///
-  /// Body styles are used for longer passages of text.
-  ///
-  /// The default text style for [Material].
-  TextStyle? get bodyMedium => textTheme.bodyMedium;
+  /// True if the shortestSide is smaller than 600p
+  bool get isPhoneSize => (shortestSide < 600);
 
-  /// Smallest of the body styles.
-  ///
-  /// Body styles are used for longer passages of text.
-  TextStyle? get bodySmall => textTheme.bodySmall;
+  /// is dark mode currently enabled?
+  bool get isPlatformDarkMode => platformBrightness == Brightness.dark;
+
+  /// is light mode currently enabled?
+  bool get isPlatformLightMode => platformBrightness == Brightness.light;
+
+  /// True if the shortestSide is largest than 600p
+  bool get isSmallTabletSize => (shortestSide >= 600);
+
+  bool get isSquare => is1x1;
+
+  /// True if the current device is Tablet
+  bool get isTabletSize => isSmallTabletSize || isLargeTabletSize;
+
+  bool get isUltraWide => is21x9;
+
+  bool get isWidescreen => is16x9;
 
   /// Largest of the label styles.
   ///
@@ -233,96 +213,145 @@ extension BuildContextExtensions on BuildContext {
   /// content body, like captions
   TextStyle? get labelSmall => textTheme.labelSmall;
 
+  MaterialLocalizations get localizations => MaterialLocalizations.of(this);
+
+  double get logicalAspectRatio => logicalWidth / logicalHeight;
+
+  string get logicalAspectRatioString => logicalScreenSize.getAspectRatioString();
+
+  double get logicalHeight => logicalScreenSize.height;
+
+  //Size in logical pixels
+  Size get logicalScreenSize => flutterView.physicalSize / pixelRatio;
+
+  double get logicalWidth => logicalScreenSize.width;
+
+  MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
+
+  MediaQueryData get mediaQuery => MediaQuery.of(this);
+
   /// Returns the [ModalRoute] associated with this [BuildContext].
   ///
   /// If there is no [ModalRoute] associated with this [BuildContext],
   /// it returns `null`.
   ModalRoute? get modalRoute => ModalRoute.of(this);
 
-  /// Returns the [RouteSettings] of the current modal route, or `null` if there is no modal route.
-  RouteSettings? get modalRouteSettings => modalRoute?.settings;
-
   /// Returns the name of the modal route, if available.
   /// If the modal route is null or the settings name is null, it returns null.
   String? get modalRouteName => modalRoute?.settings.name;
 
-  /// Restarts the app.
-  ///
-  /// This method restarts the app by using the [RestartWidget] class.
-  /// It takes the current build context as a parameter and calls the
-  /// `restartApp` method of [RestartWidget] to restart the app.
-  void restartApp() => RestartWidget.restartApp(this);
+  /// Returns the [RouteSettings] of the current modal route, or `null` if there is no modal route.
+  RouteSettings? get modalRouteSettings => modalRoute?.settings;
 
-  ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
-  bool canPop() => Navigator.canPop(this);
+  /// Returns the error color from the current theme's color scheme.
+  Color get onErrorColor => theme.colorScheme.onError;
 
-  /// performs a simple [Navigator.pop] action and returns given [result]
-  void pop<T>([result]) => Navigator.pop(this, result);
+  /// Returns the color for displaying text on the primary color.
+  Color get onPrimaryColor => theme.colorScheme.onPrimary;
 
-  /// performs a simple [Navigator.push] action with given [route]
-  Future<dynamic> push(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).push(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
+  /// Returns the color for the secondary element's text, based on the current theme.
+  Color get onSecondaryColor => theme.colorScheme.onSecondary;
 
-  Future<dynamic> pushRoute(Widget screen, {required string route, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await push(screen, settings: RouteSettings(name: route), maintainState: maintainState, fullscreenDialog: fullscreenDialog);
-
-  /// performs a simple [Navigator.pushReplacement] action with given [route]
-  Future<dynamic> pushReplacement(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).pushReplacement(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
-
-  /// perform push and remove route
-  Future<dynamic> pushAndRemoveUntil(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool routes = false, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog), (Route<dynamic> route) => routes);
-
-  /// perform push with routeName
-  Future<dynamic> pushNamed(String screenName, {Object? arguments, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).pushNamed(screenName, arguments: arguments);
-
-  /// perform replash with routeName
-  Future<dynamic> pushReplacementNamed(String screenName, {Object? arguments, bool rootNavigator = false}) => Navigator.of(this, rootNavigator: rootNavigator).pushReplacementNamed(screenName, arguments: arguments);
-
-  /// perform replash with routeName
-  void popUntilRoute(String screenName, {bool rootNavigator = false}) => Navigator.of(this, rootNavigator: rootNavigator).popUntil(ModalRoute.withName(screenName));
-
-  /// perform replash with route predicate
-  void popUntil(RoutePredicate predicate) => Navigator.popUntil(this, predicate);
-
-  /// perform a continuous pop until the first route
-  void popUntilFirst() => popUntil((route) => route.isFirst);
-
-  MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
-  CupertinoLocalizations get cupertinoLocalizations => CupertinoLocalizations.of(this);
-
-  FlutterView get flutterView => View.of(this);
-
-  double get pixelRatio => flutterView.devicePixelRatio;
-
-  //Size in physical pixels
-  Size get physicalScreenSize => flutterView.physicalSize;
-  double get physicalWidth => physicalScreenSize.width;
-  double get physicalHeight => physicalScreenSize.height;
-
-  string get physicalAspectRatioString => physicalScreenSize.getAspectRatioString();
-  double get physicalAspectRatio => physicalWidth / physicalHeight;
-
-  //Size in logical pixels
-  Size get logicalScreenSize => flutterView.physicalSize / pixelRatio;
-  double get logicalWidth => logicalScreenSize.width;
-  double get logicalHeight => logicalScreenSize.height;
-
-  string get logicalAspectRatioString => logicalScreenSize.getAspectRatioString();
-  double get logicalAspectRatio => logicalWidth / logicalHeight;
-
+  /// Returns the color of the surface text on the current theme.
+  Color get onSurfaceColor => theme.colorScheme.onSurface;
   //Padding in physical pixels
   ViewPadding get padding => flutterView.padding;
 
+  double get paddingBottom => flutterView.padding.bottom / flutterView.devicePixelRatio;
   //Safe area paddings in logical pixels
   double get paddingLeft => flutterView.padding.left / flutterView.devicePixelRatio;
+
   double get paddingRight => flutterView.padding.right / flutterView.devicePixelRatio;
   double get paddingTop => flutterView.padding.top / flutterView.devicePixelRatio;
-  double get paddingBottom => flutterView.padding.bottom / flutterView.devicePixelRatio;
+  double get physicalAspectRatio => physicalWidth / physicalHeight;
+
+  string get physicalAspectRatioString => physicalScreenSize.getAspectRatioString();
+  double get physicalHeight => physicalScreenSize.height;
+
+  //Size in physical pixels
+  Size get physicalScreenSize => flutterView.physicalSize;
+
+  double get physicalWidth => physicalScreenSize.width;
+  double get pixelRatio => flutterView.devicePixelRatio;
+
+  /// similar to [MediaQuery.platformBrightnessOf(context)]
+  Brightness get platformBrightness => MediaQuery.platformBrightnessOf(this);
+
+  /// performs a simple [Theme.of(context).primaryColor] action and returns given [primaryColor]
+  Color get primaryColor => theme.primaryColor;
+
+  /// A darker version of the [primaryColor].
+  Color get primaryColorDark => theme.primaryColorDark;
+
+  /// A lighter version of the [primaryColor].
+  Color get primaryColorLight => theme.primaryColorLight;
+
+  /// performs a simple [Theme.of(context).primaryTextTheme] action and returns given [primaryTextTheme]
+  TextTheme get primaryTextTheme => theme.primaryTextTheme;
+
+  double get safeHeight => logicalHeight - paddingTop - paddingBottom;
 
   //Safe area in logical pixels
   double get safeWidth => logicalWidth - paddingLeft - paddingRight;
-  double get safeHeight => logicalHeight - paddingTop - paddingBottom;
+
+  ScaffoldState get scaffold => Scaffold.of(this);
+
+  /// The default color of the [Material] that underlies the [Scaffold]. The
+  /// background color for a typical material app or a page within the app.
+  Color get scaffoldBackgroundColor => theme.scaffoldBackgroundColor;
+
+  ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
+
+  /// This change makes MediaQuery an InheritedModel rather than an InheritedWidget,
+  /// so any widget which knows it only depends on a
+  /// specific property of MediaQuery the ability to declare that when reading the MediaQuery from the context.
+
+  /// The same of MediaQuery.sizeOf(context)
+  Size get screenSize => mediaQuery.size;
 
   /// the current [ScreenTier]
   ScreenTier get screenTier => ScreenTier.fromWidth(width);
+
+  /// get the shortestSide from screen
+  double get shortestSide => screenSize.shortestSide;
+
+  /// True if width be larger than 800
+  bool get showNavbar => (width > 800);
+
+  /// performs a simple [Theme.of(context).backgroundColor] action and returns given [surfaceColor]
+  Color get surfaceColor => theme.colorScheme.surface;
+
+  /// similar to [MediaQuery.textScaleFactorOf(context)]
+  TextScaler get textScaler => MediaQuery.textScalerOf(this);
+
+  /// performs a simple [Theme.of(context).textTheme] action and returns given [textTheme]
+  TextTheme get textTheme => theme.textTheme;
+
+  Brightness get themeBrightness => theme.brightness;
+
+  /// Largest of the title styles.
+  ///
+  /// Titles are smaller than headline styles and should be used for shorter,
+  /// medium-emphasis text.
+  TextStyle? get titleLarge => textTheme.titleLarge;
+
+  /// Middle size of the title styles.
+  ///
+  /// Titles are smaller than headline styles and should be used for shorter,
+  /// medium-emphasis text.
+  TextStyle? get titleMedium => textTheme.titleMedium;
+
+  /// Smallest of the title styles.
+  ///
+  /// Titles are smaller than headline styles and should be used for shorter,
+  /// medium-emphasis text.
+  TextStyle? get titleSmall => textTheme.titleSmall;
+
+  /// similar to [MediaQuery.of(context).viewInsets]
+  EdgeInsets get viewInsets => mediaQuery.viewInsets;
+
+  /// similar to [MediaQuery.of(context).viewPadding]
+  EdgeInsets get viewPadding => mediaQuery.viewPadding;
 
   /// a size computed by [ScreenTier]
 
@@ -341,47 +370,78 @@ extension BuildContextExtensions on BuildContext {
     );
   }
 
-  MediaQueryData get mediaQuery => MediaQuery.of(this);
+  ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
+  bool canPop() => Navigator.canPop(this);
+  nextFocus([int times = 1]) {
+    while (times-- > 0) {
+      FocusScope.of(this).nextFocus();
+    }
+  }
 
-  /// similar to [MediaQuery.of(context).viewPadding]
-  EdgeInsets get viewPadding => mediaQuery.viewPadding;
+  /// performs a simple [Navigator.pop] action and returns given [result]
+  void pop<T>([result]) => Navigator.pop(this, result);
 
-  /// similar to [MediaQuery.of(context).viewInsets]
-  EdgeInsets get viewInsets => mediaQuery.viewInsets;
+  /// perform replash with route predicate
+  void popUntil(RoutePredicate predicate) => Navigator.popUntil(this, predicate);
 
-  bool get alwaysUse24HourFormat => mediaQuery.alwaysUse24HourFormat;
+  /// perform a continuous pop until the first route
+  void popUntilFirst() => popUntil((route) => route.isFirst);
 
-  Brightness get themeBrightness => theme.brightness;
+  /// perform replash with routeName
+  void popUntilRoute(String screenName, {bool rootNavigator = false}) => Navigator.of(this, rootNavigator: rootNavigator).popUntil(ModalRoute.withName(screenName));
 
-  /// get the shortestSide from screen
-  double get shortestSide => screenSize.shortestSide;
+  /// performs a simple [Navigator.push] action with given [route]
+  Future<dynamic> push(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async =>
+      await Navigator.of(this, rootNavigator: rootNavigator).push(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
 
-  /// True if width be larger than 800
-  bool get showNavbar => (width > 800);
+  /// perform push and remove route
+  Future<dynamic> pushAndRemoveUntil(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool routes = false, bool rootNavigator = false}) async =>
+      await Navigator.of(this, rootNavigator: rootNavigator)
+          .pushAndRemoveUntil(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog), (Route<dynamic> route) => routes);
 
-  /// True if the shortestSide is smaller than 600p
-  bool get isPhoneSize => (shortestSide < 600);
+  /// perform push with routeName
+  Future<dynamic> pushNamed(String screenName, {Object? arguments, bool rootNavigator = false}) async =>
+      await Navigator.of(this, rootNavigator: rootNavigator).pushNamed(screenName, arguments: arguments);
 
-  /// True if the shortestSide is largest than 600p
-  bool get isSmallTabletSize => (shortestSide >= 600);
+  /// performs a simple [Navigator.pushReplacement] action with given [route]
+  Future<dynamic> pushReplacement(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async =>
+      await Navigator.of(this, rootNavigator: rootNavigator)
+          .pushReplacement(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
 
-  /// True if the shortestSide is largest than 720p
-  bool get isLargeTabletSize => (shortestSide >= 720);
+  /// perform replash with routeName
+  Future<dynamic> pushReplacementNamed(String screenName, {Object? arguments, bool rootNavigator = false}) =>
+      Navigator.of(this, rootNavigator: rootNavigator).pushReplacementNamed(screenName, arguments: arguments);
 
-  /// True if the current device is Tablet
-  bool get isTabletSize => isSmallTabletSize || isLargeTabletSize;
+  Future<dynamic> pushRoute(Widget screen, {required string route, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async =>
+      await push(screen, settings: RouteSettings(name: route), maintainState: maintainState, fullscreenDialog: fullscreenDialog);
 
-  bool get is1x1 => aspectRatioString == "1:1";
-  bool get is3x2 => aspectRatioString == "3:2";
-  bool get is5x4 => aspectRatioString == "5:4";
-  bool get is16x9 => aspectRatioString == "16:9";
-  bool get is4x3 => aspectRatioString == "4:3";
-  bool get is21x9 => aspectRatioString == "4:3";
+  /// Restarts the app.
+  ///
+  /// This method restarts the app by using the [RestartWidget] class.
+  /// It takes the current build context as a parameter and calls the
+  /// `restartApp` method of [RestartWidget] to restart the app.
+  void restartApp() => RestartWidget.restartApp(this);
 
-  bool get isWidescreen => is16x9;
-  bool get isUltraWide => is21x9;
-  bool get isSquare => is1x1;
-  bool get isOldTV => is4x3;
+  /// Shows a [SnackBar] with the given [content] in the current [Scaffold].
+  ///
+  /// If the [content] is a [String], it will be converted to a [Text] widget.
+  /// If the [content] is not a [SnackBar] and is a [Widget], it will be wrapped
+  /// in a [SnackBar] widget.
+  /// If the [content] is a [SnackBar], it will be shown using the [scaffoldMessenger].
+  /// If none of the above conditions are met, the [content] will be converted to
+  /// a [String] and shown as a [SnackBar].
+  ///
+  /// Returns the [ScaffoldFeatureController] for the shown [SnackBar].
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(dynamic content) {
+    if (content is String) content = content.asText();
+    if ((content is SnackBar == false) && content is Widget) {
+      content = SnackBar(content: content);
+    }
+    if (content is SnackBar) {
+      return scaffoldMessenger.showSnackBar(content);
+    }
+    return showSnackBar("$content");
+  }
 
   /// returns a specific value according to the current screen [width] or [height] or the next lower value if omitted
 
@@ -417,41 +477,7 @@ extension BuildContextExtensions on BuildContext {
         return (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs)!;
     }
   }
-
-  /// This change makes MediaQuery an InheritedModel rather than an InheritedWidget,
-  /// so any widget which knows it only depends on a
-  /// specific property of MediaQuery the ability to declare that when reading the MediaQuery from the context.
-
-  /// The same of MediaQuery.sizeOf(context)
-  Size get screenSize => mediaQuery.size;
-
-  string get aspectRatioString => screenSize.getAspectRatioString();
-
-  double get aspectRatio => width / height;
-
-  /// similar to [MediaQuery.devicePixelRatioOf(context)]
-  double get devicePixelRatio => MediaQuery.devicePixelRatioOf(this);
-
-  /// similar to [MediaQuery.platformBrightnessOf(context)]
-  Brightness get platformBrightness => MediaQuery.platformBrightnessOf(this);
-
-  /// similar to [MediaQuery.textScaleFactorOf(context)]
-  TextScaler get textScaler => MediaQuery.textScalerOf(this);
-
-  /// is dark mode currently enabled?
-  bool get isDarkMode => themeBrightness == Brightness.dark;
-
-  /// is light mode currently enabled?
-  bool get isLightMode => themeBrightness == Brightness.light;
-
-  /// is dark mode currently enabled?
-  bool get isPlatformDarkMode => platformBrightness == Brightness.dark;
-
-  /// is light mode currently enabled?
-  bool get isPlatformLightMode => platformBrightness == Brightness.light;
 }
-
-typedef ScreenTierMap<T> = Map<T, ScreenTier>;
 
 extension MoreGetExtensions on GetInterface {
   // Returns the current [ScreenTier] based on the current [width] of the screen.

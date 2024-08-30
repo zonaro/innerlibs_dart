@@ -308,6 +308,8 @@ Widget? forceWidget(
   TextWidthBasis? textWidthBasis,
   bool validate = true,
   String? defaultText,
+  BoxFit? fit,
+  AlignmentGeometry? alignment,
 }) {
   if (item != null && item is Widget) {
     return item;
@@ -340,6 +342,30 @@ Widget? forceWidget(
       textDirection: textDirection,
     );
   }
+
+  if (item is ImageProvider?) {
+    if (item != null) {
+      return Image(
+        image: item,
+        fit: fit,
+        semanticLabel: semanticsLabel,
+        alignment: alignment ?? Alignment.center,
+      );
+    }
+    return nil;
+  }
+
+  if (item is ImageProvider) {
+    return Image(
+      image: item,
+      fit: fit,
+      semanticLabel: semanticsLabel,
+      alignment: alignment ?? Alignment.center,
+      color: style?.color,
+    );
+  }
+
+  textAlign ??= alignment?.toTextAlign;
 
   return (item as Object?).asNullableText(
     style: style,
@@ -1045,5 +1071,3 @@ mixin FilterFunctions {
         allIfEmpty: allIfEmpty);
   }
 }
-
-    

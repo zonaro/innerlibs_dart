@@ -27,25 +27,31 @@ import 'package:innerlibs/innerlibs.dart';
 /// {@end-tool}
 
 class EmptyWidget extends StatefulWidget {
-  /// Display image from package assets
-  final ImageProvider<Object>? image; /*!*/
+  /// Display image, Text or icon
+  final dynamic image;
 
   /// Set text for subTitle
-  final String? subTitle; /*!*/
+  final String? subTitle;
 
   /// Set text style for subTitle
-  final TextStyle? subtitleTextStyle; /*!*/
+  final TextStyle? subtitleTextStyle;
 
   /// Set text for title
-  final String? title; /*!*/
+  final String? title;
 
   /// Text style for title
-  final TextStyle? titleTextStyle; /*!*/
+  final TextStyle? titleTextStyle;
 
   /// Hides the background circular ball animation
   ///
   /// By default `false` value is set
-  final bool? hideBackgroundAnimation;
+  final bool hideBackgroundAnimation;
+
+  /// Background color for the circular ball animation
+  final Color? backgroundColor;
+
+  /// Shadow color for the circular ball animation
+  final Color? shadowColor;
 
   const EmptyWidget({
     super.key,
@@ -55,6 +61,8 @@ class EmptyWidget extends StatefulWidget {
     this.titleTextStyle,
     this.image,
     this.hideBackgroundAnimation = false,
+    this.backgroundColor,
+    this.shadowColor,
   });
 
   @override
@@ -134,12 +142,12 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
     return Container(
       width: getHeightDimention(context.width * .95),
       height: getHeightDimention(context.width * .95),
-      decoration: const BoxDecoration(boxShadow: <BoxShadow>[
+      decoration: BoxDecoration(boxShadow: <BoxShadow>[
         BoxShadow(
-          offset: Offset(0, 0),
-          color: Color(0xffe2e5ed),
+          offset: const Offset(0, 0),
+          color: widget.shadowColor ?? context.colorScheme.primary,
         ),
-        BoxShadow(blurRadius: 30, offset: Offset(20, 0), color: Color(0xffffffff), spreadRadius: -5),
+        BoxShadow(blurRadius: 30, offset: const Offset(20, 0), color: widget.backgroundColor ?? context.colorScheme.surface, spreadRadius: -5),
       ], shape: BoxShape.circle),
     );
   }
@@ -157,7 +165,7 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
         },
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: widget.image != null ? Image(image: widget.image!, fit: BoxFit.contain) : nil,
+          child: forceWidget(widget.image, fit: BoxFit.contain, alignment: Alignment.center),
         ),
       ),
     );
@@ -181,7 +189,7 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
     _titleTextStyle = widget.titleTextStyle ?? context.theme.typography.dense.headlineSmall!.copyWith(color: context.colorScheme.primary);
     _subtitleTextStyle = widget.subtitleTextStyle ?? context.theme.typography.dense.bodyLarge!.copyWith(color: context.colorScheme.primary);
 
-    bool anyImageProvided = widget.image == null;
+    bool noImage = widget.image == null;
 
     return FadeTransition(
       opacity: _widgetController,
@@ -191,7 +199,7 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            if (!widget.hideBackgroundAnimation!)
+            if (!widget.hideBackgroundAnimation)
               RotationTransition(
                 turns: _backgroundController,
                 child: _imageBackground(),
@@ -206,13 +214,12 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    anyImageProvided
-                        ? nil
-                        : Expanded(
-                            flex: 1,
-                            child: Container(),
-                          ),
-                    anyImageProvided ? nil : _imageWidget(),
+                    if (noImage == false)
+                      Expanded(
+                        flex: 1,
+                        child: Container(),
+                      ),
+                    if (noImage == false) _imageWidget(),
                     Column(
                       children: <Widget>[
                         if (widget.title != null)
@@ -228,12 +235,11 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
                         if (widget.subTitle != null) Text(widget.subTitle!, style: _subtitleTextStyle, overflow: TextOverflow.clip, textAlign: TextAlign.center)
                       ],
                     ),
-                    anyImageProvided
-                        ? nil
-                        : Expanded(
-                            flex: 1,
-                            child: Container(),
-                          )
+                    if (noImage == false)
+                      Expanded(
+                        flex: 1,
+                        child: Container(),
+                      )
                   ],
                 ),
               );
