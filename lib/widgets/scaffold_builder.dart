@@ -4,81 +4,57 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-class PageTabScaffold extends StatefulWidget {
-  const PageTabScaffold({
-    super.key,
-    required this.indexController,
-    this.drawer,
-    this.endDrawer,
-    this.bottomSheet,
-    this.backgroundColor,
-    this.resizeToAvoidBottomInset,
-    this.primary = true,
-    this.drawerDragStartBehavior = DragStartBehavior.start,
-    this.extendBody = false,
-    this.extendBodyBehindAppBar = false,
-    this.drawerScrimColor,
-    this.drawerEdgeDragWidth,
-    this.drawerEnableOpenDragGesture = true,
-    this.endDrawerEnableOpenDragGesture = true,
-    this.restorationId,
-    this.floatingActionButton,
-    this.title,
-    this.appBarBackgroundColor,
-    this.leading,
-    this.actions,
-    this.wrapper,
-    this.iconColor,
-    this.activeIconColor,
-    this.bottomNavigationBarType,
-    this.scrollableTabs,
-    this.labelColor,
-    this.titleColor,
-    this.showUnselectedLabels = true,
-    this.tabHeight,
-    this.floatingActionButtonLocation,
-    this.useDrawerInstedOfBottomNavigationBar = false,
-    this.bottomBarBackgroundColor,
-  });
-  final Color? titleColor;
-  final bool? scrollableTabs;
-  final Color? labelColor;
-  final Widget? drawer;
-  final Widget? endDrawer;
-  final Widget? bottomSheet;
-  final Color? backgroundColor;
-  final Color? bottomBarBackgroundColor;
-  final bool? resizeToAvoidBottomInset;
-  final bool primary;
-  final DragStartBehavior drawerDragStartBehavior;
-  final bool extendBody;
-  final bool extendBodyBehindAppBar;
-  final Color? drawerScrimColor;
-  final double? drawerEdgeDragWidth;
-  final bool drawerEnableOpenDragGesture;
-  final bool endDrawerEnableOpenDragGesture;
-  final String? restorationId;
-  final Widget? floatingActionButton;
+typedef PageEntries = List<PageEntry>;
+
+typedef TabEntries = List<TabEntry>;
+
+class PageEntry {
   final dynamic title;
-  final Color? appBarBackgroundColor;
-  final Color? iconColor;
-  final Color? activeIconColor;
-  final Widget? leading;
-  final List<Widget>? actions;
-  final BottomNavigationBarType? bottomNavigationBarType;
-  final bool showUnselectedLabels;
-  final double? tabHeight;
+  final IconData icon;
+
+  final List<Widget>? toolbarItems;
+
+  final IconData? activeIcon;
+  final List<TabEntry> tabs;
+  final string? tooltip;
+  final string? actionTitle;
+  final string? actionTooltip;
+  final void Function()? action;
+  final IconData? actionIcon;
+  final List<Widget>? persistentFooterButtons;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final bool useDrawerInstedOfBottomNavigationBar;
+  final Widget? floatingActionButton;
+  final Color? backgroundColor;
+  final string? route;
 
-  final Widget Function(Widget)? wrapper;
+  final bool showAppBar;
+  final bool showAllToolbarActions;
 
-  final PageTabController indexController;
+  TabController? tabController;
 
-  final bool automaticallyImplyLeading = true;
+  PageEntry({
+    this.route,
+    this.showAllToolbarActions = true,
+    required this.title,
+    required this.icon,
+    required this.tabs,
+    this.activeIcon,
+    this.toolbarItems,
+    this.tooltip,
+    this.actionTooltip,
+    this.backgroundColor,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
+    this.actionTitle,
+    this.action,
+    this.actionIcon,
+    this.persistentFooterButtons,
+    this.showAppBar = true,
+  });
 
-  @override
-  State<PageTabScaffold> createState() => _PageTabScaffoldState();
+  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
+
+  Widget? get titleWidget => forceWidget(tabs.singleOrNull?.title) ?? forceWidget(title);
 }
 
 /// A controller class for managing the state of a scaffold builder.
@@ -86,30 +62,32 @@ class PageTabScaffold extends StatefulWidget {
 /// This class extends [ValueNotifier] and provides methods for navigating
 /// between different pages and tabs within the scaffold builder.
 class PageTabController with ChangeNotifier {
-  final PageEntries items;
+  PageEntries _items = [];
+
+  final int defaultPageIndex;
+
+  final int defaultTabIndex;
+  int value = 0;
+
+  /// A list of previous page and tab indices.
+  List<(int, int)> history = [];
 
   /// Creates a new instance of [PageTabController].
   ///
   /// The [pageIndex] and [tabIndex] parameters specify the initial page and tab
   /// indices respectively. By default, both indices are set to 0.
-  PageTabController({required this.items, this.defaultPageIndex = 0, this.defaultTabIndex = 0}) {
+  PageTabController({this.defaultPageIndex = 0, this.defaultTabIndex = 0}) {
     navigate(pageIndex: defaultPageIndex, tabIndex: defaultTabIndex);
   }
 
-  final int defaultPageIndex;
-  final int defaultTabIndex;
+  /// Returns a boolean value indicating whether there is a previous index in the
+  /// history list.
+  bool get canGoBack => history.isNotEmpty;
 
-  PageEntry get pageEntry => items[pageIndex];
-
-  int value = 0;
-
-  /// Returns the current page index.
-  int get pageIndex => value;
-  set pageIndex(int i) => navigate(pageIndex: i);
-
-  /// Returns the current tab index.
-  int get tabIndex => pageEntry.tabController?.index ?? 0;
-  set tabIndex(int i) => navigate(tabIndex: i);
+  /// Returns the previous page and tab indices as a tuple.
+  ///
+  /// If there is no previous index, null is returned.
+  (int, int)? get oldIndex => history.firstOrNull;
 
   /// Returns the previous page index.
   ///
@@ -121,13 +99,30 @@ class PageTabController with ChangeNotifier {
   /// If there is no previous index, -1 is returned.
   int get oldTabIndex => oldIndex?.$2 ?? -1;
 
-  /// Returns the previous page and tab indices as a tuple.
-  ///
-  /// If there is no previous index, null is returned.
-  (int, int)? get oldIndex => history.firstOrNull;
+  PageEntry get pageEntry => _items[pageIndex];
 
-  /// A list of previous page and tab indices.
-  List<(int, int)> history = [];
+  /// Returns the current page index.
+  int get pageIndex => value;
+
+  set pageIndex(int i) => navigate(pageIndex: i);
+
+  /// Returns the current tab index.
+  int get tabIndex => pageEntry.tabController?.index ?? 0;
+
+  set tabIndex(int i) => navigate(tabIndex: i);
+
+  /// Navigates back to the previous page and tab indices.
+  ///
+  /// If there is a previous index in the history list, the current indices are
+  /// updated to the previous indices, and the previous indices are removed from
+  /// the history list.
+  void back([int count = 1]) => navigate(pageIndex: count.forceNegative);
+
+  void insertHistory(int pageIndex, int tabIndex) {
+    if (history.isEmpty && pageIndex == defaultPageIndex && tabIndex == defaultTabIndex) return;
+    if (history.firstOrNull == (pageIndex, tabIndex)) return;
+    history.insert(0, (pageIndex, tabIndex));
+  }
 
   /// Navigates to the specified page and tab indices.
   ///
@@ -185,19 +180,6 @@ class PageTabController with ChangeNotifier {
     }
   }
 
-  void insertHistory(int pageIndex, int tabIndex) {
-    if (history.isEmpty && pageIndex == defaultPageIndex && tabIndex == defaultTabIndex) return;
-    if (history.firstOrNull == (pageIndex, tabIndex)) return;
-    history.insert(0, (pageIndex, tabIndex));
-  }
-
-  /// Navigates back to the previous page and tab indices.
-  ///
-  /// If there is a previous index in the history list, the current indices are
-  /// updated to the previous indices, and the previous indices are removed from
-  /// the history list.
-  void back([int count = 1]) => navigate(pageIndex: count.forceNegative);
-
   /// Resets the controller to its initial state.
   ///
   /// The current indices are set to 0, and the history list is cleared.
@@ -206,97 +188,114 @@ class PageTabController with ChangeNotifier {
     tabIndex = defaultTabIndex;
     history.clear();
   }
+}
 
-  /// Returns a boolean value indicating whether there is a previous index in the
-  /// history list.
-  bool get canGoBack => history.isNotEmpty;
+class PageTabScaffold extends StatefulWidget {
+  final Color? titleColor;
+  final bool? scrollableTabs;
+  final Color? labelColor;
+  final Widget? drawer;
+  final Widget? endDrawer;
+  final Widget? bottomSheet;
+  final Color? backgroundColor;
+  final Color? bottomBarBackgroundColor;
+  final bool? resizeToAvoidBottomInset;
+  final bool primary;
+  final DragStartBehavior drawerDragStartBehavior;
+  final bool extendBody;
+  final bool extendBodyBehindAppBar;
+  final Color? drawerScrimColor;
+  final double? drawerEdgeDragWidth;
+  final bool drawerEnableOpenDragGesture;
+  final bool endDrawerEnableOpenDragGesture;
+  final String? restorationId;
+  final Widget? floatingActionButton;
+  final dynamic title;
+  final Color? appBarBackgroundColor;
+  final Color? iconColor;
+  final Color? activeIconColor;
+  final Widget? leading;
+  final List<Widget>? actions;
+  final BottomNavigationBarType? bottomNavigationBarType;
+  final bool showUnselectedLabels;
+  final double? tabHeight;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final bool useDrawerInstedOfBottomNavigationBar;
+  final PageEntries items;
+  final Widget Function(Widget)? wrapper;
+
+  final PageTabController indexController;
+
+  final bool automaticallyImplyLeading = true;
+
+  const PageTabScaffold({
+    super.key,
+    required this.indexController,
+    required this.items,
+    this.drawer,
+    this.endDrawer,
+    this.bottomSheet,
+    this.backgroundColor,
+    this.resizeToAvoidBottomInset,
+    this.primary = true,
+    this.drawerDragStartBehavior = DragStartBehavior.start,
+    this.extendBody = false,
+    this.extendBodyBehindAppBar = false,
+    this.drawerScrimColor,
+    this.drawerEdgeDragWidth,
+    this.drawerEnableOpenDragGesture = true,
+    this.endDrawerEnableOpenDragGesture = true,
+    this.restorationId,
+    this.floatingActionButton,
+    this.title,
+    this.appBarBackgroundColor,
+    this.leading,
+    this.actions,
+    this.wrapper,
+    this.iconColor,
+    this.activeIconColor,
+    this.bottomNavigationBarType,
+    this.scrollableTabs,
+    this.labelColor,
+    this.titleColor,
+    this.showUnselectedLabels = true,
+    this.tabHeight,
+    this.floatingActionButtonLocation,
+    this.useDrawerInstedOfBottomNavigationBar = false,
+    this.bottomBarBackgroundColor,
+  });
+
+  @override
+  State<PageTabScaffold> createState() => _PageTabScaffoldState();
+}
+
+class TabEntry {
+  final dynamic title;
+  final IconData? icon;
+  final Widget child;
+
+  TabEntry({
+    this.title,
+    this.icon,
+    required this.child,
+  });
+
+  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
+
+  Widget? get titleWidget => forceWidget(title);
 }
 
 class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderStateMixin {
-  Widget? get mainDrawer {
-    if (useDrawerInsteadOfBottomNavigationBar) {
-      return Drawer(
-        child: SizedBox(
-          width: 100,
-          child: ListView(
-            shrinkWrap: true,
-            children: drawerItems,
-          ),
-        ),
-      );
-    } else {
-      return widget.drawer;
-    }
-  }
-
   late PageTabController indexController;
-
-  @override
-  initState() {
-    super.initState();
-    indexController = widget.indexController;
-    indexController.addListener(() {
-      setState(() {});
-    });
-  }
-
-  bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && (widget.drawer == null || widget.drawer is! Drawer);
-
-  Widget get title => (indexController.pageEntry.titleWidget ?? forceWidget(widget.title) ?? forceWidget(indexController.pageIndex.toString()))!;
-
-  Widget? get floatingActionButton => indexController.pageEntry.floatingActionButton ?? widget.floatingActionButton;
-
-  FloatingActionButtonLocation? get floatingActionButtonLocation => indexController.pageEntry.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
-
-  bool isThisPage(PageEntry page) => indexController.pageIndex == indexController.items.indexOf(page);
-  bool isThisTab(PageEntry page, TabEntry tab) => isThisPage(page) && indexController.tabIndex == page.tabs.indexOf(tab);
-
-  Widget _getDrawerItem(PageEntry page, TabEntry tab, [bool isSubmenu = false]) {
-    IconData? icon = (isSubmenu ? tab.icon : page.icon);
-    if (isThisTab(page, tab) && page.action != null) {
-      icon = page.actionIcon ?? page.activeIcon ?? icon;
-    }
-
-    Widget? title = (isSubmenu ? tab.titleWidget : page.titleWidget);
-    if (isThisTab(page, tab) && page.action != null && page.actionTitle.isNotBlank) {
-      title = forceWidget(page.actionTitle) ?? title;
-    }
-
-    string? tooltip = (page.tooltip.isNotBlank ? page.tooltip : null);
-    if (isThisTab(page, tab) && page.action != null && page.actionTooltip.isNotBlank) {
-      tooltip = page.actionTooltip;
-    }
-
-    return ListTile(
-      leading: icon.asNullableIcon(),
-      title: title,
-      selectedColor: page.backgroundColor,
-      onTap: () {
-        if (isThisTab(page, tab)) {
-          var funcs = pageEntry.action;
-          if (funcs != null) {
-            (funcs)();
-          }
-        } else {
-          indexController.navigate(pageIndex: indexController.items.indexOf(page), tabIndex: page.tabs.indexOf(tab));
-        }
-      },
-    ).wrapIf(tooltip.isNotBlank, (x) {
-      return Tooltip(
-        message: tooltip!,
-        child: x,
-      );
-    });
-  }
 
   List<BottomNavigationBarItem> get bottomNavigationBarItems => [
         if (!useDrawerInsteadOfBottomNavigationBar)
-          for (var entry in indexController.items)
+          for (var entry in indexController._items)
             BottomNavigationBarItem(
               icon: Icon(entry.icon),
               activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon),
-              label: indexController.pageIndex == indexController.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString,
-              tooltip: indexController.pageIndex == indexController.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip,
+              label: indexController.pageIndex == indexController._items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString,
+              tooltip: indexController.pageIndex == indexController._items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip,
               backgroundColor: entry.backgroundColor,
             ),
       ];
@@ -304,10 +303,10 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
   List<Widget> get drawerItems => [
         if (useDrawerInsteadOfBottomNavigationBar) ...[
           if (widget.drawer != null && widget.drawer is! Drawer) widget.drawer!,
-          for (var entry in indexController.items)
+          for (var entry in indexController._items)
             if (entry.tabs.length > 1)
               ExpansionTile(
-                initiallyExpanded: indexController.items.indexOf(entry) == indexController.pageIndex,
+                initiallyExpanded: indexController._items.indexOf(entry) == indexController.pageIndex,
                 iconColor: widget.iconColor,
                 childrenPadding: 10.fromLeft,
                 title: entry.titleWidget!,
@@ -327,16 +326,43 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
         ]
       ];
 
+  Widget? get floatingActionButton => indexController.pageEntry.floatingActionButton ?? widget.floatingActionButton;
+
+  FloatingActionButtonLocation? get floatingActionButtonLocation => indexController.pageEntry.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
+
+  Widget? get mainDrawer {
+    if (useDrawerInsteadOfBottomNavigationBar) {
+      return Drawer(
+        child: SizedBox(
+          width: 100,
+          child: ListView(
+            shrinkWrap: true,
+            children: drawerItems,
+          ),
+        ),
+      );
+    } else {
+      return widget.drawer;
+    }
+  }
+
   PageEntry get pageEntry => indexController.pageEntry;
 
-  PageEntries get pages => indexController.items;
+  PageEntries get pages => indexController._items;
+  Widget get title => (indexController.pageEntry.titleWidget ?? forceWidget(widget.title) ?? forceWidget(indexController.pageIndex.toString()))!;
+
+  bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && (widget.drawer == null || widget.drawer is! Drawer);
 
   @override
   Widget build(BuildContext context) {
-    for (var i in indexController.items) {
+    indexController._items = widget.items;
+    for (var i in indexController._items) {
       if (i.tabs.length > 1) {
         if (i.tabController == null) {
-          i.tabController = TabController(vsync: this, length: i.tabs.length, initialIndex: indexController.defaultPageIndex == indexController.items.indexOf(i) ? indexController.defaultTabIndex.clamp(0, i.tabs.length - 1) : 0);
+          i.tabController = TabController(
+              vsync: this,
+              length: i.tabs.length,
+              initialIndex: indexController.defaultPageIndex == indexController._items.indexOf(i) ? indexController.defaultTabIndex.clamp(0, i.tabs.length - 1) : 0);
           i.tabController!.addListener(() {
             indexController.insertHistory(indexController.pageIndex, i.tabController!.index);
             indexController.notifyListeners();
@@ -436,72 +462,55 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
       restorationId: widget.restorationId,
     );
   }
-}
 
-typedef PageEntries = List<PageEntry>;
-typedef TabEntries = List<TabEntry>;
+  @override
+  initState() {
+    super.initState();
+    indexController = widget.indexController;
+    indexController.addListener(() {
+      setState(() {});
+    });
+  }
 
-class TabEntry {
-  final dynamic title;
-  final IconData? icon;
-  final Widget child;
+  bool isThisPage(PageEntry page) => indexController.pageIndex == indexController._items.indexOf(page);
 
-  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
+  bool isThisTab(PageEntry page, TabEntry tab) => isThisPage(page) && indexController.tabIndex == page.tabs.indexOf(tab);
 
-  Widget? get titleWidget => forceWidget(title);
+  Widget _getDrawerItem(PageEntry page, TabEntry tab, [bool isSubmenu = false]) {
+    IconData? icon = (isSubmenu ? tab.icon : page.icon);
+    if (isThisTab(page, tab) && page.action != null) {
+      icon = page.actionIcon ?? page.activeIcon ?? icon;
+    }
 
-  TabEntry({
-    this.title,
-    this.icon,
-    required this.child,
-  });
-}
+    Widget? title = (isSubmenu ? tab.titleWidget : page.titleWidget);
+    if (isThisTab(page, tab) && page.action != null && page.actionTitle.isNotBlank) {
+      title = forceWidget(page.actionTitle) ?? title;
+    }
 
-class PageEntry {
-  final dynamic title;
-  final IconData icon;
+    string? tooltip = (page.tooltip.isNotBlank ? page.tooltip : null);
+    if (isThisTab(page, tab) && page.action != null && page.actionTooltip.isNotBlank) {
+      tooltip = page.actionTooltip;
+    }
 
-  final List<Widget>? toolbarItems;
-
-  final IconData? activeIcon;
-  final List<TabEntry> tabs;
-  final string? tooltip;
-  final string? actionTitle;
-  final string? actionTooltip;
-  final void Function()? action;
-  final IconData? actionIcon;
-  final List<Widget>? persistentFooterButtons;
-  final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final Widget? floatingActionButton;
-  final Color? backgroundColor;
-  final string? route;
-
-  final bool showAppBar;
-  final bool showAllToolbarActions;
-
-  TabController? tabController;
-
-  Widget? get titleWidget => forceWidget(tabs.singleOrNull?.title) ?? forceWidget(title);
-
-  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
-
-  PageEntry({
-    this.route,
-    this.showAllToolbarActions = true,
-    required this.title,
-    required this.icon,
-    required this.tabs,
-    this.activeIcon,
-    this.toolbarItems,
-    this.tooltip,
-    this.actionTooltip,
-    this.backgroundColor,
-    this.floatingActionButton,
-    this.floatingActionButtonLocation,
-    this.actionTitle,
-    this.action,
-    this.actionIcon,
-    this.persistentFooterButtons,
-    this.showAppBar = true,
-  });
+    return ListTile(
+      leading: icon.asNullableIcon(),
+      title: title,
+      selectedColor: page.backgroundColor,
+      onTap: () {
+        if (isThisTab(page, tab)) {
+          var funcs = pageEntry.action;
+          if (funcs != null) {
+            (funcs)();
+          }
+        } else {
+          indexController.navigate(pageIndex: indexController._items.indexOf(page), tabIndex: page.tabs.indexOf(tab));
+        }
+      },
+    ).wrapIf(tooltip.isNotBlank, (x) {
+      return Tooltip(
+        message: tooltip!,
+        child: x,
+      );
+    });
+  }
 }
