@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/colornames.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-class HSVColor implements Color, Comparable<HSVColor> {
+class HSVColor implements  Color, Comparable<HSVColor>  {
   late double _h, _s, _v;
   late String _name;
   late Color _scolor;
@@ -23,11 +23,12 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   HSVColor.fromString(String color, [string? name]) {
 
-    if (ColorNames.isNamedColor(color)) {
+    if(ColorNames.isNamedColor(color)){
       var named = ColorNames.fromValue(color);
       color = named.hexadecimal;
       name ??= named.name;
-    }
+    }    
+
     _loadColor(color.asColor);
     _name = name ?? color;
   }
@@ -238,6 +239,6 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   String _toCssRGBA() => 'rgba($red, $green, $blue, $opacity)';
 
-  // Métodos públicos
+
   static List<HSVColor> createColors(List<String> colors) => colors.map((color) => HSVColor.fromString(color)).toList();
 }
