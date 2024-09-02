@@ -268,7 +268,7 @@ class CampoListaEstado extends StatefulWidget {
 class CampoNumerico<T extends num> extends StatefulWidget {
   final String? label;
   final TextEditingController? controller;
-  final void Function(T? newValue)? onChange;
+  final void Function(T? newValue)? onChanged;
   final void Function()? onEditingComplete;
   final string? Function(T? newValue)? validator;
   final T? defaultValue;
@@ -291,7 +291,7 @@ class CampoNumerico<T extends num> extends StatefulWidget {
     super.key,
     this.label,
     this.controller,
-    this.onChange,
+    this.onChanged,
     this.onEditingComplete,
     this.validator,
     this.defaultValue,
@@ -627,8 +627,8 @@ class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
       label: widget.label,
       controller: widget.controller,
       onChanged: (newValue) {
-        if (widget.onChange != null) {
-          widget.onChange!(changeTo<T>(newValue));
+        if (widget.onChanged != null) {
+          widget.onChanged!(changeTo<T>(newValue));
         }
       },
       onEditingComplete: widget.onEditingComplete,

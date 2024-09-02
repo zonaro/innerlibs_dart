@@ -226,51 +226,23 @@ extension StringExtensions on String {
 
   /// Splits a camel case string into individual words.
   /// Returns a list of strings representing the words in the camel case string.
-  List<String> get camelSplit {
-    List<String> words = [];
-    String word = '';
-    if (isNotBlank) {
-      for (int i = 0; i < length; i++) {
-        if (this[i] == this[i].toUpperCase()) {
-          if (word.isNotEmpty) {
-            words.add(word);
-          }
-          word = this[i];
-        } else {
-          word += this[i];
-        }
+  string get camelSplitString {
+    string input = this;
+    StringBuffer result = StringBuffer();
+    for (int i = 0; i < input.length; i++) {
+      if (i > 0 && input[i].toUpperCase() == input[i] && input[i - 1].toUpperCase() != input[i - 1]) {
+        result.write(' ');
       }
-
-      if (word.isNotEmpty) {
-        words.add(word);
-      }
+      result.write(input[i]);
     }
-
-    words = words.select((w, i) => i == 0 ? w.toLowerCase() : w.capitalizeFirst).whereNotNull().toList();
-    try {
-      List<string> newWords = [];
-      for (var word in words) {
-        if (word.length == 1 && word.isUpperCase) {
-          var i = words.indexOf(word);
-          if (words[i - 1].isUpperCase) {
-            newWords.add(words[i - 1] + word);
-          }
-        } else {
-          newWords.add(word);
-        }
-      }
-      return newWords;
-    } catch (e) {
-      consoleLog('Error: $e');
-      return words;
-    }
+    return result.toString();
   }
 
   /// Returns a string with camel case split into separate words.
   ///
   /// The camel case string is split into separate words using a space as the separator.
   /// For example, "camelSplitString" will be converted to "camel Split String".
-  String get camelSplitString => camelSplit.join(" ");
+  strings get camelSplit => camelSplitString.split(" ");
 
   /// Finds all character occurrences and returns count as:
   /// ```dart

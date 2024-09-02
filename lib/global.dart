@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:math' show Random;
+import 'dart:math' show Random, atan2, cos, pi, sin, sqrt;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +48,29 @@ date get today => now.at(hour: 0, minute: 0, second: 0, millisecond: 0, microsec
 date get tomorrow => now.add(1.days);
 
 date get yesterday => now.subtract(1.days);
+
+double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  const R = 6371000; // Radius of the Earth in meters
+  double dLat = (lat2 - lat1) * pi / 180.0;
+  double dLon = (lon2 - lon1) * pi / 180.0;
+
+  double a = sin(dLat / 2) * sin(dLat / 2) + cos(lat1 * pi / 180.0) * cos(lat2 * pi / 180.0) * sin(dLon / 2) * sin(dLon / 2);
+  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+  double distance = R * c;
+
+  return distance; // Distance in meters
+}
+
+/// Return the speed in meters per second
+double calculateSpeed(double fromLatitude, double fromLongitude, DateTime fromDatetime, double toLatitude, double toLongitude, DateTime toDatetime) {
+  double distance = calculateDistance(fromLatitude, fromLongitude, toLatitude, toLongitude);
+  Duration timeDifference = toDatetime.difference(fromDatetime);
+  double timeInSeconds = timeDifference.inSeconds.toDouble();
+
+//  double speedKilometersPerHour = (speedMetersPerSecond * 3600) / 1000;
+
+  return distance / timeInSeconds;
+}
 
 /// Try change a value of any type into a value of type [R].
 ///
@@ -203,6 +226,7 @@ List forceList(dynamic item) {
 List<T> forceListOf<T>(dynamic item) => forceList(item).map((e) => changeTo<T>(e)).toList();
 
 Set forceSet(dynamic item) => forceList(item).toSet();
+
 Set<T> forceSetOf<T>(dynamic item) => forceListOf<T>(item).toSet();
 
 /// A utility extension method that allows forcing a widget to be returned,
@@ -972,7 +996,7 @@ mixin FilterFunctions {
   }) {
     if (items.isEmpty) return <T>[].orderBy((e) => true);
 
-    var searches = forceListOf(searchTerms);
+    var searches = forceList(searchTerms);
 
     if (searches.whereValid.isEmpty) {
       if (allIfEmpty) {
@@ -992,7 +1016,7 @@ mixin FilterFunctions {
         splitCamelCase: splitCamelCase,
         useWildcards: useWildcards,
       ),
-    );
+    ).toList();
 
     if (l.isEmpty && levenshteinDistance > 0) {
       l = items.where(
@@ -1001,7 +1025,7 @@ mixin FilterFunctions {
           searchOn: searchOn(item),
           levenshteinDistance: levenshteinDistance,
         ),
-      );
+      ).toList();
     }
     return l.orderByDescending((item) => countJaro(
           searchTerms: searches,

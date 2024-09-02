@@ -42,16 +42,11 @@ class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
     }
   }
 
-  bool get hasData {
-    if (value != null) {
-      if (validateData) {
-        return this.isValid();
-      }
-      return true;
-    }
-    return false;
-  }
+  /// Return true if [data] contains a non-null value. If [validateData] is true, also validate the data against [Object.IsValid] function.
+  ///
+  bool get hasData => validateData ? isValid(value) : value != null;
 
+  /// Return true if [error] is not null
   bool get hasError => error != null;
 
   void clear() {
@@ -85,28 +80,27 @@ class FutureAwaiter<T> extends StatelessWidget {
   final bool supressError;
 
   /// Function thats receive a non-null [T] data returned by [future] and return a [Widget].
-  final Widget Function(T data)? builder;
+  final Widget Function(T data) builder;
 
   /// A [Widget] to return if [T] is null (or invalid if [data.validate] is true). If not specified return a shrink [SizedBox]
   final Widget? emptyChild;
 
-  /// [Widget] to show while [future] is running
+  /// [Widget] to show while waiting for [future] response. If not specified return a [CircularProgressIndicator]
   final Widget? loading;
 
   /// A function thats receive an error and return a [Widget]. If not specified return a [ErrorWidget]
   final Widget Function(Object error)? errorChild;
 
-  final Widget? child;
-
+  /// Function to be called after the data is loaded. Receive the data returned by [future] function.
   final void Function(T?)? afterLoad;
 
+  /// Function to be called before the data is loaded.
   final void Function()? beforeLoad;
-
-  /// Wraps a [FutureBuilder] into a more readable widget
 
   FutureAwaiter({
     super.key,
     required this.future,
+    required this.builder,
     this.emptyChild,
     this.loading,
     this.errorChild,
@@ -114,13 +108,8 @@ class FutureAwaiter<T> extends StatelessWidget {
     AwaiterData<T>? data,
     this.afterLoad,
     this.beforeLoad,
-    this.builder,
-    this.child,
   }) {
     this.data = data ?? AwaiterData();
-    if (((child == null) ^ (builder == null)) == false) {
-      throw ArgumentError("You must provide either a builder function or a child widget, but not both.");
-    }
   }
 
   @override
@@ -180,41 +169,11 @@ class FutureAwaiter<T> extends StatelessWidget {
       } else if (!data.hasData) {
         return empty();
       } else {
-        if (child != null) {
-          return child!;
-        } else if (builder != null) {
-          return builder!(data.value as T);
-        } else {
-          throw ArgumentError("Child widget or builder function must be provided.");
-        }
+        return builder(data.value as T);
       }
     } catch (e) {
       data.error = e;
       return error(e);
     }
   }
-}
-
-class FutureBool extends StatelessWidget {
-  final Future<bool> future;
-  final Widget trueWidget;
-  final Widget? falseWidget;
-  final Widget? loading;
-
-  const FutureBool({
-    super.key,
-    required this.future,
-    required this.trueWidget,
-    this.falseWidget,
-    this.loading,
-  });
-
-  @override
-  Widget build(BuildContext context) => FutureAwaiter<bool>(
-        future: () async => await future,
-        builder: (_) => trueWidget,
-        loading: loading,
-        emptyChild: falseWidget,
-        errorChild: (e) => falseWidget ?? nil,
-      );
 }
