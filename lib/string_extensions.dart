@@ -19,32 +19,6 @@ extension NullStringExtension on String? {
 
   bool get isNotBlank => this != null && !isBlank;
 
-  /// Checks whether the `String` is not `null`.
-  /// ### Example 1
-  /// ```dart
-  /// String? foo;
-  /// bool isNull = foo.isNotNull; // returns false
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = 'fff';
-  /// bool isNull = foo.isNotNull; // returns true
-  /// ```
-  bool get isNotNull => isNull == false;
-
-  /// Checks whether the `String` is `null`.
-  /// ### Example 1
-  /// ```dart
-  /// String? foo;
-  /// bool isNull = foo.isNull; // returns true
-  /// ```
-  /// ### Example 2
-  /// ```dart
-  /// String foo = 'fff';
-  /// bool isNull = foo.isNull; // returns false
-  /// ```
-  bool get isNull => this == null;
-
   /// Returns null if string is blank. Otherwise, returns the string.
   String? get nullIfBlank => ifBlank(null);
 
@@ -226,6 +200,13 @@ extension StringExtensions on String {
 
   /// Splits a camel case string into individual words.
   /// Returns a list of strings representing the words in the camel case string.
+  strings get camelSplit => camelSplitString.split(" ");
+
+  /// Returns a string with camel case split into separate words.
+  ///
+  /// The camel case string is split into separate words using a space as the separator.
+  /// For example, "camelSplitString" will be converted to "camel Split String".
+
   string get camelSplitString {
     string input = this;
     StringBuffer result = StringBuffer();
@@ -237,12 +218,6 @@ extension StringExtensions on String {
     }
     return result.toString();
   }
-
-  /// Returns a string with camel case split into separate words.
-  ///
-  /// The camel case string is split into separate words using a space as the separator.
-  /// For example, "camelSplitString" will be converted to "camel Split String".
-  strings get camelSplit => camelSplitString.split(" ");
 
   /// Finds all character occurrences and returns count as:
   /// ```dart
@@ -594,7 +569,7 @@ extension StringExtensions on String {
   /// ```dart
   /// bool isCloseWrap = ")".isCloseWrapChar(); // returns true;
   /// ```
-  bool get isCloseWrap => isNotNull && StringHelpers.closeWrappers.contains(this);
+  bool get isCloseWrap => StringHelpers.closeWrappers.contains(this);
 
   /// Checks if the `String` provided is a valid credit card number using Luhn Algorithm.
   ///
@@ -792,7 +767,7 @@ extension StringExtensions on String {
   /// ```dart
   /// bool isOpenWrap = "(".isOpenWrapChar(); // returns true;
   /// ```
-  bool get isOpenWrap => isNotNull && StringHelpers.openWrappers.contains(this);
+  bool get isOpenWrap => StringHelpers.openWrappers.contains(this);
 
   /// Checks whether the `String` is a palindrome.
   ///
@@ -1318,7 +1293,7 @@ extension StringExtensions on String {
     final leetLetters = [];
     for (var e in letters) {
       final count = StringHelpers.leetAlphabet[e].length;
-      final random = Random().nextInt(count);
+      final random = randomInt(0, count - 1);
       leetLetters.add(StringHelpers.leetAlphabet[e][random]);
     }
 
@@ -1389,7 +1364,7 @@ extension StringExtensions on String {
       } else if (text.isLike("*_*")) {
         return Size(text.split("_").first.trimAll.toDoubleOrZero, text.split("_").last.trimAll.toDoubleOrZero);
       } else if (text.isLike("*:*")) {
-        return Size(text.split("_").first.trimAll.toDoubleOrZero, text.split("_").last.trimAll.toDoubleOrZero);
+        return Size(text.split(":").first.trimAll.toDoubleOrZero, text.split(":").last.trimAll.toDoubleOrZero);
       } else {
         return Size(text.split(" ").first.trimAll.toDoubleOrZero, text.split(" ").last.trimAll.toDoubleOrZero);
       }
@@ -3036,6 +3011,40 @@ extension StringExtensions on String {
     }
     var last = parts.removeLast();
     return [parts.join(pattern), last];
+  }
+
+  List<String> splitWith(List<String> delimiters) {
+    List<String> result = [];
+    if (isBlank) return result;
+    if (delimiters.isEmpty) return [this];
+    string input = this;
+    int start = 0;
+
+    while (start < input.length) {
+      int closestIndex = input.length;
+      String closestDelimiter = "";
+
+      for (String delimiter in delimiters) {
+        int index = input.indexOf(delimiter, start);
+        if (index != -1 && index < closestIndex) {
+          closestIndex = index;
+          closestDelimiter = delimiter;
+        }
+      }
+
+      if (closestIndex == input.length) {
+        result.add(input.substring(start));
+        break;
+      }
+
+      if (start != closestIndex) {
+        result.add(input.substring(start, closestIndex));
+      }
+      result.add(closestDelimiter);
+      start = closestIndex + closestDelimiter.length;
+    }
+
+    return result;
   }
 
   /// Squeezes the `String` by removing repeats of a given character.
