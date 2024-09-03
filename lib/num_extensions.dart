@@ -168,6 +168,16 @@ extension NumExtensions2<T extends num> on T {
 
   T clampMin(T minValue) => ([this, minValue]).max();
 
+  T clampRotate(T minValue, T maxValue) {
+    if (this > maxValue) {
+      return minValue + (this - maxValue) as T;
+    }
+    if (this < minValue) {
+      return maxValue - (minValue - this) as T;
+    }
+    return this;
+  }
+
   Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: round()).delay(callback);
 
   int findGreatestCommonDivisor(int b) {
