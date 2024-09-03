@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -389,6 +391,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
   final (String, String) Function(T)? textValueSelector;
   final Widget Function(BuildContext context, T, bool isSelected)? itemBuilder;
   final List<dynamic> Function(T)? searchOn;
+  final Duration? debounce;
 
   const CampoValor({
     super.key,
@@ -418,6 +421,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
     this.searchOn,
     this.suffixIcon,
     this.onSuffixIconTap,
+    this.debounce,
   });
 
   @override
@@ -754,12 +758,13 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
   TextEditingController? _controller;
   final ValueNotifier<T?> _dropdownValue = ValueNotifier<T?>(null);
 
+  Timer? _debounce;
+
   Iterable<T> get options => [_dropdownValue.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).$2).toList();
 
   (String, string) Function(T) get textValueSelector => widget.textValueSelector ?? (e) => (changeTo<string>(e), changeTo<string>(e));
 
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
-
   Future<List<T>> allOptions(string v) async {
     List<T> values = widget.options.toList();
     if (widget.asyncItems != null) {
@@ -801,9 +806,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
                 },
                 onSelected: (newValue) {
                   _controller!.text = textValueSelector(newValue).$2;
-                  if (widget.onChanged != null) {
-                    widget.onChanged!(newValue);
-                  }
+                  onChanged(newValue);
                 },
                 displayStringForOption: (v) => textValueSelector(v).$2,
                 optionsBuilder: (v) async {
@@ -844,9 +847,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
           dropdownDecoratorProps: DropDownDecoratorProps(
             dropdownSearchDecoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
           ),
-          asyncItems: (v) async {
-            return await allOptions(v);
-          },
+          asyncItems: (v) async => await allOptions(v),
           itemAsString: (x) => textValueSelector(x).$1,
           onChanged: (newValue) {
             if (_dropdownValue.value == newValue || newValue == null) {
@@ -856,9 +857,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
               _controller!.text = textValueSelector(newValue).$2;
               _dropdownValue.value = newValue;
             }
-            if (widget.onChanged != null) {
-              widget.onChanged!(newValue);
-            }
+            onChanged(newValue);
           },
         ),
       );
@@ -874,12 +873,11 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
           if (widget.onChanged != null) {
             var opt = await allOptions("");
             var item = opt.where((e) => textValueSelector(e).$2 == newValue).firstOrNull;
-            widget.onChanged!(item);
+            onChanged(item);
           }
         },
         onEditingComplete: () {
           _controller!.text = textEditingController.text;
-
           if (widget.onEditingComplete != null) {
             widget.onEditingComplete!();
           }
@@ -940,6 +938,20 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
       title: Text(textValueSelector(item).$1),
       subtitle: textValueSelector(item).$2 != textValueSelector(item).$1 ? Text(textValueSelector(item).$2) : null,
     );
+  }
+
+  void onChanged(T? value) {
+    if (widget.onChanged != null) {
+      if (widget.debounce == null) {
+        widget.onChanged!(value);
+      } else {
+        if (_debounce?.isActive ?? false) _debounce?.cancel();
+        _debounce = Timer(widget.debounce!, () async {
+          widget.onChanged!(value);
+          setState(() {});
+        });
+      }
+    }
   }
 
   List<dynamic> searchOn(T x) {

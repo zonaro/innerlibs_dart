@@ -1,184 +1,128 @@
 import 'package:innerlibs/innerlibs.dart';
 
-extension StringListExtensions on strings {
-  ///Verify if any [String] in a [strings]  contains the specified [String]
-  bool containsLike(String s) {
-    for (var item in this) {
-      if (item.toString().contains(s)) return true;
-    }
-    return false;
-  }
-
-  ///Verify if any [String] in a [strings]  contains the specified [String] ignoring the accents and character case
-
-  bool flatContainsLike(String s) {
-    for (var item in this) {
-      if (item.toString().flatContains(s)) return true;
-    }
-    return false;
-  }
-
-  ///Verify if any [String] in a [strings]  contains any  [String] of other [strings] ignoring the accents and character case
-
-  bool flatContainsAny(strings s) {
-    for (var item in this) {
-      if (s.flatContainsLike(item)) return true;
-    }
-    return false;
-  }
-
-  bool flatContains(string s) => flatContainsAny([s]);
-
-  bool flatContainsAll(Iterable<string> s) => map((e) => e.asFlat).toList().containsAll(s.map((e) => e.asFlat).toList());
-
-  bool flatContainsAtLeast(int count, Iterable<string> s) => map((e) => e.asFlat).toList().containsAtLeast(count, s.map((e) => e.asFlat).toList());
-
-  /// Removes duplicate elements from a [strings].
-  ///
-  /// Use the [flatEqual] function to compare strings.
-  List<string> distinctFlat() {
-    Set<string> uniqueElements = {};
-    for (string element in this) {
-      if (!uniqueElements.any((e) => e.flatEqual(element))) {
-        uniqueElements.add(element);
-      }
-    }
-    return uniqueElements.toList();
-  }
-
-  String generateSQLSearch(List<String> columns, [string? quoteChar]) {
-    var whereClause = "";
-
-    for (string column in columns.whereValid) {
-      for (string value in whereValid) {
-        if (whereClause.isNotEmpty) {
-          whereClause += ' OR ';
-        }
-        whereClause += "${column.wrap(quoteChar ?? SqlUtil.defaultQuoteChar)} LIKE ${value.wrap("%").asSqlValue()}";
-      }
-    }
-
-    return whereClause.wrap("(");
-  }
-
-  /// Returns a list of Levenshtein distances between each element in the list and the given string [b].
-  /// The optional parameter [caseSensitive] determines whether the comparison should be case-sensitive or not.
-  /// If [caseSensitive] is not provided, it defaults to true.
-  List<int> getLevenshtein(String b, [bool caseSensitive = true]) => map((x) => x.getLevenshtein(b, caseSensitive)).toList();
-}
-
-extension ListExtension2<T> on List<T> {
-  /// Detach items from a list according to a
-  /// function and return these items
-  Iterable<T> detachItems([bool Function(T)? predicate]) {
-    predicate = predicate ?? (x) => true;
-    var items = where(predicate);
-    removeWhere((e) => items.contains(e));
-    return items;
-  }
-
-  /// Move items from one list into another list, and return these items
-  Iterable<T> moveTo(List<T> other, [bool Function(T)? predicate]) {
-    predicate = predicate ?? (x) => true;
-    var i = detachItems(predicate);
-    other.addAll(i);
-    return i;
-  }
-
-  /// Remove the last [count] items of a list thats satisfy the [predicate]
-  List<T> removeLastWhere(bool Function(T) predicate, [int count = 1]) {
-    if (count > 0) {
-      int c = 0;
-      for (int i = length - 1; i >= 0; i--) {
-        if (predicate(this[i])) {
-          if (c >= count) break;
-          removeAt(i);
-          c++;
-        }
-      }
-    }
-    return this;
-  }
-
-  /// Remove the first [count] items of a list thats satisfy the [predicate]
-  List<T> removeFirstWhere(bool Function(T) predicate, [int count = 1]) {
-    if (count > 0) {
-      int c = 0;
-      for (int i = 0; i < length; i++) {
-        if (predicate(this[i])) {
-          if (c >= count) break;
-          removeAt(i);
-          c++;
-        }
-      }
-    }
-    return this;
-  }
-
-  /// Inserts the same element of type `T` between each element in a `List<T>`.
-  ///
-  /// This function takes a list and an element as input. It modifies the original list
-  /// and adds the given element after each element, except after the last element of the list.
-  /// Finally, it returns the modified list.
-  ///
-  /// Usage:
-  /// ```dart
-  /// void main() {
-  ///   List<int> numbers = [1, 2, 3, 4, 5];
-  ///   int element = 0;
-  ///   numbers.insertBetween(element);
-  ///   print(numbers);  // prints: [1, 0, 2, 0, 3, 0, 4, 0, 5]
-  /// }
-  /// ```
-  ///
-  /// @param list The original list of elements of type `T`.
-  /// @param element The element of type `T` to be inserted between each element in the list.
-  /// @return The modified list with the element inserted between each element.
-  List<T> insertBetween(T element) {
-    for (int i = length - 1; i > 0; i--) {
-      insert(i, element);
-    }
-    return this;
-  }
-}
-
-extension MapSearch<K, V> on Iterable<Map<K, V>> {
-  Iterable<Map<K, V>> searchMap({required Iterable<V> searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
-    return FilterFunctions.searchMap<K, V>(
-      items: this,
-      searchTerms: searchTerms,
-      keys: keys,
-      levenshteinDistance: levenshteinDistance,
-      allIfEmpty: allIfEmpty,
-    );
-  }
-}
-
 /// Adds extensions to the `List` class
 extension IterablesExtension<T> on Iterable<T> {
-  Iterable<T> search({
-    required dynamic searchTerms,
-    required Iterable<dynamic> Function(T) searchOn,
-    int levenshteinDistance = 0,
-    bool ignoreCase = true,
-    bool ignoreDiacritics = true,
-    bool ignoreWordSplitters = true,
-    bool splitCamelCase = true,
-    bool useWildcards = false,
-    bool allIfEmpty = true,
-  }) =>
-      FilterFunctions.search(
-        items: this,
-        searchTerms: searchTerms,
-        searchOn: searchOn,
-        levenshteinDistance: levenshteinDistance,
-        ignoreCase: ignoreCase,
-        ignoreDiacritics: ignoreDiacritics,
-        ignoreWordSplitters: ignoreWordSplitters,
-        splitCamelCase: splitCamelCase,
-        useWildcards: useWildcards,
-        allIfEmpty: allIfEmpty,
-      );
+  /// Returns a map that represents the frequency of each element in the list.
+  ///
+  /// The keys of the map are the elements in the list, and the values are the
+  /// number of times each element appears in the list.
+  ///
+  /// Example:
+  /// ```dart
+  /// final list = [1, 2, 2, 3, 3, 3];
+  /// final frequencies = list.frequencies;
+  /// print(frequencies); // {1: 1, 2: 2, 3: 3}
+  /// ```
+  Map<T, int> get frequencies {
+    final frequencyMap = <T, int>{};
+
+    for (final element in this) {
+      frequencyMap[element] = (frequencyMap[element] ?? 0) + 1;
+    }
+
+    return frequencyMap;
+  }
+
+  /// Returns the least frequent element in the list.
+  T? get leastFrequent {
+    if (isEmpty) {
+      return null;
+    }
+
+    // Find the element with the lowest frequency
+    T? leastFrequentElement;
+    int minFrequency = length + 1;
+
+    for (final entry in frequencies.entries) {
+      if (entry.value < minFrequency) {
+        minFrequency = entry.value;
+        leastFrequentElement = entry.key;
+      }
+    }
+
+    return leastFrequentElement;
+  }
+
+  /// Returns the most frequent element in the list.
+  T? get mostFrequent {
+    if (isEmpty) {
+      return null;
+    }
+
+    // Find the element with the highest frequency
+    T? mostFrequentElement;
+    int maxFrequency = 0;
+
+    for (final entry in frequencies.entries) {
+      if (entry.value > maxFrequency) {
+        maxFrequency = entry.value;
+        mostFrequentElement = entry.key;
+      }
+    }
+
+    return mostFrequentElement;
+  }
+
+  Iterable<T> get orderByRandom => orderBy((x) => randomInt(0, 9999));
+
+  /// Returns a random item from the list.
+  T? get randomItem => orderByRandom.firstOrNull;
+
+  /// return only valid items (see [Object.isValid])
+  Iterable<T> get whereValid => where((e) => (e as Object?).isValid());
+
+  /// Checks if this list contains all elements from [otherList].
+  bool containsAll(Iterable<T> otherList) {
+    for (final element in otherList) {
+      if (!contains(element)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool containsAny(Iterable<T> otherList) {
+    for (final element in otherList) {
+      if (contains(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Checks if a list contains at least [count] values from [values].
+  ///
+  /// Returns `true` if [this] has at least [count] values that also exist in [values],
+  /// otherwise returns `false`.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final list1 = [1, 2, 3, 4, 5];
+  /// final list2 = [3, 5, 6, 7, 8];
+  /// final count = 2; // Specify the minimum count
+  ///
+  /// final result = list1.containsAtLeast(count,list2);
+  /// print(result ? 'List 1 has at least $count values from List 2.' : 'Not enough matching values.');
+  /// ```
+  bool containsAtLeast(int count, List<T> values) {
+    // Convert list2 to a set for efficient lookups
+    final set2 = values.toSet();
+
+    // Initialize a counter for matching values
+    int matchingCount = 0;
+
+    // Iterate through list1 and check if each value is in set2
+    for (final value in this) {
+      if (set2.contains(value)) {
+        matchingCount++;
+        if (matchingCount >= count) {
+          return true; // Found enough matching values
+        }
+      }
+    }
+
+    return false; // Not enough matching values
+  }
 
   /// Removes duplicate elements from a list based on a provided predicate.
   ///
@@ -211,11 +155,6 @@ extension IterablesExtension<T> on Iterable<T> {
     return uniqueElements;
   }
 
-  Iterable<T> get orderByRandom => orderBy((x) => randomInt(0, 9999));
-
-  /// Returns a random item from the list.
-  T? get randomItem => orderByRandom.firstOrNull;
-
   /// Groups the items in the list by the item returned by the lambda function.
   ///
   /// The lambda function takes an item of type T and returns a item of type M used as key.
@@ -229,6 +168,7 @@ extension IterablesExtension<T> on Iterable<T> {
   /// The function returns a Map<M,V> where each key is a item of type M
   /// returned by the lambda function and each value is a List<T> that have that key remmaped as V.
   Map<M, V> groupAndRemapBy<M, V>(M Function(T) keyFunction, V Function(List<T>) valueFunction) => groupAndMapBy(keyFunction).map((key, value) => MapEntry(key, valueFunction(value)));
+
   Map<M, List<V>> groupAndRemapValuesBy<M, V>(M Function(T) keyFunction, V Function(T) onValueFunction) => groupAndRemapBy(keyFunction, (l) => l.map(onValueFunction).toList());
 
   /// Group the itens of a list
@@ -238,24 +178,64 @@ extension IterablesExtension<T> on Iterable<T> {
         return toList().sublist(start, end);
       });
 
-  /// Checks if this list contains all elements from [otherList].
-  bool containsAll(Iterable<T> otherList) {
-    for (final element in otherList) {
-      if (!contains(element)) {
-        return false;
+  /// Pairs up the elements of this list with the elements of the [other] list.
+  /// Returns a new list of tuples, where each tuple contains two elements:
+  /// the corresponding element from this list and the corresponding element from the [other] list.
+  /// If one of the lists is shorter than the other, the missing elements are paired with null.
+  List<(T?, T?)> pairUp(List<T> other) {
+    var l = toList();
+    return pairUpIndexes(other).map((e) {
+      if (e.$1 == -1) {
+        return (null, other[e.$2]);
+      } else if (e.$2 == -1) {
+        return (l[e.$1], null);
+      } else {
+        return (l[e.$1], other[e.$2]);
       }
-    }
-    return true;
+    }).toList();
   }
 
-  bool containsAny(Iterable<T> otherList) {
-    for (final element in otherList) {
-      if (contains(element)) {
-        return true;
+  /// Returns a list of pairs of indexes, where each pair represents the index of an element in the original list and the index of the same element in the provided [other] list.
+  /// If an element in the original list is not found in the [other] list, its index will be represented as -1 in the pair.
+  List<(int, int)> pairUpIndexes(List<T> other) {
+    var l = toList();
+    final r = <(int, int)>[];
+    for (var i = 0; i < l.length; i++) {
+      r.add((i, other.indexOf(l[i])));
+    }
+    for (var j = 0; j < other.length; j++) {
+      final index1 = l.indexOf(other[j]);
+      if (index1 == -1) {
+        r.add((-1, j));
       }
     }
-    return false;
+
+    return r;
   }
+
+  Iterable<T> search({
+    required dynamic searchTerms,
+    required Iterable<dynamic> Function(T) searchOn,
+    int levenshteinDistance = 0,
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
+    bool useWildcards = false,
+    bool allIfEmpty = true,
+  }) =>
+      FilterFunctions.search(
+        items: this,
+        searchTerms: searchTerms,
+        searchOn: searchOn,
+        levenshteinDistance: levenshteinDistance,
+        ignoreCase: ignoreCase,
+        ignoreDiacritics: ignoreDiacritics,
+        ignoreWordSplitters: ignoreWordSplitters,
+        splitCamelCase: splitCamelCase,
+        useWildcards: useWildcards,
+        allIfEmpty: allIfEmpty,
+      );
 
   /// Splits the list into multiple sublists of the specified [count].
   ///
@@ -317,137 +297,145 @@ extension IterablesExtension<T> on Iterable<T> {
     }
     return r;
   }
+}
 
-  /// Pairs up the elements of this list with the elements of the [other] list.
-  /// Returns a new list of tuples, where each tuple contains two elements:
-  /// the corresponding element from this list and the corresponding element from the [other] list.
-  /// If one of the lists is shorter than the other, the missing elements are paired with null.
-  List<(T?, T?)> pairUp(List<T> other) {
-    var l = toList();
-    return pairUpIndexes(other).map((e) {
-      if (e.$1 == -1) {
-        return (null, other[e.$2]);
-      } else if (e.$2 == -1) {
-        return (l[e.$1], null);
-      } else {
-        return (l[e.$1], other[e.$2]);
-      }
-    }).toList();
+extension ListExtension2<T> on List<T> {
+  /// Detach items from a list according to a
+  /// function and return these items
+  Iterable<T> detachItems([bool Function(T)? predicate]) {
+    predicate = predicate ?? (x) => true;
+    var items = where(predicate);
+    removeWhere((e) => items.contains(e));
+    return items;
   }
 
-  /// Returns a list of pairs of indexes, where each pair represents the index of an element in the original list and the index of the same element in the provided [other] list.
-  /// If an element in the original list is not found in the [other] list, its index will be represented as -1 in the pair.
-  List<(int, int)> pairUpIndexes(List<T> other) {
-    var l = toList();
-    final r = <(int, int)>[];
-    for (var i = 0; i < l.length; i++) {
-      r.add((i, other.indexOf(l[i])));
-    }
-    for (var j = 0; j < other.length; j++) {
-      final index1 = l.indexOf(other[j]);
-      if (index1 == -1) {
-        r.add((-1, j));
-      }
-    }
-
-    return r;
-  }
-
-  /// return only valid items (see [Object.isValid])
-  Iterable<T> get whereValid => where((e) => (e as Object?).isValid());
-
-  /// Checks if a list contains at least [count] values from [values].
+  /// Inserts the same element of type `T` between each element in a `List<T>`.
   ///
-  /// Returns `true` if [this] has at least [count] values that also exist in [values],
-  /// otherwise returns `false`.
+  /// This function takes a list and an element as input. It modifies the original list
+  /// and adds the given element after each element, except after the last element of the list.
+  /// Finally, it returns the modified list.
   ///
-  /// Example usage:
+  /// Usage:
   /// ```dart
-  /// final list1 = [1, 2, 3, 4, 5];
-  /// final list2 = [3, 5, 6, 7, 8];
-  /// final count = 2; // Specify the minimum count
-  ///
-  /// final result = list1.containsAtLeast(count,list2);
-  /// print(result ? 'List 1 has at least $count values from List 2.' : 'Not enough matching values.');
+  /// void main() {
+  ///   List<int> numbers = [1, 2, 3, 4, 5];
+  ///   int element = 0;
+  ///   numbers.insertBetween(element);
+  ///   print(numbers);  // prints: [1, 0, 2, 0, 3, 0, 4, 0, 5]
+  /// }
   /// ```
-  bool containsAtLeast(int count, List<T> values) {
-    // Convert list2 to a set for efficient lookups
-    final set2 = values.toSet();
+  ///
+  /// @param list The original list of elements of type `T`.
+  /// @param element The element of type `T` to be inserted between each element in the list.
+  /// @return The modified list with the element inserted between each element.
+  List<T> insertBetween(T element) {
+    for (int i = length - 1; i > 0; i--) {
+      insert(i, element);
+    }
+    return this;
+  }
 
-    // Initialize a counter for matching values
-    int matchingCount = 0;
+  /// Move items from one list into another list, and return these items
+  Iterable<T> moveTo(List<T> other, [bool Function(T)? predicate]) {
+    predicate = predicate ?? (x) => true;
+    var i = detachItems(predicate);
+    other.addAll(i);
+    return i;
+  }
 
-    // Iterate through list1 and check if each value is in set2
-    for (final value in this) {
-      if (set2.contains(value)) {
-        matchingCount++;
-        if (matchingCount >= count) {
-          return true; // Found enough matching values
+  /// Remove the first [count] items of a list thats satisfy the [predicate]
+  List<T> removeFirstWhere(bool Function(T) predicate, [int count = 1]) {
+    if (count > 0) {
+      int c = 0;
+      for (int i = 0; i < length; i++) {
+        if (predicate(this[i])) {
+          if (c >= count) break;
+          removeAt(i);
+          c++;
         }
       }
     }
-
-    return false; // Not enough matching values
+    return this;
   }
 
-  /// Returns the most frequent element in the list.
-  T? get mostFrequent {
-    if (isEmpty) {
-      return null;
-    }
-
-    // Find the element with the highest frequency
-    T? mostFrequentElement;
-    int maxFrequency = 0;
-
-    for (final entry in frequencies.entries) {
-      if (entry.value > maxFrequency) {
-        maxFrequency = entry.value;
-        mostFrequentElement = entry.key;
+  /// Remove the last [count] items of a list thats satisfy the [predicate]
+  List<T> removeLastWhere(bool Function(T) predicate, [int count = 1]) {
+    if (count > 0) {
+      int c = 0;
+      for (int i = length - 1; i >= 0; i--) {
+        if (predicate(this[i])) {
+          if (c >= count) break;
+          removeAt(i);
+          c++;
+        }
       }
     }
+    return this;
+  }
+}
 
-    return mostFrequentElement;
+extension MapSearch<K, V> on Iterable<Map<K, V>> {
+  Iterable<Map<K, V>> searchMap({required Iterable<V> searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
+    return FilterFunctions.searchMap<K, V>(
+      items: this,
+      searchTerms: searchTerms,
+      keys: keys,
+      levenshteinDistance: levenshteinDistance,
+      allIfEmpty: allIfEmpty,
+    );
+  }
+}
+
+extension StringListExtensions on strings {
+  ///Verify if any [String] in a [strings]  contains the specified [String]
+  bool containsLike(String s) {
+    for (var item in this) {
+      if (item.toString().contains(s)) return true;
+    }
+    return false;
   }
 
-  /// Returns the least frequent element in the list.
-  T? get leastFrequent {
-    if (isEmpty) {
-      return null;
-    }
-
-    // Find the element with the lowest frequency
-    T? leastFrequentElement;
-    int minFrequency = length + 1;
-
-    for (final entry in frequencies.entries) {
-      if (entry.value < minFrequency) {
-        minFrequency = entry.value;
-        leastFrequentElement = entry.key;
+  /// Removes duplicate elements from a [strings].
+  ///
+  /// Use the [flatEqual] function to compare strings.
+  List<string> distinctFlat() {
+    Set<string> uniqueElements = {};
+    for (string element in this) {
+      if (!uniqueElements.any((e) => e.flatEqual(element))) {
+        uniqueElements.add(element);
       }
     }
-
-    return leastFrequentElement;
+    return uniqueElements.toList();
   }
 
-  /// Returns a map that represents the frequency of each element in the list.
-  ///
-  /// The keys of the map are the elements in the list, and the values are the
-  /// number of times each element appears in the list.
-  ///
-  /// Example:
-  /// ```dart
-  /// final list = [1, 2, 2, 3, 3, 3];
-  /// final frequencies = list.frequencies;
-  /// print(frequencies); // {1: 1, 2: 2, 3: 3}
-  /// ```
-  Map<T, int> get frequencies {
-    final frequencyMap = <T, int>{};
+  bool flatContains(string s) => flatContainsAny([s]);
 
-    for (final element in this) {
-      frequencyMap[element] = (frequencyMap[element] ?? 0) + 1;
+  bool flatContainsAll(Iterable<string> s) => map((e) => e.asFlat).toList().containsAll(s.map((e) => e.asFlat).toList());
+
+  ///Verify if any [String] in a [strings]  contains any  [String] of other [strings] ignoring the accents and character case
+
+  bool flatContainsAny(strings s) {
+    for (var item in this) {
+      if (s.flatContainsLike(item)) return true;
     }
-
-    return frequencyMap;
+    return false;
   }
+
+  bool flatContainsAtLeast(int count, Iterable<string> s) => map((e) => e.asFlat).toList().containsAtLeast(count, s.map((e) => e.asFlat).toList());
+
+  ///Verify if any [String] in a [strings]  contains the specified [String] ignoring the accents and character case
+
+  bool flatContainsLike(String s) {
+    for (var item in this) {
+      if (item.toString().flatContains(s)) return true;
+    }
+    return false;
+  }
+
+
+
+  /// Returns a list of Levenshtein distances between each element in the list and the given string [b].
+  /// The optional parameter [caseSensitive] determines whether the comparison should be case-sensitive or not.
+  /// If [caseSensitive] is not provided, it defaults to true.
+  List<int> getLevenshtein(String b, [bool caseSensitive = true]) => map((x) => x.getLevenshtein(b, caseSensitive)).toList();
 }

@@ -2853,6 +2853,7 @@ extension StringExtensions on String {
     return replaceRange(index, index + pattern.length, replacement);
   }
 
+  /// Replaces all occurrences of the given [pattern] with the [replacement] `String`.
   String replaceMany(List<Pattern> from, [String to = ""]) {
     if (isEmpty) return blankIfNull;
     String result = this;
@@ -2862,10 +2863,17 @@ extension StringExtensions on String {
     return result;
   }
 
+  /// Replaces the placeholders in the `String` with the values from the provided [params] list.
+  /// The placeholders are indexes surrounded by `{{` and `}}`.
   String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{{');
 
+  /// Replaces the placeholders in the `String` with the values from the provided [params] map.
+  /// The placeholders are defined by the `{{key}}` format.
   String replaceMustachesWithMap(Map<String, dynamic> params) => replaceWrappedWithMap(values: params, openWrapChar: "{{");
 
+  /// Replaces the placeholders  in the `String` with the values from the provided [params] list.
+  /// The placeholders are defined by the [parameterMatch] parameter.
+  /// The [parameterMatch] parameter is a `String` that defines the placeholder prefix.
   String replaceParameters(JsonRow params, string parameterMatch) {
     String query = this;
 
@@ -2920,14 +2928,15 @@ extension StringExtensions on String {
     return query;
   }
 
-  String replaceSQLParameters(JsonRow params, [bool nullAsBlank = true, string parameterMatch = ":"]) =>
-      replaceParameters(params.map((k, v) => MapEntry(k, (v as Object?).asSqlValue(nullAsBlank))), parameterMatch);
-
+  /// Replaces the placeholders in the `String` with the values from the provided [values] list.
+  /// The placeholders are indexes surrounded by [openWrapChar] and [closeWrapChar].
   String replaceWrappedWithList({required List<dynamic> values, required String openWrapChar, String? closeWrapChar}) {
     if (isBlank) return blankIfNull;
     return replaceWrappedWithMap(values: values.toMap((x) => MapEntry(values.indexOf(x).toString(), x)), openWrapChar: openWrapChar, closeWrapChar: closeWrapChar);
   }
 
+  /// Replaces the placeholders in the `String` with the values from the provided [values] map.
+  /// The placeholders are Map keys surrounded by [openWrapChar] and [closeWrapChar].
   String replaceWrappedWithMap({required Map<String, dynamic> values, required String openWrapChar, String? closeWrapChar}) {
     if (isBlank) return blankIfNull;
 

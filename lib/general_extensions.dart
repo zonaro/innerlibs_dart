@@ -205,26 +205,7 @@ extension ObjectExtensions<T extends Object?> on T {
 
   // return a string of this object as a SQL Value
   String asSqlValue([bool nullAsBlank = false]) {
-    if (this == null) {
-      return nullAsBlank ? "''" : "NULL";
-    } else if (this is Map) {
-      return jsonEncode(this).asSqlValue(nullAsBlank);
-    } else if (this is Iterable) {
-      return (this as Iterable).map((e) => (e as Object?).asSqlValue(nullAsBlank)).join(",").wrap("(");
-    } else if (this is num) {
-      return toString();
-    } else if (this is bool) {
-      return this == true ? "1" : "0";
-    } else if (this is DateTime) {
-      return "'${(this as DateTime).toIso8601String()}'";
-    } else {
-      string s = "$this";
-      if (s.isBlank && nullAsBlank == false) {
-        return 'NULL';
-      } else {
-        return "'${this!.toString().replaceAll("'", "''")}'";
-      }
-    }
+  return SqlUtil.value(this,   nullAsBlank);
   }
 
   /// Converts the object to a [Text] widget with the specified properties.
