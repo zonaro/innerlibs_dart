@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:math' show Random, atan2, cos, pi, sin, sqrt;
+import 'dart:math' show Random, atan2, cos, max, min, pi, sin, sqrt;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -729,6 +729,40 @@ String randomWord([int length = 0]) {
 ///Returns the [ScaffoldFeatureController] for the shown [SnackBar].
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(dynamic content) => Get.context?.showSnackBar(content);
 
+/// Calculates the size based on the aspect ratio and optional width and height.
+///
+/// If both [width] and [height] are provided, it returns a [Size] object with the specified width and height.
+/// If only [width] is provided, it calculates the height based on the aspect ratio and returns a [Size] object with the specified width and calculated height.
+/// If only [height] is provided, it calculates the width based on the aspect ratio and returns a [Size] object with the calculated width and specified height.
+/// If neither [width] nor [height] is provided, it returns a [Size] object based on the aspect ratio.
+///
+/// Throws an [ArgumentError] if the aspect ratio format is invalid.
+///
+/// - `aspectRatio`: The aspect ratio in string format.
+/// - `width`: The optional width.
+/// - `height`: The optional height.
+///
+/// Returns a [Size] object representing the calculated size.
+Size sizeFromAspect({required String aspectRatio, double? width, double? height}) {
+  if (width != null && height != null) {
+    return Size(width, height);
+  }
+
+  Size size = aspectRatio.toSize;
+
+  if (size.width <= 0 && size.height <= 0) {
+    throw ArgumentError('Invalid aspect ratio format.');
+  }
+
+  if (width != null) {
+    return Size(width, width / max(size.width, size.height) * min(size.width, size.height));
+  } else if (height != null) {
+    return Size(height / min(size.width, size.height) * max(size.width, size.height), height);
+  } else {
+    return size;
+  }
+}
+
 Type typeOf<T>() => T;
 
 /// Validates a value of type [T] using a list of validation functions.
@@ -1006,26 +1040,30 @@ mixin FilterFunctions {
       }
     }
 
-    var l = items.where(
-      (item) => FilterFunctions.searchFunction(
-        searchTerms: searches,
-        searchOn: searchOn(item),
-        ignoreCase: ignoreCase,
-        ignoreDiacritics: ignoreDiacritics,
-        ignoreWordSplitters: ignoreWordSplitters,
-        splitCamelCase: splitCamelCase,
-        useWildcards: useWildcards,
-      ),
-    ).toList();
+    var l = items
+        .where(
+          (item) => FilterFunctions.searchFunction(
+            searchTerms: searches,
+            searchOn: searchOn(item),
+            ignoreCase: ignoreCase,
+            ignoreDiacritics: ignoreDiacritics,
+            ignoreWordSplitters: ignoreWordSplitters,
+            splitCamelCase: splitCamelCase,
+            useWildcards: useWildcards,
+          ),
+        )
+        .toList();
 
     if (l.isEmpty && levenshteinDistance > 0) {
-      l = items.where(
-        (item) => FilterFunctions.levenshteinFunction(
-          searchTerms: searches,
-          searchOn: searchOn(item),
-          levenshteinDistance: levenshteinDistance,
-        ),
-      ).toList();
+      l = items
+          .where(
+            (item) => FilterFunctions.levenshteinFunction(
+              searchTerms: searches,
+              searchOn: searchOn(item),
+              levenshteinDistance: levenshteinDistance,
+            ),
+          )
+          .toList();
     }
     return l.orderByDescending((item) => countJaro(
           searchTerms: searches,

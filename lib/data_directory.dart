@@ -24,14 +24,14 @@ import 'package:innerlibs/innerlibs.dart';
 ///   fromJsonFunction: (json) => Data.fromJson(json),
 /// );
 /// ```
-class JsonDataDiretory<T, K> {
+class JsonDataDirectory<T, K> {
   final Directory directory;
   final K Function(T) idGetterFunction;
   final JsonMap Function(T) toJsonFunction;
   final T Function(JsonMap) fromJsonFunction;
   final String key; // New parameter for encryption key
 
-  JsonDataDiretory({
+  JsonDataDirectory({
     required this.directory,
     required this.idGetterFunction,
     required this.toJsonFunction,
@@ -56,6 +56,90 @@ class JsonDataDiretory<T, K> {
     return id;
   }
 
+  /// Creates a file in the data directory with the given data.
+  ///
+  /// The [data] parameter represents the data to be stored in the file.
+  /// The [idGetterFunction] is a function that retrieves the ID for the data.
+  /// The [toJsonFunction] is a function that converts the data to JSON format.
+  /// The [key] is an optional encryption key used to encrypt the JSON data.
+  ///
+  /// Throws an exception if there is an error writing the file.
+  K createSync(T data) {
+    final id = idGetterFunction(data);
+    final file = File('${directory.path}/$id.json');
+    final json = jsonEncode(toJsonFunction(data));
+    final encryptedJson = key.isNotBlank ? json.applyXorEncrypt(key) : json; // Encrypt the JSON if key is not blank
+    file.writeAsStringSync(encryptedJson);
+    return id;
+  }
+
+  /// Deletes the data with the specified ID.
+  ///
+  /// Throws an exception if the data with the given ID does not exist.
+  ///
+  /// Returns the ID of the deleted data.
+  Future<K> delete(K id) async {
+    final file = File('${directory.path}/$id.json');
+    if (!await file.exists()) {
+      throw Exception('Data with ID $id does not exist.');
+    }
+    await file.delete();
+    return id;
+  }
+
+  /// Deletes the data with the specified ID.
+  ///
+  /// Throws an exception if the data with the given ID does not exist.
+  ///
+  /// Returns the ID of the deleted data.
+  K deleteSync(K id) {
+    final file = File('${directory.path}/$id.json');
+    if (!file.existsSync()) {
+      throw Exception('Data with ID $id does not exist.');
+    }
+    file.deleteSync();
+    return id;
+  }
+
+  /// Retrieves a list of objects of type [T] from the directory.
+  ///
+  /// This method reads all the files in the [directory] and filters out the files that have a '.json' extension.
+  /// For each filtered file, it reads the contents, decrypts the JSON if [key] is not blank, and converts it to an object of type [T].
+  /// The resulting objects are added to a list, which is returned at the end.
+  ///
+  /// Returns a [Future] that completes with an [Iterable] of objects of type [T].
+  Future<Iterable<T>> list() async {
+    List<T> list = [];
+
+    if (await directory.exists()) {
+      await for (var entity in directory.list()) {
+        if (entity is File && entity.path.endsWith('.json')) {
+          final encryptedJson = await entity.readAsString();
+          final json = key.isNotBlank ? encryptedJson.applyXorEncrypt(key) : encryptedJson; // Decrypt the JSON if key is not blank
+          final data = fromJsonFunction(jsonDecode(json));
+          list.add(data);
+        }
+      }
+    }
+    return list;
+  }
+
+  /// Retrieves a list of objects of type [T] from the directory.
+  ///
+  /// This method reads all the files in the [directory] and filters out the files that have a '.json' extension.
+  /// For each filtered file, it reads the contents, decrypts the JSON if [key] is not blank, and converts it to an object of type [T].
+  /// The resulting objects are added to a list, which is returned at the end.
+  ///
+  /// Returns a  [Iterable] of objects of type [T].
+  Iterable<T> listSync() {
+    return directory.listFilesSync.map((file) {
+      final encryptedJson = file.readAsStringSync();
+      final json = key.isNotBlank ? encryptedJson.applyXorEncrypt(key) : encryptedJson; // Decrypt the JSON if key is not blank
+      return fromJsonFunction(jsonDecode(json));
+    });
+  }
+
+  /// Reads the data with the specified ID.
   Future<T?> read(String id) async {
     final file = File('${directory.path}/$id.json');
     if (!await file.exists()) {
@@ -67,6 +151,18 @@ class JsonDataDiretory<T, K> {
     return data;
   }
 
+  /// Reads the data with the specified ID.
+  T? readSync(K id) {
+    final file = File('${directory.path}/$id.json');
+    if (!file.existsSync()) {
+      return null;
+    }
+    final encryptedJson = file.readAsStringSync();
+    final json = key.isNotBlank ? encryptedJson.applyXorEncrypt(key) : encryptedJson; // Decrypt the JSON if key is not blank
+    return fromJsonFunction(jsonDecode(json));
+  }
+
+  /// Updates the data with the specified ID.
   Future<K> update(T data) async {
     final id = idGetterFunction(data);
     final file = File('${directory.path}/$id.json');
@@ -79,6 +175,20 @@ class JsonDataDiretory<T, K> {
     return id;
   }
 
+  /// Updates the data with the specified ID.
+  K updateSync(T data) {
+    final id = idGetterFunction(data);
+    final file = File('${directory.path}/$id.json');
+    if (!file.existsSync()) {
+      throw Exception('Data with ID $id does not exist.');
+    }
+    final json = jsonEncode(toJsonFunction(data));
+    final encryptedJson = key.isNotBlank ? json.applyXorEncrypt(key) : json; // Encrypt the JSON if key is not blank
+    file.writeAsStringSync(encryptedJson);
+    return id;
+  }
+
+/// Create or update the data with the specified ID.
   Future<K> upsert(T data) async {
     final id = idGetterFunction(data);
     final file = File('${directory.path}/$id.json');
@@ -88,20 +198,12 @@ class JsonDataDiretory<T, K> {
     return id;
   }
 
-  Future<K> delete(K id) async {
+  K upsertSync(T data) {
+    final id = idGetterFunction(data);
     final file = File('${directory.path}/$id.json');
-    if (!await file.exists()) {
-      throw Exception('Data with ID $id does not exist.');
-    }
-    await file.delete();
+    final json = jsonEncode(toJsonFunction(data));
+    final encryptedJson = key.isNotBlank ? json.applyXorEncrypt(key) : json; // Encrypt the JSON if key is not blank
+    file.writeAsStringSync(encryptedJson);
     return id;
-  }
-
-  Future<Iterable<T>> list() async {
-    return directory.listFilesSync.map((file) {
-      final encryptedJson = file.readAsStringSync();
-      final json = key.isNotBlank ? encryptedJson.applyXorEncrypt(key) : encryptedJson; // Decrypt the JSON if key is not blank
-      return fromJsonFunction(jsonDecode(json));
-    });
   }
 }
