@@ -58,10 +58,10 @@ Widget computeItem(Det item, double pageWidth, double fontSize) {
 Future<Uint8List> gerarPDFDanfe(NFeProc cupomDanfe, [PdfPageFormat pageFormat = PdfPageFormat.roll80, Uint8List? logo]) async {
   var pdf = Document(
     theme: ThemeData.withFont(
-      base: Font.ttf(await rootBundle.load("packages/innerlibs/assets/consola.ttf")),
-      bold: Font.ttf(await rootBundle.load("packages/innerlibs/assets/consolab.ttf")),
-      italic: Font.ttf(await rootBundle.load("packages/innerlibs/assets/consolai.ttf")),
-      boldItalic: Font.ttf(await rootBundle.load("packages/innerlibs/assets/consolab.ttf")),
+      base: Font.ttf(await rootBundle.load("packages/innerlibs/assets/fonts/consola.ttf")),
+      bold: Font.ttf(await rootBundle.load("packages/innerlibs/assets/fonts/consolab.ttf")),
+      italic: Font.ttf(await rootBundle.load("packages/innerlibs/assets/fonts/consolai.ttf")),
+      boldItalic: Font.ttf(await rootBundle.load("packages/innerlibs/assets/fonts/consolab.ttf")),
     ),
   );
 

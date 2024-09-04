@@ -45,7 +45,21 @@ flutter:
     - lib/brasil.json 
     - assets/fonts/consola.ttf
     - assets/fonts/consolab.ttf
-    - assets/fonts/consolai.ttf
+    - assets/fonts/consolai.ttf 
+    - assets/images/brazil.png
+    - assets/images/merco.png
+    - assets/images/brasaoOficial.png
+
+  fonts:
+  - family: Mandatory
+    fonts:
+      - asset: assets/fonts/mandatory.ttf
+  - family: Fe
+    fonts:
+      - asset: assets/fonts/fe.ttf
+  - family: Xanh
+    fonts:
+      - asset: assets/fonts/XanhMono-Regular.ttf
 
  
 

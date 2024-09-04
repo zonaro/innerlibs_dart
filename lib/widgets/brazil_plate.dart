@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-/// Create a [BrazilTwoLettersPlate] [ThreeLettersPlate] or [MercosulPlate] from [String]. The plate type is auto-selected by [category] or by format of [String].
-/// If [category] is not provided, the plate type is auto-selected by the format of [plate].
-/// If [locality] is not provided, the default value is "Brasil".
-/// [category must be provided if the plate is a custom value (not a valid Three Letters plate number or Mercosul plate number).
-
 abstract class LicensePlate extends StatelessWidget {
   final String plate;
   final double? width;
@@ -16,7 +11,6 @@ abstract class LicensePlate extends StatelessWidget {
   final Color? lettersColor;
 
   final PlateCategory? category;
-
   const LicensePlate(
     this.plate, {
     super.key,
@@ -28,15 +22,85 @@ abstract class LicensePlate extends StatelessWidget {
     this.borderColor,
     this.lettersColor,
   });
+  Color getBackgroundColor();
 
+  Color getBorderColor();
+
+  Color getLettersColor();
+
+  static PlateCategory? categoryFromPlate(String plate, dynamic value) {
+    if (MercosulPlate.isValidPlate(plate)) {
+      return MercosulPlateCategory.fromValue(value);
+    } else if (ThreeLettersPlate.isValidPlate(plate)) {
+      return ThreeLettersPlateCategory.fromValue(value);
+    } else if (TwoLettersPlate.isValidPlate(plate)) {
+      return TwoLettersPlateCategory.fromValue(value);
+    } else if (value is PlateCategory || value is ThreeLettersPlateCategory || value is TwoLettersPlateCategory || value is MercosulPlateCategory) {
+      return value;
+    }
+    return null;
+  }
+
+  /// Converts an old plate [String] to the Mercosul standard.
+  ///
+  /// The old card must be in "AAA9999" format.
+  ///
+  /// Returns the new plate in the Mercosur pattern.
+  static String convertToMercosulPlate(String? oldPlate) {
+    if (oldPlate == null) {
+      throw ArgumentError.notNull('oldPlate');
+    }
+
+    String cleanPlate = oldPlate.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+
+    RegExp oldPlateRegex = RegExp(r'^([A-Z]{3})(\d{4})$');
+    if (!oldPlateRegex.hasMatch(cleanPlate)) {
+      throw const FormatException('Invalid old plate format.');
+    }
+
+    String newPlate = cleanPlate.replaceAllMapped(oldPlateRegex, (match) => '${match[1]}${match[2]![0]}${match[1]![2]}${match[2]!.substring(1)}');
+
+    return newPlate.toUpperCase();
+  }
+
+  /// Converts a [String] from Mercosul license plate to the old standard.
+  ///
+  /// The Mercosul license plate must be in the "AAA1A11" format.
+  ///
+  /// Returns the new plate in the old pattern.
+  static String convertToOldPlate(String? newPlate) {
+    if (newPlate == null) {
+      throw ArgumentError.notNull('newPlate');
+    }
+
+    String cleanPlate = newPlate.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+
+    RegExp newPlateRegex = RegExp(r'^([A-Z]{3})(\d)([A-Z]{1})(\d{2})$');
+    if (!newPlateRegex.hasMatch(cleanPlate)) {
+      throw const FormatException('Invalid mercosul format.');
+    }
+
+    String oldPlate = cleanPlate.replaceAllMapped(newPlateRegex, (match) => '${match[1]}${match[3]}${match[4]}');
+
+    return oldPlate.toUpperCase();
+  }
+
+  /// Create a [TwoLettersPlate], [ThreeLettersPlate] or [MercosulPlate] from [String]. The plate type is auto-selected by [category] or by format of [String].
+  /// If [category] is not provided, the plate type is auto-selected by the format of [plate].
+  /// If [category] is not provided and plate is not a valid plate number, return a [MercosulPlate] with [MercosulPlateCategory].
+  /// Colors can be customized by passing the [backgroundColor], [borderColor], [lettersColor] and [topBarColor] parameters.
   static LicensePlate create(
     String plate, {
     double? width,
     double? height,
     String? locality,
     PlateCategory? category,
+    Color? backgroundColor,
+    Color? borderColor,
+    Color? lettersColor,
+    Color? topBarColor,
   }) {
-    category ??= PlateUtils.categoryFromPlate(plate, "particular");
+    category ??= categoryFromPlate(plate, "particular") ?? MercosulPlateCategory.particular;
 
     if (category is ThreeLettersPlateCategory) {
       return ThreeLettersPlate(
@@ -45,6 +109,9 @@ abstract class LicensePlate extends StatelessWidget {
         width: width,
         locality: locality ?? "",
         category: category,
+        backgroundColor: backgroundColor,
+        borderColor: borderColor,
+        lettersColor: lettersColor,
       );
     } else if (category is MercosulPlateCategory) {
       return MercosulPlate(
@@ -53,6 +120,10 @@ abstract class LicensePlate extends StatelessWidget {
         width: width,
         category: category,
         locality: locality ?? "",
+        backgroundColor: backgroundColor,
+        borderColor: borderColor,
+        lettersColor: lettersColor,
+        topBarColor: topBarColor,
       );
     } else if (category is TwoLettersPlateCategory) {
       return TwoLettersPlate(
@@ -62,9 +133,12 @@ abstract class LicensePlate extends StatelessWidget {
         locality: locality ?? "",
         showLocality: locality.isNotBlank,
         category: category,
+        backgroundColor: backgroundColor,
+        borderColor: borderColor,
+        lettersColor: lettersColor,
       );
     }
-    throw Exception('Could not determine the plate type. Specify a category or a valid plate number.');
+    throw Exception('Invalid category');
   }
 }
 
@@ -99,9 +173,6 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
   // class constructor
   static const double _defaultWidth = 300;
 
-  // The following constants are the proportion factors from the sizes of a
-  // real car license plate.
-
   /// The letters and numbers drawn in the licence plate
   @override
   final String plate;
@@ -116,6 +187,9 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
   /// proportion factor will be used to calculate this value from the width.
   @override
   final double? height;
+
+  // The following constants are the proportion factors from the sizes of a
+  // real car license plate.
 
   /// The plate's category which determines the default color set
   @override
@@ -136,12 +210,12 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
   /// The name of the image asset that will be placed in the top right corner.
   /// Considers a relative path from the root of the `assets` folder.
   /// Defaults to `brazil.png`
-  final ImageProvider? countryFlagAsset;
+  final ImageProvider? countryFlag;
 
   /// The path of the logo asset that will be placed in the top left corner.
   /// Considers a relative path from the root of the `assets` folder.
   /// Defaults to `merco.png`
-  final ImageProvider? mercosulLogoAsset;
+  final ImageProvider? mercosulLogo;
 
   @override
   final Color? backgroundColor;
@@ -151,6 +225,8 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
 
   @override
   final Color? lettersColor;
+
+  final Color? topBarColor;
 
   /// Class constructor. To obtain the original aspect ratio  of a real
   /// license plate, only provide a value for width
@@ -166,11 +242,12 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
     this.category = MercosulPlateCategory.particular,
     this.locality = 'BRASIL',
     this.countryAcronymLetters = 'BR',
-    this.countryFlagAsset,
-    this.mercosulLogoAsset,
+    this.countryFlag,
+    this.mercosulLogo,
     this.backgroundColor,
     this.borderColor,
     this.lettersColor,
+    this.topBarColor,
   });
 
   /// Evaluates the real height that will be considered
@@ -220,6 +297,15 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
     );
   }
 
+  @override
+  Color getBackgroundColor() => backgroundColor ?? category.backgroundColor;
+
+  @override
+  Color getBorderColor() => borderColor ?? lettersColor ?? category.borderColor;
+
+  @override
+  Color getLettersColor() => lettersColor ?? borderColor ?? category.lettersColor;
+
   /// Draws the area in which will be printed the main license plate characters.
   Widget _charactersContent() {
     return SizedBox(
@@ -241,8 +327,8 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
     return Container(
         width: double.infinity,
         height: realHeight * _localityContainerHeightRelation,
-        decoration: const BoxDecoration(
-          color: Color(0xFF003399),
+        decoration: BoxDecoration(
+          color: topBarColor ?? const Color(0xFF003399),
         ),
         child: Stack(
           alignment: Alignment.center,
@@ -253,8 +339,8 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
                 color: Colors.transparent,
                 height: realHeight * _localityContainerHeightRelation * 0.8,
                 child: Image(
-                  image: mercosulLogoAsset ?? const AssetImage('assets/images/merco.png', package: 'innerlibs'),
-                  color: const Color(0xFF003399),
+                  image: mercosulLogo ?? const AssetImage('assets/images/merco.png', package: 'innerlibs'),
+                  color: topBarColor ?? const Color(0xFF003399),
                   colorBlendMode: BlendMode.lighten,
                 ),
               ),
@@ -266,7 +352,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
                 height: 1.9,
                 fontSize: realHeight * _localityContainerLettersRelation,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: topBarColor?.getContrastColor(100) ?? Colors.white,
               ),
             ),
             Positioned(
@@ -285,7 +371,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
                     borderRadius: BorderRadius.circular(flagBorderRadius),
                   ),
                   child: Image(
-                    image: countryFlagAsset ?? const AssetImage('assets/images/brazil.png', package: 'innerlibs'),
+                    image: countryFlag ?? const AssetImage('assets/images/brazil.png', package: 'innerlibs'),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -308,7 +394,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
             ),
           ],
           borderRadius: BorderRadius.circular(15 * (realWidth / 500)),
-          color: borderColor ?? backgroundColor ?? category.borderColor,
+          color: getBorderColor(),
         ),
         width: realWidth,
         height: realHeight,
@@ -330,7 +416,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
         letterSpacing: 2 * (fontSize / 98),
         fontFamily: 'fe',
         package: 'innerlibs',
-        color: lettersColor ?? category.lettersColor,
+        color: getLettersColor(),
       ),
       textAlign: TextAlign.center,
     );
@@ -341,7 +427,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
   Widget _internalWrapper({required Widget child}) {
     return Container(
       decoration: BoxDecoration(
-        color: backgroundColor ?? borderColor ?? category.backgroundColor,
+        color: getBackgroundColor(),
       ),
       child: Stack(
         children: [
@@ -503,66 +589,6 @@ abstract class PlateCategory {
   factory PlateCategory.fromValue(dynamic value) => throw UnimplementedError();
 }
 
-mixin PlateUtils {
-  static PlateCategory categoryFromPlate(String plate, dynamic value) {
-    if (value is PlateCategory || value is ThreeLettersPlateCategory || value is TwoLettersPlateCategory || value is MercosulPlateCategory) {
-      return value;
-    }
-    if (MercosulPlate.isValidPlate(plate)) {
-      return MercosulPlateCategory.fromValue(value);
-    } else if (ThreeLettersPlate.isValidPlate(plate)) {
-      return ThreeLettersPlateCategory.fromValue(value);
-    } else if (TwoLettersPlate.isValidPlate(plate)) {
-      return TwoLettersPlateCategory.fromValue(value);
-    }
-    throw Exception('Invalid plate format');
-  }
-
-  /// Converts an old plate [String] to the Mercosul standard.
-  ///
-  /// The old card must be in "AAA9999" format.
-  ///
-  /// Returns the new plate in the Mercosur pattern.
-  static String convertToMercosulPlate(String? oldPlate) {
-    if (oldPlate == null) {
-      throw ArgumentError.notNull('oldPlate');
-    }
-
-    String cleanPlate = oldPlate.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-
-    RegExp oldPlateRegex = RegExp(r'^([A-Z]{3})(\d{4})$');
-    if (!oldPlateRegex.hasMatch(cleanPlate)) {
-      throw const FormatException('Invalid old plate format.');
-    }
-
-    String newPlate = cleanPlate.replaceAllMapped(oldPlateRegex, (match) => '${match[1]}${match[2]![0]}${match[1]![2]}${match[2]!.substring(1)}');
-
-    return newPlate.toUpperCase();
-  }
-
-  /// Converts a [String] from Mercosul license plate to the old standard.
-  ///
-  /// The Mercosul license plate must be in the "AAA1A11" format.
-  ///
-  /// Returns the new plate in the old pattern.
-  static String convertToOldPlate(String? newPlate) {
-    if (newPlate == null) {
-      throw ArgumentError.notNull('newPlate');
-    }
-
-    String cleanPlate = newPlate.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-
-    RegExp newPlateRegex = RegExp(r'^([A-Z]{3})(\d)([A-Z]{1})(\d{2})$');
-    if (!newPlateRegex.hasMatch(cleanPlate)) {
-      throw const FormatException('Invalid mercosul format.');
-    }
-
-    String oldPlate = cleanPlate.replaceAllMapped(newPlateRegex, (match) => '${match[1]}${match[3]}${match[4]}');
-
-    return oldPlate.toUpperCase();
-  }
-}
-
 /// A widget that prints a license plate in the
 ///  "three letters pattern" on the screen.
 class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
@@ -697,6 +723,15 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
     return _externalWrapper(child: _internalWrapper(child: _charactersContent()));
   }
 
+  @override
+  Color getBackgroundColor() => backgroundColor ?? borderColor ?? category.backgroundColor;
+
+  @override
+  Color getBorderColor() => borderColor ?? backgroundColor ?? category.borderColor;
+
+  @override
+  Color getLettersColor() => lettersColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.lettersColor;
+
   /// Draws the area in which will be printed the main license plate characters.
   Widget _charactersContent() {
     final String letters = plate.replaceAll("-", "").substring(0, 3);
@@ -732,7 +767,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
                   ),
                 ],
                 borderRadius: BorderRadius.circular(5 * (realWidth / 1000)),
-                color: lettersColor ?? category.lettersColor,
+                color: getLettersColor(),
               ),
             ),
           ),
@@ -770,7 +805,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
               fontSize: realHeight * _localityContainerLettersRelation,
               fontFamily: _fontFamily,
               package: 'innerlibs',
-              color: lettersColor ?? category.lettersColor,
+              color: getLettersColor(),
             ),
           )),
       SizedBox(
@@ -792,7 +827,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
           ),
         ],
         borderRadius: BorderRadius.circular(15 * (realWidth / 500)),
-        color: borderColor ?? backgroundColor ?? category.borderColor,
+        color: getBorderColor(),
       ),
       width: realWidth,
       height: realHeight,
@@ -816,7 +851,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
         letterSpacing: 4 * (fontSize / 98),
         fontFamily: _fontFamily,
         package: 'innerlibs',
-        color: lettersColor ?? category.lettersColor,
+        color: getLettersColor(),
         shadows: [
           Shadow(
             color: Colors.black.withOpacity(0.5),
@@ -834,7 +869,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
   Widget _internalWrapper({required Widget child}) {
     return Container(
       decoration: BoxDecoration(
-        color: backgroundColor ?? borderColor ?? category.backgroundColor,
+        color: getBackgroundColor(),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1127,6 +1162,15 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
     return _externalWrapper(child: _internalWrapper(child: _charactersContent()));
   }
 
+  @override
+  Color getBackgroundColor() => backgroundColor ?? borderColor ?? category.backgroundColor;
+
+  @override
+  Color getBorderColor() => borderColor ?? backgroundColor ?? category.borderColor;
+
+  @override
+  Color getLettersColor() => lettersColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.lettersColor;
+
   /// Draws the area in which will be printed the main license plate characters.
   Widget _charactersContent() {
     return SizedBox(
@@ -1158,7 +1202,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
               fontSize: realHeight * _localityContainerLettersRelation,
               fontFamily: _fontFamily,
               package: 'innerlibs',
-              color: lettersColor ?? category.lettersColor,
+              color: getLettersColor(),
             ),
           )),
       SizedBox(
@@ -1180,7 +1224,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
           ),
         ],
         borderRadius: BorderRadius.circular(15 * (realWidth / 500)),
-        color: borderColor ?? backgroundColor ?? category.borderColor,
+        color: getBorderColor(),
       ),
       width: realWidth,
       height: realHeight,
@@ -1203,7 +1247,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
         fontSize: fontSize * 1.05,
         fontFamily: _fontFamily,
         package: 'innerlibs',
-        color: lettersColor ?? category.lettersColor,
+        color: getLettersColor(),
         shadows: [
           Shadow(
             color: Colors.black.withOpacity(0.5),
@@ -1221,7 +1265,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
   Widget _internalWrapper({required Widget child}) {
     return Container(
       decoration: BoxDecoration(
-        color: backgroundColor ?? borderColor ?? category.backgroundColor,
+        color: getBackgroundColor(),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
