@@ -56,9 +56,46 @@ extension NumExtensions2<T extends num> on T {
     }
   }
 
+  /// Returns the value with a negative sign, regardless of its original sign.
+  ///
+  /// If the value is already negative, it returns the value itself.
+  /// If the value is positive, it returns the negation of the value.
+  ///
+  /// Example:
+  /// ```dart
+  /// var num = 5;
+  /// var result = num.forceNegative; // result is -5
+  /// ```
   T get forceNegative => (-1 * this.forcePositive) as T;
+
+  /// Returns the value unsigned, regardless of its original sign.
+  ///
+  /// If the value is already positive, it returns the value itself.
+  /// If the value is negative, it returns the negation of the value.
+  ///
+  /// Example:
+  /// ```dart
+  /// var num = -5;
+  /// var result = num.forcePositive; // result is 5
+  /// ```
   T get forcePositive => this < 0 ? -this as T : this;
 
+  /// Returns a formatted string representation of the file size.
+  ///
+  /// The file size is represented in bytes and is formatted as follows:
+  /// - If the size is less than 1024 bytes, it is returned as is with the suffix "bytes".
+  /// - If the size is between 1024 bytes (inclusive) and 1024^2 bytes (exclusive), it is converted to kilobytes (KB) and returned with two decimal places.
+  /// - If the size is between 1024^2 bytes (inclusive) and 1024^3 bytes (exclusive), it is converted to megabytes (MB) and returned with two decimal places.
+  /// - If the size is between 1024^3 bytes (inclusive) and 1024^4 bytes (exclusive), it is converted to gigabytes (GB) and returned with two decimal places.
+  /// - If the size is between 1024^4 bytes (inclusive) and 1024^5 bytes (exclusive), it is converted to terabytes (TB) and returned with two decimal places.
+  /// - If the size is greater than or equal to 1024^5 bytes, it is converted to petabytes (PB) and returned with two decimal places.
+  ///
+  /// Example:
+  /// ```dart
+  /// int fileSize = 1500;
+  /// String formattedSize = fileSize.formatFileSize;
+  /// print(formattedSize); // Output: "1.46 KB"
+  /// ```
   string get formatFileSize {
     if (this < 1024) {
       return "$this bytes";
@@ -98,7 +135,6 @@ extension NumExtensions2<T extends num> on T {
 
   /// Transform number of hours into minutes
   double get hoursToMinutes {
-    // 60 seconds = 1 minute
     if (isNullOrZero) {
       return 0;
     } else {
@@ -126,7 +162,6 @@ extension NumExtensions2<T extends num> on T {
 
   /// Transform number of seconds into hours
   double get secondsToHours {
-    // 3600 seconds = 1 hour
     if (isNullOrZero) {
       return 0;
     } else {
@@ -136,7 +171,6 @@ extension NumExtensions2<T extends num> on T {
 
   /// Transform number of seconds into minutes
   double get secondsToMinutes {
-    // 60 seconds = 1 minute
     if (isNullOrZero) {
       return 0;
     } else {
@@ -164,27 +198,52 @@ extension NumExtensions2<T extends num> on T {
       milliseconds: ((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(),
       microseconds: (((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
+  /// Returns the smaller value between this value and [maxValue].
+  ///
+  /// If this value is smaller than [maxValue], it is returned.
+  /// Otherwise, [maxValue] is returned.
   T clampMax(T maxValue) => ([this, maxValue]).min();
 
+  /// Returns the larger value between this value and [minValue].
+  ///
+  /// If this value is larger than [minValue], it is returned.
+  /// Otherwise, [minValue] is returned.
   T clampMin(T minValue) => ([this, minValue]).max();
 
+  /// Clamps the value between [minValue] and [maxValue] and rotates it if necessary.
+  ///
+  /// If the value is greater than [maxValue], it will be rotated back to [minValue] and continue counting up.
+  /// If the value is less than [minValue], it will be rotated forward to [maxValue] and continue counting down.
+  /// If the value is within the range, it will be returned as is.
+  ///
+  /// Returns the clamped and rotated value.
+
   T clampRotate(T minValue, T maxValue) {
-    if (this > maxValue) {
-      return minValue + (this - maxValue) as T;
+    var correct = minValue.compareAndSwap(maxValue);
+    minValue = correct.first;
+    maxValue = correct.last;
+    var v = this;
+    while (v > maxValue) {
+      v = minValue + (v - maxValue) - 1 as T;
     }
-    if (this < minValue) {
-      return maxValue - (minValue - this) as T;
+    while (v < minValue) {
+      v = maxValue - (minValue - v) + 1 as T;
     }
-    return this;
+    return v;
   }
 
   Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: round()).delay(callback);
 
-  int findGreatestCommonDivisor(int b) {
+  /// Finds the greatest common divisor between this integer and the given integer [other].
+  ///
+  /// The greatest common divisor is the largest positive integer that divides both this integer and [other] without leaving a remainder.
+  ///
+  /// Returns the greatest common divisor.
+  int findGreatestCommonDivisor(int other) {
     int a = round();
-    while (b != 0) {
-      var t = b;
-      b = a % b;
+    while (other != 0) {
+      var t = other;
+      other = a % other;
       a = t;
     }
     return a;
@@ -192,7 +251,7 @@ extension NumExtensions2<T extends num> on T {
 
   bool isBetween(num start, num end) => isGreaterThan(start) && isLowerThan(end);
 
-  bool isBetweenOrEqual(num start, num end) => isBetween(start, end) || this == start || this == end;
+  bool isBetweenOrEqual(num start, num end) => isBetween(start, end) || this.isEqual(start) || this.isEqual(end);
 
   bool isEqual(num b) => this == b;
 
@@ -200,6 +259,13 @@ extension NumExtensions2<T extends num> on T {
 
   bool isLowerThan(num b) => this < b;
 
+  /// Returns a formatted quantity text based on the provided parameters.
+  ///
+  /// The [plural] parameter represents the plural form of the quantity.
+  /// The [singular] parameter represents the singular form of the quantity. It is optional and defaults to an empty string.
+  /// The [includeNumber] parameter determines whether to include the quantity number in the text. It is optional and defaults to true.
+  ///
+  /// The method returns a string representing the formatted quantity text.
   String quantityText(String plural, [String singular = "", bool includeNumber = true]) {
     var pre = (includeNumber ? toString() : "");
     if (plural.length > 1) {
@@ -212,6 +278,13 @@ extension NumExtensions2<T extends num> on T {
     return pre;
   }
 
+  /// Returns a formatted quantity text based on the provided parameters.
+  ///
+  /// The [plural] parameter represents the plural form of the quantity.
+  /// The [singular] parameter represents the singular form of the quantity. It is optional and defaults to an empty string.
+  /// The [includeNumber] parameter determines whether to include the quantity number in the text. It is optional and defaults to true.
+  ///
+  /// The method returns a string representing the formatted quantity text.
   String quantityTextPt(String plural, [String singular = "", bool includeNumber = true]) {
     var pre = (includeNumber ? toString() : "");
     if (plural.length > 1) {

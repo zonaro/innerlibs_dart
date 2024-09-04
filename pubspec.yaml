@@ -43,9 +43,9 @@ dev_dependencies:
 flutter: 
   assets:
     - lib/brasil.json 
-    - assets/consola.ttf
-    - assets/consolab.ttf
-    - assets/consolai.ttf
+    - assets/fonts/consola.ttf
+    - assets/fonts/consolab.ttf
+    - assets/fonts/consolai.ttf
 
  
 

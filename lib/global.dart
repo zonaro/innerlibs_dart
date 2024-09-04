@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:math' show Random, atan2, cos, max, min, pi, sin, sqrt;
 
@@ -91,6 +92,7 @@ R changeTo<R>(dynamic value) {
   if (value is R) return value;
   if (value != null) {
     consoleLog("Changing $value from ${value.runtimeType} to $R");
+
     if (isSameType<R, DateTime>()) {
       return "$value".toDate() as R;
     } else if (isSameType<R, int>()) {
@@ -119,6 +121,11 @@ R changeTo<R>(dynamic value) {
       if (value is DateTime) {
         return value.format() as R;
       }
+
+      if (value is Map || value is List) {
+        return jsonEncode(value) as R;
+      }
+
       return "$value" as R;
     } else if (isSameType<R, bool>()) {
       return "$value".asBool() as R;
@@ -158,9 +165,9 @@ R changeTo<R>(dynamic value) {
   throw Exception("Incompatible conversion");
 }
 
-/// Logs a message to the console if the app is running in debug mode.
+/// Logs a object to the console if the app is running in debug mode.
 ///
-/// The [message] parameter is the message to be logged.
+/// The [message] parameter is a object or the message to be logged.
 /// The [time] parameter is an optional timestamp for the log message.
 /// The [sequenceNumber] parameter is an optional sequence number for the log message.
 /// The [level] parameter is an optional level for the log message.
@@ -168,8 +175,8 @@ R changeTo<R>(dynamic value) {
 /// The [zone] parameter is an optional zone for the log message.
 /// The [error] parameter is an optional error object associated with the log message.
 /// The [stackTrace] parameter is an optional stack trace associated with the log message.
-string consoleLog(
-  String message, {
+T consoleLog<T>(
+  T message, {
   DateTime? time,
   int? sequenceNumber,
   int level = 0,
@@ -179,7 +186,7 @@ string consoleLog(
   StackTrace? stackTrace,
 }) {
   if (kDebugMode) {
-    log(message, time: time ?? now, sequenceNumber: sequenceNumber, level: level, name: name, zone: zone, error: error);
+    log(changeTo(message), time: time ?? now, sequenceNumber: sequenceNumber, level: level, name: name, zone: zone, error: error);
   }
   return message;
 }

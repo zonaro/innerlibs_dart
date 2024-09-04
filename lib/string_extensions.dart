@@ -368,16 +368,16 @@ extension StringExtensions on String {
     return value;
   }
 
-  /// Formats the `String` to show its proper file size.
+  /// Returns a formatted string representation of the file size.
   ///
-  /// If the `String` is not a valid integer, it is returned unchanged.
+  /// The file size is represented in bytes and is formatted as follows:
+  /// - If the size is less than 1024 bytes, it is returned as is with the suffix "bytes".
+  /// - If the size is between 1024 bytes (inclusive) and 1024^2 bytes (exclusive), it is converted to kilobytes (KB) and returned with two decimal places.
+  /// - If the size is between 1024^2 bytes (inclusive) and 1024^3 bytes (exclusive), it is converted to megabytes (MB) and returned with two decimal places.
+  /// - If the size is between 1024^3 bytes (inclusive) and 1024^4 bytes (exclusive), it is converted to gigabytes (GB) and returned with two decimal places.
+  /// - If the size is between 1024^4 bytes (inclusive) and 1024^5 bytes (exclusive), it is converted to terabytes (TB) and returned with two decimal places.
+  /// - If the size is greater than or equal to 1024^5 bytes, it is converted to petabytes (PB) and returned with two decimal places.
   ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = '24117248';
-  /// String formatted = foo.formatFileSize; // returns '23 MB';
-  /// ```
   String get formatFileSize {
     if (isBlank) {
       return blankIfNull;
@@ -389,7 +389,7 @@ extension StringExtensions on String {
   }
 
   /// return a string in a firendly format
-  string get friendlyName => camelSplitString.replaceAll("_", " ").fixText.removeLastEqual(".").toTitleCase;
+  string get friendlyName => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(StringHelpers.endOfSentenceChars).toTitleCase;
 
   /// Return a checksum digit for a barcode
   String get generateBarcodeCheckSum {
@@ -2309,7 +2309,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return toDate(format, locale).format('MMMM');
+    return toDate(format, locale).monthName(locale);
   }
 
   bool hasMatch(String pattern) => RegExp(pattern).hasMatch(this);

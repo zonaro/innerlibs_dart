@@ -86,5 +86,15 @@ void main() {
       var s = randomWord();
       print(jsonEncode(s));
     });
+
+    test("days", () {
+      consoleLog(DateUtils.day(1));
+    });
+    test("clamp", () {
+      //1234567
+      consoleLog(20.clampRotate(1, 7));
+      //1234567
+      consoleLog(-7.clampRotate(1, 7));
+    });
   });
 }

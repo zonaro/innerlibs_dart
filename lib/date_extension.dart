@@ -4,19 +4,67 @@ import 'package:intl/intl.dart';
 export 'package:innerlibs/date_range.dart';
 
 mixin DateUtils {
+  /// Returns the name of the day corresponding to the given [day] index.
+  ///
+  /// The [day] index should be a value between 1 and 7, inclusive.
+  /// If [locale] is provided, the name of the day will be returned in the specified locale.
+  /// If [locale] is not provided, the default locale will be used.
+  ///
+  /// Example:
+  /// ```dart
+  /// String dayName = day(3);
+  /// print(dayName); // Output: "Wednesday"
+  /// ```
   static string day(int day, [dynamic locale]) => days(locale)[day.clampRotate(1, 7) - 1];
 
-      static List<string> days([dynamic locale]) => [
-        for (var i = 1; i <= 7; i++) DateFormat.E(locale).format(DateTime(now.year, 1, i)),
-      ];
+  /// Returns a list of strings representing the names of the days of the week.
+  ///
+  /// The optional parameter `locale` can be used to specify the locale for formatting the day names.
+  /// If no `locale` is provided, the default locale will be used.
+  ///
+  /// Example:
+  /// ```dart
+  /// List<String> days = days();
+  /// print(days); // [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
+  /// ```
 
+  static List<string> days([dynamic locale]) => [for (var i = 1; i <= 7; i++) DateFormat.E(locale).format(DateTime(now.year, 1, i))];
+
+  /// Returns the last day of the specified month.
+  ///
+  /// The [month] parameter represents the month number, where January is 1 and December is 12.
+  /// The optional [year] parameter represents the year. If not provided, the current year is used.
+  ///
+  /// Returns an integer representing the last day of the specified month.
   static int lastDayOfMonth(int month, [int? year]) => DateTime(year ?? thisYear, month + 1, 0).day;
 
+  /// Returns the name of the month corresponding to the given [month] number.
+  ///
+  /// The [month] parameter represents the month number, ranging from 1 to 12.
+  /// If the [locale] parameter is provided, the month name will be returned
+  /// based on the specified locale.
+  ///
+  /// Example:
+  /// ```dart
+  /// String monthName = month(3);
+  /// print(monthName); // Output: "March"
+  /// ```
+  ///
+  /// Note: The [locale] parameter is optional.
+  /// If not provided, the default locale will be used.
   static string month(int month, [dynamic locale]) => months(locale)[month.clampRotate(1, 12) - 1];
 
-  static List<string> months([dynamic locale]) => [
-        for (var i = 1; i <= 12; i++) DateFormat.MMMM(locale).format(DateTime(thisYear, i, 1)),
-      ];
+  /// Returns a list of month names.
+  ///
+  /// The [locale] parameter is optional and can be used to specify the locale for formatting the month names.
+  /// If no [locale] is provided, the default locale will be used.
+  ///
+  /// Example:
+  /// ```dart
+  /// List<String> months = months();
+  /// print(months); // Output: [January, February, March, April, May, June, July, August, September, October, November, December]
+  /// ```
+  static List<string> months([dynamic locale]) => [for (var i = 1; i <= 12; i++) DateFormat.MMMM(locale).format(DateTime(thisYear, i, 1))];
 }
 
 /// Extension methods for the `DateTime` class.
@@ -35,10 +83,7 @@ extension DateTimeExtensions on DateTime {
   int get bimesterNumber => monthGroupNumber(2);
 
   /// Get Day Of Year
-  int get dayOfYear {
-    var firstDayOfYear = DateTime(year, 1, 1);
-    return difference(firstDayOfYear).inDays + 1;
-  }
+  int get dayOfYear => difference(firstDayOfYear).inDays + 1;
 
   /// Returns the end of the day.
   date get endOfDay => date(year, month, day, 23, 59, 59, 999);
@@ -106,6 +151,7 @@ extension DateTimeExtensions on DateTime {
   /// Returns the next bimester
   date get nextBimester => date(year, lastDayOfBimester.add(1.days).month, day.clampMax(lastDayOfBimester.add(1.days).lastDayOfMonth.day));
 
+/// 
   date get nextFortnight => add(15.days);
 
   /// Returns the next month.
@@ -152,23 +198,6 @@ extension DateTimeExtensions on DateTime {
 
   /// Returns the quarter number.
   int get quarterNumber => monthGroupNumber(3);
-
-  /// Readable Date Time Format
-  ///
-  /// Returns date and time string in the format Tuesday 1 January 2022, 08:00pm
-  ///
-  /// Usage:
-  ///
-  /// ```dart
-  /// DateTime.now().readableDateTimeFormat
-  /// ```
-  ///
-  /// Result:
-  ///
-  /// ```dart
-  /// Tuesday 1 January 2022, 08:00pm
-  /// ```
-  String readableDateTimeFormat([dynamic locale]) => '${readableDate(locale)}, $timeFormat';
 
   /// Readable Time
   ///
@@ -353,11 +382,6 @@ extension DateTimeExtensions on DateTime {
   /// Returns the last month of the group.
   int lastMonthOfGroup(int group) => (firstMonthOfGroup(group) + group) - 1;
 
-  /// Get Day
-  ///
-  /// Returns day string in the format Monday, Tuesday etc
-  String weekDayName([dynamic locale]) =>  DateUtils.day(weekday, locale);
-
   /// Returns the month group number.
   int monthGroupNumber(int group) => ((month - 1) ~/ group) + 1;
 
@@ -374,9 +398,24 @@ extension DateTimeExtensions on DateTime {
   /// Readable DateTime
   ///
   /// Returns date and time string in the format January 12, 2022 08:00:15
-  String readableDateTime([dynamic locale]) => "${monthName(locale)} $day, $year ${hour >= 10 ? hour : "0$hour"}"
-      ":${minute >= 10 ? minute : "0$minute"}:${second >= 10 ? second : "0"
-          "$second"}";
+  String readableDateTime([dynamic locale]) => "${monthName(locale)} $day, $year ${hour.fixedLength(2)}:${minute.fixedLength(2)}:${second.fixedLength(2)}";
+
+  /// Readable Date Time Format
+  ///
+  /// Returns date and time string in the format Tuesday 1 January 2022, 08:00pm
+  ///
+  /// Usage:
+  ///
+  /// ```dart
+  /// DateTime.now().readableDateTimeFormat
+  /// ```
+  ///
+  /// Result:
+  ///
+  /// ```dart
+  /// Tuesday 1 January 2022, 08:00pm
+  /// ```
+  String readableDateTimeFormat([dynamic locale]) => '${readableDate(locale)}, $timeFormat';
 
   /// Get Short Month
   ///
@@ -471,4 +510,9 @@ extension DateTimeExtensions on DateTime {
 
   /// Converts the current date to a [DateRange] object with the specified [endDate].
   DateRange toRange([DateTime? endDate]) => DateRange(this, endDate);
+
+  /// Get Day
+  ///
+  /// Returns day string in the format Monday, Tuesday etc
+  String weekDayName([dynamic locale]) => DateUtils.day(weekday, locale);
 }

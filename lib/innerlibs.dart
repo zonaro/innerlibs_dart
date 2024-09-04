@@ -71,6 +71,7 @@ export 'visualizador_danfe.dart';
 export 'widget_ext.dart';
 export 'widgets/avatar_image.dart';
 export 'widgets/badge.dart';
+export 'widgets/brazil_plate.dart';
 export 'widgets/custom_calendar.dart';
 export 'widgets/custom_date_range_picker.dart';
 export 'widgets/date_picker_form_field.dart';
