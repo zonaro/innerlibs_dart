@@ -5,6 +5,7 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:innerlibs/colornames.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -181,6 +182,11 @@ extension StringExtensions on String {
       final alpha = hexColor.length == 8 ? hexColor.substring(0, 2) : 'FF'; // Extract alpha value or use default 'FF'
       final color = hexColor.substring(hexColor.length - 6); // Extract RGB value
       return Color(int.parse('$alpha$color', radix: 16));
+    }
+
+    var named = ColorNames.values.where((e) => e.name.flatEqual(this)).firstOrNull;
+    if (named != null) {
+      return named.color;
     }
 
     // If not a valid hexadecimal color, compute a hash value

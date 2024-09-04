@@ -342,13 +342,9 @@ Widget? forceWidget(
   BoxFit? fit,
   AlignmentGeometry? alignment,
 }) {
-  if (item != null && item is Widget) {
-    return item;
-  }
-
-  if (item is ResponsiveColumn) {
-    return item.child;
-  }
+  if (item == null) return null;
+  if (item is Widget) return item;
+  if (item is ResponsiveColumn) return item.child;
 
   if (item is IconData) {
     return (item).asIcon(
@@ -360,30 +356,6 @@ Widget? forceWidget(
       shadows: style?.shadows,
       textDirection: textDirection,
     );
-  }
-
-  if (item is IconData?) {
-    return (item).asNullableIcon(
-      size: style?.fontSize,
-      color: style?.color,
-      applyTextScaling: textScaler != null,
-      weight: style?.fontWeight?.value.toDouble(),
-      semanticLabel: semanticsLabel ?? defaultText,
-      shadows: style?.shadows,
-      textDirection: textDirection,
-    );
-  }
-
-  if (item is ImageProvider?) {
-    if (item != null) {
-      return Image(
-        image: item,
-        fit: fit,
-        semanticLabel: semanticsLabel,
-        alignment: alignment ?? Alignment.center,
-      );
-    }
-    return nil;
   }
 
   if (item is ImageProvider) {

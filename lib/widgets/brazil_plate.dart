@@ -8,7 +8,7 @@ abstract class LicensePlate extends StatelessWidget {
   final String? locality;
   final Color? backgroundColor;
   final Color? borderColor;
-  final Color? lettersColor;
+  final Color? textColor;
 
   final PlateCategory? category;
   const LicensePlate(
@@ -20,13 +20,13 @@ abstract class LicensePlate extends StatelessWidget {
     this.category,
     this.backgroundColor,
     this.borderColor,
-    this.lettersColor,
+    this.textColor,
   });
   Color getBackgroundColor();
 
   Color getBorderColor();
 
-  Color getLettersColor();
+  Color gettextColor();
 
   static PlateCategory? categoryFromPlate(String plate, dynamic value) {
     if (MercosulPlate.isValidPlate(plate)) {
@@ -88,7 +88,7 @@ abstract class LicensePlate extends StatelessWidget {
   /// Create a [TwoLettersPlate], [ThreeLettersPlate] or [MercosulPlate] from [String]. The plate type is auto-selected by [category] or by format of [String].
   /// If [category] is not provided, the plate type is auto-selected by the format of [plate].
   /// If [category] is not provided and plate is not a valid plate number, return a [MercosulPlate] with [MercosulPlateCategory].
-  /// Colors can be customized by passing the [backgroundColor], [borderColor], [lettersColor] and [topBarColor] parameters.
+  /// Colors can be customized by passing the [backgroundColor], [borderColor], [textColor] and [topBarColor] parameters.
   static LicensePlate create(
     String plate, {
     double? width,
@@ -97,7 +97,7 @@ abstract class LicensePlate extends StatelessWidget {
     PlateCategory? category,
     Color? backgroundColor,
     Color? borderColor,
-    Color? lettersColor,
+    Color? textColor,
     Color? topBarColor,
   }) {
     category ??= categoryFromPlate(plate, "particular") ?? MercosulPlateCategory.particular;
@@ -111,7 +111,7 @@ abstract class LicensePlate extends StatelessWidget {
         category: category,
         backgroundColor: backgroundColor,
         borderColor: borderColor,
-        lettersColor: lettersColor,
+        textColor: textColor,
       );
     } else if (category is MercosulPlateCategory) {
       return MercosulPlate(
@@ -122,7 +122,7 @@ abstract class LicensePlate extends StatelessWidget {
         locality: locality ?? "",
         backgroundColor: backgroundColor,
         borderColor: borderColor,
-        lettersColor: lettersColor,
+        textColor: textColor,
         topBarColor: topBarColor,
       );
     } else if (category is TwoLettersPlateCategory) {
@@ -135,7 +135,7 @@ abstract class LicensePlate extends StatelessWidget {
         category: category,
         backgroundColor: backgroundColor,
         borderColor: borderColor,
-        lettersColor: lettersColor,
+        textColor: textColor,
       );
     }
     throw Exception('Invalid category');
@@ -224,7 +224,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
   final Color? borderColor;
 
   @override
-  final Color? lettersColor;
+  final Color? textColor;
 
   final Color? topBarColor;
 
@@ -246,7 +246,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
     this.mercosulLogo,
     this.backgroundColor,
     this.borderColor,
-    this.lettersColor,
+    this.textColor,
     this.topBarColor,
   });
 
@@ -301,10 +301,10 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
   Color getBackgroundColor() => backgroundColor ?? category.backgroundColor;
 
   @override
-  Color getBorderColor() => borderColor ?? lettersColor ?? category.borderColor;
+  Color getBorderColor() => borderColor ?? textColor ?? category.borderColor;
 
   @override
-  Color getLettersColor() => lettersColor ?? borderColor ?? category.lettersColor;
+  Color gettextColor() => textColor ?? borderColor ?? category.textColor;
 
   /// Draws the area in which will be printed the main license plate characters.
   Widget _charactersContent() {
@@ -416,7 +416,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
         letterSpacing: 2 * (fontSize / 98),
         fontFamily: 'fe',
         package: 'innerlibs',
-        color: getLettersColor(),
+        color: gettextColor(),
       ),
       textAlign: TextAlign.center,
     );
@@ -438,6 +438,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 50 * (realWidth / 1000),
+                  color: getBackgroundColor().getContrastColor(100),
                 )),
           ),
           child,
@@ -466,9 +467,9 @@ enum MercosulPlateCategory implements PlateCategory {
   @override
   final Color borderColor;
   @override
-  final Color lettersColor;
+  final Color textColor;
 
-  const MercosulPlateCategory(this.value, this.backgroundColor, this.borderColor, this.lettersColor);
+  const MercosulPlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor);
 
   factory MercosulPlateCategory.fromInt(int value) {
     switch (value) {
@@ -580,9 +581,9 @@ abstract class PlateCategory {
   final int value;
   final Color backgroundColor;
   final Color borderColor;
-  final Color lettersColor;
+  final Color textColor;
 
-  const PlateCategory(this.value, this.backgroundColor, this.borderColor, this.lettersColor);
+  const PlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor);
 
   factory PlateCategory.fromInt(int value) => throw UnimplementedError();
   factory PlateCategory.fromString(String value) => throw UnimplementedError();
@@ -667,7 +668,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
   final Color? borderColor;
 
   @override
-  final Color? lettersColor;
+  final Color? textColor;
 
   /// Class constructor. To obtain the original aspect ratio  of a real
   /// license plate, only provide a value for width
@@ -684,7 +685,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
     this.category = ThreeLettersPlateCategory.particular,
     this.backgroundColor,
     this.borderColor,
-    this.lettersColor,
+    this.textColor,
   });
 
   /// Evaluates the real height that will be considered
@@ -730,7 +731,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
   Color getBorderColor() => borderColor ?? backgroundColor ?? category.borderColor;
 
   @override
-  Color getLettersColor() => lettersColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.lettersColor;
+  Color gettextColor() => textColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.textColor;
 
   /// Draws the area in which will be printed the main license plate characters.
   Widget _charactersContent() {
@@ -767,7 +768,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
                   ),
                 ],
                 borderRadius: BorderRadius.circular(5 * (realWidth / 1000)),
-                color: getLettersColor(),
+                color: gettextColor(),
               ),
             ),
           ),
@@ -805,7 +806,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
               fontSize: realHeight * _localityContainerLettersRelation,
               fontFamily: _fontFamily,
               package: 'innerlibs',
-              color: getLettersColor(),
+              color: gettextColor(),
             ),
           )),
       SizedBox(
@@ -851,7 +852,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
         letterSpacing: 4 * (fontSize / 98),
         fontFamily: _fontFamily,
         package: 'innerlibs',
-        color: getLettersColor(),
+        color: gettextColor(),
         shadows: [
           Shadow(
             color: Colors.black.withOpacity(0.5),
@@ -900,9 +901,9 @@ enum ThreeLettersPlateCategory implements PlateCategory {
   @override
   final Color borderColor;
   @override
-  final Color lettersColor;
+  final Color textColor;
 
-  const ThreeLettersPlateCategory(this.value, this.backgroundColor, this.borderColor, this.lettersColor);
+  const ThreeLettersPlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor);
 
   factory ThreeLettersPlateCategory.fromInt(int value) {
     switch (value) {
@@ -1105,7 +1106,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
   final Color? borderColor;
 
   @override
-  final Color? lettersColor;
+  final Color? textColor;
 
   /// Class constructor. To obtain the original aspect ratio  of a real
   /// license plate, only provide a value for width
@@ -1123,7 +1124,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
     this.category = TwoLettersPlateCategory.particular,
     this.backgroundColor,
     this.borderColor,
-    this.lettersColor,
+    this.textColor,
   });
 
   /// Evaluates the real height that will be considered
@@ -1169,7 +1170,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
   Color getBorderColor() => borderColor ?? backgroundColor ?? category.borderColor;
 
   @override
-  Color getLettersColor() => lettersColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.lettersColor;
+  Color gettextColor() => textColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.textColor;
 
   /// Draws the area in which will be printed the main license plate characters.
   Widget _charactersContent() {
@@ -1202,7 +1203,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
               fontSize: realHeight * _localityContainerLettersRelation,
               fontFamily: _fontFamily,
               package: 'innerlibs',
-              color: getLettersColor(),
+              color: gettextColor(),
             ),
           )),
       SizedBox(
@@ -1247,7 +1248,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
         fontSize: fontSize * 1.05,
         fontFamily: _fontFamily,
         package: 'innerlibs',
-        color: getLettersColor(),
+        color: gettextColor(),
         shadows: [
           Shadow(
             color: Colors.black.withOpacity(0.5),
@@ -1291,9 +1292,9 @@ enum TwoLettersPlateCategory implements PlateCategory {
   @override
   final Color borderColor;
   @override
-  final Color lettersColor;
+  final Color textColor;
 
-  const TwoLettersPlateCategory(this.value, this.backgroundColor, this.borderColor, this.lettersColor);
+  const TwoLettersPlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor);
 
   factory TwoLettersPlateCategory.fromInt(int value) {
     switch (value) {

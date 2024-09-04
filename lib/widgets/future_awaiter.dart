@@ -68,12 +68,9 @@ class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
 }
 
 /// Wraps a [FutureBuilder] into a [Widget] and add some data validations, making it easier to use.
-class FutureAwaiter<T> extends StatelessWidget {
+class FutureAwaiter<T> extends StatefulWidget {
   /// The asynchronous computation to which this builder is currently connected, possibly null.
   final Future<T> Function() future;
-
-  /// When defined, store the data returned by [FutureBuilder] and prevent repeated calls to [future] function
-  late AwaiterData<T> data;
 
   /// When true, return [emptyChild] instead of [ErrorWidget]. If [errorChild] is not null, this property do nothing.
   /// The default value is [kReleaseMode]
@@ -97,7 +94,10 @@ class FutureAwaiter<T> extends StatelessWidget {
   /// Function to be called before the data is loaded.
   final void Function()? beforeLoad;
 
-  FutureAwaiter({
+  /// Data to store the data returned by [future] function. If not specified, a new instance of [AwaiterData] is created.
+  final AwaiterData<T>? data;
+
+  const FutureAwaiter({
     super.key,
     required this.future,
     required this.builder,
@@ -105,32 +105,38 @@ class FutureAwaiter<T> extends StatelessWidget {
     this.loading,
     this.errorChild,
     this.supressError = kReleaseMode,
-    AwaiterData<T>? data,
+    this.data,
     this.afterLoad,
     this.beforeLoad,
-  }) {
-    this.data = data ?? AwaiterData();
-  }
+  });
+
+  @override
+  State<FutureAwaiter<T>> createState() => _FutureAwaiterState<T>();
+}
+
+class _FutureAwaiterState<T> extends State<FutureAwaiter<T>> {
+  /// When defined, store the data returned by [FutureBuilder] and prevent repeated calls to [widget.future] function
+  late AwaiterData<T> data;
 
   @override
   Widget build(BuildContext context) {
-    if (beforeLoad != null) {
-      beforeLoad!();
+    if (widget.beforeLoad != null) {
+      widget.beforeLoad!();
     }
     late Widget rt;
     if (data.expired) {
       data.loadedAt = null;
       consoleLog("Loading data...");
       return FutureBuilder<T>(
-        future: future.call(),
+        future: (widget.future)(),
         builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            rt = loading ?? const Center(child: CircularProgressIndicator());
+            rt = widget.loading ?? const Center(child: CircularProgressIndicator());
           } else {
             rt = _buildWidget(snapshot);
           }
-          if (afterLoad != null) {
-            afterLoad!(data.value);
+          if (widget.afterLoad != null) {
+            widget.afterLoad!(data.value);
           }
           return rt;
         },
@@ -141,21 +147,32 @@ class FutureAwaiter<T> extends StatelessWidget {
       consoleLog("Expire at: ${data.expireAt?.toIso8601String() ?? "never"}");
       rt = _buildWidget(AsyncSnapshot.withData(ConnectionState.none, data.value as T));
 
-      if (afterLoad != null) {
-        afterLoad!(data.value);
+      if (widget.afterLoad != null) {
+        widget.afterLoad!(data.value);
       }
       return rt;
     }
   }
 
-  empty() => emptyChild ?? nil;
+  empty() => widget.emptyChild ?? nil;
+
   error(Object e) {
     consoleLog("Error: $e", error: e);
-    return errorChild != null
-        ? errorChild!(e)
-        : supressError
+    return widget.errorChild != null
+        ? widget.errorChild!(e)
+        : widget.supressError
             ? empty()
             : ErrorWidget(e);
+  }
+
+  @override
+  void initState() {
+    data = widget.data ?? AwaiterData<T>();
+    data.addListener(() {
+      setState(() {});
+    });
+
+    super.initState();
   }
 
   Widget _buildWidget(AsyncSnapshot<T> snapshot) {
@@ -169,7 +186,7 @@ class FutureAwaiter<T> extends StatelessWidget {
       } else if (!data.hasData) {
         return empty();
       } else {
-        return builder(data.value as T);
+        return widget.builder(data.value as T);
       }
     } catch (e) {
       data.error = e;

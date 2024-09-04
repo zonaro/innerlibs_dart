@@ -273,7 +273,7 @@ class CampoNumerico<T extends num> extends StatefulWidget {
   final void Function(T? newValue)? onChanged;
   final void Function()? onEditingComplete;
   final string? Function(T? newValue)? validator;
-  final T? defaultValue;
+  final T? initialValue;
   final bool readOnly;
   final List<T> options;
   final Color? color;
@@ -296,7 +296,7 @@ class CampoNumerico<T extends num> extends StatefulWidget {
     this.onChanged,
     this.onEditingComplete,
     this.validator,
-    this.defaultValue,
+    this.initialValue,
     this.readOnly = false,
     this.options = const [],
     this.color,
@@ -642,7 +642,7 @@ class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
         }
         return null;
       },
-      initialValue: changeTo(widget.defaultValue ?? 0),
+      initialValue: changeTo(widget.initialValue ?? 0),
       readOnly: widget.readOnly,
       isAutoComplete: widget.isAutoComplete,
       options: widget.options,
