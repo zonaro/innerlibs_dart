@@ -93,11 +93,11 @@ PopupProps<T> popupCampos<T>(
         );
 }
 
-typedef CampoDecimal = CampoNumerico<decimal>;
+typedef CampoDecimal = CampoValor<decimal>;
 
-typedef CampoDouble = CampoNumerico<double>;
+typedef CampoDouble = CampoValor<double>;
 
-typedef CampoInteiro = CampoNumerico<int>;
+typedef CampoInteiro = CampoValor<int>;
 
 typedef CampoTexto = CampoValor<string>;
 
@@ -140,15 +140,13 @@ class BotaoTexto extends StatelessWidget {
 }
 
 class CampoCPFouCNPJ extends StatefulWidget {
-  final TextEditingController? controller;
-  final void Function(String?)? onChange;
+  final void Function(String?)? onChanged;
   final bool readOnly;
   final string? label;
 
   const CampoCPFouCNPJ({
     super.key,
-    this.controller,
-    this.onChange,
+    this.onChanged,
     this.readOnly = false,
     this.label,
   });
@@ -159,21 +157,20 @@ class CampoCPFouCNPJ extends StatefulWidget {
 
 class CampoData extends StatefulWidget {
   final String? label;
-  final TextEditingController? controller;
+
   final DateTime? initialDate;
   final DateTime? fromDate;
   final DateTime? toDate;
-  final void Function(String?)? onChange;
+  final void Function(String?)? onChanged;
   final IconData? icon;
 
   const CampoData({
     super.key,
     this.label,
-    this.controller,
     this.initialDate,
     this.fromDate,
     this.toDate,
-    this.onChange,
+    this.onChanged,
     this.icon = Icons.date_range,
   });
 
@@ -183,7 +180,7 @@ class CampoData extends StatefulWidget {
 
 class CampoEnum<T extends Enum> extends StatefulWidget {
   final String? label;
-  final TextEditingController? controller;
+
   final void Function(T?)? onChange;
   final void Function()? onEditingComplete;
   final string? Function(T?)? validator;
@@ -202,7 +199,6 @@ class CampoEnum<T extends Enum> extends StatefulWidget {
     super.key,
     required this.values,
     this.label,
-    this.controller,
     this.onChange,
     this.onEditingComplete,
     this.validator,
@@ -267,81 +263,28 @@ class CampoListaEstado extends StatefulWidget {
   createState() => _CampoListaEstadoState();
 }
 
-class CampoNumerico<T extends num> extends StatefulWidget {
-  final String? label;
-  final TextEditingController? controller;
-  final void Function(T? newValue)? onChanged;
-  final void Function()? onEditingComplete;
-  final string? Function(T? newValue)? validator;
-  final T? initialValue;
-  final bool readOnly;
-  final List<T> options;
-  final Color? color;
-  final TextAlign textAlign;
-  final FocusNode? focusNode;
-  final bool autofocus;
-  final bool isAutoComplete;
-  final IconData? icon;
-  final int? maxLen;
-  final List<NumberInputFormatter> inputFormatters;
-  final Future<List<T>> Function(string)? asyncItems;
-
-  final String Function(T?)? itemAsString;
-
-  final Widget Function(BuildContext context, T?, bool isSelected)? itemBuilder;
-  const CampoNumerico({
-    super.key,
-    this.label,
-    this.controller,
-    this.onChanged,
-    this.onEditingComplete,
-    this.validator,
-    this.initialValue,
-    this.readOnly = false,
-    this.options = const [],
-    this.color,
-    this.textAlign = TextAlign.right,
-    this.focusNode,
-    this.autofocus = false,
-    this.isAutoComplete = false,
-    this.icon,
-    this.maxLen,
-    this.inputFormatters = const [],
-    this.asyncItems,
-    this.itemAsString,
-    this.itemBuilder,
-  });
-
-  @override
-  createState() => _CampoNumericoState();
-}
-
 class CampoSimNao extends StatefulWidget {
   final String? label;
-  final TextEditingController? controller;
-  final void Function(String?)? onChange;
+  final String? initialValue;
 
-  const CampoSimNao({
-    super.key,
-    this.label,
-    this.controller,
-    this.onChange,
-  });
+  final void Function(String?)? onChanged;
+
+  const CampoSimNao({super.key, this.label, this.onChanged, this.initialValue});
 
   @override
   createState() => _CampoSimNaoState();
 }
 
 class CampoTelefone extends StatefulWidget {
-  final TextEditingController? controller;
   final void Function(String?)? onChanged;
   final String label;
+  final string initialValue;
 
   const CampoTelefone({
     super.key,
-    required this.controller,
     this.onChanged,
     this.label = "",
+    this.initialValue = "",
   });
 
   @override
@@ -349,15 +292,11 @@ class CampoTelefone extends StatefulWidget {
 }
 
 class CampoTipoPessoa extends StatefulWidget {
-  final TextEditingController tipoController;
-  final TextEditingController? cnpjCpfController;
-  final void Function(String?)? onChange;
+  final void Function(String?)? onChanged;
 
   const CampoTipoPessoa({
     super.key,
-    required this.tipoController,
-    this.cnpjCpfController,
-    this.onChange,
+    this.onChanged,
   });
 
   @override
@@ -366,7 +305,7 @@ class CampoTipoPessoa extends StatefulWidget {
 
 class CampoValor<T extends Object> extends StatefulWidget {
   final String? label;
-  final TextEditingController? controller;
+  //
   final Iterable<T> options;
   final List<TextInputFormatter> inputFormatters;
   final void Function(T?)? onChanged;
@@ -378,7 +317,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
   final bool readOnly;
   final bool isAutoComplete;
   final TextInputType? keyboardType;
-  final TextAlign textAlign;
+  final TextAlign? textAlign;
   final bool obscureText;
   final FocusNode? focusNode;
   final bool autofocus;
@@ -396,7 +335,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
   const CampoValor({
     super.key,
     this.label,
-    this.controller,
+    // this.controller,
     this.options = const [],
     this.inputFormatters = const [],
     this.onChanged,
@@ -408,7 +347,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
     this.readOnly = false,
     this.isAutoComplete = false,
     this.keyboardType,
-    this.textAlign = TextAlign.start,
+    this.textAlign,
     this.obscureText = false,
     this.focusNode,
     this.autofocus = false,
@@ -483,14 +422,14 @@ class _CampoCPFouCNPJState extends State<CampoCPFouCNPJ> {
   Widget build(BuildContext context) {
     return CampoTexto(
       label: widget.label ?? 'CPF/CNPJ',
-      controller: widget.controller,
+      // controller: widget.controller,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         CpfOuCnpjFormatter(),
       ],
       keyboardType: const TextInputType.numberWithOptions(),
       validator: (newValue) => Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!",
-      onChanged: widget.onChange,
+      onChanged: widget.onChanged,
       readOnly: widget.readOnly,
     );
   }
@@ -508,8 +447,7 @@ class _CampoDataState extends State<CampoData> {
         initialDate: widget.initialDate ?? DateTime.now(),
         fromDate: widget.fromDate ?? minDate,
         toDate: widget.toDate ?? now.sum(years: 999),
-        dateController: widget.controller,
-        onChange: widget.onChange,
+        onChange: widget.onChanged,
       ),
     );
   }
@@ -524,7 +462,7 @@ class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
       icon: widget.icon,
       maxLen: widget.maxLen,
       label: widget.label,
-      controller: widget.controller,
+      // controller: widget.controller,
       onChanged: (newValue) {
         if (widget.onChange != null) {
           (widget.onChange)!(changeTo<T>(newValue));
@@ -620,89 +558,35 @@ class _CampoListaEstadoState extends State<CampoListaEstado> {
   }
 }
 
-class _CampoNumericoState<T extends num> extends State<CampoNumerico<T>> {
-  @override
-  Widget build(BuildContext context) {
-    return CampoValor<T>(
-      icon: widget.icon,
-      maxLen: widget.maxLen,
-      keyboardType: TextInputType.numberWithOptions(decimal: T is decimal),
-      inputFormatters: widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters,
-      label: widget.label,
-      controller: widget.controller,
-      onChanged: (newValue) {
-        if (widget.onChanged != null) {
-          widget.onChanged!(changeTo<T>(newValue));
-        }
-      },
-      onEditingComplete: widget.onEditingComplete,
-      validator: (v) {
-        if (widget.validator != null) {
-          return widget.validator!(changeTo(v));
-        }
-        return null;
-      },
-      initialValue: changeTo(widget.initialValue ?? 0),
-      readOnly: widget.readOnly,
-      isAutoComplete: widget.isAutoComplete,
-      options: widget.options,
-      color: widget.color,
-      textAlign: widget.textAlign,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      asyncItems: widget.asyncItems,
-    );
-  }
-}
-
 class _CampoSimNaoState extends State<CampoSimNao> {
-  late TextEditingController controller;
-
   @override
   Widget build(BuildContext context) {
     return CampoTexto(
       label: widget.label,
-      controller: controller,
+      initialValue: widget.initialValue,
       options: const ["Sim", "Não"],
-      onChanged: widget.onChange,
+      onChanged: widget.onChanged,
       validator: (newValue) {
-        if (newValue.isBlank) {
-          controller.text = "Não";
-        }
-        return controller.text.flatEqualAny(["Sim", "Não"]) ? null : "Valor inválido";
+        return newValue.flatEqualAny(["Sim", "Não"]) ? null : "Valor inválido";
       },
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    controller = widget.controller ?? TextEditingController();
-    if (controller.text.isBlank) {
-      controller.text = "Não";
-    }
   }
 }
 
 class _CampoTelefoneState extends State<CampoTelefone> {
-  late TextEditingController controller;
-
   @override
   Widget build(BuildContext context) {
     return CampoTexto(
       label: widget.label.isNotEmpty ? widget.label : 'Telefone/Celular',
-      controller: controller..text = Brasil.formatarTelefone(controller.text),
+      initialValue: Brasil.formatarTelefone(widget.initialValue),
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         TelefoneInputFormatter(),
       ],
       keyboardType: const TextInputType.numberWithOptions(),
       onChanged: (newValue) {
-        var formatado = Brasil.formatarTelefone(newValue);
-        if (controller.text != formatado) {
-          controller.text = formatado;
-        }
-        if (widget.onChanged != null) widget.onChanged!(formatado);
+        newValue = Brasil.formatarTelefone(newValue);
+        if (widget.onChanged != null) widget.onChanged!(newValue);
       },
       validator: (newValue) {
         if (!Brasil.validarTelefone(newValue)) {
@@ -712,13 +596,6 @@ class _CampoTelefoneState extends State<CampoTelefone> {
       },
     );
   }
-
-  @override
-  void initState() {
-    controller = widget.controller ?? TextEditingController();
-    controller.text = Brasil.formatarTelefone(controller.text);
-    super.initState();
-  }
 }
 
 class _CampoTipoPessoaState extends State<CampoTipoPessoa> {
@@ -726,45 +603,38 @@ class _CampoTipoPessoaState extends State<CampoTipoPessoa> {
   Widget build(BuildContext context) {
     return CampoTexto(
       label: 'Tipo',
-      controller: widget.tipoController,
       options: const ["Física", "Jurídica", "Outros"],
       validator: ((newValue) {
         if (newValue.isBlank) {
-          widget.tipoController.text = "Outros";
+          newValue = "Outros";
         }
-        return null;
+        if (newValue.flatEqualAny(["Física", "Jurídica", "Outros"])) {
+          return null;
+        }
+        return "Tipo inválido";
       }),
-      onChanged: widget.onChange,
+      onChanged: widget.onChanged,
     );
-  }
-
-  @override
-  void initState() {
-    if (widget.cnpjCpfController != null) {
-      if (Brasil.validarCPF(widget.cnpjCpfController!.text)) {
-        widget.tipoController.text = "Física";
-      } else if (Brasil.validarCNPJ(widget.cnpjCpfController!.text)) {
-        widget.tipoController.text = "Jurídica";
-      } else {
-        widget.tipoController.text = "Outros";
-      }
-    }
-    super.initState();
   }
 }
 
 class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
   FocusNode? _focusNode;
-  TextEditingController? _controller;
+
   final ValueNotifier<T?> _dropdownValue = ValueNotifier<T?>(null);
 
   Timer? _debounce;
 
-  Iterable<T> get options => [_dropdownValue.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).$2).toList();
+  late TextInputType keyboardType;
+  late TextAlign textAlign;
 
+  late List<TextInputFormatter> inputFormatters;
+
+  Iterable<T> get options => [_dropdownValue.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).$2).toList();
   (String, string) Function(T) get textValueSelector => widget.textValueSelector ?? (e) => (changeTo<string>(e), changeTo<string>(e));
 
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
+
   Future<List<T>> allOptions(string v) async {
     List<T> values = widget.options.toList();
     if (widget.asyncItems != null) {
@@ -788,7 +658,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         padding: paddingCampos,
         child: useOptionsList
             ? Autocomplete<T>(
-                initialValue: _controller!.value,
+                initialValue: TextEditingValue(text: textValueSelector(_dropdownValue.value!).$2),
                 optionsViewBuilder: (context, onSelected, options) {
                   var opt = options.toList();
                   return Container(
@@ -804,16 +674,12 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
                         itemCount: opt.length),
                   );
                 },
-                onSelected: (newValue) {
-                  _controller!.text = textValueSelector(newValue).$2;
-                  onChanged(newValue);
-                },
+                onSelected: onChanged,
                 displayStringForOption: (v) => textValueSelector(v).$2,
                 optionsBuilder: (v) async {
                   return await allOptions(v.text);
                 },
                 fieldViewBuilder: (context, textEditingController, fn, onFieldSubmitted) {
-                  textEditingController.text = _controller!.text;
                   return Focus(
                     focusNode: _focusNode,
                     autofocus: widget.autofocus,
@@ -826,7 +692,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
                   );
                 },
               )
-            : field(_focusNode!, _controller!),
+            : field(_focusNode!),
       );
     } else {
       return Padding(
@@ -851,10 +717,8 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
           itemAsString: (x) => textValueSelector(x).$1,
           onChanged: (newValue) {
             if (_dropdownValue.value == newValue || newValue == null) {
-              _controller!.text = "";
               _dropdownValue.value = null;
             } else {
-              _controller!.text = textValueSelector(newValue).$2;
               _dropdownValue.value = newValue;
             }
             onChanged(newValue);
@@ -864,9 +728,9 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
     }
   }
 
-  field(FocusNode fn, TextEditingController textEditingController) => TextFormField(
+  field(FocusNode fn, [TextEditingController? textEditingController]) => TextFormField(
         focusNode: fn,
-        textAlign: widget.textAlign,
+        textAlign: textAlign,
         maxLength: widget.maxLen,
         controller: textEditingController,
         onChanged: (newValue) async {
@@ -877,13 +741,12 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
           }
         },
         onEditingComplete: () {
-          _controller!.text = textEditingController.text;
           if (widget.onEditingComplete != null) {
             widget.onEditingComplete!();
           }
         },
-        inputFormatters: widget.inputFormatters,
-        keyboardType: widget.keyboardType,
+        inputFormatters: inputFormatters,
+        keyboardType: keyboardType,
         decoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
         validator: (s) {
           if (widget.validator != null) {
@@ -900,22 +763,17 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         obscureText: widget.obscureText,
         textInputAction: TextInputAction.none,
       );
-
   @override
   void initState() {
-    _controller ??= widget.controller ?? TextEditingController();
     _dropdownValue.value = widget.initialValue;
-    if (_controller!.text.isBlank) {
-      if (widget.initialValue is string) {
-        _controller!.text = changeTo(widget.initialValue);
-      } else if (widget.initialValue != null) {
-        _controller!.text = textValueSelector(widget.initialValue!).$2;
-      }
+    if (T is num || T is double || T is int) {
+      keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: T is decimal);
+      inputFormatters = widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters;
+      textAlign = widget.textAlign ?? TextAlign.end;
     } else {
-      _dropdownValue.value = options.firstWhereOrNull((e) => textValueSelector(e).$2 == _controller!.text);
-    }
-    if (_dropdownValue.value == null && isSameType<T, string>() && _controller!.text.isNotBlank) {
-      _dropdownValue.value = changeTo(_controller!.text);
+      keyboardType = widget.keyboardType ?? TextInputType.text;
+      inputFormatters = widget.inputFormatters;
+      textAlign = widget.textAlign ?? TextAlign.start;
     }
 
     _focusNode = widget.focusNode ?? FocusNode();
@@ -923,7 +781,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
   }
 
   Widget itemBuilder(BuildContext context, T item, bool isSelected) {
-    isSelected = isSelected || item == _dropdownValue.value || textValueSelector(item).$2 == _controller!.text;
+    isSelected = isSelected || item == _dropdownValue.value;
     if (widget.itemBuilder != null) {
       return widget.itemBuilder!(context, item, isSelected);
     }

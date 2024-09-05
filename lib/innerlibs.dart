@@ -10,6 +10,7 @@ import 'package:innerlibs/innerlibs.dart';
 export 'package:brasil_fields/brasil_fields.dart' hide Estados;
 export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
+// export 'package:format/format.dart';
 export 'package:gap/gap.dart';
 export 'package:get/get.dart';
 export 'package:innerlibs/innerlibs.dart';

@@ -79,7 +79,7 @@ class FutureAwaiter<T> extends StatefulWidget {
   /// Function thats receive a non-null [T] data returned by [future] and return a [Widget].
   final Widget Function(T data) builder;
 
-  /// A [Widget] to return if [T] is null (or invalid if [data.validate] is true). If not specified return a shrink [SizedBox]
+  /// A [Widget] to return if [T] is null (or invalid if [data.validateData] is true). If not specified return a shrink [SizedBox]
   final Widget? emptyChild;
 
   /// [Widget] to show while waiting for [future] response. If not specified return a [CircularProgressIndicator]
@@ -124,6 +124,7 @@ class _FutureAwaiterState<T> extends State<FutureAwaiter<T>> {
       widget.beforeLoad!();
     }
     late Widget rt;
+
     if (data.expired) {
       data.loadedAt = null;
       consoleLog("Loading data...");

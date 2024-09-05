@@ -725,6 +725,9 @@ extension StringExtensions on String {
     return this == toLowerCase();
   }
 
+/// Removes from string chacacters that not match the predicate
+  string removeWhere(bool Function(String) predicate) => toArray.where((x) => !predicate(x)).join();
+
   /// Checks whether the `String` is consisted of both upper and lower case letters.
   ///
   /// ### Example
