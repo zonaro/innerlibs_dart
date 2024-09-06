@@ -343,7 +343,6 @@ class CampoValor<T extends Object> extends StatefulWidget {
   const CampoValor({
     super.key,
     this.label,
-    // this.controller,
     this.options = const [],
     this.inputFormatters = const [],
     required this.onChanged,
@@ -673,7 +672,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         padding: paddingCampos,
         child: useOptionsList
             ? Autocomplete<T>(
-                initialValue: TextEditingValue(text: textValueSelector(_dropdownValue.value!).$2),
+                initialValue: TextEditingValue(text: _dropdownValue.value != null ? textValueSelector(_dropdownValue.value!).$2 : ""),
                 optionsViewBuilder: (context, onSelected, options) {
                   var opt = options.toList();
                   return Container(
@@ -776,6 +775,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         obscureText: widget.obscureText,
         textInputAction: TextInputAction.none,
       );
+
   @override
   void initState() {
     _dropdownValue.value = widget.value;
