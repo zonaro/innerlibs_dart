@@ -140,14 +140,14 @@ class BotaoTexto extends StatelessWidget {
 }
 
 class CampoCPFouCNPJ extends StatefulWidget {
-  final void Function(String?)? onChanged;
+  final void Function(String?) onChanged;
   final bool readOnly;
   final string? label;
   final string? value;
 
   const CampoCPFouCNPJ({
     super.key,
-    this.onChanged,
+    required this.onChanged,
     this.readOnly = false,
     this.label,
     this.value,
@@ -226,7 +226,7 @@ class CampoEnum<T extends Enum> extends StatefulWidget {
 class CampoListaCidade extends StatefulWidget {
   final Cidade? value;
   final dynamic nomeEstadoOuUFOuIBGEouRegiao;
-  final void Function(Cidade?)? onChanged;
+  final void Function(Cidade?) onChanged;
   final String? Function(Cidade?)? validator;
   final String? label;
 
@@ -234,7 +234,7 @@ class CampoListaCidade extends StatefulWidget {
     super.key,
     this.value,
     this.nomeEstadoOuUFOuIBGEouRegiao,
-    this.onChanged,
+    required this.onChanged,
     this.validator,
     this.label,
   });
@@ -296,13 +296,13 @@ class CampoTelefone extends StatefulWidget {
 }
 
 class CampoTipoPessoa extends StatefulWidget {
-  final void Function(String?)? onChanged;
+  final void Function(String?) onChanged;
   final String? value;
   final String? Function(string?)? validator;
 
   const CampoTipoPessoa({
     super.key,
-    this.onChanged,
+    required this.onChanged,
     this.value,
     this.validator,
   });
