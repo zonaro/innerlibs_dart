@@ -13,16 +13,14 @@ bool get isAndroid => GetPlatform.isAndroid;
 
 bool get isApple => (isIOS || isMacOS);
 
-bool get isDarkMode => Get.isPlatformDarkMode;
-
 bool get isDesktop => (isMacOS || isWindows || isLinux);
+
 bool get isFuchsia => GetPlatform.isFuchsia;
+
 bool get isGoogle => (isAndroid || isFuchsia);
 bool get isIOS => GetPlatform.isIOS;
-bool get isLightMode => Get.isPlatformDarkMode == false;
-bool get isLinux => GetPlatform.isDesktop;
+bool get isLinux => GetPlatform.isLinux;
 bool get isMacOS => GetPlatform.isMacOS;
-
 bool get isMobile => (isIOS || isAndroid);
 bool get isNativeAndroid => isAndroid && !isWeb;
 bool get isNativeApple => isApple && !isWeb;
@@ -33,19 +31,31 @@ bool get isNativeIOS => isIOS && !isWeb;
 bool get isNativeLinux => isLinux && !isWeb;
 bool get isNativeMacOS => isMacOS && !isWeb;
 bool get isNativeMobile => isMobile && !isWeb;
-
 bool get isNativeWindows => isWindows && !isWeb;
+bool get isPlatformDarkMode => PlatformDispatcher.instance.platformBrightness == Brightness.dark;
+bool get isPlatformLightMode => Get.isPlatformDarkMode == false;
 bool get isWeb => GetPlatform.isWeb;
-
 bool get isWindows => GetPlatform.isWindows;
 date get lastWeek => now.lastDayOfWeek - 7.days;
 
 DateTime get maxDate => DateTime.utc(9999, 12, 31, 23, 59, 59);
-DateTime get minDate => DateTime.fromMicrosecondsSinceEpoch(0);
-date get now => DateTime.now();
-int get thisYear => now.year;
 
+DateTime get minDate => DateTime.fromMicrosecondsSinceEpoch(0);
+
+date get now => DateTime.now();
+
+Brightness get platformBrightness => PlatformDispatcher.instance.platformBrightness;
+
+Locale get platformLocale => PlatformDispatcher.instance.locale;
+
+String get platformLocaleCode => platformLocale.toLanguageTag();
+
+// Returns the list of locales that user defined in the system settings.
+Iterable<Locale> get platformLocales => PlatformDispatcher.instance.locales;
+
+int get thisYear => now.year;
 date get today => now.at(hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0);
+
 date get tomorrow => now.add(1.days);
 
 date get yesterday => now.subtract(1.days);
@@ -221,7 +231,7 @@ String flatString(dynamic value) {
 List forceList(dynamic item) {
   return [
     if (item != null)
-      if (item is List) ...item else if (item is Iterable) ...item else item
+      if (item is List) ...item else if (item is Iterable) ...item else if (item is Set) ...item else item
   ];
 }
 
