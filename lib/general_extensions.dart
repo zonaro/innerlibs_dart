@@ -118,6 +118,8 @@ extension ObjectExtensions<T extends Object?> on T {
       case 'DESATIVO':
       case 'N':
       case 'X':
+      case 'F':
+      case 'FALSO':
         return false;
       case '1':
       case 'S':
@@ -134,6 +136,8 @@ extension ObjectExtensions<T extends Object?> on T {
       case 'ATIVADO':
       case 'OK':
       case 'C':
+      case 'V':
+      case 'VERDADEIRO':
         return true;
       default:
         return everythingIsTrue ? true : throw ArgumentError('The object does not represent a valid option and the EverythingIsTrue flag is set to false.');
@@ -205,7 +209,7 @@ extension ObjectExtensions<T extends Object?> on T {
 
   // return a string of this object as a SQL Value
   String asSqlValue([bool nullAsBlank = false]) {
-  return SqlUtil.value(this,   nullAsBlank);
+    return SqlUtil.value(this, nullAsBlank);
   }
 
   /// Converts the object to a [Text] widget with the specified properties.

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DateTimePickerFormField extends StatefulWidget {
-  final DateTime? initialDate;
+  final DateTime? value;
   final DateTime? fromDate;
   final DateTime? toDate;
   final bool allowManualInput;
@@ -13,7 +13,7 @@ class DateTimePickerFormField extends StatefulWidget {
   final string invalidDateMessage;
   final string outOfRangeMessage;
   final string maskFormat = "dd/MM/yyyy";
-  final void Function(string)? onChange;
+  final void Function(DateTime?) onChanged;
   final InputDecoration? decoration;
   final TextEditingController? dateController;
 
@@ -21,14 +21,13 @@ class DateTimePickerFormField extends StatefulWidget {
     super.key,
     required this.invalidDateMessage,
     this.dateController,
-    this.initialDate,
+    this.value,
     this.fromDate,
     this.toDate,
     this.allowManualInput = true,
     this.requiredMessage = "",
     this.outOfRangeMessage = "",
-    onChanged,
-    this.onChange,
+    required this.onChanged,
     this.decoration,
   });
 
@@ -38,9 +37,73 @@ class DateTimePickerFormField extends StatefulWidget {
 
 class _DateTimePickerFormFieldState extends State<DateTimePickerFormField> {
   TextEditingController _controller = TextEditingController();
-  DateTime _initialData = DateTime.now();
+
   DateTime _start = DateTime.now();
   DateTime _end = DateTime.now();
+  MaskTextInputFormatter dateMaskFormatter = MaskTextInputFormatter();
+  DateTime? value;
+  DateFormat format = DateFormat();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.allowManualInput ? null : _selectDate,
+      child: TextFormField(
+        controller: _controller,
+        onEditingComplete: () {},
+        onChanged: (s) {
+          widget.onChanged(format.tryParse(s));
+        },
+        decoration: (widget.decoration ?? const InputDecoration()).copyWith(
+            suffixIcon: widget.allowManualInput
+                ? IconButton(
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: _selectDate,
+                  )
+                : null),
+        readOnly: !widget.allowManualInput,
+        inputFormatters: [if (widget.allowManualInput) dateMaskFormatter],
+        validator: _validateDate,
+        autovalidateMode: AutovalidateMode.always,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void initialize() {
+    _start = widget.fromDate ?? minDate;
+    _end = widget.toDate ?? maxDate;
+    value = widget.value ?? date.now();
+    _controller = widget.dateController ?? _controller;
+
+    format = DateFormat(widget.maskFormat);
+    dateMaskFormatter = MaskTextInputFormatter(
+      mask: widget.maskFormat.replaceMany(StringHelpers.numberChars, "#"), // Date format mask
+      filter: {
+        '#': RegExp(r'[0-9]'),
+        'A': RegExp(r'[A-Za-z]'),
+      },
+    );
+
+    if (_controller.text.isBlank) {
+      if (widget.value != null) {
+        _controller.text = format.format(value ?? _start);
+      }
+    } else {
+      try {
+        value = format.parse(_controller.text);
+      } catch (e) {
+        consoleLog("$e");
+        value = DateTime.tryParse(_controller.text) ?? value;
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,38 +121,11 @@ class _DateTimePickerFormFieldState extends State<DateTimePickerFormField> {
     });
   }
 
-  MaskTextInputFormatter dateMaskFormatter = MaskTextInputFormatter();
-  DateFormat format = DateFormat();
-  void initialize() {
-    _start = widget.fromDate ?? minDate;
-    _end = widget.toDate ?? maxDate;
-    _initialData = widget.initialDate ?? date.now();
-    _controller = widget.dateController ?? _controller;
-    format = DateFormat(widget.maskFormat);
-    dateMaskFormatter = MaskTextInputFormatter(
-      mask: widget.maskFormat.replaceMany(StringHelpers.alphaNumericChars, "#"), // Date format mask
-      filter: {'#': RegExp(r'[0-9]')},
-    );
-
-    if (_controller.text.isBlank) {
-      if (widget.initialDate != null) {
-        _controller.text = format.format(_start);
-      }
-    } else {
-      try {
-        _initialData = format.parse(_controller.text);
-      } catch (e) {
-        consoleLog("$e");
-        _initialData = DateTime.tryParse(_controller.text) ?? _initialData;
-      }
-    }
-  }
-
   Future<void> _selectDate() async {
     initialize();
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _initialData,
+      initialDate: value,
       firstDate: _start,
       lastDate: _end,
     );
@@ -99,29 +135,6 @@ class _DateTimePickerFormFieldState extends State<DateTimePickerFormField> {
         _controller.text = format.format(picked);
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.allowManualInput ? null : _selectDate,
-      child: TextFormField(
-        controller: _controller,
-        onEditingComplete: () {},
-        onChanged: widget.onChange,
-        decoration: (widget.decoration ?? const InputDecoration()).copyWith(
-            suffixIcon: widget.allowManualInput
-                ? IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    onPressed: _selectDate,
-                  )
-                : null),
-        readOnly: !widget.allowManualInput,
-        inputFormatters: [if (widget.allowManualInput) dateMaskFormatter],
-        validator: _validateDate,
-        autovalidateMode: AutovalidateMode.always,
-      ),
-    );
   }
 
   String? _validateDate(String? value) {

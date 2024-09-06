@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart' as crypto;
@@ -724,9 +725,6 @@ extension StringExtensions on String {
     }
     return this == toLowerCase();
   }
-
-/// Removes from string chacacters that not match the predicate
-  string removeWhere(bool Function(String) predicate) => toArray.where((x) => !predicate(x)).join();
 
   /// Checks whether the `String` is consisted of both upper and lower case letters.
   ///
@@ -2789,6 +2787,9 @@ extension StringExtensions on String {
   /// ```
   String removeLastEqual(String? pattern) => removeLastAny([pattern]);
 
+  /// Removes from string chacacters that not match the predicate
+  string removeWhere(bool Function(String) predicate) => toArray.where((x) => !predicate(x)).join();
+
   /// Repeats the `String` [count] times.
   ///
   /// ### Example
@@ -3120,7 +3121,9 @@ extension StringExtensions on String {
   /// return a date from string
   date toDate([string? format, string? locale]) {
     try {
+      locale ??= PlatformDispatcher.instance.locale.toLanguageTag();
       initializeDateFormatting(locale);
+      format ??= DateFormat.yMd(locale).pattern;
       return DateFormat(format, locale).parse(this);
     } catch (e) {
       return date.parse(this);

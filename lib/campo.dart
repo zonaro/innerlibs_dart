@@ -143,12 +143,14 @@ class CampoCPFouCNPJ extends StatefulWidget {
   final void Function(String?)? onChanged;
   final bool readOnly;
   final string? label;
+  final string? value;
 
   const CampoCPFouCNPJ({
     super.key,
     this.onChanged,
     this.readOnly = false,
     this.label,
+    this.value,
   });
 
   @override
@@ -158,19 +160,19 @@ class CampoCPFouCNPJ extends StatefulWidget {
 class CampoData extends StatefulWidget {
   final String? label;
 
-  final DateTime? initialDate;
+  final DateTime? value;
   final DateTime? fromDate;
   final DateTime? toDate;
-  final void Function(String?)? onChanged;
+  final void Function(DateTime?) onChanged;
   final IconData? icon;
 
   const CampoData({
     super.key,
     this.label,
-    this.initialDate,
+    this.value,
     this.fromDate,
     this.toDate,
-    this.onChanged,
+    required this.onChanged,
     this.icon = Icons.date_range,
   });
 
@@ -265,26 +267,28 @@ class CampoListaEstado extends StatefulWidget {
 
 class CampoSimNao extends StatefulWidget {
   final String? label;
-  final String? initialValue;
+  final String? value;
 
-  final void Function(String?)? onChanged;
+  final void Function(String?) onChanged;
 
-  const CampoSimNao({super.key, this.label, this.onChanged, this.initialValue});
+  const CampoSimNao({super.key, this.label, required this.onChanged, this.value});
 
   @override
   createState() => _CampoSimNaoState();
 }
 
 class CampoTelefone extends StatefulWidget {
-  final void Function(String?)? onChanged;
+  final void Function(String?) onChanged;
   final String label;
-  final string initialValue;
+  final string value;
+  final String? Function(String?)? validator;
 
   const CampoTelefone({
     super.key,
-    this.onChanged,
+    required this.onChanged,
     this.label = "",
-    this.initialValue = "",
+    this.value = "",
+    this.validator,
   });
 
   @override
@@ -293,10 +297,14 @@ class CampoTelefone extends StatefulWidget {
 
 class CampoTipoPessoa extends StatefulWidget {
   final void Function(String?)? onChanged;
+  final String? value;
+  final String? Function(string?)? validator;
 
   const CampoTipoPessoa({
     super.key,
     this.onChanged,
+    this.value,
+    this.validator,
   });
 
   @override
@@ -305,15 +313,15 @@ class CampoTipoPessoa extends StatefulWidget {
 
 class CampoValor<T extends Object> extends StatefulWidget {
   final String? label;
-  //
+
   final Iterable<T> options;
   final List<TextInputFormatter> inputFormatters;
-  final void Function(T?)? onChanged;
+  final void Function(T?) onChanged;
   final void Function()? onEditingComplete;
   final String? Function(T?)? validator;
   final int? maxLen;
   final int lines;
-  final T? initialValue;
+  final T? value;
   final bool readOnly;
   final bool isAutoComplete;
   final TextInputType? keyboardType;
@@ -338,12 +346,12 @@ class CampoValor<T extends Object> extends StatefulWidget {
     // this.controller,
     this.options = const [],
     this.inputFormatters = const [],
-    this.onChanged,
+    required this.onChanged,
     this.onEditingComplete,
     this.validator,
     this.maxLen,
     this.lines = 1,
-    this.initialValue,
+    this.value,
     this.readOnly = false,
     this.isAutoComplete = false,
     this.keyboardType,
@@ -422,7 +430,7 @@ class _CampoCPFouCNPJState extends State<CampoCPFouCNPJ> {
   Widget build(BuildContext context) {
     return CampoTexto(
       label: widget.label ?? 'CPF/CNPJ',
-      // controller: widget.controller,
+      value: widget.value,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         CpfOuCnpjFormatter(),
@@ -444,10 +452,10 @@ class _CampoDataState extends State<CampoData> {
         decoration: estiloCampos(widget.label, widget.icon),
         invalidDateMessage: 'Data inválida',
         outOfRangeMessage: "Data fora dos limites",
-        initialDate: widget.initialDate ?? DateTime.now(),
+        value: widget.value ?? DateTime.now(),
         fromDate: widget.fromDate ?? minDate,
         toDate: widget.toDate ?? now.sum(years: 999),
-        onChange: widget.onChanged,
+        onChanged: widget.onChanged,
       ),
     );
   }
@@ -475,7 +483,7 @@ class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
         }
         return null;
       },
-      initialValue: changeTo(widget.defaultValue),
+      value: changeTo(widget.defaultValue),
       readOnly: widget.readOnly,
       textAlign: widget.textAlign,
       focusNode: widget.focusNode,
@@ -514,7 +522,7 @@ class _CampoListaCidadeState extends State<CampoListaCidade> {
           trailing: Text(item.estado.uf).fontSize(20),
         );
       },
-      initialValue: widget.value,
+      value: widget.value,
       onChanged: widget.onChanged,
     );
   }
@@ -548,7 +556,7 @@ class _CampoListaEstadoState extends State<CampoListaEstado> {
         }
       },
       textValueSelector: (item) => widget.modoCompacto ? (item.uf, item.uf) : (item.nome, item.nome),
-      initialValue: widget.estadoValue,
+      value: widget.estadoValue,
       searchOn: (item) => [item.uf, item.nome, item.ibge],
       options: widget.regiao.estados,
       onChanged: (x) => widget.onChanged(x ?? Estado.naoDefinido),
@@ -563,7 +571,7 @@ class _CampoSimNaoState extends State<CampoSimNao> {
   Widget build(BuildContext context) {
     return CampoTexto(
       label: widget.label,
-      initialValue: widget.initialValue,
+      value: widget.value,
       options: const ["Sim", "Não"],
       onChanged: widget.onChanged,
       validator: (newValue) {
@@ -578,7 +586,7 @@ class _CampoTelefoneState extends State<CampoTelefone> {
   Widget build(BuildContext context) {
     return CampoTexto(
       label: widget.label.isNotEmpty ? widget.label : 'Telefone/Celular',
-      initialValue: Brasil.formatarTelefone(widget.initialValue),
+      value: Brasil.formatarTelefone(widget.value),
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         TelefoneInputFormatter(),
@@ -586,11 +594,14 @@ class _CampoTelefoneState extends State<CampoTelefone> {
       keyboardType: const TextInputType.numberWithOptions(),
       onChanged: (newValue) {
         newValue = Brasil.formatarTelefone(newValue);
-        if (widget.onChanged != null) widget.onChanged!(newValue);
+        widget.onChanged(newValue);
       },
       validator: (newValue) {
-        if (!Brasil.validarTelefone(newValue)) {
+        if (newValue.isNotBlank && !Brasil.validarTelefone(newValue)) {
           return "Telefone Inválido";
+        }
+        if (widget.validator != null) {
+          return widget.validator!(newValue);
         }
         return null;
       },
@@ -604,11 +615,15 @@ class _CampoTipoPessoaState extends State<CampoTipoPessoa> {
     return CampoTexto(
       label: 'Tipo',
       options: const ["Física", "Jurídica", "Outros"],
+      value: widget.value,
       validator: ((newValue) {
         if (newValue.isBlank) {
           newValue = "Outros";
         }
         if (newValue.flatEqualAny(["Física", "Jurídica", "Outros"])) {
+          if (widget.validator != null) {
+            return widget.validator!(newValue);
+          }
           return null;
         }
         return "Tipo inválido";
@@ -734,11 +749,9 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         maxLength: widget.maxLen,
         controller: textEditingController,
         onChanged: (newValue) async {
-          if (widget.onChanged != null) {
-            var opt = await allOptions("");
-            var item = opt.where((e) => textValueSelector(e).$2 == newValue).firstOrNull;
-            onChanged(item);
-          }
+          var opt = await allOptions("");
+          var item = opt.where((e) => textValueSelector(e).$2 == newValue).firstOrNull;
+          onChanged(item);
         },
         onEditingComplete: () {
           if (widget.onEditingComplete != null) {
@@ -765,7 +778,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
       );
   @override
   void initState() {
-    _dropdownValue.value = widget.initialValue;
+    _dropdownValue.value = widget.value;
     if (T is num || T is double || T is int) {
       keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: T is decimal);
       inputFormatters = widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters;
@@ -799,16 +812,14 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
   }
 
   void onChanged(T? value) {
-    if (widget.onChanged != null) {
-      if (widget.debounce == null) {
-        widget.onChanged!(value);
-      } else {
-        if (_debounce?.isActive ?? false) _debounce?.cancel();
-        _debounce = Timer(widget.debounce!, () async {
-          widget.onChanged!(value);
-          setState(() {});
-        });
-      }
+    if (widget.debounce == null) {
+      widget.onChanged(value);
+    } else {
+      if (_debounce?.isActive ?? false) _debounce?.cancel();
+      _debounce = Timer(widget.debounce!, () async {
+        widget.onChanged(value);
+        setState(() {});
+      });
     }
   }
 
