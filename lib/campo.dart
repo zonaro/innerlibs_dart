@@ -317,7 +317,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
 
   final Iterable<T> options;
   final List<TextInputFormatter> inputFormatters;
-  final void Function(T?) onChanged;
+  final void Function(T?, string?) onChanged;
   final void Function()? onEditingComplete;
   final String? Function(T?)? validator;
   final int? maxLen;
@@ -336,7 +336,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
   final void Function()? onSuffixIconTap;
   final Future<List<T>> Function(String)? asyncItems;
   final Color? color;
-  final List<string> Function(T)? textValueSelector;
+  final List<string> Function(T?)? textValueSelector;
   final Widget Function(BuildContext context, T, bool isSelected)? itemBuilder;
   final List<dynamic> Function(T)? searchOn;
   final Duration? debounce;
@@ -439,7 +439,9 @@ class _CampoCPFouCNPJState extends State<CampoCPFouCNPJ> {
       ],
       keyboardType: const TextInputType.numberWithOptions(),
       validator: (newValue) => Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!",
-      onChanged: widget.onChanged,
+      onChanged: (v, _) {
+        widget.onChanged(v);
+      },
       readOnly: widget.readOnly,
     );
   }
@@ -473,9 +475,9 @@ class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
       maxLen: widget.maxLen,
       label: widget.label,
       // controller: widget.controller,
-      onChanged: (newValue) {
+      onChanged: (newValue, _) {
         if (widget.onChange != null) {
-          (widget.onChange)!(changeTo<T>(newValue));
+          widget.onChange!(changeTo<T>(newValue));
         }
       },
       onEditingComplete: widget.onEditingComplete,
@@ -502,7 +504,7 @@ class _CampoListaCidadeState extends State<CampoListaCidade> {
     return CampoValor<Cidade>(
       asyncItems: (s) async => (await Brasil.pesquisarCidade(s, widget.nomeEstadoOuUFOuIBGEouRegiao)).toList(),
       validator: widget.validator,
-      textValueSelector: (item) => ["${item.nome} - ${item.estado.uf}", item.ibge.toString()],
+      textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", item?.ibge.toString()].whereNotNull().toList(),
       searchOn: (item) => [
         item.nome,
         item.ibge,
@@ -525,7 +527,9 @@ class _CampoListaCidadeState extends State<CampoListaCidade> {
         );
       },
       value: widget.value,
-      onChanged: widget.onChanged,
+      onChanged: (v, _) {
+        widget.onChanged(v);
+      },
     );
   }
 }
@@ -557,11 +561,11 @@ class _CampoListaEstadoState extends State<CampoListaEstado> {
           );
         }
       },
-      textValueSelector: (item) => widget.modoCompacto ? [item.uf] : [item.nome],
+      textValueSelector: (item) => widget.modoCompacto ? [item?.uf ?? ""] : [item?.nome ?? ""],
       value: widget.estadoValue,
       searchOn: (item) => [item.uf, item.nome, item.ibge],
       options: widget.regiao.estados,
-      onChanged: (x) => widget.onChanged(x ?? Estado.naoDefinido),
+      onChanged: (x, _) => widget.onChanged(x ?? Estado.naoDefinido),
       icon: widget.icon,
       onIconTap: widget.onIconTap,
     );
@@ -575,7 +579,9 @@ class _CampoSimNaoState extends State<CampoSimNao> {
       label: widget.label,
       value: widget.value,
       options: const ["Sim", "Não"],
-      onChanged: widget.onChanged,
+      onChanged: (v, _) {
+        widget.onChanged(v);
+      },
       validator: (newValue) {
         return newValue.flatEqualAny(["Sim", "Não"]) ? null : "Valor inválido";
       },
@@ -594,7 +600,7 @@ class _CampoTelefoneState extends State<CampoTelefone> {
         TelefoneInputFormatter(),
       ],
       keyboardType: const TextInputType.numberWithOptions(),
-      onChanged: (newValue) {
+      onChanged: (newValue, _) {
         newValue = Brasil.formatarTelefone(newValue);
         widget.onChanged(newValue);
       },
@@ -630,7 +636,9 @@ class _CampoTipoPessoaState extends State<CampoTipoPessoa> {
         }
         return "Tipo inválido";
       }),
-      onChanged: widget.onChanged,
+      onChanged: (v, _) {
+        widget.onChanged(v);
+      },
     );
   }
 }
@@ -648,7 +656,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
   late List<TextInputFormatter> inputFormatters;
 
   Iterable<T> get options => [_dropdownValue.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).last).toList();
-  strings Function(T) get textValueSelector {
+  strings Function(T?) get textValueSelector {
     if (widget.textValueSelector == null) {
       if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
         return (e) {
@@ -686,7 +694,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
         padding: paddingCampos,
         child: useOptionsList
             ? Autocomplete<T>(
-                initialValue: TextEditingValue(text: _dropdownValue.value != null ? textValueSelector(_dropdownValue.value!).last : ""),
+                initialValue: TextEditingValue(text: _dropdownValue.value != null ? textValueSelector(_dropdownValue.value as T).last : ""),
                 optionsViewBuilder: (context, onSelected, options) {
                   var opt = options.toList();
                   return Container(
@@ -702,7 +710,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
                         itemCount: opt.length),
                   );
                 },
-                onSelected: onChanged,
+                onSelected: (v) => onChanged(v, textValueSelector(v).last),
                 displayStringForOption: (v) => textValueSelector(v).last,
                 optionsBuilder: (v) async {
                   return await allOptions(v.text);
@@ -749,7 +757,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
             } else {
               _dropdownValue.value = newValue;
             }
-            onChanged(newValue);
+            onChanged(newValue, textValueSelector(newValue).last);
           },
         ),
       );
@@ -759,16 +767,16 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
   field(FocusNode fn, [TextEditingController? textEditingController]) => TextFormField(
         focusNode: fn,
         textAlign: textAlign,
-        initialValue: textEditingController == null ? (_dropdownValue.value != null ? textValueSelector(_dropdownValue.value!).last : "") : null,
+        initialValue: textEditingController == null ? (_dropdownValue.value != null ? textValueSelector(_dropdownValue.value as T).last : "") : null,
         maxLength: widget.maxLen,
-        controller: textEditingController?..text = _dropdownValue.value != null ? textValueSelector(_dropdownValue.value!).last : "",
+        controller: textEditingController?..text = _dropdownValue.value != null ? textValueSelector(_dropdownValue.value as T).last : "",
         onChanged: (newValue) async {
           if (useOptionsList) {
             var opt = await allOptions(newValue);
             var item = opt.where((e) => textValueSelector(e).last == newValue).firstOrNull;
-            onChanged(item);
+            onChanged(item, newValue);
           } else {
-            onChanged(newValue.changeTo<T>());
+            onChanged(newValue.changeTo<T>(), newValue);
           }
         },
         onEditingComplete: widget.onEditingComplete,
@@ -827,13 +835,13 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
     );
   }
 
-  void onChanged(T? value) {
+  void onChanged(T? value, string? textValue) {
     if (widget.debounce == null) {
-      widget.onChanged(value);
+      widget.onChanged(value, textValue);
     } else {
       if (_debounce?.isActive ?? false) _debounce?.cancel();
       _debounce = Timer(widget.debounce!, () async {
-        widget.onChanged(value);
+        widget.onChanged(value, textValue);
         setState(() {});
       });
     }

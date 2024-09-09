@@ -372,11 +372,21 @@ extension BuildContextExtensions on BuildContext {
 
   ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
   bool canPop() => Navigator.canPop(this);
-  nextFocus([int times = 1]) {
-    while (times-- > 0) {
-      FocusScope.of(this).nextFocus();
+  focus([int times = 1]) {
+    if (times > 0) {
+      while (times-- > 0) {
+        nextFocus();
+      }
+    } else if (times < 0) {
+      while (times++ < 0) {
+        previousFocus();
+      }
+    } else {
+      unfocus();
     }
   }
+
+  nextFocus() => FocusScope.of(this).nextFocus();
 
   /// performs a simple [Navigator.pop] action and returns given [result]
   void pop<T>([result]) => Navigator.pop(this, result);
@@ -389,6 +399,8 @@ extension BuildContextExtensions on BuildContext {
 
   /// perform replash with routeName
   void popUntilRoute(String screenName, {bool rootNavigator = false}) => Navigator.of(this, rootNavigator: rootNavigator).popUntil(ModalRoute.withName(screenName));
+
+  previousFocus() => FocusScope.of(this).previousFocus();
 
   /// performs a simple [Navigator.push] action with given [route]
   Future<dynamic> push(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async =>
@@ -443,6 +455,8 @@ extension BuildContextExtensions on BuildContext {
     return showSnackBar("$content");
   }
 
+  unfocus() => FocusScope.of(this).unfocus();
+
   /// returns a specific value according to the current screen [width] or [height] or the next lower value if omitted
 
   T valueByBreakpoint<T>({required Map<double, T> breakpoints, Axis direction = Axis.horizontal}) => getBreakpointValue(direction == Axis.horizontal ? width : height, breakpoints);
@@ -462,19 +476,19 @@ extension BuildContextExtensions on BuildContext {
     }
     switch (screenTier) {
       case ScreenTier.xxs:
-        return (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl)!;
+        return (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl) as T;
       case ScreenTier.xs:
-        return (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl)!;
+        return (xs ?? xxs ?? sm ?? md ?? lg ?? xl ?? xxl) as T;
       case ScreenTier.sm:
-        return (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl)!;
+        return (sm ?? xs ?? xxs ?? md ?? lg ?? xl ?? xxl) as T;
       case ScreenTier.md:
-        return (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl)!;
+        return (md ?? sm ?? xs ?? xxs ?? lg ?? xl ?? xxl) as T;
       case ScreenTier.lg:
-        return (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl)!;
+        return (lg ?? md ?? sm ?? xs ?? xxs ?? xl ?? xxl) as T;
       case ScreenTier.xl:
-        return (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl)!;
+        return (xl ?? lg ?? md ?? sm ?? xs ?? xxs ?? xxl) as T;
       case ScreenTier.xxl:
-        return (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs)!;
+        return (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs) as T;
     }
   }
 }

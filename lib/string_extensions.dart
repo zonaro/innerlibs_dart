@@ -2428,7 +2428,7 @@ extension StringExtensions on String {
   /// String foo = '{"name":"John","age":30,"cars":null}';
   /// bool isJson = foo.isJson; // returns true
   /// ```
-  bool isJson() {
+  bool get isJson  {
     if (isBlank) {
       return false;
     }
