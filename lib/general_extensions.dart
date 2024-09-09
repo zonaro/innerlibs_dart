@@ -74,9 +74,9 @@ extension ObjectExtensions<T extends Object?> on T {
   ///
   /// If the object is null, this function returns `null`.///
   /// Recognized keywords (case-insensitive):
-  /// - 'NULL', 'CANCEL', 'CANCELAR': Returns `null`.
-  /// - '', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N','X': Returns `false`.
-  /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO', 'OK','C': Returns `true`.
+  /// - 'NULL', 'CANCEL', 'CANCELAR','ABORT', 'ABORTAR': Returns `null`.
+  /// - '', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N','X','E','ERRADO', 'FALSO', 'MENTIRA' : Returns `false`.
+  /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO', 'OK','C','VERDADE','VERDADEIRO','CORRETO','CERTO': Returns `true`.
   ///
   /// If the object doesn't match any of the recognized keywords:
   /// - If [everythingIsTrue] is `true`, returns `true`.
@@ -101,6 +101,8 @@ extension ObjectExtensions<T extends Object?> on T {
       case 'NULL':
       case 'CANCEL':
       case 'CANCELAR':
+      case 'ABORT':
+      case 'ABORTAR':
         return null;
       case '':
       case '!':
@@ -120,6 +122,9 @@ extension ObjectExtensions<T extends Object?> on T {
       case 'X':
       case 'F':
       case 'FALSO':
+      case 'MENTIRA':
+      case 'ERRADO':
+      case 'E':
         return false;
       case '1':
       case 'S':
@@ -138,6 +143,9 @@ extension ObjectExtensions<T extends Object?> on T {
       case 'C':
       case 'V':
       case 'VERDADEIRO':
+      case 'VERDADE':
+      case 'CERTO':
+      case 'CORRETO':
         return true;
       default:
         return everythingIsTrue ? true : throw ArgumentError('The object does not represent a valid option and the EverythingIsTrue flag is set to false.');

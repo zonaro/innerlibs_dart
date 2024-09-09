@@ -340,6 +340,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
   final Widget Function(BuildContext context, T, bool isSelected)? itemBuilder;
   final List<dynamic> Function(T)? searchOn;
   final Duration? debounce;
+  final void Function(string)? onFieldSubmitted;
 
   const CampoValor({
     super.key,
@@ -369,6 +370,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
     this.suffixIcon,
     this.onSuffixIconTap,
     this.debounce,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -634,7 +636,7 @@ class _CampoTipoPessoaState extends State<CampoTipoPessoa> {
 }
 
 class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
-  FocusNode? _focusNode;
+  late FocusNode _focusNode;
 
   final ValueNotifier<T?> _dropdownValue = ValueNotifier<T?>(null);
 
@@ -718,7 +720,7 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
                   );
                 },
               )
-            : field(_focusNode!),
+            : field(_focusNode),
       );
     } else {
       return Padding(
@@ -769,11 +771,8 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
             onChanged(newValue.changeTo<T>());
           }
         },
-        onEditingComplete: () {
-          if (widget.onEditingComplete != null) {
-            widget.onEditingComplete!();
-          }
-        },
+        onEditingComplete: widget.onEditingComplete,
+        onFieldSubmitted: widget.onFieldSubmitted,
         inputFormatters: inputFormatters,
         keyboardType: keyboardType,
         decoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
