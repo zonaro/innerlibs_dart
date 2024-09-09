@@ -763,6 +763,8 @@ T? valid<T>(T value, List<bool> Function(T?)? validations, [string? throwErrorMe
         ? throw Exception(throwErrorMessage)
         : null;
 
+typedef CharMatch<T> = Map<string, bool Function(string search, string keyword, T item)>;
+
 /// A mixin that provides various filter functions for searching and filtering data.
 ///
 /// This mixin contains static methods that can be used to transform strings, count search results,
@@ -949,6 +951,7 @@ mixin FilterFunctions {
     bool ignoreWordSplitters = true,
     bool splitCamelCase = true,
     bool useWildcards = false,
+    CharMatch keyCharSearches = const {},
   }) =>
       searchFunction(
         searchTerms: searchTerms,
@@ -1016,6 +1019,7 @@ mixin FilterFunctions {
     bool splitCamelCase = true,
     bool useWildcards = false,
     bool allIfEmpty = true,
+    CharMatch<T> keyCharSearches = const {},
   }) {
     if (items.isEmpty) return <T>[].orderBy((e) => true);
 
@@ -1029,7 +1033,30 @@ mixin FilterFunctions {
       }
     }
 
-    var l = items
+    var l = items.where((item) {
+      for (var entry in keyCharSearches.entries) {
+        for (var searchword in forceList(searchTerms)) {
+          if (changeTo<string>(searchword).startsWith(entry.key)) {
+            return entry.value(
+              changeTo<string>(searchword).removeFirstEqual(entry.key),
+              generateKeyword(
+                searchword,
+                forceLowerCase: ignoreCase,
+                removeDiacritics: ignoreDiacritics,
+                removeWordSplitters: ignoreWordSplitters,
+                splitCamelCase: splitCamelCase,
+              ),
+              item,
+            );
+          }
+        }
+      }
+      return false;
+    });
+
+    if (l.isNotEmpty) return l;
+
+    l = items
         .where(
           (item) => FilterFunctions.searchFunction(
             searchTerms: searches,

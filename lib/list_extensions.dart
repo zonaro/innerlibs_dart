@@ -223,6 +223,8 @@ extension IterablesExtension<T> on Iterable<T> {
     bool splitCamelCase = true,
     bool useWildcards = false,
     bool allIfEmpty = true,
+    CharMatch<T> keyCharSearches = const {},
+
   }) =>
       FilterFunctions.search(
         items: this,
@@ -235,6 +237,7 @@ extension IterablesExtension<T> on Iterable<T> {
         splitCamelCase: splitCamelCase,
         useWildcards: useWildcards,
         allIfEmpty: allIfEmpty,
+        keyCharSearches: keyCharSearches,
       );
 
   /// Splits the list into multiple sublists of the specified [count].
