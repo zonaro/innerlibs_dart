@@ -140,7 +140,7 @@ class BotaoTexto extends StatelessWidget {
   }
 }
 
-class CampoCPFouCNPJ extends StatefulWidget {
+class CampoCPFouCNPJ extends StatelessWidget {
   final void Function(String?) onChanged;
   final bool readOnly;
   final string? label;
@@ -155,10 +155,25 @@ class CampoCPFouCNPJ extends StatefulWidget {
   });
 
   @override
-  createState() => _CampoCPFouCNPJState();
+  Widget build(BuildContext context) {
+    return CampoTexto(
+      label: label ?? 'CPF/CNPJ',
+      value: value,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        CpfOuCnpjFormatter(),
+      ],
+      keyboardType: const TextInputType.numberWithOptions(),
+      validator: (newValue) => Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!",
+      onChanged: (v, _) {
+        onChanged(v);
+      },
+      readOnly: readOnly,
+    );
+  }
 }
 
-class CampoData extends StatefulWidget {
+class CampoData extends StatelessWidget {
   final String? label;
 
   final DateTime? value;
@@ -178,10 +193,23 @@ class CampoData extends StatefulWidget {
   });
 
   @override
-  createState() => _CampoDataState();
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: paddingCampos,
+      child: DateTimePickerFormField(
+        decoration: estiloCampos(label, icon),
+        invalidDateMessage: 'Data inválida',
+        outOfRangeMessage: "Data fora dos limites",
+        value: value ?? DateTime.now(),
+        fromDate: fromDate ?? minDate,
+        toDate: toDate ?? now.sum(years: 999),
+        onChanged: onChanged,
+      ),
+    );
+  }
 }
 
-class CampoEnum<T extends Enum> extends StatefulWidget {
+class CampoEnum<T extends Enum> extends StatelessWidget {
   final String? label;
 
   final void Function(T?)? onChange;
@@ -220,11 +248,39 @@ class CampoEnum<T extends Enum> extends StatefulWidget {
     }
   }
 
+  String Function(T?) get itemString => itemAsString ?? ((e) => e.toString().split(".").last.pascalSplitString);
+
   @override
-  createState() => _CampoEnumState<T>();
+  Widget build(BuildContext context) {
+    return CampoValor<T>(
+      icon: icon,
+      maxLen: maxLen,
+      label: label,
+      // controller: widget.controller,
+      onChanged: (newValue, _) {
+        if (onChange != null) {
+          onChange!(changeTo<T>(newValue));
+        }
+      },
+      onEditingComplete: onEditingComplete,
+      validator: (v) {
+        if (validator != null) {
+          return (validator)!(changeTo(v));
+        }
+        return null;
+      },
+      value: changeTo(defaultValue),
+      readOnly: readOnly,
+      textAlign: textAlign,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      options: values,
+      textValueSelector: (x) => [itemString(x), x.toString()],
+    );
+  }
 }
 
-class CampoListaCidade extends StatefulWidget {
+class CampoListaCidade extends StatelessWidget {
   final Cidade? value;
   final dynamic nomeEstadoOuUFOuIBGEouRegiao;
   final void Function(Cidade?) onChanged;
@@ -241,10 +297,41 @@ class CampoListaCidade extends StatefulWidget {
   });
 
   @override
-  createState() => _CampoListaCidadeState();
+  Widget build(BuildContext context) {
+    return CampoValor<Cidade>(
+      asyncItems: (s) async => (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao)).toList(),
+      validator: validator,
+      textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", item?.ibge.toString()].whereNotNull().toList(),
+      searchOn: (item) => [
+        item.nome,
+        item.ibge,
+        item.estado.uf,
+      ],
+      label: label ?? (isValid(nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
+      itemBuilder: (context, item, isSelected) {
+        isSelected = isSelected || item.ibge == value?.ibge;
+        return ListTile(
+          leading: Visibility(
+            visible: isSelected,
+            child: Icon(
+              Icons.check,
+              color: context.colorScheme.primary,
+            ),
+          ),
+          title: Text(item.nome),
+          subtitle: Text("Estado: ${item.estado.nome} | IBGE: ${item.ibge} ${item.capital ? '| Capital' : ""}"),
+          trailing: Text(item.estado.uf).fontSize(20),
+        );
+      },
+      value: value,
+      onChanged: (v, _) {
+        onChanged(v);
+      },
+    );
+  }
 }
 
-class CampoListaEstado extends StatefulWidget {
+class CampoListaEstado extends StatelessWidget {
   final Estado estadoValue;
   final void Function(Estado) onChanged;
   final bool modoCompacto;
@@ -263,10 +350,43 @@ class CampoListaEstado extends StatefulWidget {
   });
 
   @override
-  createState() => _CampoListaEstadoState();
+  Widget build(BuildContext context) {
+    return CampoValor<Estado>(
+      label: modoCompacto ? "UF" : "Estado",
+      itemBuilder: (context, item, isSelected) {
+        isSelected = isSelected || item.ibge == estadoValue.ibge;
+        if (modoCompacto) {
+          return ListTile(
+            title: item.uf.asText().fontSize(15).textColor(isSelected ? context.colorScheme.primary : null),
+            subtitle: Text("IBGE: ${item.ibge}").fontSize(10),
+          );
+        } else {
+          return ListTile(
+            leading: Visibility(
+              visible: isSelected,
+              child: Icon(
+                Icons.check,
+                color: context.colorScheme.primary,
+              ),
+            ),
+            trailing: item.uf.asText().fontSize(20),
+            title: item.nome.asText(),
+            subtitle: Text("IBGE: ${item.ibge}"),
+          );
+        }
+      },
+      textValueSelector: (item) => modoCompacto ? [item?.uf ?? ""] : [item?.nome ?? ""],
+      value: estadoValue,
+      searchOn: (item) => [item.uf, item.nome, item.ibge],
+      options: regiao.estados,
+      onChanged: (x, _) => onChanged(x ?? Estado.naoDefinido),
+      icon: icon,
+      onIconTap: onIconTap,
+    );
+  }
 }
 
-class CampoSimNao extends StatefulWidget {
+class CampoSimNao extends StatelessWidget {
   final String? label;
   final String? value;
 
@@ -275,10 +395,22 @@ class CampoSimNao extends StatefulWidget {
   const CampoSimNao({super.key, this.label, required this.onChanged, this.value});
 
   @override
-  createState() => _CampoSimNaoState();
+  Widget build(BuildContext context) {
+    return CampoTexto(
+      label: label,
+      value: value,
+      options: const ["Sim", "Não"],
+      onChanged: (v, _) {
+        onChanged(v);
+      },
+      validator: (newValue) {
+        return newValue.flatEqualAny(["Sim", "Não"]) ? null : "Valor inválido";
+      },
+    );
+  }
 }
 
-class CampoTelefone extends StatefulWidget {
+class CampoTelefone extends StatelessWidget {
   final void Function(String?) onChanged;
   final String label;
   final string value;
@@ -293,10 +425,33 @@ class CampoTelefone extends StatefulWidget {
   });
 
   @override
-  createState() => _CampoTelefoneState();
+  Widget build(BuildContext context) {
+    return CampoTexto(
+      label: label.isNotEmpty ? label : 'Telefone/Celular',
+      value: Brasil.formatarTelefone(value),
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        TelefoneInputFormatter(),
+      ],
+      keyboardType: const TextInputType.numberWithOptions(),
+      onChanged: (newValue, _) {
+        newValue = Brasil.formatarTelefone(newValue);
+        onChanged(newValue);
+      },
+      validator: (newValue) {
+        if (newValue.isNotBlank && !Brasil.validarTelefone(newValue)) {
+          return "Telefone Inválido";
+        }
+        if (validator != null) {
+          return validator!(newValue);
+        }
+        return null;
+      },
+    );
+  }
 }
 
-class CampoTipoPessoa extends StatefulWidget {
+class CampoTipoPessoa extends StatelessWidget {
   final void Function(String?) onChanged;
   final String? value;
   final String? Function(string?)? validator;
@@ -309,7 +464,28 @@ class CampoTipoPessoa extends StatefulWidget {
   });
 
   @override
-  createState() => _CampoTipoPessoaState();
+  Widget build(BuildContext context) {
+    return CampoTexto(
+      label: 'Tipo',
+      options: const ["Física", "Jurídica", "Outros"],
+      value: value,
+      validator: ((newValue) {
+        if (newValue.isBlank) {
+          newValue = "Outros";
+        }
+        if (newValue.flatEqualAny(["Física", "Jurídica", "Outros"])) {
+          if (validator != null) {
+            return validator!(newValue);
+          }
+          return null;
+        }
+        return "Tipo inválido";
+      }),
+      onChanged: (v, _) {
+        onChanged(v);
+      },
+    );
+  }
 }
 
 class CampoValor<T extends Object> extends StatefulWidget {
@@ -374,276 +550,10 @@ class CampoValor<T extends Object> extends StatefulWidget {
   });
 
   @override
-  createState() => _CampoValorState<T>();
+  createState() => CampoValorState<T>();
 }
 
-class FabSalvar<T> extends StatelessWidget {
-  final T? id;
-  final VoidCallback onPressed;
-
-  const FabSalvar({
-    Key? key,
-    required this.id,
-    required this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FabTexto(
-      label: id.isNotValid ? "Cadastrar" : "Salvar",
-      icon: id.isNotValid ? Icons.edit : Icons.save,
-      onPressed: onPressed,
-    );
-  }
-}
-
-class FabTexto extends StatelessWidget {
-  final String? label;
-  final IconData? icon;
-  final Color? color;
-  final VoidCallback onPressed;
-
-  const FabTexto({
-    Key? key,
-    this.label,
-    this.icon,
-    this.color,
-    required this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
-      onPressed: onPressed,
-      backgroundColor: color ?? Get.context?.colorScheme.primary,
-      label: Row(
-        children: [
-          Visibility(visible: icon != null, child: Icon(icon)),
-          Visibility(visible: icon != null && label.isNotBlank, child: const Gap(10)),
-          Visibility(visible: label.isNotBlank, child: label!.asText()),
-        ],
-      ),
-    );
-  }
-}
-
-class _CampoCPFouCNPJState extends State<CampoCPFouCNPJ> {
-  @override
-  Widget build(BuildContext context) {
-    return CampoTexto(
-      label: widget.label ?? 'CPF/CNPJ',
-      value: widget.value,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-        CpfOuCnpjFormatter(),
-      ],
-      keyboardType: const TextInputType.numberWithOptions(),
-      validator: (newValue) => Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!",
-      onChanged: (v, _) {
-        widget.onChanged(v);
-      },
-      readOnly: widget.readOnly,
-    );
-  }
-}
-
-class _CampoDataState extends State<CampoData> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: paddingCampos,
-      child: DateTimePickerFormField(
-        decoration: estiloCampos(widget.label, widget.icon),
-        invalidDateMessage: 'Data inválida',
-        outOfRangeMessage: "Data fora dos limites",
-        value: widget.value ?? DateTime.now(),
-        fromDate: widget.fromDate ?? minDate,
-        toDate: widget.toDate ?? now.sum(years: 999),
-        onChanged: widget.onChanged,
-      ),
-    );
-  }
-}
-
-class _CampoEnumState<T extends Enum> extends State<CampoEnum<T>> {
-  String Function(T?) get itemAsString => widget.itemAsString ?? ((e) => e.toString().split(".").last.pascalSplitString);
-
-  @override
-  Widget build(BuildContext context) {
-    return CampoValor<T>(
-      icon: widget.icon,
-      maxLen: widget.maxLen,
-      label: widget.label,
-      // controller: widget.controller,
-      onChanged: (newValue, _) {
-        if (widget.onChange != null) {
-          widget.onChange!(changeTo<T>(newValue));
-        }
-      },
-      onEditingComplete: widget.onEditingComplete,
-      validator: (v) {
-        if (widget.validator != null) {
-          return (widget.validator)!(changeTo(v));
-        }
-        return null;
-      },
-      value: changeTo(widget.defaultValue),
-      readOnly: widget.readOnly,
-      textAlign: widget.textAlign,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      options: widget.values,
-      textValueSelector: (x) => [itemAsString(x), x.toString()],
-    );
-  }
-}
-
-class _CampoListaCidadeState extends State<CampoListaCidade> {
-  @override
-  Widget build(BuildContext context) {
-    return CampoValor<Cidade>(
-      asyncItems: (s) async => (await Brasil.pesquisarCidade(s, widget.nomeEstadoOuUFOuIBGEouRegiao)).toList(),
-      validator: widget.validator,
-      textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", item?.ibge.toString()].whereNotNull().toList(),
-      searchOn: (item) => [
-        item.nome,
-        item.ibge,
-        item.estado.uf,
-      ],
-      label: widget.label ?? (isValid(widget.nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
-      itemBuilder: (context, item, isSelected) {
-        isSelected = isSelected || item.ibge == widget.value?.ibge;
-        return ListTile(
-          leading: Visibility(
-            visible: isSelected,
-            child: Icon(
-              Icons.check,
-              color: context.colorScheme.primary,
-            ),
-          ),
-          title: Text(item.nome),
-          subtitle: Text("Estado: ${item.estado.nome} | IBGE: ${item.ibge} ${item.capital ? '| Capital' : ""}"),
-          trailing: Text(item.estado.uf).fontSize(20),
-        );
-      },
-      value: widget.value,
-      onChanged: (v, _) {
-        widget.onChanged(v);
-      },
-    );
-  }
-}
-
-class _CampoListaEstadoState extends State<CampoListaEstado> {
-  @override
-  Widget build(BuildContext context) {
-    return CampoValor<Estado>(
-      label: widget.modoCompacto ? "UF" : "Estado",
-      itemBuilder: (context, item, isSelected) {
-        isSelected = isSelected || item.ibge == widget.estadoValue.ibge;
-        if (widget.modoCompacto) {
-          return ListTile(
-            title: item.uf.asText().fontSize(15).textColor(isSelected ? context.colorScheme.primary : null),
-            subtitle: Text("IBGE: ${item.ibge}").fontSize(10),
-          );
-        } else {
-          return ListTile(
-            leading: Visibility(
-              visible: isSelected,
-              child: Icon(
-                Icons.check,
-                color: context.colorScheme.primary,
-              ),
-            ),
-            trailing: item.uf.asText().fontSize(20),
-            title: item.nome.asText(),
-            subtitle: Text("IBGE: ${item.ibge}"),
-          );
-        }
-      },
-      textValueSelector: (item) => widget.modoCompacto ? [item?.uf ?? ""] : [item?.nome ?? ""],
-      value: widget.estadoValue,
-      searchOn: (item) => [item.uf, item.nome, item.ibge],
-      options: widget.regiao.estados,
-      onChanged: (x, _) => widget.onChanged(x ?? Estado.naoDefinido),
-      icon: widget.icon,
-      onIconTap: widget.onIconTap,
-    );
-  }
-}
-
-class _CampoSimNaoState extends State<CampoSimNao> {
-  @override
-  Widget build(BuildContext context) {
-    return CampoTexto(
-      label: widget.label,
-      value: widget.value,
-      options: const ["Sim", "Não"],
-      onChanged: (v, _) {
-        widget.onChanged(v);
-      },
-      validator: (newValue) {
-        return newValue.flatEqualAny(["Sim", "Não"]) ? null : "Valor inválido";
-      },
-    );
-  }
-}
-
-class _CampoTelefoneState extends State<CampoTelefone> {
-  @override
-  Widget build(BuildContext context) {
-    return CampoTexto(
-      label: widget.label.isNotEmpty ? widget.label : 'Telefone/Celular',
-      value: Brasil.formatarTelefone(widget.value),
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-        TelefoneInputFormatter(),
-      ],
-      keyboardType: const TextInputType.numberWithOptions(),
-      onChanged: (newValue, _) {
-        newValue = Brasil.formatarTelefone(newValue);
-        widget.onChanged(newValue);
-      },
-      validator: (newValue) {
-        if (newValue.isNotBlank && !Brasil.validarTelefone(newValue)) {
-          return "Telefone Inválido";
-        }
-        if (widget.validator != null) {
-          return widget.validator!(newValue);
-        }
-        return null;
-      },
-    );
-  }
-}
-
-class _CampoTipoPessoaState extends State<CampoTipoPessoa> {
-  @override
-  Widget build(BuildContext context) {
-    return CampoTexto(
-      label: 'Tipo',
-      options: const ["Física", "Jurídica", "Outros"],
-      value: widget.value,
-      validator: ((newValue) {
-        if (newValue.isBlank) {
-          newValue = "Outros";
-        }
-        if (newValue.flatEqualAny(["Física", "Jurídica", "Outros"])) {
-          if (widget.validator != null) {
-            return widget.validator!(newValue);
-          }
-          return null;
-        }
-        return "Tipo inválido";
-      }),
-      onChanged: (v, _) {
-        widget.onChanged(v);
-      },
-    );
-  }
-}
-
-class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
+class CampoValorState<T extends Object> extends State<CampoValor<T>> {
   late FocusNode _focusNode;
 
   final ValueNotifier<T?> _dropdownValue = ValueNotifier<T?>(null);
@@ -857,5 +767,55 @@ class _CampoValorState<T extends Object> extends State<CampoValor<T>> {
       flatString(x),
       if (T is JsonMap) ...(x as JsonMap).values,
     ];
+  }
+}
+
+class FabSalvar<T> extends StatelessWidget {
+  final T? id;
+  final VoidCallback onPressed;
+
+  const FabSalvar({
+    Key? key,
+    required this.id,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FabTexto(
+      label: id.isNotValid ? "Cadastrar" : "Salvar",
+      icon: id.isNotValid ? Icons.edit : Icons.save,
+      onPressed: onPressed,
+    );
+  }
+}
+
+class FabTexto extends StatelessWidget {
+  final String? label;
+  final IconData? icon;
+  final Color? color;
+  final VoidCallback onPressed;
+
+  const FabTexto({
+    Key? key,
+    this.label,
+    this.icon,
+    this.color,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: onPressed,
+      backgroundColor: color ?? Get.context?.colorScheme.primary,
+      label: Row(
+        children: [
+          Visibility(visible: icon != null, child: Icon(icon)),
+          Visibility(visible: icon != null && label.isNotBlank, child: const Gap(10)),
+          Visibility(visible: label.isNotBlank, child: label!.asText()),
+        ],
+      ),
+    );
   }
 }

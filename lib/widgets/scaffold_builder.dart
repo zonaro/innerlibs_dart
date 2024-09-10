@@ -11,6 +11,7 @@ typedef TabEntries<T> = List<TabEntry<T>>;
 
 class PageEntry<T> {
   final dynamic title;
+  final dynamic subtitle;
   final IconData icon;
 
   final List<Widget>? toolbarItems;
@@ -38,6 +39,7 @@ class PageEntry<T> {
     this.route,
     this.showAllToolbarActions = true,
     required this.title,
+    this.subtitle,
     required this.icon,
     required this.tabs,
     this.activeIcon,
@@ -55,8 +57,10 @@ class PageEntry<T> {
     this.onSearch,
   });
 
-  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
+  string get subtitleString => (subtitle is Text ? (subtitle as Text).data : subtitle.toString()) | "";
 
+  Widget? get subtitleWidget => forceWidget(tabs.singleOrNull?.subtitle) ?? forceWidget(subtitle);
+  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
   Widget? get titleWidget => forceWidget(tabs.singleOrNull?.title) ?? forceWidget(title);
 }
 
@@ -81,6 +85,8 @@ class PageTabController<T> with ChangeNotifier {
   PageEntry<T>? _pageEntry;
 
   int _pageCount = 0;
+
+  bool isSearching = false;
 
   /// Creates a new instance of [PageTabController].
   ///
@@ -245,6 +251,7 @@ class PageTabScaffold<T> extends StatefulWidget {
   final String? restorationId;
   final Widget? floatingActionButton;
   final dynamic title;
+  final dynamic subtitle;
   final Color? appBarBackgroundColor;
   final Color? iconColor;
   final Color? activeIconColor;
@@ -306,6 +313,7 @@ class PageTabScaffold<T> extends StatefulWidget {
     this.restorationId,
     this.floatingActionButton,
     this.title,
+    this.subtitle,
     this.appBarBackgroundColor,
     this.leading,
     this.actions,
@@ -337,6 +345,7 @@ class PageTabScaffold<T> extends StatefulWidget {
 
 class TabEntry<T> {
   final dynamic title;
+  final dynamic subtitle;
   final IconData? icon;
   final Widget Function(T) builder;
 
@@ -344,23 +353,23 @@ class TabEntry<T> {
 
   TabEntry({
     this.title,
+    this.subtitle,
     this.icon,
     required this.builder,
     this.onSearch,
   });
 
-  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
+  string get subtitleString => (subtitle is Text ? (subtitle as Text).data : subtitle.toString()) | "";
+  Widget? get subtitleWidget => forceWidget(subtitle);
 
+  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
   Widget? get titleWidget => forceWidget(title);
 }
 
 class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProviderStateMixin {
   late PageTabController<T> indexController;
 
-  bool isSearching = false;
-
   late GlobalKey<ScaffoldState> scaffoldKey;
-
   List<BottomNavigationBarItem> get bottomNavigationBarItems => [
         if (!useDrawerInsteadOfBottomNavigationBar)
           for (var entry in widget.items)
@@ -405,6 +414,10 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
 
   bool get isSearchEnabled => onSearch != null;
 
+  bool get isSearching => indexController.isSearching;
+
+  set isSearching(bool value) => indexController.isSearching = value;
+
   Widget? get mainDrawer {
     if (useDrawerInsteadOfBottomNavigationBar) {
       return Drawer(
@@ -428,9 +441,22 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
 
   ScaffoldState get scaffoldState => scaffoldKey.currentState ?? Scaffold.of(context);
 
-  TabEntry? get tabEntry => indexController.tabEntry;
+  Widget? get subtitle => indexController.tabEntry?.subtitleWidget ?? indexController.pageEntry?.subtitleWidget ?? forceWidget(widget.subtitle);
 
+  TabEntry? get tabEntry => indexController.tabEntry;
   Widget get title => (indexController.pageEntry?.titleWidget ?? forceWidget(widget.title) ?? forceWidget(indexController.pageIndex.toString()))!;
+
+  Widget get titleAndSubtitle => (subtitle != null)
+      ? Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            title,
+            if (subtitle != null) subtitle!,
+          ],
+        )
+      : [title, subtitle].whereNotNull().first;
+
+  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
 
   bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && (widget.drawer == null || widget.drawer is! Drawer);
 
@@ -439,17 +465,27 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
       key: scaffoldKey,
       appBar: (pageEntry != null && (pageEntry!.showAppBar || pageEntry!.tabs.length > 1)) || useDrawerInsteadOfBottomNavigationBar
           ? AppBar(
-              title: isSearching
+              title: isSearching && onSearch != null
                   ? TextField(
                       autofocus: true,
                       controller: indexController.searchController,
-                      decoration: const InputDecoration(),
+                      decoration: InputDecoration(
+                        labelText: titleString,
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {
+                            if (onSearch != null) onSearch!(indexController.searchController.text);
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                      textInputAction: TextInputAction.search,
                       onSubmitted: (value) {
                         if (onSearch != null) onSearch!(value);
                         setState(() {});
                       },
                     )
-                  : title,
+                  : titleAndSubtitle,
               leading: widget.leading,
               automaticallyImplyLeading: widget.automaticallyImplyLeading,
               backgroundColor: widget.appBarBackgroundColor,
@@ -592,7 +628,7 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
   Widget errorWidget(Object error) => Scaffold(
       appBar: indexController.pageEntry?.showAppBar ?? true
           ? AppBar(
-              // title: const TitleError(),
+              title: titleAndSubtitle,
               leading: widget.leading,
               automaticallyImplyLeading: widget.automaticallyImplyLeading,
               backgroundColor: widget.appBarBackgroundColor,
@@ -631,11 +667,15 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
           : null,
       body: widget.loading ?? const Center(child: CircularProgressIndicator()));
 
-  bool startSearch() {
-    if (isSearching) {
+  bool toggleSearch() {
+    if (isSearching && indexController.searchController.text.isNotBlank) {
       indexController.searchController.clear();
+      if (onSearch != null) {
+        onSearch!("");
+      }
+    } else {
+      isSearching = !isSearching;
     }
-    isSearching = !isSearching;
     return isSearching;
   }
 
@@ -681,7 +721,7 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
     return IconButton(
         icon: Icon(isSearching ? Icons.close : Icons.search),
         onPressed: () {
-          startSearch();
+          toggleSearch();
           setState(() {});
         });
   }
