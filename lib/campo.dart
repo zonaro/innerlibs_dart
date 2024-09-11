@@ -99,6 +99,8 @@ typedef CampoDecimal = CampoValor<decimal>;
 typedef CampoDouble = CampoValor<double>;
 
 typedef CampoInteiro = CampoValor<int>;
+typedef CampoNumerico = CampoValor<num>;
+typedef CampoNumero = CampoValor<num>;
 
 typedef CampoTexto = CampoValor<string>;
 

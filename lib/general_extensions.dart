@@ -272,11 +272,11 @@ extension ObjectExtensions<T extends Object?> on T {
   ///
   /// Usage:
   /// ```dart
-  /// print(parseTo<int>('123')); // prints: 123
-  /// print(parseTo<double>('123.45')); // prints: 123.45
-  /// print(parseTo<DateTime>('2024-05-27 13:18:56')); // prints: 2024-05-27 13:18:56.000
-  /// print(parseTo<String>(123)); // prints: '123'
-  /// print(parseTo<bool>('y')); // prints: true
+  /// print(changeTo<int>('123')); // prints: 123
+  /// print(changeTo<double>('123.45')); // prints: 123.45
+  /// print(changeTo<DateTime>('2024-05-27 13:18:56')); // prints: 2024-05-27 13:18:56.000
+  /// print(changeTo<String>(123)); // prints: '123'
+  /// print(changeTo<bool>('y')); // prints: true
   /// ```
   ///
   /// [T] The type to convert the value to.
