@@ -493,7 +493,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
 
   final Iterable<T> options;
   final List<TextInputFormatter> inputFormatters;
-  final void Function(T?, string?) onChanged;
+  final void Function(T? value, string? valueString) onChanged;
   final void Function()? onEditingComplete;
   final String? Function(T?)? validator;
   final int? maxLen;
