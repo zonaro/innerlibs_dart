@@ -652,7 +652,7 @@ abstract interface class Brasil {
       cids = (await (nomeCidadeOuIBGE as Regiao).cidades).toList();
     }
 
-    if (nomeEstadoOuUFOuIBGEouRegiao is num) {
+    if (nomeEstadoOuUFOuIBGEouRegiao is num || nomeEstadoOuUFOuIBGEouRegiao is int || nomeEstadoOuUFOuIBGEouRegiao is double) {
       nomeEstadoOuUFOuIBGEouRegiao = nomeEstadoOuUFOuIBGEouRegiao.toString().first(2);
     }
     nomeCidadeOuIBGE = flatString(nomeCidadeOuIBGE);
