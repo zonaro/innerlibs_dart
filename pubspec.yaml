@@ -22,7 +22,6 @@ dependencies:
   crypto:
   intl: 
   xml_crypto:
-  pdf:
   brasil_fields:
   path_provider:
   printing:

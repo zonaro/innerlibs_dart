@@ -184,18 +184,6 @@ abstract interface class Brasil {
         "Lopes"
       ];
 
-  /// Verifica se o tipo de contribuinte é um consumidor final.
-  ///
-  /// Retorna true se o tipo de contribuinte for um consumidor final, caso contrário retorna false.
-  /// O parâmetro [tipoPessoaOuDocumento] representa o tipo da pessoa (Fisica ou Juridica) ou documento do contribuinte.
-  /// O parâmetro [inscricaoRg] é opcional e representa a inscrição RG do contribuinte, sendo "ISENTO" o valor padrão.
-  ///
-  /// Exemplo de uso:
-  /// ```dart
-  /// bool isConsumidorFinal = consumidorFinal("43077469880", "ISENTO");
-  /// ```
-  static bool consumidorFinal(String tipoPessoaOuDocumento, [int? inscricaoRg]) => tipoContribuinte(tipoPessoaOuDocumento, inscricaoRg) == IndicadorIEDestinatario.naoContribuinte;
-
   /// Formata um número de CEP.
   ///
   /// Recebe um [numero] dinâmico e retorna uma string formatada no formato de CEP.
@@ -217,7 +205,7 @@ abstract interface class Brasil {
     if (validarCEP(cep)) {
       return cep;
     } else {
-      return "";
+      return changeTo(numero);
     }
   }
 
@@ -239,7 +227,7 @@ abstract interface class Brasil {
 
       return '$uf-$sequencial-$digitosVerificadores';
     }
-    return "";
+    return changeTo(numero);
   }
 
   /// Função para formatar CNPJ
@@ -252,13 +240,13 @@ abstract interface class Brasil {
   ///
   /// Retorna:
   /// Uma string formatada (por exemplo: "12.345.678/0001-90")
-  static String formatarCNPJ(dynamic number) {
+  static String formatarCNPJ(dynamic numero) {
     // Implementação para formatar o número do CNPJ
-    String cnpj = "$number".onlyNumbers.padLeft(14, "0");
-    if (Brasil.validarCNPJ(number)) {
+    String cnpj = "$numero".onlyNumbers.padLeft(14, "0");
+    if (Brasil.validarCNPJ(cnpj)) {
       return "${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12)}";
     }
-    return "$number";
+    return changeTo(numero);
   }
 
   /// Formata um número de CPF para o formato XXX.XXX.XXX-XX.
@@ -268,7 +256,10 @@ abstract interface class Brasil {
   /// Retorna a string formatada do CPF.
   static String formatarCPF(dynamic numero) {
     String cpf = "$numero".onlyNumbers.padLeft(11, "0");
-    return "${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9)}";
+    if (Brasil.validarCPF(cpf)) {
+      return "${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9)}";
+    }
+    return changeTo(numero);
   }
 
   /// Formata um número de CPF ou CNPJ.
@@ -290,7 +281,7 @@ abstract interface class Brasil {
     } else if (validarCNPJ(numero)) {
       return formatarCNPJ(numero);
     } else {
-      return "$numero";
+      return changeTo(numero);
     }
   }
 
@@ -319,8 +310,6 @@ abstract interface class Brasil {
   static String formatarDocumento(dynamic documento) {
     if (documento == null) return "";
     if (documento is date) return formatarData(documento);
-    if (documento is ChaveNFe) return documento.chaveFormatadaTraco;
-    if (documento is NFe) return documento.infNFe?.ide?.nNF?.toString() ?? "";
     if (documento is Estado) return documento.uf;
     if (documento is Cidade) return documento.nome;
     if (documento is Endereco) return documento.toString();
@@ -333,7 +322,6 @@ abstract interface class Brasil {
     if (validarEAN(documento)) return formatarEAN(documento);
     if (validarPIS(documento)) return formatarPIS(documento);
     if (validarCNH(documento)) return formatarCNH(documento);
-    if (ChaveNFe.validar(documento)) return ChaveNFe.fromString(documento).chaveFormatadaTraco;
     if (documento.toString().isEmail) return documento.toString().toLowerCase();
     if (validarTelefone(documento)) return formatarTelefone(documento);
     return "$documento";
@@ -372,7 +360,7 @@ abstract interface class Brasil {
 
     // Verifique se o código EAN é válido (você pode usar sua função validarEAN aqui)
     if (!validarEAN(cleanedEAN)) {
-      cleanedEAN = "";
+      return changeTo(numero);
     } else {
       // Formate o código EAN com hífens
       if (cleanedEAN.length == 8) {
@@ -394,7 +382,7 @@ abstract interface class Brasil {
       });
       return n;
     } else {
-      throw const FormatException('String is not a valid PIS');
+      return changeTo(numero);
     }
   }
 
@@ -406,7 +394,7 @@ abstract interface class Brasil {
     if (Brasil.validarTelefone(numero)) {
       return Telefone(numero).toString();
     }
-    return "$numero";
+    return changeTo(numero);
   }
 
   /// Gera uma CNH falsa
@@ -527,7 +515,7 @@ abstract interface class Brasil {
       cep: randomInt(0, 99999999).fixedLength(8)!,
       logradouro: "${["Rua", "Avenida", "Alameda", "Travessa", "Praça"].randomize().first} ${gerarNomeAleatorioString()}",
       numero: randomInt(0, 999).toString(),
-      bairro: "${["Jardim", "Campos", ""].randomize().first} ${gerarNomeAleatorioString()}",
+      bairro: "${["Jardim", "Campos", ""].randomize().first} ${gerarNomeAleatorioString()}".trim(),
       cidade: await cidades.then((c) => c.randomize().first),
     );
   }
@@ -720,8 +708,7 @@ abstract interface class Brasil {
   static String pegarRotuloDocumento({dynamic documento, String rotuloPadrao = ""}) {
     if (documento == null) return rotuloPadrao;
     if (documento is date) return "Data";
-    if (documento is ChaveNFe) return "Chave NFe";
-    if (documento is NFe) return "NFe";
+
     if (documento is Estado) return "Estado";
     if (documento is Cidade) return "Cidade";
     if (documento is Endereco) return "Endereço";
@@ -736,7 +723,7 @@ abstract interface class Brasil {
     if (validarEAN(d)) return "EAN";
     if (validarPIS(d)) return "PIS";
     if (validarCNH(d)) return "CNH";
-    if (ChaveNFe.validar(d)) return "Chave NFe";
+
     if (Brasil.validarInscricaoEstadual(d)) return "Inscrição Estadual";
     if (validarTelefone(d)) return d.onlyNumbers.length.isIn([9, 11]) ? "Celular" : "Telefone";
     return rotuloPadrao;
@@ -881,32 +868,6 @@ abstract interface class Brasil {
     final matchesNumbers = texto.findByRegex(regexNumbers);
 
     return matchesCep.union(matchesNumbers).toList();
-  }
-
-  /// Retorna o tipo de contribuinte com base no tipo ou documento fornecido.
-  ///
-  /// O parâmetro [tipoPessoaOuDocumento] representa o tipo ou documento do contribuinte.
-  /// O parâmetro [inscricaoRg] é opcional e representa a inscrição RG do contribuinte, sendo "ISENTO" o valor padrão.
-  ///
-  /// Retorna uma expressão de caractere que representa o tipo de contribuinte:
-  /// - "9 - NÃO CONTRIBUINTE" para pessoas físicas.
-  /// - "2 - CONTRIBUINTE ISENTO" para pessoas jurídicas com inscrição RG igual a "ISENTO".
-  /// - "1 - CONTRIBUINTE ICMS" para pessoas jurídicas com inscrição RG diferente de "ISENTO".
-  ///
-  /// Se o parâmetro [tipoPessoaOuDocumento] estiver vazio, retorna uma string vazia.
-  static IndicadorIEDestinatario tipoContribuinte(String tipoPessoaOuDocumento, [int? inscricaoRg]) {
-    if (tipoPessoaOuDocumento.isBlank) {
-      return IndicadorIEDestinatario.naoContribuinte;
-    }
-    if (TipoPessoa.fromValue(tipoPessoaOuDocumento) == TipoPessoa.fisica) {
-      return IndicadorIEDestinatario.naoContribuinte;
-    } else {
-      if (inscricaoRg == null || inscricaoRg == 0) {
-        return IndicadorIEDestinatario.contribuinteIsento;
-      } else {
-        return IndicadorIEDestinatario.contribuinteICMS;
-      }
-    }
   }
 
   /// Valida um CEP.
@@ -1174,8 +1135,6 @@ abstract interface class Brasil {
   static int? valorDocumento(dynamic documento) {
     if (documento == null) return null;
     if (documento is date) return documento.millisecondsSinceEpoch.nullIfZero;
-    if (documento is ChaveNFe) return documento.chave.toInt?.nullIfZero;
-    if (documento is NFe) return documento.infNFe?.ide?.nNF?.nullIfZero;
     if (documento is Estado) return documento.ibge.nullIfZero;
     if (documento is Cidade) return documento.ibge.nullIfZero;
     if (documento is Endereco) return documento.cep.onlyNumbers.toInt.nullIfZero;
@@ -1188,7 +1147,6 @@ abstract interface class Brasil {
         validarEAN(documento) ||
         validarPIS(documento) ||
         validarCNH(documento) ||
-        ChaveNFe.validar(documento) ||
         validarTelefone(documento) ||
         validarInscricaoEstadual(documento)) {
       return int.tryParse("$documento".onlyNumbers).nullIfZero;
