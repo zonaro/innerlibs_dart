@@ -68,7 +68,7 @@ class __PromptDialogState extends State<_PromptDialog> {
               textCapitalization: widget.textCapitalization,
               onEditingComplete: () {
                 if (formKey.currentState!.validate()) {
-                  Navigator.pop(context, value);
+                  context.pop(value);
                 }
               },
               textAlign: widget.textAlign,
@@ -77,16 +77,16 @@ class __PromptDialogState extends State<_PromptDialog> {
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, null),
-            child: (widget.textCancel != null) ? widget.textCancel! : Text(context.translations.cancel),
+            onPressed: context.pop,
+            child: widget.textCancel ?? Text(context.translations.cancel),
           ),
           TextButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                Navigator.pop(context, value);
+                context.pop(value);
               }
             },
-            child: (widget.textOK != null) ? widget.textOK! : Text(context.translations.ok),
+            child: widget.textOK ?? Text(context.translations.ok),
           ),
         ],
       ),
@@ -424,9 +424,9 @@ extension DialogExt on BuildContext {
       barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
         return _PromptDialog(
-          title:   (title as Object?).asNullableText(),
-          textOK: (textOK as Object?).asNullableText(),
-          textCancel: (textCancel as Object?).asNullableText(),
+          title: forceWidget(title),
+          textOK: forceWidget(textOK),
+          textCancel: forceWidget(textCancel),
           initialValue: initialValue,
           isSelectedInitialValue: isSelectedInitialValue,
           hintText: hintText,
