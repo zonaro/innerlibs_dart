@@ -3,7 +3,6 @@
     "@@author": "Kaizonaro",
     "search": "Search",
     "find": "Find",
-    "invalidValue": "Invalid value",
     "yes": "Yes",
     "no": "No",
     "cancel": "Cancel",
@@ -30,20 +29,22 @@
     "username": "Username",
     "password": "Password",
     "name": "Name",
+    "number": "Number",
+    "date": "Data",
+    "value": "Value",
+    "phone": "Phone",
     "city": "City",
     "country": "Country",
     "estate": "Estate",
     "dateOutOfRange": "Date out of range",
-    "invalidDate": "Invalid date",
-    "invalidEmail": "Invalid email",
-    "invalidNumber": "Invalid number",
-    "invalidPhone": "Invalid phone number",
-    "invalidUrl": "Invalid URL",
-    "invalidCreditCard": "Invalid credit card number",
-    "invalidCurrency": "Invalid currency",
-    "invalidPassword": "Invalid password",
-    "weakPassword": "Weak password",
-    "strongPassword": "Strong password",
+    "invalidItem": "Invalid {item}.",
+    "@invalidItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
     "couldNotFindItem": "Could not find {item}.",
     "@couldNotFindItem": {
         "placeholders": {

@@ -15,9 +15,6 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get find => 'Procurar';
 
   @override
-  String get invalidValue => 'Invalid value';
-
-  @override
   String get yes => 'Sim';
 
   @override
@@ -96,6 +93,18 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get name => 'Name';
 
   @override
+  String get number => 'Number';
+
+  @override
+  String get date => 'Data';
+
+  @override
+  String get value => 'Value';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
   String get city => 'City';
 
   @override
@@ -108,34 +117,9 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get dateOutOfRange => 'Date out of range';
 
   @override
-  String get invalidDate => 'Invalid date';
-
-  @override
-  String get invalidEmail => 'Invalid email';
-
-  @override
-  String get invalidNumber => 'Invalid number';
-
-  @override
-  String get invalidPhone => 'Invalid phone number';
-
-  @override
-  String get invalidUrl => 'Invalid URL';
-
-  @override
-  String get invalidCreditCard => 'Invalid credit card number';
-
-  @override
-  String get invalidCurrency => 'Invalid currency';
-
-  @override
-  String get invalidPassword => 'Invalid password';
-
-  @override
-  String get weakPassword => 'Weak password';
-
-  @override
-  String get strongPassword => 'Strong password';
+  String invalidItem(String item) {
+    return 'Invalid $item.';
+  }
 
   @override
   String couldNotFindItem(String item) {

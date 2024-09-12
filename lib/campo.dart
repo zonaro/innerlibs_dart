@@ -14,7 +14,7 @@ Widget emptySearch(BuildContext context, string searchEntry, string label) {
   return Expanded(
     child: Center(
       child: ListView(shrinkWrap: true, children: [
-        Text(InnerLibsLocalizations.of(context).couldNotFindItem(label)).toCenter(),
+        Text(context.translations.couldNotFindItem(label)).toCenter(),
         ...searches.defaultIfEmpty(label).map((e) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: Chip(label: e.asText()),
@@ -50,7 +50,7 @@ PopupProps<T> popupFields<T>(
   IconData? suffixIcon,
   void Function()? onSuffixIconTap,
 }) {
-  var tt = "${InnerLibsLocalizations.of(context).search} $title:".trim();
+  var tt = "${context.translations.search} $title:".trim();
   return Get.screenTier < ScreenTier.xs
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
@@ -64,7 +64,7 @@ PopupProps<T> popupFields<T>(
                 children: [
                   const Icon(Icons.arrow_back),
                   const Gap(10),
-                  Get.context!.localizations.back.asText().fontSize(10),
+                  Get.context!.translations.back.asText().fontSize(10),
                 ],
               ).toCenter().paddingAll(8),
             ),
@@ -288,7 +288,7 @@ class ClearButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContextButtonBase(
-      label: InnerLibsLocalizations.of(context).clear,
+      label: context.translations.clear,
       icon: Icons.cleaning_services,
       onPressed: onPressed,
     );
@@ -391,8 +391,8 @@ class DateField extends StatelessWidget {
       padding: fieldsPadding,
       child: DateTimePickerFormField(
         decoration: inputStyles(label, icon),
-        invalidDateMessage: InnerLibsLocalizations.of(context).invalidDate,
-        outOfRangeMessage: InnerLibsLocalizations.of(context).dateOutOfRange,
+        invalidDateMessage: context.translations.invalidItem(context.translations.date),
+        outOfRangeMessage: context.translations.dateOutOfRange,
         value: value ?? now,
         fromDate: fromDate ?? minDate,
         toDate: toDate ?? now.sum(years: 999),
@@ -413,7 +413,7 @@ class DeleteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContextButtonBase(
-      label: InnerLibsLocalizations.of(context).delete,
+      label: context.translations.delete,
       icon: Icons.delete,
       color: Colors.redAccent,
       onPressed: onPressed,
@@ -504,7 +504,7 @@ class FabSave<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FabTextBase(
-      label: id.isNotValid ? InnerLibsLocalizations.of(context).register : InnerLibsLocalizations.of(context).save,
+      label: id.isNotValid ? context.translations.register : context.translations.save,
       icon: id.isNotValid ? Icons.edit : Icons.save,
       onPressed: onPressed,
       heroTag: (T.runtimeType, id, randomInt()),
@@ -556,7 +556,7 @@ class RegisterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContextButtonBase(
-      label: InnerLibsLocalizations.of(context).register,
+      label: context.translations.register,
       icon: Icons.edit,
       onPressed: onPressed,
     );
@@ -575,7 +575,7 @@ class SaveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContextButtonBase(
       icon: Icons.save,
-      label: InnerLibsLocalizations.of(context).save,
+      label: context.translations.save,
       onPressed: onPressed,
     );
   }
@@ -876,7 +876,7 @@ class YesNoField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final opt = [InnerLibsLocalizations.of(context).yes, InnerLibsLocalizations.of(context).no];
+    final opt = [context.translations.yes, context.translations.no];
     return StringField(
       label: label,
       value: value,
@@ -886,7 +886,7 @@ class YesNoField extends StatelessWidget {
         onChanged(v);
       },
       validator: (newValue) {
-        return newValue.flatEqualAny(opt) ? null : InnerLibsLocalizations.of(context).invalidValue;
+        return newValue.flatEqualAny(opt) ? null : context.translations.invalidItem(context.translations.value);
       },
     );
   }

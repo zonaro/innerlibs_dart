@@ -107,12 +107,6 @@ abstract class InnerLibsLocalizations {
   /// **'Find'**
   String get find;
 
-  /// No description provided for @invalidValue.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid value'**
-  String get invalidValue;
-
   /// No description provided for @yes.
   ///
   /// In en, this message translates to:
@@ -269,6 +263,30 @@ abstract class InnerLibsLocalizations {
   /// **'Name'**
   String get name;
 
+  /// No description provided for @number.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get number;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get date;
+
+  /// No description provided for @value.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get value;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
   /// No description provided for @city.
   ///
   /// In en, this message translates to:
@@ -293,65 +311,11 @@ abstract class InnerLibsLocalizations {
   /// **'Date out of range'**
   String get dateOutOfRange;
 
-  /// No description provided for @invalidDate.
+  /// No description provided for @invalidItem.
   ///
   /// In en, this message translates to:
-  /// **'Invalid date'**
-  String get invalidDate;
-
-  /// No description provided for @invalidEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid email'**
-  String get invalidEmail;
-
-  /// No description provided for @invalidNumber.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid number'**
-  String get invalidNumber;
-
-  /// No description provided for @invalidPhone.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid phone number'**
-  String get invalidPhone;
-
-  /// No description provided for @invalidUrl.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid URL'**
-  String get invalidUrl;
-
-  /// No description provided for @invalidCreditCard.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid credit card number'**
-  String get invalidCreditCard;
-
-  /// No description provided for @invalidCurrency.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid currency'**
-  String get invalidCurrency;
-
-  /// No description provided for @invalidPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid password'**
-  String get invalidPassword;
-
-  /// No description provided for @weakPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Weak password'**
-  String get weakPassword;
-
-  /// No description provided for @strongPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Strong password'**
-  String get strongPassword;
+  /// **'Invalid {item}.'**
+  String invalidItem(String item);
 
   /// No description provided for @couldNotFindItem.
   ///

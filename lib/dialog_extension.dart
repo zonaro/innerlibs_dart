@@ -78,7 +78,7 @@ class __PromptDialogState extends State<_PromptDialog> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, null),
-            child: (widget.textCancel != null) ? widget.textCancel! : Text(context.localizations.cancel),
+            child: (widget.textCancel != null) ? widget.textCancel! : Text(context.translations.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -86,7 +86,7 @@ class __PromptDialogState extends State<_PromptDialog> {
                 Navigator.pop(context, value);
               }
             },
-            child: (widget.textOK != null) ? widget.textOK! : Text(context.localizations.ok),
+            child: (widget.textOK != null) ? widget.textOK! : Text(context.translations.ok),
           ),
         ],
       ),
@@ -189,8 +189,8 @@ extension DialogExt on BuildContext {
       context: this,
       barrierDismissible: canPop,
       builder: (BuildContext context) {
-        textOK ??= context.localizations.ok;
-        textCancel ??= context.localizations.cancel;
+        textOK ??= context.translations.ok;
+        textCancel ??= context.translations.cancel;
         content ??= "${context.materialLocalizations.continueButtonLabel}?";
         return PopScope(
           canPop: canPop,
@@ -280,7 +280,7 @@ extension DialogExt on BuildContext {
     List<Widget> arrWidget = [];
 
     if (buttons.isEmpty) {
-      cancelButton ??= localizations.ok;
+      cancelButton ??= translations.ok;
     }
 
     if (cancelButton.isNotBlank) {
@@ -498,7 +498,7 @@ extension DialogExt on BuildContext {
       barrierDismissible: false,
       builder: (BuildContext context) => StatefulBuilder(builder: (BuildContext context, setState) {
         if (cancelTaskButton == null && onCancel != null) {
-          cancelTaskButton = context.localizations.cancel;
+          cancelTaskButton = context.translations.cancel;
         }
         if (timeout != null && timeout.inSeconds > 0) {
           timer ??= Timer.periodic(1.seconds, (timer) {

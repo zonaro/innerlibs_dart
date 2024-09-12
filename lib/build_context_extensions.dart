@@ -213,8 +213,6 @@ extension BuildContextExtensions on BuildContext {
   /// content body, like captions
   TextStyle? get labelSmall => textTheme.labelSmall;
 
-  InnerLibsLocalizations get localizations => InnerLibsLocalizations.of(this);
-
   double get logicalAspectRatio => logicalWidth / logicalHeight;
 
   string get logicalAspectRatioString => logicalScreenSize.getAspectRatioString();
@@ -254,24 +252,25 @@ extension BuildContextExtensions on BuildContext {
 
   /// Returns the color of the surface text on the current theme.
   Color get onSurfaceColor => theme.colorScheme.onSurface;
+
   //Padding in physical pixels
   ViewPadding get padding => flutterView.padding;
-
   double get paddingBottom => flutterView.padding.bottom / flutterView.devicePixelRatio;
+
   //Safe area paddings in logical pixels
   double get paddingLeft => flutterView.padding.left / flutterView.devicePixelRatio;
-
   double get paddingRight => flutterView.padding.right / flutterView.devicePixelRatio;
+
   double get paddingTop => flutterView.padding.top / flutterView.devicePixelRatio;
   double get physicalAspectRatio => physicalWidth / physicalHeight;
-
   string get physicalAspectRatioString => physicalScreenSize.getAspectRatioString();
-  double get physicalHeight => physicalScreenSize.height;
 
+  double get physicalHeight => physicalScreenSize.height;
   //Size in physical pixels
   Size get physicalScreenSize => flutterView.physicalSize;
 
   double get physicalWidth => physicalScreenSize.width;
+
   double get pixelRatio => flutterView.devicePixelRatio;
 
   /// similar to [MediaQuery.platformBrightnessOf(context)]
@@ -347,6 +346,8 @@ extension BuildContextExtensions on BuildContext {
   /// medium-emphasis text.
   TextStyle? get titleSmall => textTheme.titleSmall;
 
+  InnerLibsLocalizations get translations => InnerLibsLocalizations.of(this);
+
   /// similar to [MediaQuery.of(context).viewInsets]
   EdgeInsets get viewInsets => mediaQuery.viewInsets;
 
@@ -372,10 +373,9 @@ extension BuildContextExtensions on BuildContext {
 
   ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
   bool canPop() => Navigator.canPop(this);
- 
- 
- /// Control the focus of the current context
- /// 
+
+  /// Control the focus of the current context
+  ///
   focus([int times = 1]) {
     if (times > 0) {
       while (times-- > 0) {
