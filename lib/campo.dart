@@ -288,19 +288,23 @@ class CampoSimNao extends StatelessWidget {
 
   final void Function(String?) onChanged;
 
-  const CampoSimNao({super.key, this.label, required this.onChanged, this.value});
+  final bool readOnly;
+
+  const CampoSimNao({super.key, this.label, required this.onChanged, this.value, this.readOnly = false});
 
   @override
   Widget build(BuildContext context) {
+    final opt = [InnerLibsLocalizations.of(context).yes, InnerLibsLocalizations.of(context).no];
     return StringField(
       label: label,
       value: value,
-      options: const ["Sim", "Não"],
+      readOnly: readOnly,
+      options: opt,
       onChanged: (v, _) {
         onChanged(v);
       },
       validator: (newValue) {
-        return newValue.flatEqualAny(["Sim", "Não"]) ? null : "Valor inválido";
+        return newValue.flatEqualAny(opt) ? null : "Valor inválido";
       },
     );
   }

@@ -40,6 +40,7 @@ export 'hsv_color.dart';
 export 'icon_extensions.dart';
 export 'info_usuario.dart';
 export 'keyed_json_table.dart';
+export 'l10n/app_localizations.dart';
 export 'list_extensions.dart';
 export 'map_extensions.dart';
 export 'num_extensions.dart';

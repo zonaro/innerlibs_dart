@@ -10,6 +10,7 @@ import 'package:innerlibs/colornames.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/message_format.dart';
 
 // for the utf8.encode method
 
@@ -30,6 +31,23 @@ extension NullStringExtension on String? {
   String blankCoalesce(List<string?> newString) {
     var x = [blankIfNull, ...newString];
     return x.firstWhereOrNull((e) => e.isNotBlank).blankIfNull;
+  }
+
+  /// Format a string with ICU syntax.
+  ///
+  /// See the [ICU User Guide](https://api.flutter.dev/flutter/message_format/MessageFormat-class.html) for more information.
+  ///
+  /// The [args] parameter is a map of arguments to be used in the string.
+  ///
+  /// The [locale] parameter is the locale to be used in the formatting.  If not specified, the default locale is used.
+  ///
+  /// Returns the formatted string.
+  String format(Map<string, Object> args, [String? locale]) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    final messageFormat = MessageFormat(this!, locale: locale ?? "en");
+    return messageFormat.format(args);
   }
 
   /// Returns the string if it is not null, empty or blank, otherwise returns the specified string.

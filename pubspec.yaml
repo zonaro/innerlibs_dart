@@ -26,6 +26,8 @@ dependencies:
   gap:
   dropdown_search:
   mime:
+  flutter_localizations:
+    sdk: flutter
  
  
  
@@ -37,6 +39,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 flutter: 
+  generate: true  
   assets:
     - lib/brasil.json 
     - assets/fonts/consola.ttf
