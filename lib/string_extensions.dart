@@ -207,7 +207,7 @@ extension StringExtensions on String {
 
   /// Splits a camel case string into individual words.
   /// Returns a list of strings representing the words in the camel case string.
-  strings get camelSplit => camelSplitString.split(" ");
+  StringList get camelSplit => camelSplitString.split(" ");
 
   /// Returns a string with camel case split into separate words.
   ///
@@ -481,10 +481,10 @@ extension StringExtensions on String {
   }
 
   /// Returns a list with distinct words of this sentence
-  strings get getUniqueWords => getWords.distinctFlat();
+  StringList get getUniqueWords => getWords.distinctFlat();
 
   /// Returns a list with words of this sentence
-  strings get getWords {
+  StringList get getWords {
     if (isBlank) {
       return [];
     }
@@ -686,6 +686,26 @@ extension StringExtensions on String {
   }
 
   bool get isIP => isIPv4 || isIPv6;
+
+  /// Checks if the `String` is a valid `json` format.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// String foo = '{"name":"John","age":30,"cars":null}';
+  /// bool isJson = foo.isJson; // returns true
+  /// ```
+  bool get isJson {
+    if (isBlank) {
+      return false;
+    }
+    try {
+      jsonDecode(this);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   /// Checks if the `String` has only Latin characters.
   /// ### Example
@@ -1523,7 +1543,7 @@ extension StringExtensions on String {
   }
 
   /// slice a string into chunks
-  strings operator /(int chunkSize) {
+  StringList operator /(int chunkSize) {
     List<String> chunks = [];
     if (isNotBlank) {
       for (int i = 0; i < length; i += chunkSize) {
@@ -2420,26 +2440,6 @@ extension StringExtensions on String {
   /// ```
   bool isIn(Iterable<String> strings) => isNotBlank && strings.isNotEmpty && strings.contains(this);
 
-  /// Checks if the `String` is a valid `json` format.
-  ///
-  /// ### Example
-  ///
-  /// ```dart
-  /// String foo = '{"name":"John","age":30,"cars":null}';
-  /// bool isJson = foo.isJson; // returns true
-  /// ```
-  bool get isJson  {
-    if (isBlank) {
-      return false;
-    }
-    try {
-      jsonDecode(this);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   /// Checks if a given [value] matches a [mask] pattern.
   ///
   /// The [mask] pattern can contain wildcard characters:
@@ -2959,7 +2959,7 @@ extension StringExtensions on String {
   }
 
   /// slice a string into chunks
-  strings slice(int chunkSize) => this / chunkSize;
+  StringList slice(int chunkSize) => this / chunkSize;
 
   /// Splits the string into multiple substrings using any of the specified delimiters.
   ///

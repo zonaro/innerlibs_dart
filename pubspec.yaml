@@ -21,16 +21,12 @@ dependencies:
   get:
   crypto:
   intl: 
-  xml_crypto:
-  brasil_fields:
-  path_provider:
-  printing:
-  download:
-  file_picker:
+  brasil_fields: 
+  download: 
   gap:
   dropdown_search:
   mime:
-  format:
+ 
  
  
    

@@ -224,7 +224,6 @@ extension IterablesExtension<T> on Iterable<T> {
     bool useWildcards = false,
     bool allIfEmpty = true,
     CharMatch<T> keyCharSearches = const {},
-
   }) =>
       FilterFunctions.search(
         items: this,
@@ -389,8 +388,8 @@ extension MapSearch<K, V> on Iterable<Map<K, V>> {
   }
 }
 
-extension StringListExtensions on strings {
-  ///Verify if any [String] in a [strings]  contains the specified [String]
+extension StringListExtensions on StringList {
+  ///Verify if any [String] in a [StringList]  contains the specified [String]
   bool containsLike(String s) {
     for (var item in this) {
       if (item.toString().contains(s)) return true;
@@ -398,7 +397,7 @@ extension StringListExtensions on strings {
     return false;
   }
 
-  /// Removes duplicate elements from a [strings].
+  /// Removes duplicate elements from a [StringList].
   ///
   /// Use the [flatEqual] function to compare strings.
   List<string> distinctFlat() {
@@ -415,9 +414,9 @@ extension StringListExtensions on strings {
 
   bool flatContainsAll(Iterable<string> s) => map((e) => e.asFlat).toList().containsAll(s.map((e) => e.asFlat).toList());
 
-  ///Verify if any [String] in a [strings]  contains any  [String] of other [strings] ignoring the accents and character case
+  ///Verify if any [String] in a [StringList]  contains any  [String] of other [StringList] ignoring the accents and character case
 
-  bool flatContainsAny(strings s) {
+  bool flatContainsAny(StringList s) {
     for (var item in this) {
       if (s.flatContainsLike(item)) return true;
     }
@@ -426,7 +425,7 @@ extension StringListExtensions on strings {
 
   bool flatContainsAtLeast(int count, Iterable<string> s) => map((e) => e.asFlat).toList().containsAtLeast(count, s.map((e) => e.asFlat).toList());
 
-  ///Verify if any [String] in a [strings]  contains the specified [String] ignoring the accents and character case
+  ///Verify if any [String] in a [StringList]  contains the specified [String] ignoring the accents and character case
 
   bool flatContainsLike(String s) {
     for (var item in this) {
@@ -434,8 +433,6 @@ extension StringListExtensions on strings {
     }
     return false;
   }
-
-
 
   /// Returns a list of Levenshtein distances between each element in the list and the given string [b].
   /// The optional parameter [caseSensitive] determines whether the comparison should be case-sensitive or not.

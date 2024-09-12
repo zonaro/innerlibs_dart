@@ -10,7 +10,6 @@ import 'package:innerlibs/innerlibs.dart';
 export 'package:brasil_fields/brasil_fields.dart' hide Estados;
 export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
-// export 'package:format/format.dart';
 export 'package:gap/gap.dart';
 export 'package:get/get.dart';
 export 'package:innerlibs/innerlibs.dart';
@@ -95,7 +94,6 @@ typedef date = DateTime;
 typedef decimal = double;
 
 /// C# Alias for [Map<K, V>]
-
 typedef Dictionary<K, V> = Map<K, V>;
 
 /// C# alias for [Directory]
@@ -132,10 +130,4 @@ typedef money = decimal;
 /// C# alias for [String]
 typedef string = String;
 
-typedef stringmap = Map<String, String>;
-
-typedef stringpair = Tuple2<String, String>;
-
-typedef stringrecord = (string, string);
-
-typedef strings = List<String>;
+typedef StringList = List<String>;

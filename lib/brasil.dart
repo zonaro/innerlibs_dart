@@ -541,7 +541,7 @@ abstract interface class Brasil {
   /// print(nome); // Exemplo de saída: "João Silva"
   /// ```
 
-  static strings gerarNomeAleatorio({bool sobrenomeUnico = false, bool nomeComposto = false, bool masculino = true, bool feminino = true}) {
+  static StringList gerarNomeAleatorio({bool sobrenomeUnico = false, bool nomeComposto = false, bool masculino = true, bool feminino = true}) {
     if (masculino == false && feminino == false) {
       masculino = randomBool();
       feminino = !masculino;
@@ -582,7 +582,7 @@ abstract interface class Brasil {
       emails: [
         "${nome.replaceAll(" ", ".").toLowerCase()}_${sobrenome.replaceAll(" ", ".")}@${["fakemail.com", "notmail.com", "ghostmail.com", "jmail.com", "outlucky.com"].randomize().first}"
       ],
-      telefones: [gerarTelefone()],
+      telefones: [gerarTelefoneFake()],
       cnh: Brasil.gerarCNHFake(),
       pis: Brasil.gerarPISFake(),
       enderecos: [await gerarEnderecoAleatorio()],
@@ -616,7 +616,7 @@ abstract interface class Brasil {
     return "$n1$n2$n3$n4$n5$n6$n7$n8$n9$n10$n11$d1";
   }
 
-  static Telefone gerarTelefone({Cidade? cidade}) => Telefone((cidade?.ddd.toString() ?? randomInt(0, 99).fixedLength(2)!) + randomInt(0, 99999999).toString().padLeft(8, "9").first(9));
+  static Telefone gerarTelefoneFake({Cidade? cidade}) => Telefone((cidade?.ddd.toString() ?? randomInt(0, 99).fixedLength(2)!) + randomInt(0, 99999999).toString().padLeft(8, "9").first(9));
 
   /// Retorna uma data a partir de uma string no formato especificado no manual da SEFAZ
   static DateTime? parseDataXML(String data) => data.toDate("yyyy-MM-ddTHH:mm:ssZ", "pt-BR");
@@ -747,7 +747,7 @@ abstract interface class Brasil {
       try {
         final response = await http.get(Uri.parse(url));
         if (response.statusCode == 200) {
-          final Map<String, dynamic> data = json.decode(response.body);
+          final JsonMap data = json.decode(response.body);
           data['cep'] = cep;
           data['numero'] = numero;
           data['complemento'] = complemento;
