@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-class SquareButton extends StatelessWidget {
+class SquareIconCard extends StatelessWidget {
   final String title;
 
   final String subtitle;
   final IconData? icon;
-  const SquareButton({
+  const SquareIconCard({
     super.key,
     required this.title,
     required this.subtitle,
@@ -21,13 +21,14 @@ class SquareButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Icon(
-              icon,
-              size: 80,
+          if (icon != null)
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Icon(
+                icon,
+                size: 80,
+              ),
             ),
-          ),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Center(
