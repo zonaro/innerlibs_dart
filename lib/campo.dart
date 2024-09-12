@@ -20,7 +20,7 @@ Widget botaoSalvar(void Function()? onPressed) => BotaoTexto(
       onPressed: onPressed,
     );
 
-InputDecoration estiloCampos([string? label, IconData? icon, void Function()? onIconTap, Color? color, IconData? suffixIcon, void Function()? onSuffixIconTap]) => InputDecoration(
+InputDecoration inputStyles([string? label, IconData? icon, void Function()? onIconTap, Color? color, IconData? suffixIcon, void Function()? onSuffixIconTap]) => InputDecoration(
       label: label.asNullableText(),
       icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
       suffixIcon: suffixIcon == null
@@ -52,7 +52,7 @@ Widget pesquisaVazia(string searchEntry, string label) {
   );
 }
 
-PopupProps<T> popupCampos<T>(
+PopupProps<T> popupFields<T>(
   string? title, {
   Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder,
   IconData? icon,
@@ -65,7 +65,7 @@ PopupProps<T> popupCampos<T>(
   return Get.screenTier < ScreenTier.xs
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
+          searchFieldProps: TextFieldProps(decoration: inputStyles(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
           title: InkWell(
             onTap: () => Get.back(),
             child: Padding(
@@ -90,19 +90,17 @@ PopupProps<T> popupCampos<T>(
           showSearchBox: true,
           emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
           itemBuilder: itemBuilder,
-          searchFieldProps: TextFieldProps(decoration: estiloCampos(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
+          searchFieldProps: TextFieldProps(decoration: inputStyles(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
         );
 }
 
-typedef CampoDecimal = CampoValor<decimal>;
+typedef DecimalField = ValueField<decimal>;
 
-typedef CampoDouble = CampoValor<double>;
+typedef DoubleField = ValueField<double>;
+typedef IntField = ValueField<int>;
+typedef NumField = ValueField<num>;
 
-typedef CampoInteiro = CampoValor<int>;
-typedef CampoNumerico = CampoValor<num>;
-typedef CampoNumero = CampoValor<num>;
-
-typedef CampoTexto = CampoValor<string>;
+typedef StringField = ValueField<string>;
 
 class BotaoTexto extends StatelessWidget {
   final String label;
@@ -142,39 +140,6 @@ class BotaoTexto extends StatelessWidget {
   }
 }
 
-class CampoCPFouCNPJ extends StatelessWidget {
-  final void Function(String?) onChanged;
-  final bool readOnly;
-  final string? label;
-  final string? value;
-
-  const CampoCPFouCNPJ({
-    super.key,
-    required this.onChanged,
-    this.readOnly = false,
-    this.label,
-    this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CampoTexto(
-      label: label ?? 'CPF/CNPJ',
-      value: value,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-        CpfOuCnpjFormatter(),
-      ],
-      keyboardType: const TextInputType.numberWithOptions(),
-      validator: (newValue) => Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!",
-      onChanged: (v, _) {
-        onChanged(v);
-      },
-      readOnly: readOnly,
-    );
-  }
-}
-
 class CampoData extends StatelessWidget {
   final String? label;
 
@@ -199,7 +164,7 @@ class CampoData extends StatelessWidget {
     return Padding(
       padding: paddingCampos,
       child: DateTimePickerFormField(
-        decoration: estiloCampos(label, icon),
+        decoration: inputStyles(label, icon),
         invalidDateMessage: 'Data inválida',
         outOfRangeMessage: "Data fora dos limites",
         value: value ?? DateTime.now(),
@@ -207,77 +172,6 @@ class CampoData extends StatelessWidget {
         toDate: toDate ?? now.sum(years: 999),
         onChanged: onChanged,
       ),
-    );
-  }
-}
-
-class CampoEnum<T extends Enum> extends StatelessWidget {
-  final String? label;
-
-  final void Function(T?)? onChange;
-  final void Function()? onEditingComplete;
-  final string? Function(T?)? validator;
-  final T? defaultValue;
-  final bool readOnly;
-  final Color? borderColor;
-  final TextAlign textAlign;
-  final FocusNode? focusNode;
-  final bool autofocus;
-  final IconData? icon;
-  final int? maxLen;
-  final List<T> values;
-  final string Function(T?)? itemAsString;
-
-  CampoEnum({
-    super.key,
-    required this.values,
-    this.label,
-    this.onChange,
-    this.onEditingComplete,
-    this.validator,
-    this.defaultValue,
-    this.readOnly = false,
-    this.borderColor,
-    this.textAlign = TextAlign.start,
-    this.focusNode,
-    this.autofocus = false,
-    this.icon,
-    this.maxLen,
-    this.itemAsString,
-  }) {
-    if (values.isEmpty) {
-      throw "CampoEnum: values não pode ser vazio";
-    }
-  }
-
-  String Function(T?) get itemString => itemAsString ?? ((e) => e.toString().split(".").last.pascalSplitString);
-
-  @override
-  Widget build(BuildContext context) {
-    return CampoValor<T>(
-      icon: icon,
-      maxLen: maxLen,
-      label: label,
-      // controller: widget.controller,
-      onChanged: (newValue, _) {
-        if (onChange != null) {
-          onChange!(changeTo<T>(newValue));
-        }
-      },
-      onEditingComplete: onEditingComplete,
-      validator: (v) {
-        if (validator != null) {
-          return (validator)!(changeTo(v));
-        }
-        return null;
-      },
-      value: changeTo(defaultValue),
-      readOnly: readOnly,
-      textAlign: textAlign,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      options: values,
-      textValueSelector: (x) => [itemString(x), x.toString()],
     );
   }
 }
@@ -300,7 +194,7 @@ class CampoListaCidade extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CampoValor<Cidade>(
+    return ValueField<Cidade>(
       asyncItems: (s) async => (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao)).toList(),
       validator: validator,
       textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", item?.ibge.toString()].whereNotNull().toList(),
@@ -353,7 +247,7 @@ class CampoListaEstado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CampoValor<Estado>(
+    return ValueField<Estado>(
       label: modoCompacto ? "UF" : "Estado",
       itemBuilder: (context, item, isSelected) {
         isSelected = isSelected || item.ibge == estadoValue.ibge;
@@ -398,7 +292,7 @@ class CampoSimNao extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CampoTexto(
+    return StringField(
       label: label,
       value: value,
       options: const ["Sim", "Não"],
@@ -428,7 +322,7 @@ class CampoTelefone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CampoTexto(
+    return StringField(
       label: label.isNotEmpty ? label : 'Telefone/Celular',
       value: Brasil.formatarTelefone(value),
       inputFormatters: [
@@ -467,7 +361,7 @@ class CampoTipoPessoa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CampoTexto(
+    return StringField(
       label: 'Tipo',
       options: const ["Física", "Jurídica", "Outros"],
       value: value,
@@ -490,7 +384,165 @@ class CampoTipoPessoa extends StatelessWidget {
   }
 }
 
-class CampoValor<T extends Object> extends StatefulWidget {
+class CnpjCpfField extends StatelessWidget {
+  final void Function(String?) onChanged;
+  final bool readOnly;
+  final string? label;
+  final string? value;
+
+  const CnpjCpfField({
+    super.key,
+    required this.onChanged,
+    this.readOnly = false,
+    this.label,
+    this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StringField(
+      label: label ?? 'CPF/CNPJ',
+      value: value,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        CpfOuCnpjFormatter(),
+      ],
+      keyboardType: const TextInputType.numberWithOptions(),
+      validator: (newValue) => Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!",
+      onChanged: (v, _) {
+        onChanged(v);
+      },
+      readOnly: readOnly,
+    );
+  }
+}
+
+class EnumField<T extends Enum> extends StatelessWidget {
+  final String? label;
+
+  final void Function(T?)? onChange;
+  final void Function()? onEditingComplete;
+  final string? Function(T?)? validator;
+  final T? defaultValue;
+  final bool readOnly;
+  final Color? borderColor;
+  final TextAlign textAlign;
+  final FocusNode? focusNode;
+  final bool autofocus;
+  final IconData? icon;
+  final int? maxLen;
+  final List<T> values;
+  final string Function(T?)? itemAsString;
+
+  EnumField({
+    super.key,
+    required this.values,
+    this.label,
+    this.onChange,
+    this.onEditingComplete,
+    this.validator,
+    this.defaultValue,
+    this.readOnly = false,
+    this.borderColor,
+    this.textAlign = TextAlign.start,
+    this.focusNode,
+    this.autofocus = false,
+    this.icon,
+    this.maxLen,
+    this.itemAsString,
+  }) {
+    if (values.isEmpty) {
+      throw "CampoEnum: values não pode ser vazio";
+    }
+  }
+
+  String Function(T?) get itemString => itemAsString ?? ((e) => e.toString().split(".").last.pascalSplitString);
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueField<T>(
+      icon: icon,
+      maxLen: maxLen,
+      label: label,
+      // controller: widget.controller,
+      onChanged: (newValue, _) {
+        if (onChange != null) {
+          onChange!(changeTo<T>(newValue));
+        }
+      },
+      onEditingComplete: onEditingComplete,
+      validator: (v) {
+        if (validator != null) {
+          return (validator)!(changeTo(v));
+        }
+        return null;
+      },
+      value: changeTo(defaultValue),
+      readOnly: readOnly,
+      textAlign: textAlign,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      options: values,
+      textValueSelector: (x) => [itemString(x), x.toString()],
+    );
+  }
+}
+
+class FabSalvar<T> extends StatelessWidget {
+  final T? id;
+  final VoidCallback onPressed;
+
+  const FabSalvar({
+    Key? key,
+    required this.id,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FabTexto(
+      label: id.isNotValid ? "Cadastrar" : "Salvar",
+      icon: id.isNotValid ? Icons.edit : Icons.save,
+      onPressed: onPressed,
+      heroTag: (T.runtimeType, id, randomInt()),
+    );
+  }
+}
+
+class FabTexto extends StatelessWidget {
+  final String? label;
+  final IconData? icon;
+  final Color? color;
+  final VoidCallback onPressed;
+  final Object? heroTag;
+
+  const FabTexto({
+    super.key,
+    this.label,
+    this.icon,
+    this.color,
+    this.heroTag,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: onPressed,
+      heroTag: heroTag ?? (label?.hashCode, icon?.hashCode, randomInt()),
+      backgroundColor: color ?? Get.context?.colorScheme.primary,
+      label: Row(
+        children: [
+          Visibility(visible: icon != null, child: Icon(icon)),
+          Visibility(visible: icon != null && label.isNotBlank, child: const Gap(10)),
+          Visibility(visible: label.isNotBlank, child: label!.asText()),
+        ],
+      ),
+    );
+  }
+}
+
+class ValueField<T extends Object> extends StatefulWidget {
   final String? label;
 
   final Iterable<T> options;
@@ -520,7 +572,7 @@ class CampoValor<T extends Object> extends StatefulWidget {
   final Duration? debounce;
   final void Function(string)? onFieldSubmitted;
 
-  const CampoValor({
+  const ValueField({
     super.key,
     this.label,
     this.options = const [],
@@ -552,10 +604,10 @@ class CampoValor<T extends Object> extends StatefulWidget {
   });
 
   @override
-  createState() => CampoValorState<T>();
+  createState() => ValueFieldState<T>();
 }
 
-class CampoValorState<T extends Object> extends State<CampoValor<T>> {
+class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   late FocusNode _focusNode;
 
   final ValueNotifier<T?> _dropdownValue = ValueNotifier<T?>(null);
@@ -653,13 +705,13 @@ class CampoValorState<T extends Object> extends State<CampoValor<T>> {
                 searchOn: searchOn(item),
               ),
           compareFn: (item1, item2) => textValueSelector(item1).last == textValueSelector(item2).last,
-          popupProps: popupCampos(
+          popupProps: popupFields(
             widget.label,
             itemBuilder: itemBuilder,
           ),
           selectedItem: _dropdownValue.value,
           dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
+            dropdownSearchDecoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
           ),
           asyncItems: (v) async => await allOptions(v),
           itemAsString: (x) => textValueSelector(x).first,
@@ -695,7 +747,7 @@ class CampoValorState<T extends Object> extends State<CampoValor<T>> {
         onFieldSubmitted: widget.onFieldSubmitted,
         inputFormatters: inputFormatters,
         keyboardType: keyboardType,
-        decoration: estiloCampos(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
+        decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
         validator: (s) {
           if (widget.validator != null) {
             try {
@@ -769,59 +821,5 @@ class CampoValorState<T extends Object> extends State<CampoValor<T>> {
       flatString(x),
       if (T is JsonMap) ...(x as JsonMap).values,
     ];
-  }
-}
-
-class FabSalvar<T> extends StatelessWidget {
-  final T? id;
-  final VoidCallback onPressed;
-
-  const FabSalvar({
-    Key? key,
-    required this.id,
-    required this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FabTexto(
-      label: id.isNotValid ? "Cadastrar" : "Salvar",
-      icon: id.isNotValid ? Icons.edit : Icons.save,
-      onPressed: onPressed,
-      heroTag: (T.runtimeType, id, randomInt()),
-    );
-  }
-}
-
-class FabTexto extends StatelessWidget {
-  final String? label;
-  final IconData? icon;
-  final Color? color;
-  final VoidCallback onPressed;
-  final Object? heroTag;
-
-  const FabTexto({
-    super.key,
-    this.label,
-    this.icon,
-    this.color,
-    this.heroTag,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
-      onPressed: onPressed,
-      heroTag: heroTag ?? (label?.hashCode, icon?.hashCode, randomInt()),
-      backgroundColor: color ?? Get.context?.colorScheme.primary,
-      label: Row(
-        children: [
-          Visibility(visible: icon != null, child: Icon(icon)),
-          Visibility(visible: icon != null && label.isNotBlank, child: const Gap(10)),
-          Visibility(visible: label.isNotBlank, child: label!.asText()),
-        ],
-      ),
-    );
   }
 }
