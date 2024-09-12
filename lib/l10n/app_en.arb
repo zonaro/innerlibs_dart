@@ -61,7 +61,7 @@
             }
         }
     },
-    "confirmDeleteMultiple": "Are you sure you want to delete {count, plural, =1{1 {item}} other{{count} {items}}}?",
+    "confirmDeleteMultiple": "Are you sure you want to delete {count, plural, =1{1 {singular}} other{{count} {plural}}}?",
     "@confirmDeleteMultiple": {
         "placeholders": {
             "count": {
@@ -69,11 +69,13 @@
                 "format": "compact",
                 "description": "The number of items to delete"
             },
-            "item": {
-                "type": "String"
+            "singular": {
+                "type": "String",
+                "description": "The singular form of the item"
             },
-            "items": {
-                "type": "String"
+            "plural": {
+                "type": "String",
+                "description": "The plural form of the item"
             }
         }
     }

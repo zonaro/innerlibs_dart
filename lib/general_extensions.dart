@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
@@ -181,6 +182,8 @@ extension ObjectExtensions<T extends Object?> on T {
     string dateFormat = "",
   }) {
     Text? text;
+    
+    locale ??= PlatformDispatcher.instance.locale;
 
     if (this == null && defaultText == null) return null;
 
@@ -191,7 +194,7 @@ extension ObjectExtensions<T extends Object?> on T {
         if (this is Map || this is List) {
           text = Text(jsonEncode(this));
         } else if (this is DateTime) {
-          text = Text((this as DateTime).format(dateFormat, locale?.countryCode));
+          text = Text((this as DateTime).format(dateFormat, locale.countryCode));
         } else {
           text = Text("$this" | defaultText);
         }

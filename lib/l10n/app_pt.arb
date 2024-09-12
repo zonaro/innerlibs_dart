@@ -1,10 +1,82 @@
 {
     "@@locale": "pt",
     "@@author": "Kaizonaro",
-    "search": "Pesquisar",
-    "find": "Procurar",
+    "search": "Buscar",
+    "find": "Encontrar",
     "yes": "Sim",
     "no": "Não",
     "cancel": "Cancelar",
-    "ok": "OK"
+    "ok": "OK",
+    "close": "Fechar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "add": "Adicionar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "finish": "Finalizar",
+    "loading": "Carregando",
+    "clear": "Limpar",
+    "error": "Erro",
+    "warning": "Aviso",
+    "info": "Informação",
+    "success": "Sucesso",
+    "confirm": "Confirmar",
+    "register": "Registrar",
+    "login": "Entrar",
+    "logout": "Sair",
+    "username": "Nome de usuário",
+    "password": "Senha",
+    "name": "Nome",
+    "number": "Número",
+    "date": "Data",
+    "value": "Valor",
+    "phone": "Telefone",
+    "city": "Cidade",
+    "country": "País",
+    "estate": "Estado",
+    "dateOutOfRange": "Data fora do intervalo",
+    "invalidItem": "{item} inválido.",
+    "@invalidItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "couldNotFindItem": "Não foi possível encontrar {item}.",
+    "@couldNotFindItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "confirmDelete": "Tem certeza de que deseja excluir {item}?",
+    "@confirmDelete": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "confirmDeleteMultiple": "Tem certeza de que deseja excluir {count, plural, =1{1 {singular}} other{{count} {plural}}}?",
+    "@confirmDeleteMultiple": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact",
+                "description": "O número de itens a serem excluídos"
+            },
+            "singular": {
+                "type": "String",
+                "description": "A forma singular do item"
+            },
+            "plural": {
+                "type": "String",
+                "description": "A forma plural do item"
+            }
+        }
+    }
 }

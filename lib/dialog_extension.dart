@@ -424,7 +424,7 @@ extension DialogExt on BuildContext {
       barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
         return _PromptDialog(
-          title: (title as Object?).asNullableText(),
+          title:   (title as Object?).asNullableText(),
           textOK: (textOK as Object?).asNullableText(),
           textCancel: (textCancel as Object?).asNullableText(),
           initialValue: initialValue,
