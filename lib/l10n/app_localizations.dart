@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_pt.dart';
 
 // ignore_for_file: type=lint
 
@@ -90,7 +91,8 @@ abstract class InnerLibsLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('en')
+    Locale('en'),
+    Locale('pt')
   ];
 
   /// No description provided for @search.
@@ -98,6 +100,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Search'**
   String get search;
+
+  /// No description provided for @find.
+  ///
+  /// In en, this message translates to:
+  /// **'Find'**
+  String get find;
+
+  /// No description provided for @invalidValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid value'**
+  String get invalidValue;
 
   /// No description provided for @yes.
   ///
@@ -122,6 +136,240 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @previous.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previous;
+
+  /// No description provided for @finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get finish;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get loading;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warning;
+
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @city.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get city;
+
+  /// No description provided for @country.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
+
+  /// No description provided for @estate.
+  ///
+  /// In en, this message translates to:
+  /// **'Estate'**
+  String get estate;
+
+  /// No description provided for @dateOutOfRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Date out of range'**
+  String get dateOutOfRange;
+
+  /// No description provided for @invalidDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid date'**
+  String get invalidDate;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email'**
+  String get invalidEmail;
+
+  /// No description provided for @invalidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid number'**
+  String get invalidNumber;
+
+  /// No description provided for @invalidPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid phone number'**
+  String get invalidPhone;
+
+  /// No description provided for @invalidUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid URL'**
+  String get invalidUrl;
+
+  /// No description provided for @invalidCreditCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid credit card number'**
+  String get invalidCreditCard;
+
+  /// No description provided for @invalidCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid currency'**
+  String get invalidCurrency;
+
+  /// No description provided for @invalidPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid password'**
+  String get invalidPassword;
+
+  /// No description provided for @weakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak password'**
+  String get weakPassword;
+
+  /// No description provided for @strongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong password'**
+  String get strongPassword;
+
+  /// No description provided for @couldNotFindItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not find {item}.'**
+  String couldNotFindItem(String item);
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {item}?'**
+  String confirmDelete(String item);
+
+  /// No description provided for @confirmDeleteMultiple.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {count, plural, =1{1 {item}} other{{count} {items}}}?'**
+  String confirmDeleteMultiple(int count, String item, String items);
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {
@@ -133,7 +381,7 @@ class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLoc
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_InnerLibsLocalizationsDelegate old) => false;
@@ -145,6 +393,7 @@ InnerLibsLocalizations lookupInnerLibsLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en': return InnerLibsLocalizationsEn();
+    case 'pt': return InnerLibsLocalizationsPt();
   }
 
   throw FlutterError(

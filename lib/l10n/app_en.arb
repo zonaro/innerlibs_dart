@@ -3,8 +3,77 @@
     "@@author": "Kaizonaro",
     "search": "Search",
     "find": "Find",
+    "invalidValue": "Invalid value",
     "yes": "Yes",
     "no": "No",
     "cancel": "Cancel",
-    "ok": "OK"
+    "ok": "OK",
+    "close": "Close",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "loading": "Loading",
+    "clear": "Clear",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "success": "Success",
+    "confirm": "Confirm",
+    "register": "Register",
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "name": "Name",
+    "city": "City",
+    "country": "Country",
+    "estate": "Estate",
+    "dateOutOfRange": "Date out of range",
+    "invalidDate": "Invalid date",
+    "invalidEmail": "Invalid email",
+    "invalidNumber": "Invalid number",
+    "invalidPhone": "Invalid phone number",
+    "invalidUrl": "Invalid URL",
+    "invalidCreditCard": "Invalid credit card number",
+    "invalidCurrency": "Invalid currency",
+    "invalidPassword": "Invalid password",
+    "weakPassword": "Weak password",
+    "strongPassword": "Strong password",
+    "couldNotFindItem": "Could not find {item}.",
+    "@couldNotFindItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "confirmDelete": "Are you sure you want to delete {item}?",
+    "@confirmDelete": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "confirmDeleteMultiple": "Are you sure you want to delete {count, plural, =1{1 {item}} other{{count} {items}}}?",
+    "@confirmDeleteMultiple": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact",
+                "description": "The number of items to delete"
+            },
+            "item": {
+                "type": "String"
+            },
+            "items": {
+                "type": "String"
+            }
+        }
+    }
 }

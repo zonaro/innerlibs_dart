@@ -493,20 +493,24 @@ extension StringExtensions on String {
         return "¡";
       case "¡":
         return "!";
+      case "«":
+        return "»";
+      case "»":
+        return "«";
       default:
         return blankIfNull;
     }
   }
 
   /// Returns a list with distinct words of this sentence
-  StringList get getUniqueWords => getWords.distinctFlat();
+  Iterable<string> get getUniqueWords => getWords.toList().distinctFlat();
 
   /// Returns a list with words of this sentence
-  StringList get getWords {
+  Iterable<string> get getWords {
     if (isBlank) {
       return [];
     }
-    return splitAny(StringHelpers.wordSplitters).toList();
+    return splitAny(StringHelpers.wordSplitters);
   }
 
   /// Checks if string contains at least one Capital Letter
@@ -1166,6 +1170,9 @@ extension StringExtensions on String {
   /// If the string ends with 's', it removes the last character.
   /// If none of the above conditions are met, it returns the original string.
   String get singular {
+
+
+    
     if (endsWith('ies')) {
       return '${removeLast(3)}y';
     } else if (endsWith('es')) {
@@ -2661,7 +2668,7 @@ extension StringExtensions on String {
     return substring(0, indexOfLastPatternWord);
   }
 
-  String removeAny(List<Pattern> texts) => replaceMany(texts);
+  String removeAny(Iterable<Pattern> texts) => replaceMany(texts);
 
   /// Removes everything in the `String` before the match of the [pattern].
   ///
@@ -2782,7 +2789,7 @@ extension StringExtensions on String {
   /// ```dart
   /// String s = "esentisfs12".removeLastAny(["12","s","ng","f",]); // returns "esentis";
   /// ```
-  String removeLastAny(List<String?> patterns) {
+  String removeLastAny(Iterable<String?> patterns) {
     var from = this;
     if (from.isNotBlank) {
       for (var pattern in patterns) {
@@ -2882,7 +2889,7 @@ extension StringExtensions on String {
   }
 
   /// Replaces all occurrences of the given [pattern] with the [replacement] `String`.
-  String replaceMany(List<Pattern> from, [String to = ""]) {
+  String replaceMany(Iterable<Pattern> from, [String to = ""]) {
     if (isEmpty) return blankIfNull;
     String result = this;
     for (var pattern in from) {

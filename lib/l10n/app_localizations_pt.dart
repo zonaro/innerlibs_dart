@@ -4,27 +4,27 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
-  InnerLibsLocalizationsEn([String locale = 'en']) : super(locale);
+/// The translations for Portuguese (`pt`).
+class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
+  InnerLibsLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
-  String get search => 'Search';
+  String get search => 'Pesquisar';
 
   @override
-  String get find => 'Find';
+  String get find => 'Procurar';
 
   @override
   String get invalidValue => 'Invalid value';
 
   @override
-  String get yes => 'Yes';
+  String get yes => 'Sim';
 
   @override
-  String get no => 'No';
+  String get no => 'Não';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Cancelar';
 
   @override
   String get ok => 'OK';

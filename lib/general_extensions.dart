@@ -285,26 +285,26 @@ extension ObjectExtensions<T extends Object?> on T {
   /// Returns the converted value of type `T`.
   R changeTo<R>() => _changeTo<R>(this);
 
-  /// Checks if the current string contains the given [text] when both are flattened.
-  /// If the current string is blank, it returns `true` only if the [text] is also blank.
-  /// If the [text] is blank, it returns `true`.
-  /// Otherwise, it checks if the current string contains the [text] when both are flattened.
-  /// Returns `true` if the current string contains the [text], `false` otherwise.
-  bool flatContains(T text) {
-    if (asFlat.isBlank) return text.asFlat.isBlank;
+  /// Checks if the current string contains the given [value] when both are flattened.
+  /// If the current string is blank, it returns `true` only if the [value] is also blank.
+  /// If the [value] is blank, it returns `true`.
+  /// Otherwise, it checks if the current string contains the [value] when both are flattened.
+  /// Returns `true` if the current string contains the [value], `false` otherwise.
+  bool flatContains<V>(V value) {
+    if (asFlat.isBlank) return value.asFlat.isBlank;
 
-    if (text.asFlat.isBlank) {
+    if (value.asFlat.isBlank) {
       return true;
     }
-    return asFlat.contains(text!.asFlat);
+    return asFlat.contains(value!.asFlat);
   }
 
   /// Checks if the string contains any of the specified texts.
   ///
-  /// Returns `true` if the string contains any of the texts in the [texts] iterable,
+  /// Returns `true` if the string contains any of the texts in the [values] iterable,
   /// otherwise returns `false`.
-  bool flatContainsAny(Iterable<T> texts) {
-    for (var t in texts) {
+  bool flatContainsAny<V>(Iterable<V> values) {
+    for (var t in values) {
       if (flatContains(t)) {
         return true;
       }
@@ -312,14 +312,14 @@ extension ObjectExtensions<T extends Object?> on T {
     return false;
   }
 
-  /// Checks if the current string is equal to the given [text] when both are flattened.
+  /// Checks if the current string is equal to the given [value] when both are flattened.
   /// Returns `true` if they are equal, `false` otherwise.
-  bool flatEqual(T text) => asFlat == text?.asFlat;
+  bool flatEqual<V>(V value) => asFlat == value?.asFlat;
 
-  /// Checks if any of the strings in the given [texts] iterable is equal to the current string.
+  /// Checks if any of the strings in the given [values] iterable is equal to the current string.
   /// Returns `true` if any string is equal, otherwise returns `false`.
-  bool flatEqualAny(Iterable<T> texts) {
-    for (var t in texts) {
+  bool flatEqualAny<V>(Iterable<V> values) {
+    for (var t in values) {
       if (flatEqual(t)) {
         return true;
       }

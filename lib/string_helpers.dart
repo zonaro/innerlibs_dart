@@ -6,11 +6,11 @@ const breakLine = "\r\n";
 /// `String` helpers
 class StringHelpers {
   static Map<String, dynamic> leetAlphabet = {
-    "a": ['∆', '4', '/-\\', '/_\\', '@', '/\\', 'Д', 'а'],
+    "a": ['∆', '4', '/-\\', '/_\\', '@', '/\\', 'Д'],
     "b": ['8', '|3', '13', '|}', '|8', '|B', '|8', 'ß', 'в', 'ь'],
-    "c": ['<', '{', '[', '(', '©', '¢', 'с'],
+    "c": ['<', '{', '[', '(', '©', '¢'],
     "d": ['|)', '|}', '|]', '|>'],
-    "e": ['3', '£', '₤', '€', 'е'],
+    "e": ['3', '£', '₤', '€'],
     "f": ['7', '|=', 'ph', '|#', '|"', 'ƒ'],
     "g": ['9', '[', '[+', '6'],
     "h": ['#', '|-|', '[-]', '{-}', '}-{', '}{', '|=|', '[=]', '/-/', ':-:', 'н'],
@@ -20,8 +20,8 @@ class StringHelpers {
     "l": ['|_', '|', '1', ']['],
     "m": ['|/|', '^^', '/\\/\\', '/X\\', '[]/][', '[]V[]', ' ][\\//][', '(V)', '//., .\\', 'N\\', 'м'],
     "n": ['||', '//', '/V', '][\\][', 'И', 'и', 'п'],
-    "o": ['0', '()', '[]', '{}', '<>', 'Ø', 'oh', 'Θ', 'о', 'ө'],
-    "p": ['|o', '|O', '|>', '|*', '|°', '|D', '/o', '[]D', '|7', 'р'],
+    "o": ['0', '()', '[]', '{}', '<>', 'Ø', 'oh', 'Θ', 'ө'],
+    "p": ['|o', '|O', '|>', '|*', '|°', '|D', '/o', '[]D', '|7'],
     "q": ['O_', '(,)', '0', 'kw'],
     "r": ['|2', '12', '|^', 'l2', 'Я', '®'],
     "s": ['5', '\$', '§'],
@@ -29,12 +29,12 @@ class StringHelpers {
     "v": ['V'],
     "u": ['|_|', '\\_\\', '/_/', '\\_/', '(_)', '[_]', '{_}'],
     "w": ['\\/\\/', '(/\\)', '\\^/', '|/|', '\\X/', 'VV', '\\_|_/', '\\//\\//', 'Ш', '2u', 'V/'],
-    "x": ['×', '%', '*', '><', 'Ж'],
-    "y": ['¥', '|/', 'Ч', 'ү', 'у'],
+    "x": ['%', '*', '><', 'Ж'],
+    "y": ['¥', '|/', 'Ч'],
     "z": ['5', '>_'],
   };
 
-  static List<String> validLetters = [
+  static Iterable<string> validLetters = [
     // GREEK VARIATION
     "Α",
     "A",
@@ -153,64 +153,81 @@ class StringHelpers {
   };
 
   /// Chars from Aa to Zz
-  static List<String> get alphaChars => (alphaUpperChars + alphaLowerChars)..sort();
+  static Iterable<string> get alphaChars => [...alphaUpperChars, ...alphaLowerChars]..sort();
 
   /// Chars from a to z
-  static List<String> get alphaLowerChars => (lowerConsonants + lowerVowels)..sort();
+  static Iterable<string> get alphaLowerChars => [...lowerConsonants, ...lowerVowels]..sort();
 
   /// Chars from Aa to Zz and Numbers (0 to 9)
-  static List<String> get alphaNumericChars => alphaChars + numberChars;
+  static Iterable<string> get alphaNumericChars => [...alphaChars, ...numberChars]..sort();
 
   /// Chars from A to Z
-  static List<String> get alphaUpperChars => alphaLowerChars.map((e) => e.toUpperCase()).toList();
+  static Iterable<string> get alphaUpperChars => alphaLowerChars.map((e) => e.toUpperCase()).toList();
 
   /// Line feed and carriage retrun
-  static List<String> get breakLineChars => ["\n", "\r", breakLine];
+  static Iterable<string> get breakLineChars => ["\n", "\r", breakLine];
 
   /// Double-Quotes, Single-Quotes, Close Brackets etc
-  static List<String> get closeWrappers => [")", "}", "]", ">"] + quotes;
+  static Iterable<string> get closeWrappers => openCloseWrappers.map((x) => x.$2);
 
   /// Upper and lower case consonants
-  static List<String> get consonants => (upperConsonants + lowerConsonants)..sort();
+  static Iterable<string> get consonants => [...upperConsonants, ...lowerConsonants]..sort();
 
   /// Dot, Question mark and Exclamation Mark
-  static List<String> get endOfSentenceChars => [".", "?", "!"];
+  static Iterable<string> get endOfSentenceChars => [".", "?", "!"];
 
   /// Ident char (tab)
-  static List<String> get identChars => ["\t"];
+  static Iterable<string> get identChars => ["\t"];
 
   /// Invisible char (white space, line feed, ident, carriage return)
-  static List<String> get invisibleChars => whiteSpaceChars + breakLineChars + identChars;
+  static Iterable<string> get invisibleChars => [...whiteSpaceChars, ...breakLineChars, ...identChars];
 
   /// Lower consonants
-  static List<String> get lowerConsonants => ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"];
+  static Iterable<string> get lowerConsonants => ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"];
 
   /// Lower vowels
-  static List<String> get lowerVowels => ["a", "e", "i", "o", "u", "y"];
+  static Iterable<string> get lowerVowels => ["a", "e", "i", "o", "u", "y"];
 
   /// Semicolon, colon and comma
-  static List<String> get midSentenceChars => [":", ";", ","];
+  static Iterable<string> get midSentenceChars => [":", ";", ","];
 
   /// Numbers from 0 to 9
-  static List<String> get numberChars => ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  static Iterable<string> get numberChars => ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  static Iterable<(string, string)> get openCloseWrappers => [
+        ("(", ")"),
+        ("{", "}"),
+        ("[", "]"),
+        ("<", ">"),
+        ("\"", "\""),
+        ("'", "'"),
+        ("`", "`"),
+        ("\\", "/"),
+        ("/", "\\"),
+        ("/*", "*/"),
+        ("¿", "?"),
+        ("¡", "!"),
+        ("«", "»"),
+        ...quotes.map((x) => (x, x)),
+      ];
 
   /// Double-Quotes, Single-Quotes, Open Brackets etc
-  static List<String> get openWrappers => ["(", "{", "[", "<"] + quotes;
+  static Iterable<String> get openWrappers => openCloseWrappers.map((x) => x.$1);
 
   /// Double-Quotes, Single-Quotes
-  static List<String> get quotes => ["\"", "'", "`"];
+  static Iterable<string> get quotes => ["\"", "'", "`"];
 
   /// Upper consonants
-  static List<String> get upperConsonants => lowerConsonants.map((e) => e.toUpperCase()).toList();
+  static Iterable<string> get upperConsonants => lowerConsonants.map((e) => e.toUpperCase()).toList();
 
   /// Upper vowels
-  static List<String> get upperVowels => lowerVowels.map((e) => e.toUpperCase()).toList();
+  static Iterable<string> get upperVowels => lowerVowels.map((e) => e.toUpperCase()).toList();
 
   /// Upper and lower vowels
-  static List<String> get vowels => (upperVowels + lowerVowels)..sort();
+  static Iterable<string> get vowels => [...upperVowels, ...lowerVowels]..sort();
 
   /// White space char
-  static List<String> get whiteSpaceChars => [" "];
+  static Iterable<string> get whiteSpaceChars => [" "];
 
   static StringList get wordSplitters => [
         ...breakLineChars,
@@ -223,5 +240,5 @@ class StringHelpers {
       ];
 
   /// Double-Quotes, Single-Quotes, Open and Close Brackets etc
-  static List<String> get wrappers => openWrappers + closeWrappers;
+  static Iterable<string> get wrappers => [...openWrappers, ...closeWrappers];
 }

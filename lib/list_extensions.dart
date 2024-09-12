@@ -301,6 +301,58 @@ extension IterablesExtension<T> on Iterable<T> {
   }
 }
 
+extension IterableString on Iterable<String> {
+  ///Verify if any [String] in a [StringList]  contains the specified [String]
+  bool containsLike(String s) {
+    for (var item in this) {
+      if (item.toString().contains(s)) return true;
+    }
+    return false;
+  }
+
+  /// Removes duplicate elements from a [StringList].
+  ///
+  /// Use the [flatEqual] function to compare strings.
+  Iterable<string> distinctFlat() {
+    Set<string> uniqueElements = {};
+    for (string element in this) {
+      if (!uniqueElements.any((e) => e.flatEqual(element))) {
+        uniqueElements.add(element);
+      }
+    }
+    return uniqueElements;
+  }
+
+  bool flatContains(string s) => flatContainsAny([s]);
+
+  bool flatContainsAll(Iterable<string> s) => map((e) => e.asFlat).toList().containsAll(s.map((e) => e.asFlat).toList());
+
+  ///Verify if any [String] in a [StringList]  contains any  [String] of other [StringList] ignoring the accents and character case
+
+  bool flatContainsAny(Iterable<string> s) {
+    for (var item in this) {
+      if (s.flatContainsLike(item)) return true;
+    }
+    return false;
+  }
+
+  bool flatContainsAtLeast(int count, Iterable<string> s) => map((e) => e.asFlat).toList().containsAtLeast(count, s.map((e) => e.asFlat).toList());
+
+  ///Verify if any [String] in a [StringList]  contains the specified [String] ignoring the accents and character case
+
+  bool flatContainsLike(String s) {
+    for (var item in this) {
+      if (item.toString().flatContains(s)) return true;
+    }
+    return false;
+  }
+
+  /// Returns a list of Levenshtein distances between each element in the list and the given string [b].
+  /// The optional parameter [caseSensitive] determines whether the comparison should be case-sensitive or not.
+  /// If [caseSensitive] is not provided, it defaults to true.
+  List<int> getLevenshtein(String b, [bool caseSensitive = true]) => map((x) => x.getLevenshtein(b, caseSensitive)).toList();
+}
+
 extension ListExtension2<T> on List<T> {
   /// Detach items from a list according to a
   /// function and return these items
@@ -386,56 +438,4 @@ extension MapSearch<K, V> on Iterable<Map<K, V>> {
       allIfEmpty: allIfEmpty,
     );
   }
-}
-
-extension StringListExtensions on StringList {
-  ///Verify if any [String] in a [StringList]  contains the specified [String]
-  bool containsLike(String s) {
-    for (var item in this) {
-      if (item.toString().contains(s)) return true;
-    }
-    return false;
-  }
-
-  /// Removes duplicate elements from a [StringList].
-  ///
-  /// Use the [flatEqual] function to compare strings.
-  List<string> distinctFlat() {
-    Set<string> uniqueElements = {};
-    for (string element in this) {
-      if (!uniqueElements.any((e) => e.flatEqual(element))) {
-        uniqueElements.add(element);
-      }
-    }
-    return uniqueElements.toList();
-  }
-
-  bool flatContains(string s) => flatContainsAny([s]);
-
-  bool flatContainsAll(Iterable<string> s) => map((e) => e.asFlat).toList().containsAll(s.map((e) => e.asFlat).toList());
-
-  ///Verify if any [String] in a [StringList]  contains any  [String] of other [StringList] ignoring the accents and character case
-
-  bool flatContainsAny(StringList s) {
-    for (var item in this) {
-      if (s.flatContainsLike(item)) return true;
-    }
-    return false;
-  }
-
-  bool flatContainsAtLeast(int count, Iterable<string> s) => map((e) => e.asFlat).toList().containsAtLeast(count, s.map((e) => e.asFlat).toList());
-
-  ///Verify if any [String] in a [StringList]  contains the specified [String] ignoring the accents and character case
-
-  bool flatContainsLike(String s) {
-    for (var item in this) {
-      if (item.toString().flatContains(s)) return true;
-    }
-    return false;
-  }
-
-  /// Returns a list of Levenshtein distances between each element in the list and the given string [b].
-  /// The optional parameter [caseSensitive] determines whether the comparison should be case-sensitive or not.
-  /// If [caseSensitive] is not provided, it defaults to true.
-  List<int> getLevenshtein(String b, [bool caseSensitive = true]) => map((x) => x.getLevenshtein(b, caseSensitive)).toList();
 }

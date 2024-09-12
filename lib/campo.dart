@@ -6,19 +6,23 @@ import 'package:flutter/services.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
-const paddingCampos = EdgeInsets.all(8);
+const fieldsPadding = EdgeInsets.all(8);
 
-Widget botaoCadastrar(void Function()? onPressed) => BotaoTexto(label: "Cadastrar", icon: Icons.edit, onPressed: onPressed);
-
-Widget botaoExcluir(void Function()? onPressed) => BotaoTexto(label: 'Excluir', icon: Icons.delete, color: Colors.redAccent, onPressed: onPressed);
-
-Widget botaoLimpar(void Function()? onPressed) => BotaoTexto(label: "Limpar formulário", icon: Icons.cleaning_services, onPressed: onPressed);
-
-Widget botaoSalvar(void Function()? onPressed) => BotaoTexto(
-      icon: Icons.save,
-      label: 'Salvar',
-      onPressed: onPressed,
-    );
+/// gera os chips que aparecem nas buscas de SELECTs quando nao tem resultados
+Widget emptySearch(BuildContext context, string searchEntry, string label) {
+  var searches = searchEntry.split(";").where((e) => e.isNotBlank).toList();
+  return Expanded(
+    child: Center(
+      child: ListView(shrinkWrap: true, children: [
+        Text(InnerLibsLocalizations.of(context).couldNotFindItem(label)).toCenter(),
+        ...searches.defaultIfEmpty(label).map((e) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Chip(label: e.asText()),
+            )),
+      ]),
+    ),
+  );
+}
 
 InputDecoration inputStyles([string? label, IconData? icon, void Function()? onIconTap, Color? color, IconData? suffixIcon, void Function()? onSuffixIconTap]) => InputDecoration(
       label: label.asNullableText(),
@@ -36,23 +40,8 @@ InputDecoration inputStyles([string? label, IconData? icon, void Function()? onI
       filled: true,
     );
 
-/// gera os chips que aparecem nas buscas de SELECTs quando nao tem resultados
-Widget pesquisaVazia(string searchEntry, string label) {
-  var searches = searchEntry.split(";").where((e) => e.isNotBlank).toList();
-  return Expanded(
-    child: Center(
-      child: ListView(shrinkWrap: true, children: [
-        const Text("Não foi possivel encontrar: ").toCenter(),
-        ...searches.defaultIfEmpty(label).map((e) => Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Chip(label: e.asText()),
-            )),
-      ]),
-    ),
-  );
-}
-
 PopupProps<T> popupFields<T>(
+  BuildContext context,
   string? title, {
   Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder,
   IconData? icon,
@@ -61,7 +50,7 @@ PopupProps<T> popupFields<T>(
   IconData? suffixIcon,
   void Function()? onSuffixIconTap,
 }) {
-  var tt = "Pesquisar $title:".trim();
+  var tt = "${InnerLibsLocalizations.of(context).search} $title:".trim();
   return Get.screenTier < ScreenTier.xs
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
@@ -82,13 +71,13 @@ PopupProps<T> popupFields<T>(
           ),
           modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: Get.context?.colorScheme.surfaceBright),
           showSearchBox: true,
-          emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
+          emptyBuilder: (context, search) => emptySearch(context, search, title ?? ""),
           itemBuilder: itemBuilder,
         )
       : PopupProps.menu(
           fit: FlexFit.tight,
           showSearchBox: true,
-          emptyBuilder: (context, search) => pesquisaVazia(search, title ?? ""),
+          emptyBuilder: (context, search) => emptySearch(context, search, title ?? ""),
           itemBuilder: itemBuilder,
           searchFieldProps: TextFieldProps(decoration: inputStyles(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
         );
@@ -97,84 +86,12 @@ PopupProps<T> popupFields<T>(
 typedef DecimalField = ValueField<decimal>;
 
 typedef DoubleField = ValueField<double>;
+
 typedef IntField = ValueField<int>;
+
 typedef NumField = ValueField<num>;
 
 typedef StringField = ValueField<string>;
-
-class BotaoTexto extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final Color? color;
-  final void Function()? onPressed;
-
-  const BotaoTexto({
-    super.key,
-    required this.label,
-    required this.icon,
-    this.color,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 25,
-      child: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? Get.context?.colorScheme.primary,
-          textStyle: const TextStyle(fontSize: 12),
-        ),
-        icon: Icon(
-          icon,
-          color: Get.context?.colorScheme.onPrimary,
-          size: 15,
-        ),
-        label: Text(
-          label,
-          style: TextStyle(color: Get.context?.colorScheme.onPrimary),
-        ),
-        onPressed: onPressed,
-      ),
-    );
-  }
-}
-
-class CampoData extends StatelessWidget {
-  final String? label;
-
-  final DateTime? value;
-  final DateTime? fromDate;
-  final DateTime? toDate;
-  final void Function(DateTime?) onChanged;
-  final IconData? icon;
-
-  const CampoData({
-    super.key,
-    this.label,
-    this.value,
-    this.fromDate,
-    this.toDate,
-    required this.onChanged,
-    this.icon = Icons.date_range,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: paddingCampos,
-      child: DateTimePickerFormField(
-        decoration: inputStyles(label, icon),
-        invalidDateMessage: 'Data inválida',
-        outOfRangeMessage: "Data fora dos limites",
-        value: value ?? DateTime.now(),
-        fromDate: fromDate ?? minDate,
-        toDate: toDate ?? now.sum(years: 999),
-        onChanged: onChanged,
-      ),
-    );
-  }
-}
 
 class CampoListaCidade extends StatelessWidget {
   final Cidade? value;
@@ -282,34 +199,6 @@ class CampoListaEstado extends StatelessWidget {
   }
 }
 
-class CampoSimNao extends StatelessWidget {
-  final String? label;
-  final String? value;
-
-  final void Function(String?) onChanged;
-
-  final bool readOnly;
-
-  const CampoSimNao({super.key, this.label, required this.onChanged, this.value, this.readOnly = false});
-
-  @override
-  Widget build(BuildContext context) {
-    final opt = [InnerLibsLocalizations.of(context).yes, InnerLibsLocalizations.of(context).no];
-    return StringField(
-      label: label,
-      value: value,
-      readOnly: readOnly,
-      options: opt,
-      onChanged: (v, _) {
-        onChanged(v);
-      },
-      validator: (newValue) {
-        return newValue.flatEqualAny(opt) ? null : "Valor inválido";
-      },
-    );
-  }
-}
-
 class CampoTelefone extends StatelessWidget {
   final void Function(String?) onChanged;
   final String label;
@@ -388,6 +277,24 @@ class CampoTipoPessoa extends StatelessWidget {
   }
 }
 
+class ClearButton extends StatelessWidget {
+  final void Function()? onPressed;
+
+  const ClearButton({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ContextButtonBase(
+      label: InnerLibsLocalizations.of(context).clear,
+      icon: Icons.cleaning_services,
+      onPressed: onPressed,
+    );
+  }
+}
+
 class CnpjCpfField extends StatelessWidget {
   final void Function(String?) onChanged;
   final bool readOnly;
@@ -417,6 +324,99 @@ class CnpjCpfField extends StatelessWidget {
         onChanged(v);
       },
       readOnly: readOnly,
+    );
+  }
+}
+
+class ContextButtonBase extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final Color? color;
+  final void Function()? onPressed;
+
+  const ContextButtonBase({
+    super.key,
+    required this.label,
+    required this.icon,
+    this.color,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 25,
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color ?? context.colorScheme.primary,
+          textStyle: const TextStyle(fontSize: 12),
+        ),
+        icon: Icon(
+          icon,
+          color: context.colorScheme.onPrimary,
+          size: 15,
+        ),
+        label: Text(
+          label,
+          style: TextStyle(color: context.colorScheme.onPrimary),
+        ),
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
+
+class DateField extends StatelessWidget {
+  final String? label;
+
+  final DateTime? value;
+  final DateTime? fromDate;
+  final DateTime? toDate;
+  final void Function(DateTime?) onChanged;
+  final IconData? icon;
+
+  const DateField({
+    super.key,
+    this.label,
+    this.value,
+    this.fromDate,
+    this.toDate,
+    required this.onChanged,
+    this.icon = Icons.date_range,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: fieldsPadding,
+      child: DateTimePickerFormField(
+        decoration: inputStyles(label, icon),
+        invalidDateMessage: InnerLibsLocalizations.of(context).invalidDate,
+        outOfRangeMessage: InnerLibsLocalizations.of(context).dateOutOfRange,
+        value: value ?? now,
+        fromDate: fromDate ?? minDate,
+        toDate: toDate ?? now.sum(years: 999),
+        onChanged: onChanged,
+      ),
+    );
+  }
+}
+
+class DeleteButton extends StatelessWidget {
+  final void Function()? onPressed;
+
+  const DeleteButton({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ContextButtonBase(
+      label: InnerLibsLocalizations.of(context).delete,
+      icon: Icons.delete,
+      color: Colors.redAccent,
+      onPressed: onPressed,
     );
   }
 }
@@ -456,7 +456,7 @@ class EnumField<T extends Enum> extends StatelessWidget {
     this.itemAsString,
   }) {
     if (values.isEmpty) {
-      throw "CampoEnum: values não pode ser vazio";
+      throw "EnumField: values cannot be empty";
     }
   }
 
@@ -468,7 +468,6 @@ class EnumField<T extends Enum> extends StatelessWidget {
       icon: icon,
       maxLen: maxLen,
       label: label,
-      // controller: widget.controller,
       onChanged: (newValue, _) {
         if (onChange != null) {
           onChange!(changeTo<T>(newValue));
@@ -492,11 +491,11 @@ class EnumField<T extends Enum> extends StatelessWidget {
   }
 }
 
-class FabSalvar<T> extends StatelessWidget {
+class FabSave<T> extends StatelessWidget {
   final T? id;
   final VoidCallback onPressed;
 
-  const FabSalvar({
+  const FabSave({
     Key? key,
     required this.id,
     required this.onPressed,
@@ -504,8 +503,8 @@ class FabSalvar<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FabTexto(
-      label: id.isNotValid ? "Cadastrar" : "Salvar",
+    return FabTextBase(
+      label: id.isNotValid ? InnerLibsLocalizations.of(context).register : InnerLibsLocalizations.of(context).save,
       icon: id.isNotValid ? Icons.edit : Icons.save,
       onPressed: onPressed,
       heroTag: (T.runtimeType, id, randomInt()),
@@ -513,14 +512,14 @@ class FabSalvar<T> extends StatelessWidget {
   }
 }
 
-class FabTexto extends StatelessWidget {
+class FabTextBase extends StatelessWidget {
   final String? label;
   final IconData? icon;
   final Color? color;
   final VoidCallback onPressed;
   final Object? heroTag;
 
-  const FabTexto({
+  const FabTextBase({
     super.key,
     this.label,
     this.icon,
@@ -542,6 +541,42 @@ class FabTexto extends StatelessWidget {
           Visibility(visible: label.isNotBlank, child: label!.asText()),
         ],
       ),
+    );
+  }
+}
+
+class RegisterButton extends StatelessWidget {
+  final void Function()? onPressed;
+
+  const RegisterButton({
+    Key? key,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ContextButtonBase(
+      label: InnerLibsLocalizations.of(context).register,
+      icon: Icons.edit,
+      onPressed: onPressed,
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  final void Function()? onPressed;
+
+  const SaveButton({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ContextButtonBase(
+      icon: Icons.save,
+      label: InnerLibsLocalizations.of(context).save,
+      onPressed: onPressed,
     );
   }
 }
@@ -659,7 +694,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   Widget build(BuildContext context) {
     if (widget.isAutoComplete || (useOptionsList == false)) {
       return Padding(
-        padding: paddingCampos,
+        padding: fieldsPadding,
         child: useOptionsList
             ? Autocomplete<T>(
                 initialValue: TextEditingValue(text: _dropdownValue.value != null ? textValueSelector(_dropdownValue.value as T).last : ""),
@@ -700,7 +735,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
       );
     } else {
       return Padding(
-        padding: paddingCampos,
+        padding: fieldsPadding,
         child: DropdownSearch<T>(
           filterFn: (item, filters) =>
               filters.isBlank ||
@@ -710,6 +745,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
               ),
           compareFn: (item1, item2) => textValueSelector(item1).last == textValueSelector(item2).last,
           popupProps: popupFields(
+            context,
             widget.label,
             itemBuilder: itemBuilder,
           ),
@@ -825,5 +861,33 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
       flatString(x),
       if (T is JsonMap) ...(x as JsonMap).values,
     ];
+  }
+}
+
+class YesNoField extends StatelessWidget {
+  final String? label;
+  final String? value;
+
+  final void Function(String?) onChanged;
+
+  final bool readOnly;
+
+  const YesNoField({super.key, this.label, required this.onChanged, this.value, this.readOnly = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final opt = [InnerLibsLocalizations.of(context).yes, InnerLibsLocalizations.of(context).no];
+    return StringField(
+      label: label,
+      value: value,
+      readOnly: readOnly,
+      options: opt,
+      onChanged: (v, _) {
+        onChanged(v);
+      },
+      validator: (newValue) {
+        return newValue.flatEqualAny(opt) ? null : InnerLibsLocalizations.of(context).invalidValue;
+      },
+    );
   }
 }
