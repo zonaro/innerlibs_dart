@@ -98,7 +98,7 @@ typedef Dictionary<K, V> = Map<K, V>;
 
 /// C# alias for [Directory]
 typedef DirectoryInfo = Directory;
-typedef doubles = List<double>;
+typedef DoubleList = List<double>;
 typedef Estados = Estado;
 typedef FileBytes = bytes;
 
@@ -111,7 +111,7 @@ typedef GroupedJsonTable<T> = Map<T, JsonTable>;
 /// C# alias for [Iterable]
 typedef IEnumerable = Iterable;
 
-typedef ints = List<int>;
+typedef IntList = List<int>;
 
 /// Alias for [Map<String, dynamic>], used in most Json serializations
 typedef JsonMap = Map<String, dynamic>;
