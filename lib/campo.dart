@@ -64,7 +64,7 @@ PopupProps<T> popupFields<T>(
                 children: [
                   const Icon(Icons.arrow_back),
                   const Gap(10),
-                  Get.context!.localizations.backButtonTooltip.asText().fontSize(10),
+                  Get.context!.localizations.back.asText().fontSize(10),
                 ],
               ).toCenter().paddingAll(8),
             ),

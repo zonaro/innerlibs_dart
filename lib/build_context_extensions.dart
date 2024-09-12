@@ -213,7 +213,7 @@ extension BuildContextExtensions on BuildContext {
   /// content body, like captions
   TextStyle? get labelSmall => textTheme.labelSmall;
 
-  MaterialLocalizations get localizations => MaterialLocalizations.of(this);
+  InnerLibsLocalizations get localizations => InnerLibsLocalizations.of(this);
 
   double get logicalAspectRatio => logicalWidth / logicalHeight;
 
@@ -372,6 +372,10 @@ extension BuildContextExtensions on BuildContext {
 
   ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
   bool canPop() => Navigator.canPop(this);
+ 
+ 
+ /// Control the focus of the current context
+ /// 
   focus([int times = 1]) {
     if (times > 0) {
       while (times-- > 0) {

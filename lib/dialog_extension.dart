@@ -78,7 +78,7 @@ class __PromptDialogState extends State<_PromptDialog> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, null),
-            child: (widget.textCancel != null) ? widget.textCancel! : Text(MaterialLocalizations.of(context).cancelButtonLabel),
+            child: (widget.textCancel != null) ? widget.textCancel! : Text(context.localizations.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -86,7 +86,7 @@ class __PromptDialogState extends State<_PromptDialog> {
                 Navigator.pop(context, value);
               }
             },
-            child: (widget.textOK != null) ? widget.textOK! : Text(MaterialLocalizations.of(context).okButtonLabel),
+            child: (widget.textOK != null) ? widget.textOK! : Text(context.localizations.ok),
           ),
         ],
       ),
@@ -189,9 +189,9 @@ extension DialogExt on BuildContext {
       context: this,
       barrierDismissible: canPop,
       builder: (BuildContext context) {
-        textOK ??= context.localizations.okButtonLabel;
-        textCancel ??= context.localizations.cancelButtonLabel;
-        content ??= "${context.localizations.continueButtonLabel}?";
+        textOK ??= context.localizations.ok;
+        textCancel ??= context.localizations.cancel;
+        content ??= "${context.materialLocalizations.continueButtonLabel}?";
         return PopScope(
           canPop: canPop,
           onPopInvokedWithResult: onPopInvoked,
@@ -280,7 +280,7 @@ extension DialogExt on BuildContext {
     List<Widget> arrWidget = [];
 
     if (buttons.isEmpty) {
-      cancelButton ??= materialLocalizations.okButtonLabel;
+      cancelButton ??= localizations.ok;
     }
 
     if (cancelButton.isNotBlank) {
@@ -498,7 +498,7 @@ extension DialogExt on BuildContext {
       barrierDismissible: false,
       builder: (BuildContext context) => StatefulBuilder(builder: (BuildContext context, setState) {
         if (cancelTaskButton == null && onCancel != null) {
-          cancelTaskButton = context.localizations.cancelButtonLabel;
+          cancelTaskButton = context.localizations.cancel;
         }
         if (timeout != null && timeout.inSeconds > 0) {
           timer ??= Timer.periodic(1.seconds, (timer) {

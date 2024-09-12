@@ -400,7 +400,7 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
           const Divider(),
           ListTile(
             leading: const Icon(Icons.close),
-            title: Text(context.localizations.closeButtonTooltip),
+            title: Text(context.localizations.close),
             onTap: () {
               context.pop(); // pop drawer
             },
