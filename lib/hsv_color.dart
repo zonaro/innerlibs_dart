@@ -55,7 +55,31 @@ class HSVColor implements Color, Comparable<HSVColor> {
     }
   }
 
-  String get closestColorName => _getClosestColorName();
+  HSVColor? get closestColor {
+    var min = double.infinity;
+    HSVColor? color;
+    for (var color in ColorNames.values) {
+      var d = color.color.distanceTo(this);
+      if (d < min) {
+        min = d;
+        color = color;
+      }
+    }
+    return color;
+  }
+
+  string get closestColorName {
+    var min = double.infinity;
+    String? name;
+    for (var color in ColorNames.values) {
+      var d = color.color.distanceTo(this);
+      if (d < min) {
+        min = d;
+        name = color.name;
+      }
+    }
+    return name ?? "";
+  }
 
   HSVColor get complementaryColor => modColor(180);
 
@@ -85,12 +109,15 @@ class HSVColor implements Color, Comparable<HSVColor> {
     }
   }
 
+  /// The Luminance of this color.
+  /// The Luminance is a measure of the brightness of a color.
   double get luminance => 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 
+  /// The Name of this color.
+  /// If the name is not set, it will return the closest color name from the [ColorNames] list.
   String get name => _name.isEmpty ? closestColorName : _name;
 
   set name(String value) => _name = value;
-
   @override
   double get opacity => alpha / 255.0;
 
@@ -98,9 +125,10 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   @override
   int get red => _scolor.red;
-  set red(int value) => _loadColor(_scolor.withRed(value));
 
+  set red(int value) => _loadColor(_scolor.withRed(value));
   double get saturation => _s;
+
   set saturation(double value) {
     value = value.clamp(0.0, 1.0);
     if (_s != value) {
@@ -109,11 +137,17 @@ class HSVColor implements Color, Comparable<HSVColor> {
     }
   }
 
+  /// The Split-Complementary colors of this color.
+  Iterable<HSVColor> get splitComplementaryColors => modColors([150, 210]);
+
+  Iterable<HSVColor> get triadicColors => modColors([120, 240]);
+
   @override
   int get value => _scolor.value;
 
   set value(int value) => _loadColor(Color(value));
 
+  /// Returns a [HSVColor] added by the provided [color].
   HSVColor addictive(HSVColor color) {
     var n = clone();
     n.red = (n.red + color.red).clamp(0, 255);
@@ -122,6 +156,7 @@ class HSVColor implements Color, Comparable<HSVColor> {
     return n;
   }
 
+  /// Return a new instance of [HSVColor] with the same values as this instance.
   HSVColor clone() => HSVColor(_scolor, _name)..description = description;
 
   @override
@@ -140,8 +175,23 @@ class HSVColor implements Color, Comparable<HSVColor> {
   @override
   double computeLuminance() => _scolor.computeLuminance();
 
+  /// Calculates the distance between this HSVColor and the provided [color].
+  ///
+  /// The distance is calculated by taking the absolute difference between the hue,
+  /// saturation, and brightness values of this color and the provided [color],
+  /// and summing them up.
+  ///
+  /// Returns the calculated distance.
+  double distanceTo(HSVColor color) {
+    var h = (hue - color.hue).abs();
+    var s = (saturation - color.saturation).abs();
+    var v = (brightness - color.brightness).abs();
+    return h + s + v;
+  }
+
   HSVColor modColor(int degrees) => modColors([degrees]).first;
 
+  /// Returns a list of colors that are modified by the provided [degrees] int the color wheel.
   Iterable<HSVColor> modColors(IntList degrees) => degrees
       .map((x) => HSVColor()
         ..hue = (hue + x) % 360
@@ -163,11 +213,6 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
   @override
   HSVColor withRed(int r) => _scolor.withRed(r).hsv;
-
-  String _getClosestColorName() {
-    // return the most similar color from dart Colors by comparing this.color with all colors
-    return "";
-  }
 
   void _loadColor(Color color) {
     _scolor = color;

@@ -533,7 +533,7 @@ class FabTextBase extends StatelessWidget {
     return FloatingActionButton.extended(
       onPressed: onPressed,
       heroTag: heroTag ?? (label?.hashCode, icon?.hashCode, randomInt()),
-      backgroundColor: color ?? Get.context?.colorScheme.primary,
+      backgroundColor: color,
       label: Row(
         children: [
           Visibility(visible: icon != null, child: Icon(icon)),

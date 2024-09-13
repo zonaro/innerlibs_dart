@@ -196,6 +196,7 @@ T consoleLog<T>(
   StackTrace? stackTrace,
 }) {
   if (kDebugMode) {
+    if (T == Exception && error == null) error = message;
     log(changeTo(message), time: time ?? now, sequenceNumber: sequenceNumber, level: level, name: name, zone: zone, error: error);
   }
   return message;

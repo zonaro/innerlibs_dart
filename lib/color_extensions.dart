@@ -53,7 +53,7 @@ extension ColorExtensions on Color {
   /// percent: Porcentagem de mesclagem
   ///
   /// Retorna a cor mesclada
-  Color makeDarker(double percent) => mergeWith(Colors.black, percent);
+  Color makeDarker([double percent = .5]) => mergeWith(Colors.black, percent);
 
   /// Clareia a cor misturando ela com branco
   ///
@@ -61,7 +61,7 @@ extension ColorExtensions on Color {
   /// percent: Porcentagem de mesclagem
   ///
   /// Retorna a cor mesclada
-  Color makeLighter(double percent) => mergeWith(Colors.white, percent);
+  Color makeLighter([double percent = .5]) => mergeWith(Colors.white, percent);
 
   /// Mescla duas cores a partir de uma porcentagem
   ///
@@ -70,5 +70,5 @@ extension ColorExtensions on Color {
   /// Percent: Porcentagem de mescla
   ///
   /// Retorna a cor mesclada
-  Color mergeWith(Color anotherColor, double percent) => lerp(anotherColor, percent / 100);
+  Color mergeWith(Color anotherColor, double percent) => lerp(anotherColor, percent);
 }
