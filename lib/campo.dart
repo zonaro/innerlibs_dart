@@ -649,7 +649,7 @@ class ValueField<T extends Object> extends StatefulWidget {
 class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   late FocusNode _focusNode;
 
-  final ValueNotifier<T?> _dropdownValue = ValueNotifier<T?>(null);
+  final ValueNotifier<T?> value = ValueNotifier<T?>(null);
 
   Timer? _debounce;
 
@@ -658,7 +658,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
 
   late List<TextInputFormatter> inputFormatters;
 
-  Iterable<T> get options => [_dropdownValue.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).last).toList();
+  Iterable<T> get options => [value.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).last).toList();
   StringList Function(T?) get textValueSelector {
     if (widget.textValueSelector == null) {
       if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
@@ -697,7 +697,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
         padding: fieldsPadding,
         child: useOptionsList
             ? Autocomplete<T>(
-                initialValue: TextEditingValue(text: _dropdownValue.value != null ? textValueSelector(_dropdownValue.value as T).last : ""),
+                initialValue: TextEditingValue(text: value.value != null ? textValueSelector(value.value as T).last : ""),
                 optionsViewBuilder: (context, onSelected, options) {
                   var opt = options.toList();
                   return Container(
@@ -708,7 +708,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
                         itemBuilder: (context, i) => itemBuilder(
                               context,
                               opt[i],
-                              _dropdownValue.value != null ? (i == opt.indexOf(_dropdownValue.value!)) : false,
+                              value.value != null ? (i == opt.indexOf(value.value!)) : false,
                             ).onTap(() => onSelected(opt[i])),
                         itemCount: opt.length),
                   );
@@ -749,17 +749,17 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
             widget.label,
             itemBuilder: itemBuilder,
           ),
-          selectedItem: _dropdownValue.value,
+          selectedItem: value.value,
           dropdownDecoratorProps: DropDownDecoratorProps(
             dropdownSearchDecoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
           ),
           asyncItems: (v) async => await allOptions(v),
           itemAsString: (x) => textValueSelector(x).first,
           onChanged: (newValue) {
-            if (_dropdownValue.value == newValue || newValue == null) {
-              _dropdownValue.value = null;
+            if (value.value == newValue || newValue == null) {
+              value.value = null;
             } else {
-              _dropdownValue.value = newValue;
+              value.value = newValue;
             }
             onChanged(newValue, textValueSelector(newValue).last);
           },
@@ -771,9 +771,9 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   field(FocusNode fn, [TextEditingController? textEditingController]) => TextFormField(
         focusNode: fn,
         textAlign: textAlign,
-        initialValue: textEditingController == null ? (_dropdownValue.value != null ? textValueSelector(_dropdownValue.value as T).last : "") : null,
+        initialValue: textEditingController == null ? (value.value != null ? textValueSelector(value.value as T).last : "") : null,
         maxLength: widget.maxLen,
-        controller: textEditingController?..text = _dropdownValue.value != null ? textValueSelector(_dropdownValue.value as T).last : "",
+        controller: textEditingController?..text = value.value != null ? textValueSelector(value.value as T).last : "",
         onChanged: (newValue) async {
           if (useOptionsList) {
             var opt = await allOptions(newValue);
@@ -806,7 +806,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
 
   @override
   void initState() {
-    _dropdownValue.value = widget.value;
+    value.value = widget.value;
     if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
       keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: T is decimal);
       inputFormatters = widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters;
@@ -822,7 +822,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   }
 
   Widget itemBuilder(BuildContext context, T item, bool isSelected) {
-    isSelected = isSelected || item == _dropdownValue.value;
+    isSelected = isSelected || item == value.value;
     if (widget.itemBuilder != null) {
       return widget.itemBuilder!(context, item, isSelected);
     }

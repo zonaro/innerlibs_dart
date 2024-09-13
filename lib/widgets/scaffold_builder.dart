@@ -60,7 +60,11 @@ class PageEntry<T> {
   string get subtitleString => (subtitle is Text ? (subtitle as Text).data : subtitle.toString()) | "";
 
   Widget? get subtitleWidget => forceWidget(tabs.singleOrNull?.subtitle) ?? forceWidget(subtitle);
-  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
+  string get titleString {
+    if (title is Text) return (title as Text).data ?? "";
+    return title.toString() | "";
+  }
+
   Widget? get titleWidget => forceWidget(tabs.singleOrNull?.title) ?? forceWidget(title);
 }
 
@@ -374,8 +378,8 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
         if (!useDrawerInsteadOfBottomNavigationBar)
           for (var entry in widget.items)
             BottomNavigationBarItem(
-              icon: Icon(entry.icon),
-              activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon),
+              icon: Icon(entry.icon, color: widget.iconColor),
+              activeIcon: Icon((entry.action == null ? null : entry.actionIcon) ?? entry.activeIcon ?? entry.icon, color: widget.activeIconColor),
               label: indexController.pageIndex == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTitle : null) ?? entry.titleString : entry.titleString,
               tooltip: indexController.pageIndex == widget.items.indexOf(entry) ? (entry.action != null ? entry.actionTooltip : null) ?? entry.tooltip : entry.tooltip,
               backgroundColor: entry.backgroundColor,
@@ -454,7 +458,7 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
             if (subtitle != null) subtitle!,
           ],
         )
-      : [title, subtitle].whereNotNull().first;
+      : title;
 
   string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
 
