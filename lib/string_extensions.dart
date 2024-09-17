@@ -194,8 +194,11 @@ extension StringExtensions on String {
       return Colors.transparent; // Default color if the string is empty
     }
 
-    // Check if the string is a valid hexadecimal color
+    if (isNumber) {
+      return Color(int.parse(this));
+    }
 
+    // Check if the string is a valid hexadecimal color
     if (isHexadecimalColor) {
       final hexColor = replaceFirst('#', ''); // Remove any leading '#'
       final alpha = hexColor.length == 8 ? hexColor.substring(0, 2) : 'FF'; // Extract alpha value or use default 'FF'
@@ -203,9 +206,32 @@ extension StringExtensions on String {
       return Color(int.parse('$alpha$color', radix: 16));
     }
 
-    var named = ColorNames.values.where((e) => e.name.flatEqual(this)).firstOrNull;
-    if (named != null) {
-      return named.color;
+    if (ColorNames.isNamedColor(this)) {
+      return NamedColor.fromString(this);
+    }
+
+    if (flatEqualAny(["random", "rand", "aleatorio"])) {
+      return NamedColor.fromString(randomWord());
+    }
+
+    if (contains("*")) {
+      var various = split("*").whereValid;
+      if (various.isNotEmpty) {
+        return various.map((x) => NamedColor.fromString(x.trim())).reduce((a, b) => a * b);
+      }
+    }
+    if (contains("+")) {
+      var various = split("+").whereValid;
+      if (various.isNotEmpty) {
+        return various.map((x) => NamedColor.fromString(x.trim())).reduce((a, b) => a + b);
+      }
+    }
+
+    if (contains("-")) {
+      var various = split("-").whereValid;
+      if (various.isNotEmpty) {
+        return various.map((x) => NamedColor.fromString(x.trim())).reduce((a, b) => a - b);
+      }
     }
 
     // If not a valid hexadecimal color, compute a hash value
@@ -1170,9 +1196,6 @@ extension StringExtensions on String {
   /// If the string ends with 's', it removes the last character.
   /// If none of the above conditions are met, it returns the original string.
   String get singular {
-
-
-    
     if (endsWith('ies')) {
       return '${removeLast(3)}y';
     } else if (endsWith('es')) {

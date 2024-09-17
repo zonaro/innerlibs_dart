@@ -350,4 +350,63 @@ extension NumNullExtensions<T extends num?> on T {
   /// The [fill] parameter specifies the character used to fill the remaining space.
   /// The [fractionDigits] parameter specifies the number of digits after the decimal point.
   String? fixedLength(int length, {String fill = "0", int fractionDigits = 0}) => this?.toStringAsFixed(fractionDigits).padLeft(length, fill);
+
+
+/// Get the color of a number based on a map of color steps.
+/// if the number is less than the minimum key, the color of the minimum key is returned.
+/// if the number is greater than the maximum key, the color of the maximum key is returned.
+/// if the number is between two keys, the color is interpolated between the two colors.
+/// if the number is equal to a key, the color of the key is returned.
+/// if the number is null, the color is transparent.
+/// if the color step is empty, the color is computed by [NamedColor.fromValue] .
+  Color getColor([Map<T, Color> colorStep = const {}]) {
+    if (this == null) {
+      return Colors.transparent;
+    }
+
+    if (colorStep.isEmpty) {
+      NamedColor.fromValue(this!);
+    }
+
+    T x = this!;
+    if (colorStep.containsKey(x)) {
+      return colorStep[x]!;
+    }
+
+    if (x <= colorStep.keys.min()!) {
+      return colorStep[colorStep.keys.min()]!;
+    }
+
+    if (x >= colorStep.keys.max()!) {
+      return colorStep[colorStep.keys.max()]!;
+    }
+
+    num lowerKey = -1 as num;
+    num upperKey = -1 as num;
+
+    for (var key in colorStep.keys) {
+      if (key! < x && (lowerKey == -1 || key > lowerKey)) {
+        lowerKey = key;
+      }
+      if (key > x && (upperKey == -1 || key < upperKey)) {
+        upperKey = key;
+      }
+    }
+
+    Color lowerColor = colorStep[lowerKey]!;
+    Color upperColor = colorStep[upperKey]!;
+
+    double proportion = (x - lowerKey) / (upperKey - lowerKey);
+
+    int mixChannel(int lower, int upper) {
+      return (lower + ((upper - lower) * proportion)).round();
+    }
+
+    return Color.fromARGB(
+      mixChannel(lowerColor.alpha, upperColor.alpha),
+      mixChannel(lowerColor.red, upperColor.red),
+      mixChannel(lowerColor.green, upperColor.green),
+      mixChannel(lowerColor.blue, upperColor.blue),
+    );
+  }
 }

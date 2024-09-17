@@ -92,7 +92,8 @@ abstract class InnerLibsLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('pt')
+    Locale('pt'),
+    Locale('pt', 'BR')
   ];
 
   /// No description provided for @search.
@@ -332,8 +333,8 @@ abstract class InnerLibsLocalizations {
   /// No description provided for @confirmDeleteMultiple.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete {count, plural, =1{1 {item}} other{{count} {items}}}?'**
-  String confirmDeleteMultiple(int count, String item, String items);
+  /// **'Are you sure you want to delete {count, plural, =1{1 {singular}} other{{count} {plural}}}?'**
+  String confirmDeleteMultiple(int count, String singular, String plural);
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {
@@ -353,6 +354,15 @@ class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLoc
 
 InnerLibsLocalizations lookupInnerLibsLocalizations(Locale locale) {
 
+  // Lookup logic when language+country codes are specified.
+  switch (locale.languageCode) {
+    case 'pt': {
+  switch (locale.countryCode) {
+    case 'BR': return InnerLibsLocalizationsPtBr();
+   }
+  break;
+   }
+  }
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {

@@ -9,10 +9,10 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   InnerLibsLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
-  String get search => 'Pesquisar';
+  String get search => 'Buscar';
 
   @override
-  String get find => 'Procurar';
+  String get find => 'Encontrar';
 
   @override
   String get yes => 'Sim';
@@ -27,112 +27,112 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get ok => 'OK';
 
   @override
-  String get close => 'Close';
+  String get close => 'Fechar';
 
   @override
-  String get save => 'Save';
+  String get save => 'Salvar';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Excluir';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'Editar';
 
   @override
-  String get add => 'Add';
+  String get add => 'Adicionar';
 
   @override
-  String get back => 'Back';
+  String get back => 'Voltar';
 
   @override
-  String get next => 'Next';
+  String get next => 'Próximo';
 
   @override
-  String get previous => 'Previous';
+  String get previous => 'Anterior';
 
   @override
-  String get finish => 'Finish';
+  String get finish => 'Finalizar';
 
   @override
-  String get loading => 'Loading';
+  String get loading => 'Carregando';
 
   @override
-  String get clear => 'Clear';
+  String get clear => 'Limpar';
 
   @override
-  String get error => 'Error';
+  String get error => 'Erro';
 
   @override
-  String get warning => 'Warning';
+  String get warning => 'Aviso';
 
   @override
-  String get info => 'Info';
+  String get info => 'Informação';
 
   @override
-  String get success => 'Success';
+  String get success => 'Sucesso';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'Confirmar';
 
   @override
-  String get register => 'Register';
+  String get register => 'Registrar';
 
   @override
-  String get login => 'Login';
+  String get login => 'Entrar';
 
   @override
-  String get logout => 'Logout';
+  String get logout => 'Sair';
 
   @override
-  String get username => 'Username';
+  String get username => 'Nome de usuário';
 
   @override
-  String get password => 'Password';
+  String get password => 'Senha';
 
   @override
-  String get name => 'Name';
+  String get name => 'Nome';
 
   @override
-  String get number => 'Number';
+  String get number => 'Número';
 
   @override
   String get date => 'Data';
 
   @override
-  String get value => 'Value';
+  String get value => 'Valor';
 
   @override
-  String get phone => 'Phone';
+  String get phone => 'Telefone';
 
   @override
-  String get city => 'City';
+  String get city => 'Cidade';
 
   @override
-  String get country => 'Country';
+  String get country => 'País';
 
   @override
-  String get estate => 'Estate';
+  String get estate => 'Estado';
 
   @override
-  String get dateOutOfRange => 'Date out of range';
+  String get dateOutOfRange => 'Data fora do intervalo';
 
   @override
   String invalidItem(String item) {
-    return 'Invalid $item.';
+    return '$item inválido.';
   }
 
   @override
   String couldNotFindItem(String item) {
-    return 'Could not find $item.';
+    return 'Não foi possível encontrar $item.';
   }
 
   @override
   String confirmDelete(String item) {
-    return 'Are you sure you want to delete $item?';
+    return 'Tem certeza de que deseja excluir $item?';
   }
 
   @override
-  String confirmDeleteMultiple(int count, String item, String items) {
+  String confirmDeleteMultiple(int count, String singular, String plural) {
     final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
       locale: localeName,
       
@@ -142,9 +142,16 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$countString $items',
-      one: '1 $item',
+      other: '$countString $plural',
+      one: '1 $singular',
     );
-    return 'Are you sure you want to delete $_temp0?';
+    return 'Tem certeza de que deseja excluir $_temp0?';
   }
+}
+
+/// The translations for Portuguese, as used in Brazil (`pt_BR`).
+class InnerLibsLocalizationsPtBr extends InnerLibsLocalizationsPt {
+  InnerLibsLocalizationsPtBr(): super('pt_BR');
+
+
 }

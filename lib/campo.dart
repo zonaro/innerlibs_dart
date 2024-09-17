@@ -43,7 +43,7 @@ InputDecoration inputStyles([string? label, IconData? icon, void Function()? onI
 PopupProps<T> popupFields<T>(
   BuildContext context,
   string? title, {
-  Widget Function(BuildContext context, T item, bool isSelected)? itemBuilder,
+  DropdownSearchPopupItemBuilder<T>? itemBuilder,
   IconData? icon,
   void Function()? onIconTap,
   Color? color,
@@ -708,6 +708,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
                         itemBuilder: (context, i) => itemBuilder(
                               context,
                               opt[i],
+                              false, //TODO implement disabled
                               value.value != null ? (i == opt.indexOf(value.value!)) : false,
                             ).onTap(() => onSelected(opt[i])),
                         itemCount: opt.length),
@@ -750,10 +751,11 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
             itemBuilder: itemBuilder,
           ),
           selectedItem: value.value,
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
+          decoratorProps: DropDownDecoratorProps(
+            decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
           ),
-          asyncItems: (v) async => await allOptions(v),
+
+          items: (v,l) async => await allOptions(v),
           itemAsString: (x) => textValueSelector(x).first,
           onChanged: (newValue) {
             if (value.value == newValue || newValue == null) {
@@ -821,7 +823,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
     super.initState();
   }
 
-  Widget itemBuilder(BuildContext context, T item, bool isSelected) {
+  Widget itemBuilder(BuildContext context, T item, bool isDisabled, bool isSelected) {
     isSelected = isSelected || item == value.value;
     if (widget.itemBuilder != null) {
       return widget.itemBuilder!(context, item, isSelected);

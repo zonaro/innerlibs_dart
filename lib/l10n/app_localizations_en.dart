@@ -132,7 +132,7 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
-  String confirmDeleteMultiple(int count, String item, String items) {
+  String confirmDeleteMultiple(int count, String singular, String plural) {
     final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
       locale: localeName,
       
@@ -142,8 +142,8 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$countString $items',
-      one: '1 $item',
+      other: '$countString $plural',
+      one: '1 $singular',
     );
     return 'Are you sure you want to delete $_temp0?';
   }

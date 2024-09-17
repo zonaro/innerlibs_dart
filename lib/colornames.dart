@@ -1119,11 +1119,11 @@ enum ColorNames {
     throw Exception("Color not found");
   }
 
-  HSVColor get color => HSVColor.fromString(hexadecimal, name);
+  NamedColor get color => NamedColor.fromString(hexadecimal, name);
 
-  static isNamedColor(String value) {
+  static bool isNamedColor(String value) {
     for (var color in values) {
-      if (color.hexadecimal.flatEqual(value) || color.name.flatEqual(value)) {
+      if (color.hexadecimal.flatEqual(value) || generateKeyword(color.name).flatEqual(generateKeyword(value))) {
         return true;
       }
     }

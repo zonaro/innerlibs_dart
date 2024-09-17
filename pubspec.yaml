@@ -1,7 +1,7 @@
 name: innerlibs
 description: All-in-one extensions, widgets and tools to improve dart code.
 version: 0.0.1
-homepage:
+homepage: 
 
 environment:
   sdk: '>=3.1.0-163.1.beta <4.0.0'
@@ -10,57 +10,50 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  darq:
-  collection:
-  convert:
+  darq: 
+  collection: 
+  convert: 
   http: 
-  async:
-  mask_text_input_formatter:
-  path:
+  async: 
+  mask_text_input_formatter: 
+  path: 
   xml: 
-  get:
-  crypto:
+  get: 
+  crypto: 
   intl: 
   brasil_fields: 
   download: 
-  gap:
-  dropdown_search:
-  mime:
+  gap: 
+  dropdown_search: 
+  mime: 
   flutter_localizations:
     sdk: flutter
- 
- 
- 
-   
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
 
-flutter: 
-  generate: true  
+flutter:
+  generate: true
   assets:
-    - lib/brasil.json 
+    - lib/brasil.json
     - assets/fonts/consola.ttf
     - assets/fonts/consolab.ttf
-    - assets/fonts/consolai.ttf 
+    - assets/fonts/consolai.ttf
     - assets/images/brazil.png
     - assets/images/merco.png
     - assets/images/brasaoOficial.png
 
   fonts:
-  - family: Mandatory
-    fonts:
-      - asset: assets/fonts/mandatory.ttf
-  - family: Fe
-    fonts:
-      - asset: assets/fonts/fe.ttf
-  - family: Xanh
-    fonts:
-      - asset: assets/fonts/XanhMono-Regular.ttf
-
- 
-
-
-
+    - family: Mandatory
+      fonts:
+        - asset: assets/fonts/mandatory.ttf
+    - family: Fe
+      fonts:
+        - asset: assets/fonts/fe.ttf
+    - family: Xanh
+      fonts:
+        - asset: assets/fonts/XanhMono-Regular.ttf
+flutter_intl:
+  enabled: true

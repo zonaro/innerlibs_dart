@@ -2,27 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/colornames.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-class HSVColor implements Color, Comparable<HSVColor> {
+/// A class that represents a color with a name and description.
+class NamedColor implements Color, Comparable<NamedColor> {
   late double _h, _s, _v;
   late String _name;
   late Color _scolor;
 
   String description = "";
 
-  HSVColor([Color color = Colors.transparent, String? name]) {
+  NamedColor([Color color = Colors.transparent, String? name, string description = ""]) {
     _loadColor(color);
     _name = name ?? color.alphaHexadecimal;
+    description = description;
   }
 
   @override
-  HSVColor.fromARGB(int a, int r, int g, int b) : this(Color.fromARGB(a, r, g, b));
+  NamedColor.fromARGB(int a, int r, int g, int b) : this(Color.fromARGB(a, r, g, b));
 
-  HSVColor.fromInt(int argb) : this(Color(argb));
+  NamedColor.fromInt(int argb) : this(Color(argb));
 
-  HSVColor.fromRGB(int r, int g, int b) : this.fromInt(255 << 24 | r << 16 | g << 8 | b);
+  NamedColor.fromRGB(int r, int g, int b) : this.fromInt(255 << 24 | r << 16 | g << 8 | b);
 
-  HSVColor.fromString(String color, [string? name]) {
-    if (ColorNames.isNamedColor(color)) {
+  NamedColor.fromString(String color, [string? name, string description = ""]) {
+    if (name == null && ColorNames.isNamedColor(color)) {
       var named = ColorNames.fromValue(color);
       color = named.hexadecimal;
       name ??= named.name;
@@ -30,13 +32,28 @@ class HSVColor implements Color, Comparable<HSVColor> {
 
     _loadColor(color.asColor);
     _name = name ?? color;
+    description = description;
+  }
+
+  factory NamedColor.fromValue(dynamic value) {
+    if (value is NamedColor) {
+      return NamedColor.fromString(value.hexadecimal, value.name, value.description);
+    } else if (value is Color) {
+      return NamedColor(value);
+    } else if (value is String) {
+      return NamedColor.fromString(value);
+    } else if (value is num) {
+      return NamedColor.fromInt(value.round());
+    } else {
+      return NamedColor.fromString(flatString(value));
+    }
   }
 
   @override
   int get alpha => _scolor.alpha;
   set alpha(int value) => _loadColor(_scolor.withAlpha(value));
 
-  Iterable<HSVColor> get analogousColors => modColors([30, -30]);
+  Iterable<NamedColor> get analogousColors => modColors([30, -30]);
   int get argb => _scolor.value;
 
   set argb(int value) => _loadColor(Color(value));
@@ -55,9 +72,9 @@ class HSVColor implements Color, Comparable<HSVColor> {
     }
   }
 
-  HSVColor? get closestColor {
+  NamedColor? get closestColor {
     var min = double.infinity;
-    HSVColor? color;
+    NamedColor? color;
     for (var color in ColorNames.values) {
       var d = color.color.distanceTo(this);
       if (d < min) {
@@ -81,9 +98,11 @@ class HSVColor implements Color, Comparable<HSVColor> {
     return name ?? "";
   }
 
-  HSVColor get complementaryColor => modColor(180);
+  NamedColor get complementaryColor => modColor(180);
 
-  String get css => alpha == 255 ? _toCssRGB() : _toCssRGBA();
+  String get css => alpha == 255 ? 'rgb($red, $green, $blue)' : 'rgba($red, $green, $blue, $opacity)';
+
+  /// The Dominant value of this color.
   int get dominantValue => [red, green, blue].max;
 
   @override
@@ -105,6 +124,7 @@ class HSVColor implements Color, Comparable<HSVColor> {
       while (_h > 360.0) {
         _h -= 360.0;
       }
+      _h = _h.clampRotate(0.0, 360.0);
       _setColor();
     }
   }
@@ -138,37 +158,79 @@ class HSVColor implements Color, Comparable<HSVColor> {
   }
 
   /// The Split-Complementary colors of this color.
-  Iterable<HSVColor> get splitComplementaryColors => modColors([150, 210]);
+  Iterable<NamedColor> get splitComplementaryColors => modColors([150, 210]);
 
-  Iterable<HSVColor> get triadicColors => modColors([120, 240]);
+  Iterable<NamedColor> get triadicColors => modColors([120, 240]);
 
   @override
   int get value => _scolor.value;
 
   set value(int value) => _loadColor(Color(value));
 
-  /// Returns a [HSVColor] added by the provided [color].
-  HSVColor addictive(HSVColor color) {
-    var n = clone();
-    n.red = (n.red + color.red).clamp(0, 255);
-    n.green = (n.green + color.green).clamp(0, 255);
-    n.blue = (n.blue + color.blue).clamp(0, 255);
-    return n;
+  NamedColor operator *(other) {
+    if (other is num) {
+      var red = (this.red * other).clamp(0, 255).round();
+      var green = (this.green * other).clamp(0, 255).round();
+      var blue = (this.blue * other).clamp(0, 255).round();
+      var alpha = (this.alpha * other).clamp(0, 255).round();
+      return NamedColor.fromARGB(alpha, red, green, blue);
+    }
+
+    var c = NamedColor.fromValue(other);
+    var red = (this.red * c.red).clamp(0, 255);
+    var green = (this.green * c.green).clamp(0, 255);
+    var blue = (this.blue * c.blue).clamp(0, 255);
+    var alpha = (this.alpha * c.alpha).clamp(0, 255);
+    return NamedColor.fromARGB(alpha, red, green, blue);
   }
 
-  /// Return a new instance of [HSVColor] with the same values as this instance.
-  HSVColor clone() => HSVColor(_scolor, _name)..description = description;
+  NamedColor operator +(other) {
+    if (other is num) {
+      var red = (this.red + other).clamp(0, 255).round();
+      var green = (this.green + other).clamp(0, 255).round();
+      var blue = (this.blue + other).clamp(0, 255).round();
+      var alpha = (this.alpha + other).clamp(0, 255).round();
+      return NamedColor.fromARGB(alpha, red, green, blue);
+    }
+
+    var c = NamedColor.fromValue(other);
+    var red = (this.red + c.red).clamp(0, 255);
+    var green = (this.green + c.green).clamp(0, 255);
+    var blue = (this.blue + c.blue).clamp(0, 255);
+    var alpha = (this.alpha + c.alpha).clamp(0, 255);
+    return NamedColor.fromARGB(alpha, red, green, blue);
+  }
+
+  NamedColor operator -(other) {
+    if (other is num) {
+      var red = (this.red - other).clamp(0, 255).round();
+      var green = (this.green - other).clamp(0, 255).round();
+      var blue = (this.blue - other).clamp(0, 255).round();
+      var alpha = (this.alpha - other).clamp(0, 255).round();
+      return NamedColor.fromARGB(alpha, red, green, blue);
+    }
+
+    var c = NamedColor.fromValue(other);
+    var red = (this.red - c.red).clamp(0, 255);
+    var green = (this.green - c.green).clamp(0, 255);
+    var blue = (this.blue - c.blue).clamp(0, 255);
+    var alpha = (this.alpha - c.alpha).clamp(0, 255);
+    return NamedColor.fromARGB(alpha, red, green, blue);
+  }
+
+  /// Return a new instance of [NamedColor] with the same values as this instance.
+  NamedColor clone() => NamedColor(_scolor, _name, description);
 
   @override
   int compareTo(dynamic other) {
     if (other is int) {
       return argb.compareTo(other);
-    } else if (other is HSVColor) {
+    } else if (other is NamedColor) {
       return argb.compareTo(other.argb);
     } else if (other is Color) {
       return argb.compareTo(other.value);
     } else {
-      throw ArgumentError('Cannot compare HSVColor with ${other.runtimeType}');
+      throw ArgumentError('Cannot compare $NamedColor with ${other.runtimeType}');
     }
   }
 
@@ -182,37 +244,37 @@ class HSVColor implements Color, Comparable<HSVColor> {
   /// and summing them up.
   ///
   /// Returns the calculated distance.
-  double distanceTo(HSVColor color) {
+  double distanceTo(NamedColor color) {
     var h = (hue - color.hue).abs();
     var s = (saturation - color.saturation).abs();
     var v = (brightness - color.brightness).abs();
     return h + s + v;
   }
 
-  HSVColor modColor(int degrees) => modColors([degrees]).first;
+  NamedColor modColor(int degrees) => modColors([degrees]).first;
 
   /// Returns a list of colors that are modified by the provided [degrees] int the color wheel.
-  Iterable<HSVColor> modColors(IntList degrees) => degrees
-      .map((x) => HSVColor()
+  Iterable<NamedColor> modColors(IntList degrees) => degrees
+      .map((x) => NamedColor()
         ..hue = (hue + x) % 360
         ..saturation = saturation
         ..brightness = brightness)
       .orderBy((x) => x.hue);
 
   @override
-  HSVColor withAlpha(int a) => _scolor.withAlpha(a).hsv;
+  NamedColor withAlpha(int a) => _scolor.withAlpha(a).hsv;
 
   @override
-  HSVColor withBlue(int b) => _scolor.withBlue(b).hsv;
+  NamedColor withBlue(int b) => _scolor.withBlue(b).hsv;
 
   @override
-  HSVColor withGreen(int g) => _scolor.withGreen(g).hsv;
+  NamedColor withGreen(int g) => _scolor.withGreen(g).hsv;
 
   @override
-  HSVColor withOpacity(double opacity) => _scolor.withOpacity(opacity).hsv;
+  NamedColor withOpacity(double opacity) => _scolor.withOpacity(opacity).hsv;
 
   @override
-  HSVColor withRed(int r) => _scolor.withRed(r).hsv;
+  NamedColor withRed(int r) => _scolor.withRed(r).hsv;
 
   void _loadColor(Color color) {
     _scolor = color;
@@ -279,9 +341,5 @@ class HSVColor implements Color, Comparable<HSVColor> {
     }
   }
 
-  String _toCssRGB() => 'rgb($red, $green, $blue)';
-
-  String _toCssRGBA() => 'rgba($red, $green, $blue, $opacity)';
-
-  static List<HSVColor> createColors(List<String> colors) => colors.map((color) => HSVColor.fromString(color)).toList();
+  static List<NamedColor> createColors(List<String> colors) => colors.map((color) => NamedColor.fromString(color)).toList();
 }

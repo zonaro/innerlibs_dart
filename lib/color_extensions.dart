@@ -8,7 +8,7 @@ extension ColorExtensions on Color {
   String get alphaHexadecimal => '#${value.toRadixString(16).padLeft(8, '0')}';
   String get hexadecimal => '#${value.toRadixString(16).removeFirst(2).padLeft(6, '0')}';
 
-  HSVColor get hsv => HSVColor(this);
+  NamedColor get hsv => NamedColor(this);
 
   /// Retorna uma cor de contraste baseado na iluminacao da primeira cor: Uma cor clara se a
   /// primeira for escura. Uma cor escura se a primeira for clara
