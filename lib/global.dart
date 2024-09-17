@@ -6,6 +6,7 @@ import 'dart:math' show Random, atan2, cos, max, min, pi, sin, sqrt;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 
 final _random = Random();
 
@@ -102,7 +103,7 @@ R changeTo<R>(dynamic value) {
   if (value is R) return value;
   if (value != null) {
     consoleLog("Changing $value from ${value.runtimeType} to $R");
-
+    var nf = NumberFormat(null, platformLocaleCode);
     if (isSameType<R, DateTime>()) {
       return "$value".toDate() as R;
     } else if (isSameType<R, int>()) {
@@ -119,13 +120,13 @@ R changeTo<R>(dynamic value) {
       } else if (value is num) {
         return value.toDouble() as R;
       } else {
-        return double.parse("$value".ifBlank("0").removeLetters) as R;
+        return (nf.tryParse("$value")?.toDouble() ?? double.parse("$value".ifBlank("0").removeLetters)) as R;
       }
     } else if (isSameType<R, num>()) {
       if (value is DateTime) {
         return changeTo(value.millisecondsSinceEpoch);
       } else {
-        return num.parse("$value".ifBlank("0").removeLetters) as R;
+        return (nf.tryParse("$value") ?? num.parse("$value".ifBlank("0").removeLetters)) as R;
       }
     } else if (isSameType<R, String>()) {
       if (value is DateTime) {

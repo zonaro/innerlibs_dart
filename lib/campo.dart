@@ -25,6 +25,7 @@ Widget emptySearch(BuildContext context, string searchEntry, string label) {
 }
 
 InputDecoration inputStyles([string? label, IconData? icon, void Function()? onIconTap, Color? color, IconData? suffixIcon, void Function()? onSuffixIconTap]) => InputDecoration(
+      fillColor: Colors.transparent,
       label: label.asNullableText(),
       icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
       suffixIcon: suffixIcon == null
@@ -754,8 +755,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
           decoratorProps: DropDownDecoratorProps(
             decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
           ),
-
-          items: (v,l) async => await allOptions(v),
+          items: (v, l) async => await allOptions(v),
           itemAsString: (x) => textValueSelector(x).first,
           onChanged: (newValue) {
             if (value.value == newValue || newValue == null) {

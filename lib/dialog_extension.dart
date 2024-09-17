@@ -244,29 +244,26 @@ extension DialogExt on BuildContext {
     dynamic cancelConfirmationText,
     void Function(Object?)? onError,
     void Function()? onCancel,
-  }) async {
-    bool isConfirmed = await confirm(
-      confirmTaskMessage,
-      title: title,
-      textOK: yesButton,
-      textCancel: noButton,
-      canPop: canPop,
-      onPopInvoked: onPopInvoked,
-    );
-    if (isConfirmed) {
-      return await showTaskLoader(
-        task: task,
-        cancelTaskButton: cancelTaskButton,
-        loadingText: loadingText,
-        yesButton: yesButton,
-        noButton: noButton,
-        cancelConfirmationText: cancelConfirmationText,
-        onError: onError,
-        onCancel: onCancel,
-      );
-    }
-    return null;
-  }
+  }) async =>
+      await confirm(
+        confirmTaskMessage,
+        title: title,
+        textOK: yesButton,
+        textCancel: noButton,
+        canPop: canPop,
+        onPopInvoked: onPopInvoked,
+      )
+          ? await showTaskLoader(
+              task: task,
+              cancelTaskButton: cancelTaskButton,
+              loadingText: loadingText,
+              yesButton: yesButton,
+              noButton: noButton,
+              cancelConfirmationText: cancelConfirmationText,
+              onError: onError,
+              onCancel: onCancel,
+            )
+          : null;
 
   Future<void> dialog(dynamic content,
       {String? title,

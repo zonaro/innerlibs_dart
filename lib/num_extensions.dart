@@ -351,14 +351,13 @@ extension NumNullExtensions<T extends num?> on T {
   /// The [fractionDigits] parameter specifies the number of digits after the decimal point.
   String? fixedLength(int length, {String fill = "0", int fractionDigits = 0}) => this?.toStringAsFixed(fractionDigits).padLeft(length, fill);
 
-
-/// Get the color of a number based on a map of color steps.
-/// if the number is less than the minimum key, the color of the minimum key is returned.
-/// if the number is greater than the maximum key, the color of the maximum key is returned.
-/// if the number is between two keys, the color is interpolated between the two colors.
-/// if the number is equal to a key, the color of the key is returned.
-/// if the number is null, the color is transparent.
-/// if the color step is empty, the color is computed by [NamedColor.fromValue] .
+  /// Get the color of a number based on a map of color steps.
+  /// if the number is less than the minimum key, the color of the minimum key is returned.
+  /// if the number is greater than the maximum key, the color of the maximum key is returned.
+  /// if the number is between two keys, the color is interpolated between the two colors.
+  /// if the number is equal to a key, the color of the key is returned.
+  /// if the number is null, the color is transparent.
+  /// if the color step is empty, the color is computed by [NamedColor.fromValue] .
   Color getColor([Map<T, Color> colorStep = const {}]) {
     if (this == null) {
       return Colors.transparent;
@@ -408,5 +407,13 @@ extension NumNullExtensions<T extends num?> on T {
       mixChannel(lowerColor.green, upperColor.green),
       mixChannel(lowerColor.blue, upperColor.blue),
     );
+  }
+
+  T percentOf(T total) {
+    if (total == null || total == 0) {
+      return 0 as T;
+    } else {
+      return (this! / total) as T;
+    }
   }
 }
