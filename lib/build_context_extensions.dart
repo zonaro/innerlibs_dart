@@ -376,21 +376,23 @@ extension BuildContextExtensions on BuildContext {
 
   /// Control the focus of the current context
   ///
-  focus([int times = 1]) {
+  bool focus([int times = 1]) {
+    bool b = false;
     if (times > 0) {
       while (times-- > 0) {
-        nextFocus();
+        b = nextFocus();
       }
     } else if (times < 0) {
       while (times++ < 0) {
-        previousFocus();
+        b = previousFocus();
       }
     } else {
       unfocus();
     }
+    return b;
   }
 
-  nextFocus() => FocusScope.of(this).nextFocus();
+  bool nextFocus() => FocusScope.of(this).nextFocus();
 
   /// performs a simple [Navigator.pop] action and returns given [result]
   void pop<T>([result]) => Navigator.pop(this, result);
@@ -404,7 +406,7 @@ extension BuildContextExtensions on BuildContext {
   /// perform replash with routeName
   void popUntilRoute(String screenName, {bool rootNavigator = false}) => Navigator.of(this, rootNavigator: rootNavigator).popUntil(ModalRoute.withName(screenName));
 
-  previousFocus() => FocusScope.of(this).previousFocus();
+  bool previousFocus() => FocusScope.of(this).previousFocus();
 
   /// performs a simple [Navigator.push] action with given [route]
   Future<dynamic> push(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async =>
@@ -459,7 +461,10 @@ extension BuildContextExtensions on BuildContext {
     return showSnackBar("$content");
   }
 
-  unfocus() => FocusScope.of(this).unfocus();
+  void unfocus({
+    UnfocusDisposition disposition = UnfocusDisposition.scope,
+  }) =>
+      FocusScope.of(this).unfocus(disposition: disposition);
 
   /// returns a specific value according to the current screen [width] or [height] or the next lower value if omitted
 

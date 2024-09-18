@@ -57,13 +57,13 @@ class PageEntry<T> {
     this.onSearch,
   });
 
-  string get subtitleString => (subtitle is Text ? (subtitle as Text).data : subtitle.toString()) | "";
+  string get subtitleString => subtitleWidget?.text | "";
+  // string get subtitleString => subtitle is Text ? (subtitle as Text).text : "$subtitle" | "";
 
   Widget? get subtitleWidget => forceWidget(tabs.singleOrNull?.subtitle) ?? forceWidget(subtitle);
-  string get titleString {
-    if (title is Text) return (title as Text).data ?? "";
-    return title.toString() | "";
-  }
+
+  string get titleString => titleWidget?.text | "";
+  // string get titleString => title is Text ? (title as Text).text : "$title" | "";
 
   Widget? get titleWidget => forceWidget(tabs.singleOrNull?.title) ?? forceWidget(title);
 }
@@ -347,6 +347,8 @@ class PageTabScaffold<T> extends StatefulWidget {
   State<PageTabScaffold<T>> createState() => _PageTabScaffoldState<T>();
 }
 
+class Shortcuts {}
+
 class TabEntry<T> {
   final dynamic title;
   final dynamic subtitle;
@@ -363,10 +365,12 @@ class TabEntry<T> {
     this.onSearch,
   });
 
-  string get subtitleString => (subtitle is Text ? (subtitle as Text).data : subtitle.toString()) | "";
+  string get subtitleString => subtitleWidget?.text | "";
+  // string get subtitleString => (subtitle is Text ? (subtitle as Text).data : subtitle.toString()) | "";
   Widget? get subtitleWidget => forceWidget(subtitle);
 
-  string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
+  string get titleString => titleWidget?.text | "";
+  // string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
   Widget? get titleWidget => forceWidget(title);
 }
 

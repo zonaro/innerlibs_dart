@@ -531,18 +531,27 @@ class FabTextBase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
-      onPressed: onPressed,
-      heroTag: heroTag ?? (label?.hashCode, icon?.hashCode, randomInt()),
-      backgroundColor: color,
-      label: Row(
-        children: [
-          Visibility(visible: icon != null, child: Icon(icon)),
-          Visibility(visible: icon != null && label.isNotBlank, child: const Gap(10)),
-          Visibility(visible: label.isNotBlank, child: label!.asText()),
-        ],
-      ),
-    );
+    var parts = [
+      if (icon != null) Icon(icon),
+      if (icon != null && label.isNotBlank) const Gap(10),
+      if (label.isNotBlank) label!.asText(),
+    ];
+
+    if (parts.length == 1) {
+      return FloatingActionButton(
+        onPressed: onPressed,
+        heroTag: heroTag ?? (label?.hashCode, icon?.hashCode, randomInt()),
+        backgroundColor: color,
+        child: parts.first,
+      );
+    } else {
+      return FloatingActionButton.extended(
+        onPressed: onPressed,
+        heroTag: heroTag ?? (label?.hashCode, icon?.hashCode, randomInt()),
+        backgroundColor: color,
+        label: Row(children: parts),
+      );
+    }
   }
 }
 
@@ -709,7 +718,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
                         itemBuilder: (context, i) => itemBuilder(
                               context,
                               opt[i],
-                              false, //TODO implement disabled
+                              false,
                               value.value != null ? (i == opt.indexOf(value.value!)) : false,
                             ).onTap(() => onSelected(opt[i])),
                         itemCount: opt.length),
@@ -824,11 +833,12 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   }
 
   Widget itemBuilder(BuildContext context, T item, bool isDisabled, bool isSelected) {
-    isSelected = isSelected || item == value.value;
+    isSelected = (isSelected || item == value.value) && !isDisabled;
     if (widget.itemBuilder != null) {
       return widget.itemBuilder!(context, item, isSelected);
     }
     return ListTile(
+      enabled: !isDisabled,
       leading: Visibility(
         visible: isSelected,
         child: Icon(

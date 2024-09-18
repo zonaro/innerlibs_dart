@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:innerlibs/innerlibs.dart';
 
-extension Keyboardextensions on KeyEvent {
+extension KeyboardExtensions on KeyEvent {
   bool get isAltPressed => HardwareKeyboard.instance.isAltPressed;
 
   bool get isControlPressed => HardwareKeyboard.instance.isControlPressed;
@@ -25,12 +26,24 @@ extension Keyboardextensions on KeyEvent {
 }
 
 extension WidgetExt on Widget {
-  /// wrap a widget using a [Function] if [test] is true
-  Widget wrapIf(bool test, Widget Function(Widget wrappedChild) func) {
-    if (test) {
-      return func(this);
-    } else {
-      return this;
+  /// get all the [Text] children in the widget tree and return their text as string
+  string get text => texts.join(" ");
+
+  /// get all the [Text] children in the widget tree and return their text as list of string
+  Iterable<string> get texts {
+    List<Text> textWidgets = [if (this is Text) this as Text];
+    void findTextWidgetsRecursive(Element element) {
+      if (element.widget is Text) {
+        textWidgets.add(element.widget as Text);
+      }
+      element.visitChildren(findTextWidgetsRecursive);
     }
+
+    // ignore: invalid_use_of_protected_member
+    createElement().visitChildren(findTextWidgetsRecursive);
+    return textWidgets.map((x) => x.text);
   }
+
+  /// wrap a widget using a [Function] if [test] is true
+  Widget wrapIf(bool test, Widget Function(Widget wrappedChild) func) => test ? func(this) : this;
 }

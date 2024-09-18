@@ -397,9 +397,7 @@ extension NumNullExtensions<T extends num?> on T {
 
     double proportion = (x - lowerKey) / (upperKey - lowerKey);
 
-    int mixChannel(int lower, int upper) {
-      return (lower + ((upper - lower) * proportion)).round();
-    }
+    int mixChannel(int lower, int upper) => (lower + ((upper - lower) * proportion)).round();
 
     return Color.fromARGB(
       mixChannel(lowerColor.alpha, upperColor.alpha),

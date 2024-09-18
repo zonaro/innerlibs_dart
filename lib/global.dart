@@ -120,13 +120,13 @@ R changeTo<R>(dynamic value) {
       } else if (value is num) {
         return value.toDouble() as R;
       } else {
-        return (nf.tryParse("$value")?.toDouble() ?? double.parse("$value".ifBlank("0").removeLetters)) as R;
+        return (nf.tryParse(changeTo(value))?.toDouble() ?? double.parse(changeTo<string>(value).ifBlank("0").removeLetters)) as R;
       }
     } else if (isSameType<R, num>()) {
       if (value is DateTime) {
         return changeTo(value.millisecondsSinceEpoch);
       } else {
-        return (nf.tryParse("$value") ?? num.parse("$value".ifBlank("0").removeLetters)) as R;
+        return (nf.tryParse(changeTo(value)) ?? num.parse(changeTo<string>(value).ifBlank("0").removeLetters)) as R;
       }
     } else if (isSameType<R, String>()) {
       if (value is DateTime) {
@@ -222,6 +222,7 @@ String flatString(dynamic value) {
   if (value is bool) value = value.toString();
   if (value is Map) value = value.values.join(", ");
   if (value is Iterable) value = value.join(", ");
+  if(value is Widget) value = value.text;
   return "$value".removeDiacritics.toLowerCase().trimAll;
 }
 
@@ -398,6 +399,7 @@ Widget? forceWidget(
     defaultText: defaultText,
   );
 }
+
 
 /// Generates a keyword from the given [value].
 ///

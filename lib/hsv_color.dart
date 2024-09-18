@@ -255,8 +255,8 @@ class NamedColor implements Color, Comparable<NamedColor> {
 
   /// Returns a list of colors that are modified by the provided [degrees] int the color wheel.
   Iterable<NamedColor> modColors(IntList degrees) => degrees
-      .map((x) => NamedColor()
-        ..hue = (hue + x) % 360
+      .map((degree) => NamedColor()
+        ..hue = (hue + degree) % 360
         ..saturation = saturation
         ..brightness = brightness)
       .orderBy((x) => x.hue);
@@ -341,5 +341,5 @@ class NamedColor implements Color, Comparable<NamedColor> {
     }
   }
 
-  static List<NamedColor> createColors(List<String> colors) => colors.map((color) => NamedColor.fromString(color)).toList();
+  static List<NamedColor> createColors(List<dynamic> values) => values.map((color) => NamedColor.fromValue(color)).toList();
 }
