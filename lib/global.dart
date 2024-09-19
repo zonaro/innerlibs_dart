@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:math' show Random, atan2, cos, max, min, pi, sin, sqrt;
+import 'dart:math' show Random, min, max;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -60,29 +60,6 @@ date get today => now.at(hour: 0, minute: 0, second: 0, millisecond: 0, microsec
 date get tomorrow => now.add(1.days);
 
 date get yesterday => now.subtract(1.days);
-
-double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-  const R = 6371000; // Radius of the Earth in meters
-  double dLat = (lat2 - lat1) * pi / 180.0;
-  double dLon = (lon2 - lon1) * pi / 180.0;
-
-  double a = sin(dLat / 2) * sin(dLat / 2) + cos(lat1 * pi / 180.0) * cos(lat2 * pi / 180.0) * sin(dLon / 2) * sin(dLon / 2);
-  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  double distance = R * c;
-
-  return distance; // Distance in meters
-}
-
-/// Return the speed in meters per second
-double calculateSpeed(double fromLatitude, double fromLongitude, DateTime fromDatetime, double toLatitude, double toLongitude, DateTime toDatetime) {
-  double distance = calculateDistance(fromLatitude, fromLongitude, toLatitude, toLongitude);
-  Duration timeDifference = toDatetime.difference(fromDatetime);
-  double timeInSeconds = timeDifference.inSeconds.toDouble();
-
-//  double speedKilometersPerHour = (speedMetersPerSecond * 3600) / 1000;
-
-  return distance / timeInSeconds;
-}
 
 /// Try change a value of any type into a value of type [R].
 ///
@@ -222,14 +199,14 @@ String flatString(dynamic value) {
   if (value is bool) value = value.toString();
   if (value is Map) value = value.values.join(", ");
   if (value is Iterable) value = value.join(", ");
-  if(value is Widget) value = value.text;
+  if (value is Widget) value = value.text;
   return "$value".removeDiacritics.toLowerCase().trimAll;
 }
 
 /// Ensure the given [item] is a List.
 ///
 /// If [item] is `null`, an empty list is returned.
-/// If [item] is already a Iterable, a copy of items is returned.
+/// If [item] is already a Iterable, a copy of items is returned in list.
 /// Otherwise, [item] is wrapped in a list and returned.
 List forceList(dynamic item) {
   return [
@@ -399,7 +376,6 @@ Widget? forceWidget(
     defaultText: defaultText,
   );
 }
-
 
 /// Generates a keyword from the given [value].
 ///

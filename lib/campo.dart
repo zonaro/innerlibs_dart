@@ -24,7 +24,7 @@ Widget emptySearch(BuildContext context, string searchEntry, string label) {
   );
 }
 
-InputDecoration inputStyles([string? label, IconData? icon, void Function()? onIconTap, Color? color, IconData? suffixIcon, void Function()? onSuffixIconTap]) => InputDecoration(
+InputDecoration inputStyles([string? label, IconData? icon, void Function()? onIconTap, Color? color, dynamic suffixIcon, void Function()? onSuffixIconTap]) => InputDecoration(
       fillColor: Colors.transparent,
       label: label.asNullableText(),
       icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
@@ -435,7 +435,7 @@ class EnumField<T extends Enum> extends StatelessWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final IconData? icon;
-  final int? maxLen;
+  final double? max;
   final List<T> values;
   final string Function(T?)? itemAsString;
 
@@ -453,7 +453,7 @@ class EnumField<T extends Enum> extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.icon,
-    this.maxLen,
+    this.max,
     this.itemAsString,
   }) {
     if (values.isEmpty) {
@@ -467,7 +467,7 @@ class EnumField<T extends Enum> extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueField<T>(
       icon: icon,
-      maxLen: maxLen,
+      max: max,
       label: label,
       onChanged: (newValue, _) {
         if (onChange != null) {
@@ -599,7 +599,7 @@ class ValueField<T extends Object> extends StatefulWidget {
   final void Function(T? value, string? valueString) onChanged;
   final void Function()? onEditingComplete;
   final String? Function(T?)? validator;
-  final int? maxLen;
+  final double? max;
   final int lines;
   final T? value;
   final bool readOnly;
@@ -610,7 +610,7 @@ class ValueField<T extends Object> extends StatefulWidget {
   final FocusNode? focusNode;
   final bool autofocus;
   final IconData? icon;
-  final IconData? suffixIcon;
+  final dynamic suffixIcon;
   final void Function()? onIconTap;
   final void Function()? onSuffixIconTap;
   final Future<List<T>> Function(String)? asyncItems;
@@ -629,7 +629,7 @@ class ValueField<T extends Object> extends StatefulWidget {
     required this.onChanged,
     this.onEditingComplete,
     this.validator,
-    this.maxLen,
+    this.max,
     this.lines = 1,
     this.value,
     this.readOnly = false,
@@ -668,7 +668,9 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
 
   late List<TextInputFormatter> inputFormatters;
 
+  int? maxLen;
   Iterable<T> get options => [value.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).last).toList();
+
   StringList Function(T?) get textValueSelector {
     if (widget.textValueSelector == null) {
       if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
@@ -702,6 +704,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
 
   @override
   Widget build(BuildContext context) {
+    _maxLenByType();
     if (widget.isAutoComplete || (useOptionsList == false)) {
       return Padding(
         padding: fieldsPadding,
@@ -783,7 +786,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
         focusNode: fn,
         textAlign: textAlign,
         initialValue: textEditingController == null ? (value.value != null ? textValueSelector(value.value as T).last : "") : null,
-        maxLength: widget.maxLen,
+        maxLength: maxLen,
         controller: textEditingController?..text = value.value != null ? textValueSelector(value.value as T).last : "",
         onChanged: (newValue) async {
           if (useOptionsList) {
@@ -852,6 +855,13 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   }
 
   void onChanged(T? value, string? textValue) {
+    if (widget.max != null && widget.max! > 0) {
+      if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
+        value = (value as num).clampMax(widget.max!) as T;
+      }
+      textValue = textValue?.first(maxLen!);
+    }
+
     if (widget.debounce == null) {
       widget.onChanged(value, textValue);
     } else {
@@ -873,6 +883,16 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
       flatString(x),
       if (T is JsonMap) ...(x as JsonMap).values,
     ];
+  }
+
+  void _maxLenByType() {
+    if (widget.max != null && widget.max! > 0) {
+      if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
+        maxLen = widget.max.toString().length;
+      } else {
+        maxLen = widget.max!.ceil();
+      }
+    }
   }
 }
 
