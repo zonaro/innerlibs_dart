@@ -36,7 +36,7 @@ export 'formatters.dart';
 export 'general_extensions.dart';
 export 'gesture_detector_extension.dart';
 export 'global.dart';
-export 'hsv_color.dart';
+export 'named_color.dart';
 export 'icon_extensions.dart';
 export 'info_usuario.dart';
 export 'keyed_json_table.dart';

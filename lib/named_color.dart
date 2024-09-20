@@ -5,6 +5,7 @@ export 'package:innerlibs/colornames.dart';
 
 /// Represents a color with a name and description.
 /// Its implements most of the methods of the [Color], [HSLColor] and [HSVColor] classes.
+/// Different from the [Color] class, this class values can be changed without copying the instance.
 class NamedColor implements Color, Comparable<NamedColor> {
   late double _h, _s, _v;
   late String _name;
@@ -13,20 +14,21 @@ class NamedColor implements Color, Comparable<NamedColor> {
   String description = "";
 
   NamedColor([Color color = Colors.transparent, String? name, string description = ""]) {
+    name ??= NamedColors.getName(color.hexadecimal);
     _loadColor(color);
     _name = name ?? color.alphaHexadecimal;
     description = description;
   }
 
-  factory NamedColor.fromAHSL(alpha, hue, saturation, lightness, [string name = "", string description = ""]) {
+  factory NamedColor.fromAHSL(alpha, hue, saturation, lightness, [string? name, string description = ""]) {
     HSLColor hsl = HSLColor.fromAHSL(alpha, hue, saturation, lightness);
     return NamedColor(hsl.toColor(), name, description);
   }
 
   @override
-  NamedColor.fromARGB(int a, int r, int g, int b, [string name = "", string description = ""]) : this(Color.fromARGB(a, r, g, b), name, description);
+  NamedColor.fromARGB(int a, int r, int g, int b, [string? name, string description = ""]) : this(Color.fromARGB(a, r, g, b), name, description);
 
-  factory NamedColor.fromCMYK(double c, double m, double y, double k, [string name = "", string description = ""]) {
+  factory NamedColor.fromCMYK(double c, double m, double y, double k, [string? name, string description = ""]) {
     var r = 255 * (1 - c) * (1 - k);
     var g = 255 * (1 - m) * (1 - k);
     var b = 255 * (1 - y) * (1 - k);
@@ -35,7 +37,9 @@ class NamedColor implements Color, Comparable<NamedColor> {
 
   factory NamedColor.fromCss(String css) {
     var color = NamedColor();
-    if (css.startsWith('rgba')) {
+    if (css.isHexadecimalColor) {
+      color.hexadecimal = css;
+    } else if (css.startsWith('rgba')) {
       var values = css.substring(5, css.length - 1).split(',');
       color.red = int.parse(values[0]);
       color.green = int.parse(values[1]);
@@ -46,8 +50,6 @@ class NamedColor implements Color, Comparable<NamedColor> {
       color.red = int.parse(values[0]);
       color.green = int.parse(values[1]);
       color.blue = int.parse(values[2]);
-    } else if (css.startsWith('#')) {
-      color.hexadecimal = css;
     } else if (css.startsWith('hsl')) {
       var values = css.substring(4, css.length - 1).split(',');
       color.hue = double.parse(values[0]);
@@ -64,16 +66,10 @@ class NamedColor implements Color, Comparable<NamedColor> {
     return color;
   }
 
-  NamedColor.fromInt(int argb, [string name = "", string description = ""]) : this(Color(argb), name, description);
+  NamedColor.fromInt(int argb, [string? name, string description = ""]) : this(Color(argb), name, description);
 
-  NamedColor.fromRGB(int r, int g, int b, [string name = "", string description = ""]) : this.fromInt(255 << 24 | r << 16 | g << 8 | b, name, description);
+  NamedColor.fromRGB(int r, int g, int b, [string? name, string description = ""]) : this.fromInt(255 << 24 | r << 16 | g << 8 | b, name, description);
   NamedColor.fromString(String color, [string? name, this.description = ""]) {
-    if (name == null && NamedColors.isNamedColor(color)) {
-      var named = NamedColors.fromValue(color);
-      color = named.hexadecimal;
-      name ??= named.name;
-    }
-
     _loadColor(color.asColor);
     _name = name ?? color;
   }

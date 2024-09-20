@@ -1,8 +1,10 @@
+import 'dart:ui';
+
 import 'package:innerlibs/innerlibs.dart';
 
 /// A list of named colors and their values
 /// It
-enum NamedColors {
+enum NamedColors implements Color {
   absoluteZero("#0048BA", "Absolute Zero"),
   acidGreen("#B0BF1A", "Acid green"),
   aero("#7CB9E8", "Aero"),
@@ -79,7 +81,7 @@ enum NamedColors {
   blizzardBlue("#ACE5EE", "Blizzard blue"),
   blond("#FAF0BE", "Blond"),
   bloodRed("#660000", "Blood red"),
-  blue('#0000FF', 'Blue'),
+  blueColor('#0000FF', 'Blue'),
   blueBell("#A2A2D0", "Blue bell"),
   blueCrayola("#1F75FE", "Blue (Crayola)"),
   blueGray("#6699CC", "Blue gray"),
@@ -377,7 +379,7 @@ enum NamedColors {
   gray('#808080', 'Gray'),
   grayAsparagus("#465945", "Gray asparagus"),
   grayBlue("#8C92AC", "Gray blue"),
-  green('#008000', 'Green'),
+  greenColor('#008000', 'Green'),
   greenBlue("#1164B4", "Green blue"),
   greenCrayola("#1CAC78", "Green (Crayola)"),
   greenCyan("#009966", "Green cyan"),
@@ -838,7 +840,7 @@ enum NamedColors {
   razzmatazz("#E3256B", "Razzmatazz"),
   razzmicBerry("#8D4E85", "Razzmic berry"),
   rebeccaPurple('#663399', 'Rebecca Purple'),
-  red('#FF0000', 'Red'),
+  redColor('#FF0000', 'Red'),
   redBrown("#A52A2A", "Red brown"),
   redCrayola("#EE204D", "Red (Crayola)"),
   redDevil("#860111", "Red devil"),
@@ -1134,21 +1136,59 @@ enum NamedColors {
     throw Exception("Color not found");
   }
 
+  @override
+  int get alpha => color.alpha;
+
+  @override
+  int get blue => color.blue;
+
   NamedColor get color => NamedColor.fromString(hexadecimal, name);
+
+  @override
+  int get green => color.green;
 
   string get keyword => generateKeyword(name);
 
-  static bool isNamedColor(String value) {
+  @override
+  double get opacity => color.opacity;
+
+  @override
+  int get red => color.red;
+
+  @override
+  int get value => color.value;
+
+  @override
+  double computeLuminance() => color.computeLuminance();
+
+  @override
+  Color withAlpha(int a) => color.withAlpha(a);
+
+  @override
+  Color withBlue(int b) => color.withBlue(b);
+
+  @override
+  Color withGreen(int g) => color.withGreen(g);
+
+  @override
+  Color withOpacity(double opacity) => color.withOpacity(opacity);
+
+  @override
+  Color withRed(int r) => color.withRed(r);
+
+  static String? getName(string value) {
     for (var color in values) {
       if (value.isHexadecimalColor || value.isNumber) {
         if (color.color == value.asColor) {
-          return true;
+          return color.name;
         }
         if (color.keyword.flatEqual(generateKeyword(value))) {
-          return true;
+          return color.name;
         }
       }
     }
-    return false;
+    return null;
   }
+
+  static bool isNamedColor(String value) => getName(value) != null;
 }

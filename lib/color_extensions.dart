@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' show Colors;
 import 'package:flutter/widgets.dart';
-import 'package:innerlibs/hsv_color.dart';
+import 'package:innerlibs/named_color.dart';
 import 'package:innerlibs/string_extensions.dart';
 
 extension ColorExtensions on Color {
@@ -34,6 +34,7 @@ extension ColorExtensions on Color {
   ///
   /// Retorna a cor mesclada
   Color lerp(Color toColor, double amount) {
+    if (amount.isNaN) return this;
     // start colours as lerp-able floats
     double sr = red.toDouble();
     double sg = green.toDouble();
