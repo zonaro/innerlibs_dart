@@ -620,6 +620,7 @@ class ValueField<T extends Object> extends StatefulWidget {
   final List<dynamic> Function(T)? searchOn;
   final Duration? debounce;
   final void Function(string)? onFieldSubmitted;
+ 
 
   const ValueField({
     super.key,
@@ -914,12 +915,8 @@ class YesNoField extends StatelessWidget {
       value: value,
       readOnly: readOnly,
       options: opt,
-      onChanged: (v, _) {
-        onChanged(v);
-      },
-      validator: (newValue) {
-        return newValue.flatEqualAny(opt) ? null : context.translations.invalidItem(context.translations.value);
-      },
+      onChanged: (v, _) => onChanged(v),
+      validator: (newValue) => newValue.flatEqualAny(opt) ? null : context.translations.invalidItem(context.translations.value),
     );
   }
 }
