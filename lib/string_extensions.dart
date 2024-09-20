@@ -6,7 +6,6 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:innerlibs/colornames.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -206,7 +205,7 @@ extension StringExtensions on String {
       return Color(int.parse('$alpha$color', radix: 16));
     }
 
-    if (ColorNames.isNamedColor(this)) {
+    if (NamedColors.isNamedColor(this)) {
       return NamedColor.fromString(this);
     }
 

@@ -1,14 +1,17 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart' show Colors;
+import 'package:flutter/widgets.dart';
 import 'package:innerlibs/hsv_color.dart';
 import 'package:innerlibs/string_extensions.dart';
 
 extension ColorExtensions on Color {
   String get alphaHexadecimal => '#${value.toRadixString(16).padLeft(8, '0')}';
+  NamedColor get asNamedColor => NamedColor(this);
+
   String get hexadecimal => '#${value.toRadixString(16).removeFirst(2).padLeft(6, '0')}';
 
-  NamedColor get hsv => NamedColor(this);
+  HSLColor get hsl => HSLColor.fromColor(this);
+
+  HSVColor get hsv => HSVColor.fromColor(this);
 
   /// Retorna uma cor de contraste baseado na iluminacao da primeira cor: Uma cor clara se a
   /// primeira for escura. Uma cor escura se a primeira for clara

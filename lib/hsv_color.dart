@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:innerlibs/colornames.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-/// A class that represents a color with a name and description.
+export 'package:innerlibs/colornames.dart';
+
+/// Represents a color with a name and description.
+/// Its implements most of the methods of the [Color], [HSLColor] and [HSVColor] classes.
 class NamedColor implements Color, Comparable<NamedColor> {
   late double _h, _s, _v;
   late String _name;
@@ -16,23 +18,64 @@ class NamedColor implements Color, Comparable<NamedColor> {
     description = description;
   }
 
+  factory NamedColor.fromAHSL(alpha, hue, saturation, lightness, [string name = "", string description = ""]) {
+    HSLColor hsl = HSLColor.fromAHSL(alpha, hue, saturation, lightness);
+    return NamedColor(hsl.toColor(), name, description);
+  }
+
   @override
-  NamedColor.fromARGB(int a, int r, int g, int b) : this(Color.fromARGB(a, r, g, b));
+  NamedColor.fromARGB(int a, int r, int g, int b, [string name = "", string description = ""]) : this(Color.fromARGB(a, r, g, b), name, description);
 
-  NamedColor.fromInt(int argb) : this(Color(argb));
+  factory NamedColor.fromCMYK(double c, double m, double y, double k, [string name = "", string description = ""]) {
+    var r = 255 * (1 - c) * (1 - k);
+    var g = 255 * (1 - m) * (1 - k);
+    var b = 255 * (1 - y) * (1 - k);
+    return NamedColor.fromRGB(r.round(), g.round(), b.round(), name, description);
+  }
 
-  NamedColor.fromRGB(int r, int g, int b) : this.fromInt(255 << 24 | r << 16 | g << 8 | b);
+  factory NamedColor.fromCss(String css) {
+    var color = NamedColor();
+    if (css.startsWith('rgba')) {
+      var values = css.substring(5, css.length - 1).split(',');
+      color.red = int.parse(values[0]);
+      color.green = int.parse(values[1]);
+      color.blue = int.parse(values[2]);
+      color.opacity = double.parse(values[3]);
+    } else if (css.startsWith('rgb')) {
+      var values = css.substring(4, css.length - 1).split(',');
+      color.red = int.parse(values[0]);
+      color.green = int.parse(values[1]);
+      color.blue = int.parse(values[2]);
+    } else if (css.startsWith('#')) {
+      color.hexadecimal = css;
+    } else if (css.startsWith('hsl')) {
+      var values = css.substring(4, css.length - 1).split(',');
+      color.hue = double.parse(values[0]);
+      color.saturation = double.parse(values[1]);
+      color.lightness = double.parse(values[2]);
+    } else if (css.startsWith('hsv')) {
+      var values = css.substring(4, css.length - 1).split(',');
+      color.hue = double.parse(values[0]);
+      color.saturation = double.parse(values[1]);
+      color.brightness = double.parse(values[2]);
+    } else {
+      throw ArgumentError('Invalid CSS color: $css');
+    }
+    return color;
+  }
 
-  NamedColor.fromString(String color, [string? name, string description = ""]) {
-    if (name == null && ColorNames.isNamedColor(color)) {
-      var named = ColorNames.fromValue(color);
+  NamedColor.fromInt(int argb, [string name = "", string description = ""]) : this(Color(argb), name, description);
+
+  NamedColor.fromRGB(int r, int g, int b, [string name = "", string description = ""]) : this.fromInt(255 << 24 | r << 16 | g << 8 | b, name, description);
+  NamedColor.fromString(String color, [string? name, this.description = ""]) {
+    if (name == null && NamedColors.isNamedColor(color)) {
+      var named = NamedColors.fromValue(color);
       color = named.hexadecimal;
       name ??= named.name;
     }
 
     _loadColor(color.asColor);
     _name = name ?? color;
-    description = description;
   }
 
   factory NamedColor.fromValue(dynamic value) {
@@ -40,6 +83,10 @@ class NamedColor implements Color, Comparable<NamedColor> {
       return NamedColor.fromString(value.hexadecimal, value.name, value.description);
     } else if (value is Color) {
       return NamedColor(value);
+    } else if (value is HSLColor) {
+      return NamedColor(value.toColor());
+    } else if (value is HSVColor) {
+      return NamedColor(value.toColor());
     } else if (value is String) {
       return NamedColor.fromString(value);
     } else if (value is num) {
@@ -51,12 +98,16 @@ class NamedColor implements Color, Comparable<NamedColor> {
 
   @override
   int get alpha => _scolor.alpha;
-  set alpha(int value) => _loadColor(_scolor.withAlpha(value));
 
+  set alpha(int value) => _loadColor(_scolor.withAlpha(value));
   Iterable<NamedColor> get analogousColors => modColors([30, -30]);
+
   int get argb => _scolor.value;
 
   set argb(int value) => _loadColor(Color(value));
+
+  double get black => 1 - _v;
+
   @override
   int get blue => _scolor.blue;
 
@@ -75,7 +126,7 @@ class NamedColor implements Color, Comparable<NamedColor> {
   NamedColor? get closestColor {
     var min = double.infinity;
     NamedColor? color;
-    for (var color in ColorNames.values) {
+    for (var color in NamedColors.values) {
       var d = color.color.distanceTo(this);
       if (d < min) {
         min = d;
@@ -85,29 +136,24 @@ class NamedColor implements Color, Comparable<NamedColor> {
     return color;
   }
 
-  string get closestColorName {
-    var min = double.infinity;
-    String? name;
-    for (var color in ColorNames.values) {
-      var d = color.color.distanceTo(this);
-      if (d < min) {
-        min = d;
-        name = color.name;
-      }
-    }
-    return name ?? "";
-  }
+  string get closestColorName => closestColor?.name ?? '';
 
   NamedColor get complementaryColor => modColor(180);
 
   String get css => alpha == 255 ? 'rgb($red, $green, $blue)' : 'rgba($red, $green, $blue, $opacity)';
+
+  double get cyan => 1 - (red / 255);
 
   /// The Dominant value of this color.
   int get dominantValue => [red, green, blue].max;
 
   @override
   int get green => _scolor.green;
+
   set green(int value) => _loadColor(_scolor.withGreen(value));
+
+  @override
+  int get hashCode => _scolor.hashCode;
 
   String get hexadecimal => _scolor.hexadecimal;
 
@@ -129,24 +175,29 @@ class NamedColor implements Color, Comparable<NamedColor> {
     }
   }
 
+  double get lightness => hsl.lightness;
+
+  set lightness(double value) => _loadColor(HSLColor.fromColor(this).withLightness(value).toColor());
+
   /// The Luminance of this color.
   /// The Luminance is a measure of the brightness of a color.
   double get luminance => 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 
+  double get magenta => 1 - (green / 255);
+
   /// The Name of this color.
-  /// If the name is not set, it will return the closest color name from the [ColorNames] list.
+  /// If the name is not set, it will return the closest color name from the [NamedColors] list.
   String get name => _name.isEmpty ? closestColorName : _name;
 
   set name(String value) => _name = value;
+
   @override
   double get opacity => alpha / 255.0;
-
   set opacity(double value) => alpha = (value * 255).toInt();
-
   @override
   int get red => _scolor.red;
-
   set red(int value) => _loadColor(_scolor.withRed(value));
+
   double get saturation => _s;
 
   set saturation(double value) {
@@ -166,6 +217,8 @@ class NamedColor implements Color, Comparable<NamedColor> {
   int get value => _scolor.value;
 
   set value(int value) => _loadColor(Color(value));
+
+  double get yellow => 1 - (blue / 255);
 
   NamedColor operator *(other) {
     if (other is num) {
@@ -218,6 +271,9 @@ class NamedColor implements Color, Comparable<NamedColor> {
     return NamedColor.fromARGB(alpha, red, green, blue);
   }
 
+  @override
+  operator ==(Object other) => hashCode == NamedColor.fromValue(other).hashCode;
+
   /// Return a new instance of [NamedColor] with the same values as this instance.
   NamedColor clone() => NamedColor(_scolor, _name, description);
 
@@ -229,6 +285,12 @@ class NamedColor implements Color, Comparable<NamedColor> {
       return argb.compareTo(other.argb);
     } else if (other is Color) {
       return argb.compareTo(other.value);
+    } else if (other is String) {
+      return argb.compareTo(NamedColor.fromValue(other).argb);
+    } else if (other is HSLColor) {
+      return other.toColor().value.compareTo(argb);
+    } else if (other is HSVColor) {
+      return other.toColor().value.compareTo(argb);
     } else {
       throw ArgumentError('Cannot compare $NamedColor with ${other.runtimeType}');
     }
@@ -261,20 +323,44 @@ class NamedColor implements Color, Comparable<NamedColor> {
         ..brightness = brightness)
       .orderBy((x) => x.hue);
 
-  @override
-  NamedColor withAlpha(int a) => _scolor.withAlpha(a).hsv;
+  JsonMap toJson() {
+    return {
+      'name': name,
+      'description': description,
+      'hexadecimal': hexadecimal,
+      'rgb': [red, green, blue],
+      'hsl': [hue, saturation, lightness],
+      'hsv': [hue, saturation, brightness],
+      'cmyk': [cyan, magenta, yellow, black],
+      'css': css,
+      'luminance': luminance,
+      'brightness': brightness,
+      'dominantValue': dominantValue,
+      'closestColor': closestColorName,
+      'complementaryColor': complementaryColor.hexadecimal,
+      'analogousColors': analogousColors.map((c) => c.hexadecimal).toList(),
+      'triadicColors': triadicColors.map((c) => c.hexadecimal).toList(),
+      'splitComplementaryColors': splitComplementaryColors.map((c) => c.hexadecimal).toList(),
+    };
+  }
 
   @override
-  NamedColor withBlue(int b) => _scolor.withBlue(b).hsv;
+  String toString() => name;
 
   @override
-  NamedColor withGreen(int g) => _scolor.withGreen(g).hsv;
+  NamedColor withAlpha(int a) => _scolor.withAlpha(a).asNamedColor;
 
   @override
-  NamedColor withOpacity(double opacity) => _scolor.withOpacity(opacity).hsv;
+  NamedColor withBlue(int b) => _scolor.withBlue(b).asNamedColor;
 
   @override
-  NamedColor withRed(int r) => _scolor.withRed(r).hsv;
+  NamedColor withGreen(int g) => _scolor.withGreen(g).asNamedColor;
+
+  @override
+  NamedColor withOpacity(double opacity) => _scolor.withOpacity(opacity).asNamedColor;
+
+  @override
+  NamedColor withRed(int r) => _scolor.withRed(r).asNamedColor;
 
   void _loadColor(Color color) {
     _scolor = color;
@@ -342,4 +428,11 @@ class NamedColor implements Color, Comparable<NamedColor> {
   }
 
   static List<NamedColor> createColors(List<dynamic> values) => values.map((color) => NamedColor.fromValue(color)).toList();
+
+  static NamedColor fromJson(JsonMap json) {
+    var color = NamedColor.fromValue(json['hexadecimal']);
+    color.name = json['name'];
+    color.description = json['description'];
+    return color;
+  }
 }
