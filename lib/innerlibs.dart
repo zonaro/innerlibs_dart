@@ -83,7 +83,6 @@ export 'widgets/nil.dart';
 export 'widgets/placeholders.dart';
 export 'widgets/responsive.dart';
 export 'widgets/responsive_grid.dart';
-export 'widgets/restart_widget.dart';
 export 'widgets/scaffold_builder.dart';
 export 'widgets/shimmer.dart';
 export 'widgets/square_button.dart';

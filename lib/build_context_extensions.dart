@@ -7,7 +7,7 @@ import 'package:innerlibs/innerlibs.dart';
 typedef ScreenTierMap<T> = Map<T, ScreenTier>;
 
 extension BuildContextExtensions on BuildContext {
-  bool get alwaysUse24HourFormat => mediaQuery.alwaysUse24HourFormat;
+  bool get alwaysUse24HourFormat => MediaQuery.alwaysUse24HourFormatOf(this);
 
   /// performs a simple [Theme.of(context).appBarTheme] action and returns given [appBarTheme]
   AppBarTheme get appBarTheme => theme.appBarTheme;
@@ -103,49 +103,6 @@ extension BuildContextExtensions on BuildContext {
   /// component.
   Color get hoverColor => theme.hoverColor;
 
-  // // TYPOGRAPHY 2018
-
-  // /// performs a simple [textTheme.headline1] action and returns given [headline1]
-  // TextStyle? get headline1 => textTheme.displayLarge;
-
-  // /// performs a simple [textTheme.headline2] action and returns given [headline2]
-  // TextStyle? get headline2 => textTheme.displayMedium;
-
-  // /// performs a simple [textTheme.headline3] action and returns given [headline3]
-  // TextStyle? get headline3 => textTheme.displaySmall;
-
-  // /// performs a simple [textTheme.headline4] action and returns given [headline4]
-  // TextStyle? get headline4 => textTheme.headlineMedium;
-
-  // /// performs a simple [textTheme.headline5] action and returns given [headline5]
-  // TextStyle? get headline5 => textTheme.headlineSmall;
-
-  // /// performs a simple [textTheme.headline6] action and returns given [headline6]
-  // TextStyle? get headline6 => textTheme.titleLarge;
-
-  // /// performs a simple [textTheme.subtitle1] action and returns given [subtitle1]
-  // TextStyle? get subtitle1 => textTheme.titleMedium;
-
-  // /// performs a simple [textTheme.subtitle2] action and returns given [subtitle2]
-  // TextStyle? get subtitle2 => textTheme.titleSmall;
-
-  // /// performs a simple [textTheme.bodyText1] action and returns given [bodyText1]
-  // TextStyle? get bodyText1 => textTheme.bodyLarge;
-
-  // /// performs a simple [textTheme.bodyText2] action and returns given [bodyText2]
-  // TextStyle? get bodyText2 => textTheme.bodyMedium;
-
-  // /// performs a simple [textTheme.caption] action and returns given [caption]
-  // TextStyle? get caption => textTheme.bodySmall;
-
-  // /// performs a simple [textTheme.button] action and returns given [button]
-  // TextStyle? get button => textTheme.labelLarge;
-
-  // /// performs a simple [textTheme.overline] action and returns given [overline]
-  // TextStyle? get overline => textTheme.labelSmall;
-
-  // TYPOGRAPHY 2021
-
   bool get is16x9 => aspectRatioString == "16:9";
 
   bool get is1x1 => aspectRatioString == "1:1";
@@ -171,12 +128,6 @@ extension BuildContextExtensions on BuildContext {
 
   /// True if the shortestSide is smaller than 600p
   bool get isPhoneSize => (shortestSide < 600);
-
-  /// is dark mode currently enabled?
-  bool get isPlatformDarkMode => platformBrightness == Brightness.dark;
-
-  /// is light mode currently enabled?
-  bool get isPlatformLightMode => platformBrightness == Brightness.light;
 
   /// True if the shortestSide is largest than 600p
   bool get isSmallTabletSize => (shortestSide >= 600);
@@ -225,8 +176,6 @@ extension BuildContextExtensions on BuildContext {
   double get logicalWidth => logicalScreenSize.width;
 
   MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
-
-  MediaQueryData get mediaQuery => MediaQuery.of(this);
 
   /// Returns the [ModalRoute] associated with this [BuildContext].
   ///
@@ -306,7 +255,7 @@ extension BuildContextExtensions on BuildContext {
   /// specific property of MediaQuery the ability to declare that when reading the MediaQuery from the context.
 
   /// The same of MediaQuery.sizeOf(context)
-  Size get screenSize => mediaQuery.size;
+  Size get screenSize => MediaQuery.sizeOf(this);
 
   /// the current [ScreenTier]
   ScreenTier get screenTier => ScreenTier.fromWidth(width);
@@ -349,10 +298,10 @@ extension BuildContextExtensions on BuildContext {
   InnerLibsLocalizations get translations => InnerLibsLocalizations.of(this);
 
   /// similar to [MediaQuery.of(context).viewInsets]
-  EdgeInsets get viewInsets => mediaQuery.viewInsets;
+  EdgeInsets get viewInsets => MediaQuery.viewInsetsOf(this);
 
   /// similar to [MediaQuery.of(context).viewPadding]
-  EdgeInsets get viewPadding => mediaQuery.viewPadding;
+  EdgeInsets get viewPadding => MediaQuery.viewPaddingOf(this);
 
   /// a size computed by [ScreenTier]
 
@@ -375,7 +324,10 @@ extension BuildContextExtensions on BuildContext {
   bool canPop() => Navigator.canPop(this);
 
   /// Control the focus of the current context
-  ///
+  /// [times] is the number of times to move the focus.
+  /// if [times] is positive, it will move the focus forward.
+  /// if [times] is negative, it will move the focus backward.
+  /// if [times] is zero, it will unfocus the current context.
   bool focus([int times = 1]) {
     bool b = false;
     if (times > 0) {
@@ -409,36 +361,21 @@ extension BuildContextExtensions on BuildContext {
   bool previousFocus() => FocusScope.of(this).previousFocus();
 
   /// performs a simple [Navigator.push] action with given [route]
-  Future<dynamic> push(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async =>
-      await Navigator.of(this, rootNavigator: rootNavigator).push(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
+  Future<dynamic> push(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).push(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
 
   /// perform push and remove route
-  Future<dynamic> pushAndRemoveUntil(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool routes = false, bool rootNavigator = false}) async =>
-      await Navigator.of(this, rootNavigator: rootNavigator)
-          .pushAndRemoveUntil(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog), (Route<dynamic> route) => routes);
+  Future<dynamic> pushAndRemoveUntil(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool routes = false, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog), (Route<dynamic> route) => routes);
 
   /// perform push with routeName
-  Future<dynamic> pushNamed(String screenName, {Object? arguments, bool rootNavigator = false}) async =>
-      await Navigator.of(this, rootNavigator: rootNavigator).pushNamed(screenName, arguments: arguments);
+  Future<dynamic> pushNamed(String screenName, {Object? arguments, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).pushNamed(screenName, arguments: arguments);
 
   /// performs a simple [Navigator.pushReplacement] action with given [route]
-  Future<dynamic> pushReplacement(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async =>
-      await Navigator.of(this, rootNavigator: rootNavigator)
-          .pushReplacement(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
+  Future<dynamic> pushReplacement(Widget screen, {RouteSettings? settings, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await Navigator.of(this, rootNavigator: rootNavigator).pushReplacement(MaterialPageRoute(builder: (_) => screen, settings: settings, maintainState: maintainState, fullscreenDialog: fullscreenDialog));
 
   /// perform replash with routeName
-  Future<dynamic> pushReplacementNamed(String screenName, {Object? arguments, bool rootNavigator = false}) =>
-      Navigator.of(this, rootNavigator: rootNavigator).pushReplacementNamed(screenName, arguments: arguments);
+  Future<dynamic> pushReplacementNamed(String screenName, {Object? arguments, bool rootNavigator = false}) => Navigator.of(this, rootNavigator: rootNavigator).pushReplacementNamed(screenName, arguments: arguments);
 
-  Future<dynamic> pushRoute(Widget screen, {required string route, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async =>
-      await push(screen, settings: RouteSettings(name: route), maintainState: maintainState, fullscreenDialog: fullscreenDialog);
-
-  /// Restarts the app.
-  ///
-  /// This method restarts the app by using the [RestartWidget] class.
-  /// It takes the current build context as a parameter and calls the
-  /// `restartApp` method of [RestartWidget] to restart the app.
-  void restartApp() => RestartWidget.restartApp(this);
+  Future<dynamic> pushRoute(Widget screen, {required string route, bool maintainState = true, bool fullscreenDialog = false, bool rootNavigator = false}) async => await push(screen, settings: RouteSettings(name: route), maintainState: maintainState, fullscreenDialog: fullscreenDialog);
 
   /// Shows a [SnackBar] with the given [content] in the current [Scaffold].
   ///
@@ -452,7 +389,7 @@ extension BuildContextExtensions on BuildContext {
   /// Returns the [ScaffoldFeatureController] for the shown [SnackBar].
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(dynamic content) {
     if (content is String) content = content.asText();
-    if ((content is SnackBar == false) && content is Widget) {
+    if ((content is! SnackBar) && content is Widget) {
       content = SnackBar(content: content);
     }
     if (content is SnackBar) {
@@ -461,10 +398,7 @@ extension BuildContextExtensions on BuildContext {
     return showSnackBar("$content");
   }
 
-  void unfocus({
-    UnfocusDisposition disposition = UnfocusDisposition.scope,
-  }) =>
-      FocusScope.of(this).unfocus(disposition: disposition);
+  void unfocus({UnfocusDisposition disposition = UnfocusDisposition.scope}) => FocusScope.of(this).unfocus(disposition: disposition);
 
   /// returns a specific value according to the current screen [width] or [height] or the next lower value if omitted
 
