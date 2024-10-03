@@ -1,7 +1,74 @@
 {
     "@@locale": "en",
     "@@author": "Kaizonaro",
+    "call": "Call",
+    "send": "Send",
+    "calltoItem": "Call to {item}",
+    "@calltoItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "sendtoItem": "Send to {item}",
+    "@sendtoItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "sendItemToItem": "Send {item1} to {item2}",
+    "@sendItemToItem": {
+        "placeholders": {
+            "item1": {
+                "type": "String"
+            },
+            "item2": {
+                "type": "String"
+            }
+        }
+    },
+    "to": "To",
+    "open": "Open",
+    "view": "View",
     "search": "Search",
+    "searchFor": "Search for {item}...",
+    "@searchFor": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "searchForIn": "Search for {item} in {location}",
+    "@searchForIn": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            },
+            "location": {
+                "type": "String"
+            }
+        }
+    },
+    "findItem": "Find {item}",
+    "@findItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "findIn": "Find in {item}",
+    "@findIn": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
     "find": "Find",
     "yes": "Yes",
     "no": "No",
@@ -11,6 +78,14 @@
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
+   "newItem": "New {item}",
+    "@newItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
     "add": "Add",
     "back": "Back",
     "next": "Next",
@@ -79,4 +154,5 @@
             }
         }
     }
+
 }

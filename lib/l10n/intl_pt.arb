@@ -1,7 +1,74 @@
 {
     "@@locale": "pt",
     "@@author": "Kaizonaro",
+    "call": "Ligar",
+    "send": "Enviar",
+    "calltoItem": "Ligar para {item}",
+    "@calltoItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "sendtoItem": "Enviar para {item}",
+    "@sendtoItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "sendItemToItem": "Enviar {item1} para {item2}",
+    "@sendItemToItem": {
+        "placeholders": {
+            "item1": {
+                "type": "String"
+            },
+            "item2": {
+                "type": "String"
+            }
+        }
+    },
+    "to": "Para",
+    "open": "Abrir",
+    "view": "Visualizar",
     "search": "Buscar",
+    "searchFor": "Buscar por {item}...",
+    "@searchFor": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "searchForIn": "Buscar por {item} em {location}",
+    "@searchForIn": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            },
+            "location": {
+                "type": "String"
+            }
+        }
+    },
+    "findItem": "Encontrar {item}",
+    "@findItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
+    "findIn": "Encontrar em {item}",
+    "@findIn": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
     "find": "Encontrar",
     "yes": "Sim",
     "no": "Não",
@@ -11,6 +78,15 @@
     "save": "Salvar",
     "delete": "Excluir",
     "edit": "Editar",
+
+    "newItem": "Novo {item}",
+    "@newItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+    },
     "add": "Adicionar",
     "back": "Voltar",
     "next": "Próximo",

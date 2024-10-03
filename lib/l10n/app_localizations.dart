@@ -96,11 +96,83 @@ abstract class InnerLibsLocalizations {
     Locale('pt', 'BR')
   ];
 
+  /// No description provided for @call.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get call;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @calltoItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Call to {item}'**
+  String calltoItem(String item);
+
+  /// No description provided for @sendtoItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Send to {item}'**
+  String sendtoItem(String item);
+
+  /// No description provided for @sendItemToItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Send {item1} to {item2}'**
+  String sendItemToItem(String item1, String item2);
+
+  /// No description provided for @to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get to;
+
+  /// No description provided for @open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get open;
+
+  /// No description provided for @view.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view;
+
   /// No description provided for @search.
   ///
   /// In en, this message translates to:
   /// **'Search'**
   String get search;
+
+  /// No description provided for @searchFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for {item}...'**
+  String searchFor(String item);
+
+  /// No description provided for @searchForIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for {item} in {location}'**
+  String searchForIn(String item, String location);
+
+  /// No description provided for @findItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Find {item}'**
+  String findItem(String item);
+
+  /// No description provided for @findIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Find in {item}'**
+  String findIn(String item);
 
   /// No description provided for @find.
   ///
@@ -155,6 +227,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Edit'**
   String get edit;
+
+  /// No description provided for @newItem.
+  ///
+  /// In en, this message translates to:
+  /// **'New {item}'**
+  String newItem(String item);
 
   /// No description provided for @add.
   ///

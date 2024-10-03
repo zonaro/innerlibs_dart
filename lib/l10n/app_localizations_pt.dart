@@ -9,7 +9,57 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   InnerLibsLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
+  String get call => 'Ligar';
+
+  @override
+  String get send => 'Enviar';
+
+  @override
+  String calltoItem(String item) {
+    return 'Ligar para $item';
+  }
+
+  @override
+  String sendtoItem(String item) {
+    return 'Enviar para $item';
+  }
+
+  @override
+  String sendItemToItem(String item1, String item2) {
+    return 'Enviar $item1 para $item2';
+  }
+
+  @override
+  String get to => 'Para';
+
+  @override
+  String get open => 'Abrir';
+
+  @override
+  String get view => 'Visualizar';
+
+  @override
   String get search => 'Buscar';
+
+  @override
+  String searchFor(String item) {
+    return 'Buscar por $item...';
+  }
+
+  @override
+  String searchForIn(String item, String location) {
+    return 'Buscar por $item em $location';
+  }
+
+  @override
+  String findItem(String item) {
+    return 'Encontrar $item';
+  }
+
+  @override
+  String findIn(String item) {
+    return 'Encontrar em $item';
+  }
 
   @override
   String get find => 'Encontrar';
@@ -37,6 +87,11 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get edit => 'Editar';
+
+  @override
+  String newItem(String item) {
+    return 'Novo $item';
+  }
 
   @override
   String get add => 'Adicionar';

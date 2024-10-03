@@ -176,6 +176,7 @@ extension BuildContextExtensions on BuildContext {
   double get logicalWidth => logicalScreenSize.width;
 
   MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
+  InnerLibsLocalizations get innerLibsLocalizations => InnerLibsLocalizations.of(this);
 
   /// Returns the [ModalRoute] associated with this [BuildContext].
   ///
