@@ -45,10 +45,13 @@ DateTime get minDate => DateTime.fromMicrosecondsSinceEpoch(0);
 
 date get now => DateTime.now();
 
+/// Returns the platform brightness of the device.
 Brightness get platformBrightness => PlatformDispatcher.instance.platformBrightness;
 
+/// Returns the locale of the platform.
 Locale get platformLocale => PlatformDispatcher.instance.locale;
 
+/// Returns the language code of the platform locale.
 String get platformLocaleCode => platformLocale.toLanguageTag();
 
 // Returns the list of locales that user defined in the system settings.

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
@@ -182,8 +181,8 @@ extension ObjectExtensions<T extends Object?> on T {
     string dateFormat = "",
   }) {
     Text? text;
-    
-    locale ??= PlatformDispatcher.instance.locale;
+
+    locale ??= platformLocale;
 
     if (this == null && defaultText == null) return null;
 
@@ -194,7 +193,7 @@ extension ObjectExtensions<T extends Object?> on T {
         if (this is Map || this is List) {
           text = Text(jsonEncode(this));
         } else if (this is DateTime) {
-          text = Text((this as DateTime).format(dateFormat, locale.countryCode));
+          text = Text((this as DateTime).format(dateFormat, locale.toLanguageTag()));
         } else {
           text = Text("$this" | defaultText);
         }
@@ -219,9 +218,7 @@ extension ObjectExtensions<T extends Object?> on T {
   }
 
   // return a string of this object as a SQL Value
-  String asSqlValue([bool nullAsBlank = false]) {
-    return SqlUtil.value(this, nullAsBlank);
-  }
+  String asSqlValue([bool nullAsBlank = false, bool quoteStrings = true]) => SqlUtil.value(this, nullAsBlank, quoteStrings);
 
   /// Converts the object to a [Text] widget with the specified properties.
   ///
@@ -431,8 +428,7 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(
-          value.map((e) => generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(value.map((e) => generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
 
   bool keywordEqual(
     T value, {
@@ -441,8 +437,7 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) ==
-      generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) == generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
 
   T? valid(List<bool> Function(T?)? validations, [string? throwErrorMessage]) => _valid(this, validations, throwErrorMessage);
 }

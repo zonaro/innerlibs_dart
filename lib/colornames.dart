@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:innerlibs/innerlibs.dart';
 
 /// A list of named colors and their values
-/// It
+
 enum NamedColors implements Color {
   absoluteZero("#0048BA", "Absolute Zero"),
   acidGreen("#B0BF1A", "Acid green"),

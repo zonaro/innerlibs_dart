@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart' as crypto;
@@ -3168,7 +3167,7 @@ extension StringExtensions on String {
   /// return a date from string
   date toDate([string? format, string? locale]) {
     try {
-      locale ??= PlatformDispatcher.instance.locale.toLanguageTag();
+      locale ??= platformLocaleCode;
       initializeDateFormatting(locale);
       format ??= DateFormat.yMd(locale).pattern;
       return DateFormat(format, locale).parse(this);

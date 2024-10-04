@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
@@ -10,13 +9,12 @@ class NumberInputFormatter extends TextInputFormatter {
   String? locale;
 
   NumberInputFormatter([this.format]);
-  NumberInputFormatter.currency({this.locale, String? name, String? symbol, int? decimalDigits, String? customPattern})
-      : format = NumberFormat.currency(locale: locale, symbol: symbol, name: name, customPattern: customPattern, decimalDigits: decimalDigits);
+  NumberInputFormatter.currency({this.locale, String? name, String? symbol, int? decimalDigits, String? customPattern}) : format = NumberFormat.currency(locale: locale, symbol: symbol, name: name, customPattern: customPattern, decimalDigits: decimalDigits);
   NumberInputFormatter.locale([this.locale]);
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    locale ??= PlatformDispatcher.instance.locale.toLanguageTag();
+    locale ??= platformLocaleCode;
     format ??= NumberFormat.decimalPattern(locale);
 
     String newText = newValue.text;
@@ -57,8 +55,7 @@ class PercentFormatter extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    locale ??= PlatformDispatcher.instance.locale.toLanguageTag();
-
+    locale ??= platformLocaleCode;
     decimalDigits ??= NumberFormat.decimalPattern(locale).decimalDigits ?? 4;
     var simb = numberFormatSymbols[locale] as NumberSymbols?;
     var decimalSeparator = simb?.DECIMAL_SEP ?? ".";

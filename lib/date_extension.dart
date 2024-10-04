@@ -151,7 +151,7 @@ extension DateTimeExtensions on DateTime {
   /// Returns the next bimester
   date get nextBimester => date(year, lastDayOfBimester.add(1.days).month, day.clampMax(lastDayOfBimester.add(1.days).lastDayOfMonth.day));
 
-/// 
+  ///
   date get nextFortnight => add(15.days);
 
   /// Returns the next month.
@@ -347,16 +347,15 @@ extension DateTimeExtensions on DateTime {
   /// Returns the first month of the group.
   int firstMonthOfGroup(int group) => ((month - 1) ~/ group) * group + 1;
 
-  /// Formats the date according to the specified format and locale.
-  ///
-  /// If the [format] is blank, it returns the ISO 8601 string representation of the date.
-  /// Otherwise, it uses the [format] and [locale] parameters to format the date.
-  /// The [format] parameter specifies the desired format, and the [locale] parameter
-  /// specifies the locale to use for formatting.
-  ///
-  /// Returns the formatted date as a string.
-  String format([String format = "", String? locale]) {
-    if (format.isBlank) return toIso8601String();
+  /// Format the date using the specified format and locale.
+  /// - If the [format] and [locale] parameters are not provided, the date will be formatted using the ISO 8601 format.
+  /// - If only the [format] parameter is provided, the date will be formatted using the specified format and the default locale.
+  /// - If only the [locale] parameter is provided, the date will be formatted using the default format and the specified locale.
+  /// - If both the [format] and [locale] parameters are provided, the date will be formatted using the specified format and locale.
+  String format([String? format, String? locale]) {
+    if (format.isBlank && locale.isBlank) return toIso8601String();
+    if (locale.isBlank) locale = platformLocaleCode;
+    format = format.nullIfBlank;
     return DateFormat(format, locale).format(this);
   }
 
@@ -373,7 +372,7 @@ extension DateTimeExtensions on DateTime {
   /// or if it is equal to the start or end DateTime. Otherwise, returns `false`.
   bool isBetweenOrEqual(DateTime start, DateTime end) => isBetween(start, end) || this == start || this == end;
 
-  /// Checks if the date is the same as the specified [other] date.
+  /// Checks if the date is the same as the specified [other] date, ignoring time.
   bool isSameDate(DateTime other) => year == other.year && month == other.month && day == other.day;
 
   /// Returns the last day of the month group.
