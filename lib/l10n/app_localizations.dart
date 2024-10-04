@@ -102,12 +102,6 @@ abstract class InnerLibsLocalizations {
   /// **'Add'**
   String get add;
 
-  /// No description provided for @apps.
-  ///
-  /// In en, this message translates to:
-  /// **'Apps'**
-  String get apps;
-
   /// No description provided for @app.
   ///
   /// In en, this message translates to:
@@ -126,11 +120,23 @@ abstract class InnerLibsLocalizations {
   /// **'App Settings'**
   String get appSettings;
 
+  /// No description provided for @apps.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps'**
+  String get apps;
+
   /// No description provided for @back.
   ///
   /// In en, this message translates to:
   /// **'Back'**
   String get back;
+
+  /// No description provided for @calculate.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate'**
+  String get calculate;
 
   /// No description provided for @call.
   ///
@@ -210,6 +216,18 @@ abstract class InnerLibsLocalizations {
   /// **'Are you sure you want to delete {count, plural, =1{1 {singular}} other{{count} {plural}}}?'**
   String confirmDeleteMultiple(int count, String singular, String plural);
 
+  /// No description provided for @contacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Contacts'**
+  String get contacts;
+
+  /// No description provided for @contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get contact;
+
   /// No description provided for @country.
   ///
   /// In en, this message translates to:
@@ -251,6 +269,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Edit'**
   String get edit;
+
+  /// No description provided for @empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty'**
+  String get empty;
 
   /// No description provided for @error.
   ///
@@ -384,6 +408,18 @@ abstract class InnerLibsLocalizations {
   /// **'Invalid {item}.'**
   String invalidItem(String item);
 
+  /// No description provided for @itemNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'{Item} not found'**
+  String itemNotFound(String item, Object Item);
+
+  /// No description provided for @itemNotFoundIn.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} not found in {location}'**
+  String itemNotFoundIn(String item, String location);
+
   /// No description provided for @list.
   ///
   /// In en, this message translates to:
@@ -456,6 +492,12 @@ abstract class InnerLibsLocalizations {
   /// **'No'**
   String get no;
 
+  /// No description provided for @notFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Found'**
+  String get notFound;
+
   /// No description provided for @number.
   ///
   /// In en, this message translates to:
@@ -509,6 +551,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Register'**
   String get register;
+
+  /// No description provided for @results.
+  ///
+  /// In en, this message translates to:
+  /// **'Results'**
+  String get results;
 
   /// No description provided for @save.
   ///
@@ -641,18 +689,6 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Yes'**
   String get yes;
-
-  /// No description provided for @contacts.
-  ///
-  /// In en, this message translates to:
-  /// **'Contacts'**
-  String get contacts;
-
-  /// No description provided for @contact.
-  ///
-  /// In en, this message translates to:
-  /// **'Contact'**
-  String get contact;
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

@@ -2,11 +2,12 @@
     "@@author": "Kaizonaro",
     "@@locale": "en",
     "add": "Add",
-    "apps": "Apps",
     "app": "App",
     "appName": "App Name",
     "appSettings": "App Settings",
+    "apps": "Apps",
     "back": "Back",
+    "calculate": "Calculate",
     "call": "Call",
     "calltoItem": "Call to {item}",
     "@calltoItem": {
@@ -61,6 +62,8 @@
             }
         }
     },
+    "contacts": "Contacts",
+    "contact": "Contact",
     "country": "Country",
     "couldNotFindItem": "Could not find {item}.",
     "@couldNotFindItem": {
@@ -76,6 +79,7 @@
     "defaultWord": "Default",
     "delete": "Delete",
     "edit": "Edit",
+    "empty": "Empty",
     "error": "Error",
     "estate": "Estate",
     "file": "File",
@@ -130,6 +134,28 @@
             }
         }
     },
+    "itemNotFound": "{Item} not found",
+    "@itemNotFound": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item that was not found"
+            }
+        }
+    },
+    "itemNotFoundIn": "{item} not found in {location}",
+    "@itemNotFoundIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item that was not found"
+            },
+            "location": {
+                "type": "String",
+                "description": "The location where the item was not found"
+            }
+        }
+    },
     "list": "List",
     "listView": "List View",
     "loading": "Loading",
@@ -150,6 +176,7 @@
     },
     "next": "Next",
     "no": "No",
+    "notFound": "Not Found",
     "number": "Number",
     "ok": "OK",
     "open": "Open",
@@ -167,6 +194,7 @@
     "phone": "Phone",
     "previous": "Previous",
     "register": "Register",
+    "results": "Results",
     "save": "Save",
     "search": "Search",
     "searchFor": "Search for {item}...",
@@ -244,7 +272,5 @@
     "viewType": "View Type",
     "wallpaper": "Wallpaper",
     "warning": "Warning",
-    "yes": "Yes",
-    "contacts": "Contacts",
-    "contact": "Contact"
+    "yes": "Yes"
 }

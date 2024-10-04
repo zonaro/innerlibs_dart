@@ -2,11 +2,12 @@
     "@@author": "Kaizonaro",
     "@@locale": "pt",
     "add": "Adicionar",
-    "apps": "Aplicativos",
     "app": "Aplicativo",
     "appName": "Nome do Aplicativo",
     "appSettings": "Configurações do Aplicativo",
+    "apps": "Aplicativos",
     "back": "Voltar",
+    "calculate": "Calcular",
     "call": "Chamar",
     "calltoItem": "Chamar {item}",
     "@calltoItem": {
@@ -61,6 +62,8 @@
             }
         }
     },
+    "contacts": "Contatos",
+    "contact": "Contato",
     "country": "País",
     "couldNotFindItem": "Não foi possível encontrar {item}.",
     "@couldNotFindItem": {
@@ -76,6 +79,7 @@
     "defaultWord": "Padrão",
     "delete": "Excluir",
     "edit": "Editar",
+    "empty": "Vazio",
     "error": "Erro",
     "estate": "Propriedade",
     "file": "Arquivo",
@@ -92,7 +96,7 @@
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "O item em que encontrar"
+                "description": "O item para encontrar em"
             }
         }
     },
@@ -130,6 +134,28 @@
             }
         }
     },
+    "itemNotFound": "{Item} não encontrado",
+    "@itemNotFound": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "O item que não foi encontrado"
+            }
+        }
+    },
+    "itemNotFoundIn": "{item} não encontrado em {location}",
+    "@itemNotFoundIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "O item que não foi encontrado"
+            },
+            "location": {
+                "type": "String",
+                "description": "O local onde o item não foi encontrado"
+            }
+        }
+    },
     "list": "Lista",
     "listView": "Visualização em Lista",
     "loading": "Carregando",
@@ -137,7 +163,7 @@
     "logout": "Sair",
     "main": "Principal",
     "map": "Mapa",
-    "mapView": "Visualização em Mapa",
+    "mapView": "Visualização do Mapa",
     "name": "Nome",
     "newItem": "Novo {item}",
     "@newItem": {
@@ -150,6 +176,7 @@
     },
     "next": "Próximo",
     "no": "Não",
+    "notFound": "Não Encontrado",
     "number": "Número",
     "ok": "OK",
     "open": "Abrir",
@@ -167,6 +194,7 @@
     "phone": "Telefone",
     "previous": "Anterior",
     "register": "Registrar",
+    "results": "Resultados",
     "save": "Salvar",
     "search": "Pesquisar",
     "searchFor": "Pesquisar por {item}...",
@@ -187,7 +215,7 @@
             },
             "location": {
                 "type": "String",
-                "description": "O local a ser pesquisado"
+                "description": "O local para pesquisar"
             }
         }
     },
@@ -244,7 +272,5 @@
     "viewType": "Tipo de Visualização",
     "wallpaper": "Papel de Parede",
     "warning": "Aviso",
-    "yes": "Sim",
-    "contacts": "Contatos",
-    "contact": "Contato"
+    "yes": "Sim"
 }

@@ -12,9 +12,6 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get add => 'Add';
 
   @override
-  String get apps => 'Apps';
-
-  @override
   String get app => 'App';
 
   @override
@@ -24,7 +21,13 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get appSettings => 'App Settings';
 
   @override
+  String get apps => 'Apps';
+
+  @override
   String get back => 'Back';
+
+  @override
+  String get calculate => 'Calculate';
 
   @override
   String get call => 'Call';
@@ -86,6 +89,12 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
+  String get contacts => 'Contacts';
+
+  @override
+  String get contact => 'Contact';
+
+  @override
   String get country => 'Country';
 
   @override
@@ -107,6 +116,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get edit => 'Edit';
+
+  @override
+  String get empty => 'Empty';
 
   @override
   String get error => 'Error';
@@ -183,6 +195,16 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
+  String itemNotFound(String item, Object Item) {
+    return '$Item not found';
+  }
+
+  @override
+  String itemNotFoundIn(String item, String location) {
+    return '$item not found in $location';
+  }
+
+  @override
   String get list => 'List';
 
   @override
@@ -221,6 +243,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get no => 'No';
 
   @override
+  String get notFound => 'Not Found';
+
+  @override
   String get number => 'Number';
 
   @override
@@ -248,6 +273,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get register => 'Register';
+
+  @override
+  String get results => 'Results';
 
   @override
   String get save => 'Save';
@@ -326,10 +354,4 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get yes => 'Yes';
-
-  @override
-  String get contacts => 'Contacts';
-
-  @override
-  String get contact => 'Contact';
 }

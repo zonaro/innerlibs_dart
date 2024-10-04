@@ -12,9 +12,6 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get add => 'Adicionar';
 
   @override
-  String get apps => 'Aplicativos';
-
-  @override
   String get app => 'Aplicativo';
 
   @override
@@ -24,7 +21,13 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get appSettings => 'Configurações do Aplicativo';
 
   @override
+  String get apps => 'Aplicativos';
+
+  @override
   String get back => 'Voltar';
+
+  @override
+  String get calculate => 'Calcular';
 
   @override
   String get call => 'Chamar';
@@ -86,6 +89,12 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   }
 
   @override
+  String get contacts => 'Contatos';
+
+  @override
+  String get contact => 'Contato';
+
+  @override
   String get country => 'País';
 
   @override
@@ -107,6 +116,9 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get edit => 'Editar';
+
+  @override
+  String get empty => 'Vazio';
 
   @override
   String get error => 'Erro';
@@ -183,6 +195,16 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   }
 
   @override
+  String itemNotFound(String item, Object Item) {
+    return '$Item não encontrado';
+  }
+
+  @override
+  String itemNotFoundIn(String item, String location) {
+    return '$item não encontrado em $location';
+  }
+
+  @override
   String get list => 'Lista';
 
   @override
@@ -204,7 +226,7 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get map => 'Mapa';
 
   @override
-  String get mapView => 'Visualização em Mapa';
+  String get mapView => 'Visualização do Mapa';
 
   @override
   String get name => 'Nome';
@@ -219,6 +241,9 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get no => 'Não';
+
+  @override
+  String get notFound => 'Não Encontrado';
 
   @override
   String get number => 'Número';
@@ -248,6 +273,9 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get register => 'Registrar';
+
+  @override
+  String get results => 'Resultados';
 
   @override
   String get save => 'Salvar';
@@ -326,12 +354,6 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get yes => 'Sim';
-
-  @override
-  String get contacts => 'Contatos';
-
-  @override
-  String get contact => 'Contato';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
