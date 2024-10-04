@@ -1,138 +1,45 @@
 {
-    "@@locale": "en",
     "@@author": "Kaizonaro",
+    "@@locale": "en",
+    "add": "Add",
+    "apps": "Apps",
+    "app": "App",
+    "appName": "App Name",
+    "appSettings": "App Settings",
+    "back": "Back",
     "call": "Call",
-    "send": "Send",
     "calltoItem": "Call to {item}",
     "@calltoItem": {
         "placeholders": {
             "item": {
-                "type": "String"
+                "type": "String",
+                "description": "The item to call"
             }
         }
     },
-    "sendtoItem": "Send to {item}",
-    "@sendtoItem": {
-        "placeholders": {
-            "item": {
-                "type": "String"
-            }
-        }
-    },
-    "sendItemToItem": "Send {item1} to {item2}",
-    "@sendItemToItem": {
-        "placeholders": {
-            "item1": {
-                "type": "String"
-            },
-            "item2": {
-                "type": "String"
-            }
-        }
-    },
-    "to": "To",
-    "open": "Open",
-    "view": "View",
-    "search": "Search",
-    "searchFor": "Search for {item}...",
-    "@searchFor": {
-        "placeholders": {
-            "item": {
-                "type": "String"
-            }
-        }
-    },
-    "searchForIn": "Search for {item} in {location}",
-    "@searchForIn": {
-        "placeholders": {
-            "item": {
-                "type": "String"
-            },
-            "location": {
-                "type": "String"
-            }
-        }
-    },
-    "findItem": "Find {item}",
-    "@findItem": {
-        "placeholders": {
-            "item": {
-                "type": "String"
-            }
-        }
-    },
-    "findIn": "Find in {item}",
-    "@findIn": {
-        "placeholders": {
-            "item": {
-                "type": "String"
-            }
-        }
-    },
-    "find": "Find",
-    "yes": "Yes",
-    "no": "No",
     "cancel": "Cancel",
-    "ok": "OK",
-    "close": "Close",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-   "newItem": "New {item}",
-    "@newItem": {
-        "placeholders": {
-            "item": {
-                "type": "String"
-            }
-        }
-    },
-    "add": "Add",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "finish": "Finish",
-    "loading": "Loading",
-    "clear": "Clear",
-    "error": "Error",
-    "warning": "Warning",
-    "info": "Info",
-    "success": "Success",
-    "confirm": "Confirm",
-    "register": "Register",
-    "login": "Login",
-    "logout": "Logout",
-    "username": "Username",
-    "password": "Password",
-    "name": "Name",
-    "number": "Number",
-    "date": "Data",
-    "value": "Value",
-    "phone": "Phone",
+    "categories": "Categories",
+    "category": "Category",
     "city": "City",
-    "country": "Country",
-    "estate": "Estate",
-    "dateOutOfRange": "Date out of range",
-    "invalidItem": "Invalid {item}.",
-    "@invalidItem": {
+    "clear": "Clear",
+    "close": "Close",
+    "closeItem": "Close {item}",
+    "@closeItem": {
         "placeholders": {
             "item": {
-                "type": "String"
+                "type": "String",
+                "description": "The item to close"
             }
         }
     },
-    "couldNotFindItem": "Could not find {item}.",
-    "@couldNotFindItem": {
-        "placeholders": {
-            "item": {
-                "type": "String"
-            }
-        }
-    },
+    "color": "Color",
+    "confirm": "Confirm",
     "confirmDelete": "Are you sure you want to delete {item}?",
     "@confirmDelete": {
         "placeholders": {
             "item": {
-                "type": "String"
+                "type": "String",
+                "description": "The item to delete"
             }
         }
     },
@@ -153,6 +60,191 @@
                 "description": "The plural form of the item"
             }
         }
-    }
-
+    },
+    "country": "Country",
+    "couldNotFindItem": "Could not find {item}.",
+    "@couldNotFindItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item that could not be found"
+            }
+        }
+    },
+    "date": "Data",
+    "dateOutOfRange": "Date out of range",
+    "defaultWord": "Default",
+    "delete": "Delete",
+    "edit": "Edit",
+    "error": "Error",
+    "estate": "Estate",
+    "file": "File",
+    "fileDate": "File Date",
+    "fileName": "File Name",
+    "fileOwner": "File Owner",
+    "filePermissions": "File Permissions",
+    "fileSize": "File Size",
+    "fileType": "File Type",
+    "files": "Files",
+    "find": "Find",
+    "findIn": "Find in {item}",
+    "@findIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to find in"
+            }
+        }
+    },
+    "findItem": "Find {item}",
+    "@findItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to find"
+            }
+        }
+    },
+    "finish": "Finish",
+    "folder": "Folder",
+    "folderName": "Folder Name",
+    "grid": "Grid",
+    "gridSize": "Grid Size",
+    "gridView": "Grid View",
+    "info": "Info",
+    "installItem": "Install {item}",
+    "@installItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to install"
+            }
+        }
+    },
+    "invalidItem": "Invalid {item}.",
+    "@invalidItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The invalid item"
+            }
+        }
+    },
+    "list": "List",
+    "listView": "List View",
+    "loading": "Loading",
+    "login": "Login",
+    "logout": "Logout",
+    "main": "Main",
+    "map": "Map",
+    "mapView": "Map View",
+    "name": "Name",
+    "newItem": "New {item}",
+    "@newItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The new item"
+            }
+        }
+    },
+    "next": "Next",
+    "no": "No",
+    "number": "Number",
+    "ok": "OK",
+    "open": "Open",
+    "openItem": "Open {item}",
+    "@openItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to open"
+            }
+        }
+    },
+    "owner": "Owner",
+    "password": "Password",
+    "phone": "Phone",
+    "previous": "Previous",
+    "register": "Register",
+    "save": "Save",
+    "search": "Search",
+    "searchFor": "Search for {item}...",
+    "@searchFor": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to search for"
+            }
+        }
+    },
+    "searchForIn": "Search for {item} in {location}",
+    "@searchForIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to search for"
+            },
+            "location": {
+                "type": "String",
+                "description": "The location to search in"
+            }
+        }
+    },
+    "send": "Send",
+    "sendItemToItem": "Send {item1} to {item2}",
+    "@sendItemToItem": {
+        "placeholders": {
+            "item1": {
+                "type": "String",
+                "description": "The first item to send"
+            },
+            "item2": {
+                "type": "String",
+                "description": "The second item to send"
+            }
+        }
+    },
+    "sendtoItem": "Send to {item}",
+    "@sendtoItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to send"
+            }
+        }
+    },
+    "settings": "Settings",
+    "size": "Size",
+    "success": "Success",
+    "table": "Table",
+    "tableView": "Table View",
+    "to": "To",
+    "uninstallItem": "Uninstall {item}",
+    "@uninstallItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to uninstall"
+            }
+        }
+    },
+    "updateItem": "Update {item}",
+    "@updateItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to update"
+            }
+        }
+    },
+    "username": "Username",
+    "value": "Value",
+    "view": "View",
+    "viewType": "View Type",
+    "wallpaper": "Wallpaper",
+    "warning": "Warning",
+    "yes": "Yes",
+    "contacts": "Contacts",
+    "contact": "Contact"
 }
