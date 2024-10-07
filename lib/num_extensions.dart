@@ -39,7 +39,13 @@ extension DurationExtensions on Duration {
 }
 
 extension NumExtensions2<T extends num> on T {
-  Duration get days => Duration(days: floor(), hours: ((this % 1) * 24).floor(), minutes: (((this % 1) * 24 % 1) * 60).floor(), seconds: ((((this % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: (((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: ((((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  Duration get days => Duration(
+      days: floor(),
+      hours: ((this % 1) * 24).floor(),
+      minutes: (((this % 1) * 24 % 1) * 60).floor(),
+      seconds: ((((this % 1) * 24 % 1) * 60 % 1) * 60).floor(),
+      milliseconds: (((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(),
+      microseconds: ((((((this % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
   /// Transform number of days into hours
   double get daysToHours {
@@ -110,7 +116,12 @@ extension NumExtensions2<T extends num> on T {
 
   SizedBox get heightBox => SizedBox(height: toDouble());
 
-  Duration get hours => Duration(hours: floor(), minutes: ((this % 1) * 60).floor(), seconds: (((this % 1) * 60 % 1) * 60).floor(), milliseconds: ((((this % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((this % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  Duration get hours => Duration(
+      hours: floor(),
+      minutes: ((this % 1) * 60).floor(),
+      seconds: (((this % 1) * 60 % 1) * 60).floor(),
+      milliseconds: ((((this % 1) * 60 % 1) * 60 % 1) * 1000).floor(),
+      microseconds: (((((this % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
   /// Transform number of hours into days
   double get hoursToDays {
@@ -135,7 +146,8 @@ extension NumExtensions2<T extends num> on T {
 
   Duration get milliseconds => Duration(milliseconds: floor()) + Duration(microseconds: ((this % 1) * 1000).round());
 
-  Duration get minutes => Duration(minutes: floor(), seconds: ((this % 1) * 60).floor(), milliseconds: (((this % 1) * 60 % 1) * 1000).floor(), microseconds: ((((this % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  Duration get minutes =>
+      Duration(minutes: floor(), seconds: ((this % 1) * 60).floor(), milliseconds: (((this % 1) * 60 % 1) * 1000).floor(), microseconds: ((((this % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
   /// Transform number of minutes into hours
   double get minutesToHours {
@@ -168,11 +180,23 @@ extension NumExtensions2<T extends num> on T {
 
   SizedBox get squareBox => SizedBox.square(dimension: toDouble());
 
-  Duration get weeks => Duration(days: (this * 7).floor(), hours: (((this * 7) % 1) * 24).floor(), minutes: ((((this * 7) % 1) * 24 % 1) * 60).floor(), seconds: (((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: ((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  Duration get weeks => Duration(
+      days: (this * 7).floor(),
+      hours: (((this * 7) % 1) * 24).floor(),
+      minutes: ((((this * 7) % 1) * 24 % 1) * 60).floor(),
+      seconds: (((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60).floor(),
+      milliseconds: ((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(),
+      microseconds: (((((((this * 7) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
   SizedBox get widthBox => SizedBox(width: toDouble());
 
-  Duration get years => Duration(days: (this * 365.25).floor(), hours: (((this * 365.25) % 1) * 24).floor(), minutes: ((((this * 365.25) % 1) * 24 % 1) * 60).floor(), seconds: (((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60).floor(), milliseconds: ((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(), microseconds: (((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
+  Duration get years => Duration(
+      days: (this * 365.25).floor(),
+      hours: (((this * 365.25) % 1) * 24).floor(),
+      minutes: ((((this * 365.25) % 1) * 24 % 1) * 60).floor(),
+      seconds: (((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60).floor(),
+      milliseconds: ((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000).floor(),
+      microseconds: (((((((this * 365.25) % 1) * 24 % 1) * 60 % 1) * 60 % 1) * 1000 % 1) * 1000).round());
 
   /// Returns the smaller value between this value and [maxValue].
   ///
@@ -340,7 +364,7 @@ extension NumNullExtensions<T extends num?> on T {
     }
 
     if (colorStep.isEmpty) {
-      Color(this!.round());
+      return Color(this!.round());
     }
 
     T x = this!;

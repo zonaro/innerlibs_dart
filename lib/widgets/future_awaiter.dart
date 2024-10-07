@@ -170,7 +170,7 @@ class _FutureAwaiterState<T> extends State<FutureAwaiter<T>> {
   void initState() {
     data = widget.data ?? AwaiterData<T>();
     data.addListener(() {
-      setState(() {});
+      if (mounted) setState(() {});
     });
 
     super.initState();
