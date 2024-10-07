@@ -272,5 +272,52 @@
     "viewType": "View Type",
     "wallpaper": "Wallpaper",
     "warning": "Warning",
-    "yes": "Yes"
+    "yes": "Yes",
+    "opeIn": "Open in {item}",
+    "@openIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to open in"
+            }
+        }
+    },
+    "openItemIn": "Open {item} in {location}",
+    "@openItemIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to open"
+            },
+            "location": {
+                "type": "String",
+                "description": "The location to open the item in"
+            }
+        }
+    },
+    "dock": "Dock",
+    "dockItem": "Dock {item}",
+    "@dockItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to dock"
+            }
+        }
+    },
+    "undock": "Undock",
+    "undockItem": "Undock {item}",
+    "@undockItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to undock"
+            }
+        }
+    },
+    "show": "Show",
+    "hide": "Hide",
+    "loadingItem": "Loading {item}...",
+    "uninstall": "Uninstall",
+    "install": "Install"
 }

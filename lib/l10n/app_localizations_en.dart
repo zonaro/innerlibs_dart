@@ -354,4 +354,47 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get yes => 'Yes';
+
+  @override
+  String opeIn(Object item) {
+    return 'Open in $item';
+  }
+
+  @override
+  String openItemIn(String item, String location) {
+    return 'Open $item in $location';
+  }
+
+  @override
+  String get dock => 'Dock';
+
+  @override
+  String dockItem(String item) {
+    return 'Dock $item';
+  }
+
+  @override
+  String get undock => 'Undock';
+
+  @override
+  String undockItem(String item) {
+    return 'Undock $item';
+  }
+
+  @override
+  String get show => 'Show';
+
+  @override
+  String get hide => 'Hide';
+
+  @override
+  String loadingItem(Object item) {
+    return 'Loading $item...';
+  }
+
+  @override
+  String get uninstall => 'Uninstall';
+
+  @override
+  String get install => 'Install';
 }

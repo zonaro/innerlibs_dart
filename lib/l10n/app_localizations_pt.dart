@@ -354,6 +354,49 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get yes => 'Sim';
+
+  @override
+  String opeIn(Object item) {
+    return 'Abrir em $item';
+  }
+
+  @override
+  String openItemIn(String item, String location) {
+    return 'Abrir $item em $location';
+  }
+
+  @override
+  String get dock => 'Acoplar';
+
+  @override
+  String dockItem(String item) {
+    return 'Acoplar $item';
+  }
+
+  @override
+  String get undock => 'Desacoplar';
+
+  @override
+  String undockItem(String item) {
+    return 'Desacoplar $item';
+  }
+
+  @override
+  String get show => 'Mostrar';
+
+  @override
+  String get hide => 'Ocultar';
+
+  @override
+  String loadingItem(Object item) {
+    return 'Carregando $item...';
+  }
+
+  @override
+  String get uninstall => 'Desinstalar';
+
+  @override
+  String get install => 'Instalar';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

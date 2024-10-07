@@ -96,7 +96,7 @@
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "O item para encontrar em"
+                "description": "O item a ser encontrado em"
             }
         }
     },
@@ -215,7 +215,7 @@
             },
             "location": {
                 "type": "String",
-                "description": "O local para pesquisar"
+                "description": "O local a ser pesquisado"
             }
         }
     },
@@ -272,5 +272,52 @@
     "viewType": "Tipo de Visualização",
     "wallpaper": "Papel de Parede",
     "warning": "Aviso",
-    "yes": "Sim"
+    "yes": "Sim",
+    "opeIn": "Abrir em {item}",
+    "@openIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "O item a ser aberto em"
+            }
+        }
+    },
+    "openItemIn": "Abrir {item} em {location}",
+    "@openItemIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "O item a ser aberto"
+            },
+            "location": {
+                "type": "String",
+                "description": "O local a ser aberto"
+            }
+        }
+    },
+    "dock": "Acoplar",
+    "dockItem": "Acoplar {item}",
+    "@dockItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "O item a ser acoplado"
+            }
+        }
+    },
+    "undock": "Desacoplar",
+    "undockItem": "Desacoplar {item}",
+    "@undockItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "O item a ser desacoplado"
+            }
+        }
+    },
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "loadingItem": "Carregando {item}...",
+    "uninstall": "Desinstalar",
+    "install": "Instalar"
 }

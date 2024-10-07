@@ -1,434 +1,1201 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
 import 'package:innerlibs/innerlibs.dart';
 
-export 'package:innerlibs/colornames.dart';
+/// A Enum containing all the named colors. Also implements the [Color] interface, so it can be used as a [Color].
+enum NamedColor implements Color {
+  absoluteZero("#0048BA", "Absolute Zero"),
+  acidGreen("#B0BF1A", "Acid green"),
+  aero("#7CB9E8", "Aero"),
+  aeroBlue("#C0E8D5", "Aero blue"),
+  africanViolet("#B284BE", "African violet"),
+  airSuperiorityBlue("#72A0C1", "Air superiority blue"),
+  alabaster("#EDEAE0", "Alabaster"),
+  aliceBlue('#F0F8FF', 'Alice Blue'),
+  alloyOrange("#C46210", "Alloy orange"),
+  almond("#EFDECD", "Almond"),
+  amaranth("#E52B50", "Amaranth"),
+  amaranthMP("#9F2B68", "Amaranth (M&P)"),
+  amaranthPink("#F19CBB", "Amaranth pink"),
+  amaranthPurple("#AB274F", "Amaranth purple"),
+  amaranthRed("#D3212D", "Amaranth red"),
+  amazon("#3B7A57", "Amazon"),
+  amber("#FFBF00", "Amber"),
+  amberSAEECE("#FF7E00", "Amber (SAE/ECE)"),
+  amethyst("#9966CC", "Amethyst"),
+  androidGreen("#3DDC84", "Android green"),
+  antiqueBrass("#CD9575", "Antique brass"),
+  antiqueBronze("#665D1E", "Antique bronze"),
+  antiqueFuchsia("#915C83", "Antique fuchsia"),
+  antiqueRuby("#841B2D", "Antique ruby"),
+  antiqueWhite('#FAEBD7', 'Antique White'),
+  ao("#008000", "Ao"),
+  appleGreen("#8DB600", "Apple green"),
+  apricot("#FBCEB1", "Apricot"),
+  aqua('#00FFFF', 'Aqua'),
+  aquamarine('#7FFFD4', 'Aquamarine'),
+  arcticLime("#D0FF14", "Arctic lime"),
+  armyGreen("#4B5320", "Army green"),
+  artichoke("#8F9779", "Artichoke"),
+  arylideYellow("#E9D66B", "Arylide yellow"),
+  ashGray("#B2BEB5", "Ash gray"),
+  asparagus("#87A96B", "Asparagus"),
+  atomicTangerine("#FF9966", "Atomic tangerine"),
+  auburn("#A52A2A", "Auburn"),
+  aureolin("#FDEE00", "Aureolin"),
+  avocado("#568203", "Avocado"),
+  azure('#F0FFFF', 'Azure'),
+  azureX11WebColor("#F0FFFF", "Azure (X11/web color)"),
+  babyBlue("#89CFF0", "Baby blue"),
+  babyBlueEyes("#A1CAF1", "Baby blue eyes"),
+  babyPink("#F4C2C2", "Baby pink"),
+  babyPowder("#FEFEFA", "Baby powder"),
+  bakerMillerPink("#FF91AF", "Baker Miller pink"),
+  bananaMania("#FAE7B5", "Banana Mania"),
+  barbiePink("#DA1884", "Barbie Pink"),
+  barnRed("#7C0A02", "Barn red"),
+  battleshipGrey("#848482", "Battleship grey"),
+  bdazzledBlue("#2E5894", "B'dazzled blue"),
+  beauBlue("#BCD4E6", "Beau blue"),
+  beaver("#9F8170", "Beaver"),
+  beige('#F5F5DC', 'Beige'),
+  bigDipORuby("#9C2542", "Big dip o ruby"),
+  bisque('#FFE4C4', 'Bisque'),
+  bistre("#3D2B1F", "Bistre"),
+  bistreBrown("#967117", "Bistre brown"),
+  bitterLemon("#CAE00D", "Bitter lemon"),
+  bitterLime("#BFFF00", "Bitter lime"),
+  bittersweet("#FE6F5E", "Bittersweet"),
+  bittersweetShimmer("#BF4F51", "Bittersweet shimmer"),
+  black('#000000', 'Black'),
+  blackBean("#3D0C02", "Black bean"),
+  blackChocolate("#1B1811", "Black chocolate"),
+  blackCoffee("#3B2F2F", "Black coffee"),
+  blackCoral("#54626F", "Black coral"),
+  blackOlive("#3B3C36", "Black olive"),
+  blackShadows("#BFAFB2", "Black Shadows"),
+  blanchedAlmond('#FFEBCD', 'Blanched Almond'),
+  blastOffBronze("#A57164", "Blast off bronze"),
+  bleuDeFrance("#318CE7", "Bleu de France"),
+  blizzardBlue("#ACE5EE", "Blizzard blue"),
+  blond("#FAF0BE", "Blond"),
+  bloodRed("#660000", "Blood red"),
+  blueColor('#0000FF', 'Blue'),
+  blueBell("#A2A2D0", "Blue bell"),
+  blueCrayola("#1F75FE", "Blue (Crayola)"),
+  blueGray("#6699CC", "Blue gray"),
+  blueGreen("#0D98BA", "Blue green"),
+  blueGreenColorWheel("#064E40", "Blue green (Color Wheel)"),
+  blueJeans("#5DADEC", "Blue jeans"),
+  blueMunsell("#0093AF", "Blue (Munsell)"),
+  blueNCS("#0087BD", "Blue (NCS)"),
+  bluePantone("#0018A8", "Blue (Pantone)"),
+  bluePigment("#333399", "Blue (pigment)"),
+  blueRYB("#0247FE", "Blue (RYB)"),
+  blueSapphire("#126180", "Blue sapphire"),
+  bluetiful("#3C69E7", "Bluetiful"),
+  blueViolet('#8A2BE2', 'Blue Violet'),
+  blueVioletColorWheel("#4D1A7F", "Blue violet (Color Wheel)"),
+  blueVioletCrayola("#7366BD", "Blue violet (Crayola)"),
+  blueYonder("#5072A7", "Blue yonder"),
+  blush("#DE5D83", "Blush"),
+  bole("#79443B", "Bole"),
+  bone("#E3DAC9", "Bone"),
+  bottleGreen("#006A4E", "Bottle green"),
+  brandy("#87413F", "Brandy"),
+  brickRed("#CB4154", "Brick red"),
+  brightGreen("#66FF00", "Bright green"),
+  brightLilac("#D891EF", "Bright lilac"),
+  brightMaroon("#C32148", "Bright maroon"),
+  brightNavyBlue("#1974D2", "Bright navy blue"),
+  brightYellowCrayola("#FFAA1D", "Bright yellow (Crayola)"),
+  brilliantRose("#FF55A3", "Brilliant rose"),
+  brinkPink("#FB607F", "Brink pink"),
+  britishRacingGreen("#004225", "British racing green"),
+  bronze("#CD7F32", "Bronze"),
+  brown('#A52A2A', 'Brown'),
+  brownSugar("#AF6E4D", "Brown sugar"),
+  brunswickGreen("#1B4D3E", "Brunswick green"),
+  budGreen("#7BB661", "Bud green"),
+  buff("#FFC680", "Buff"),
+  burgundy("#800020", "Burgundy"),
+  burlywood("#DEB887", "Burlywood"),
+  burlyWood('#DEB887', 'Burly Wood'),
+  burnishedBrown("#A17A74", "Burnished brown"),
+  burntOrange("#CC5500", "Burnt orange"),
+  burntSienna("#E97451", "Burnt sienna"),
+  burntUmber("#8A3324", "Burnt umber"),
+  byzantine("#BD33A4", "Byzantine"),
+  byzantium("#702963", "Byzantium"),
+  cadet("#536872", "Cadet"),
+  cadetBlue('#5F9EA0', 'Cadet Blue'),
+  cadetBlueCrayola("#A9B2C3", "Cadet blue (Crayola)"),
+  cadetGrey("#91A3B0", "Cadet grey"),
+  cadmiumGreen("#006B3C", "Cadmium green"),
+  cadmiumOrange("#ED872D", "Cadmium orange"),
+  cadmiumRed("#E30022", "Cadmium red"),
+  cadmiumYellow("#FFF600", "Cadmium yellow"),
+  cafeAuLait("#A67B5B", "Café au lait"),
+  cafeNoir("#4B3621", "Café noir"),
+  cambridgeBlue("#A3C1AD", "Cambridge blue"),
+  camel("#C19A6B", "Camel"),
+  cameoPink("#EFBBCC", "Cameo pink"),
+  canary("#FFFF99", "Canary"),
+  canaryYellow("#FFEF00", "Canary yellow"),
+  candyAppleRed("#FF0800", "Candy apple red"),
+  candyPink("#E4717A", "Candy pink"),
+  capri("#00BFFF", "Capri"),
+  caputMortuum("#592720", "Caput mortuum"),
+  cardinal("#C41E3A", "Cardinal"),
+  caribbeanGreen("#00CC99", "Caribbean green"),
+  carmine("#960018", "Carmine"),
+  carmineMP("#D70040", "Carmine (M&P)"),
+  carnationPink("#FFA6C9", "Carnation pink"),
+  carnelian("#B31B1B", "Carnelian"),
+  carolinaBlue("#56A0D3", "Carolina blue"),
+  carrotOrange("#ED9121", "Carrot orange"),
+  castletonGreen("#00563F", "Castleton green"),
+  catawba("#703642", "Catawba"),
+  cedarChest("#C95A49", "Cedar Chest"),
+  celadon("#ACE1AF", "Celadon"),
+  celadonBlue("#007BA7", "Celadon blue"),
+  celadonGreen("#2F847C", "Celadon green"),
+  celeste("#B2FFFF", "Celeste"),
+  celticBlue("#246BCE", "Celtic blue"),
+  cerise("#DE3163", "Cerise"),
+  cerulean("#007BA7", "Cerulean"),
+  ceruleanBlue("#2A52BE", "Cerulean blue"),
+  ceruleanCrayola("#1DACD6", "Cerulean (Crayola)"),
+  ceruleanFrost("#6D9BC3", "Cerulean frost"),
+  cgBlue("#007AA5", "CG blue"),
+  cgRed("#E03C31", "CG red"),
+  champagne("#F7E7CE", "Champagne"),
+  champagnePink("#F1DDCF", "Champagne pink"),
+  charcoal("#36454F", "Charcoal"),
+  charlestonGreen("#232B2B", "Charleston green"),
+  charmPink("#E68FAC", "Charm pink"),
+  chartreuse('#7FFF00', 'Chartreuse'),
+  chartreuseTraditional("#DFFF00", "Chartreuse (traditional)"),
+  chartreuseWeb("#7FFF00", "Chartreuse (web)"),
+  cherryBlossomPink("#FFB7C5", "Cherry blossom pink"),
+  chestnut("#954535", "Chestnut"),
+  chiliRed("#E23D28", "Chili red"),
+  chinaPink("#DE6FA1", "China pink"),
+  chinaRose("#A8516E", "China rose"),
+  chineseRed("#AA381E", "Chinese red"),
+  chineseViolet("#856088", "Chinese violet"),
+  chineseYellow("#FFB200", "Chinese yellow"),
+  chocolate('#D2691E', 'Chocolate'),
+  chocolateCosmos("#58111A", "Chocolate Cosmos"),
+  chocolateTraditional("#7B3F00", "Chocolate (traditional)"),
+  chocolateWeb("#D2691E", "Chocolate (web)"),
+  chromeYellow("#FFA700", "Chrome yellow"),
+  cinereous("#98817B", "Cinereous"),
+  cinnabar("#E34234", "Cinnabar"),
+  cinnamonSatin("#CD607E", "Cinnamon Satin"),
+  citrine("#E4D00A", "Citrine"),
+  citron("#9FA91F", "Citron"),
+  claret("#7F1734", "Claret"),
+  cobaltBlue("#0047AB", "Cobalt blue"),
+  cocoaBrown("#D2691E", "Cocoa brown"),
+  coffee("#6F4E37", "Coffee"),
+  columbiaBlue("#B9D9EB", "Columbia Blue"),
+  congoPink("#F88379", "Congo pink"),
+  coolGrey("#8C92AC", "Cool grey"),
+  copper("#B87333", "Copper"),
+  copperCrayola("#DA8A67", "Copper (Crayola)"),
+  copperPenny("#AD6F69", "Copper penny"),
+  copperRed("#CB6D51", "Copper red"),
+  copperRose("#996666", "Copper rose"),
+  coquelicot("#FF3800", "Coquelicot"),
+  coral('#FF7F50', 'Coral'),
+  coralPink("#F88379", "Coral pink"),
+  cordovan("#893F45", "Cordovan"),
+  corn("#FBEC5D", "Corn"),
+  cornellRed("#B31B1B", "Cornell red"),
+  cornflowerBlue('#6495ED', 'Cornflower Blue'),
+  cornsilk('#FFF8DC', 'Cornsilk'),
+  cosmicCobalt("#2E2D88", "Cosmic cobalt"),
+  cosmicLatte("#FFF8E7", "Cosmic latte"),
+  cottonCandy("#FFBCD9", "Cotton candy"),
+  coyoteBrown("#81613C", "Coyote brown"),
+  cream("#FFFDD0", "Cream"),
+  crimson('#DC143C', 'Crimson'),
+  crimsonUA("#9E1B32", "Crimson (UA)"),
+  crystal("#A7D8DE", "Crystal"),
+  cultured("#F5F5F5", "Cultured"),
+  cyan('#00FFFF', 'Cyan'),
+  cyanProcess("#00B7EB", "Cyan (process)"),
+  cyberGrape("#58427C", "Cyber grape"),
+  cyberYellow("#FFD300", "Cyber yellow"),
+  cyclamen("#F56FA1", "Cyclamen"),
+  darkBlue('#00008B', 'Dark Blue'),
+  darkBlueGray("#666699", "Dark blue gray"),
+  darkBrown("#654321", "Dark brown"),
+  darkByzantium("#5D3954", "Dark byzantium"),
+  darkCornflowerBlue("#26428B", "Dark cornflower blue"),
+  darkCyan('#008B8B', 'Dark Cyan'),
+  darkElectricBlue("#536878", "Dark electric blue"),
+  darkGoldenrod("#B8860B", "Dark goldenrod"),
+  darkGoldenRod('#B8860B', 'Dark Golden Rod'),
+  darkGray('#A9A9A9', 'Dark Gray'),
+  darkGreen('#006400', 'Dark Green'),
+  darkGreenX11("#006400", "Dark green (X11)"),
+  darkJungleGreen("#1A2421", "Dark jungle green"),
+  darkKhaki('#BDB76B', 'Dark Khaki'),
+  darkLava("#483C32", "Dark lava"),
+  darkLiver("#534B4F", "Dark liver"),
+  darkLiverHorses("#543D37", "Dark liver (horses)"),
+  darkMagenta('#8B008B', 'Dark Magenta'),
+  darkMossGreen("#4A5D23", "Dark moss green"),
+  darkOliveGreen('#556B2F', 'Dark Olive Green'),
+  darkOrange('#FF8C00', 'Dark Orange'),
+  darkOrchid('#9932CC', 'Dark Orchid'),
+  darkPastelGreen("#03C03C", "Dark pastel green"),
+  darkPurple("#301934", "Dark purple"),
+  darkRed('#8B0000', 'Dark Red'),
+  darkSalmon('#E9967A', 'Dark Salmon'),
+  darkSeaGreen('#8FBC8F', 'Dark Sea Green'),
+  darkSienna("#3C1414", "Dark sienna"),
+  darkSkyBlue("#8CBED6", "Dark sky blue"),
+  darkSlateBlue('#483D8B', 'Dark Slate Blue'),
+  darkSlateGray('#2F4F4F', 'Dark Slate Gray'),
+  darkSpringGreen("#177245", "Dark spring green"),
+  darkTurquoise('#00CED1', 'Dark Turquoise'),
+  darkViolet('#9400D3', 'Dark Violet'),
+  dartmouthGreen("#00703C", "Dartmouth green"),
+  davysGrey("#555555", "Davy's grey"),
+  deepCerise("#DA3287", "Deep cerise"),
+  deepChampagne("#FAD6A5", "Deep champagne"),
+  deepChestnut("#B94E48", "Deep chestnut"),
+  deepJungleGreen("#004B49", "Deep jungle green"),
+  deepPink('#FF1493', 'Deep Pink'),
+  deepSaffron("#FF9933", "Deep saffron"),
+  deepSkyBlue('#00BFFF', 'Deep Sky Blue'),
+  deepSpaceSparkle("#4A646C", "Deep Space Sparkle"),
+  deepTaupe("#7E5E60", "Deep taupe"),
+  denim("#1560BD", "Denim"),
+  denimBlue("#2243B6", "Denim blue"),
+  desert("#C19A6B", "Desert"),
+  desertSand("#EDC9AF", "Desert sand"),
+  dimGray('#696969', 'Dim Gray'),
+  dodgerBlue('#1E90FF', 'Dodger Blue'),
+  dogwoodRose("#D71868", "Dogwood rose"),
+  drab("#967117", "Drab"),
+  dukeBlue("#00009C", "Duke blue"),
+  dutchWhite("#EFDFBB", "Dutch white"),
+  earthYellow("#E1A95F", "Earth yellow"),
+  ebony("#555D50", "Ebony"),
+  ecru("#C2B280", "Ecru"),
+  eerieBlack("#1B1B1B", "Eerie black"),
+  eggplant("#614051", "Eggplant"),
+  eggshell("#F0EAD6", "Eggshell"),
+  egyptianBlue("#1034A6", "Egyptian blue"),
+  eigengrau("#16161D", "Eigengrau"),
+  electricBlue("#7DF9FF", "Electric blue"),
+  electricGreen("#00FF00", "Electric green"),
+  electricIndigo("#6F00FF", "Electric indigo"),
+  electricLime("#CCFF00", "Electric lime"),
+  electricPurple("#BF00FF", "Electric purple"),
+  electricViolet("#8F00FF", "Electric violet"),
+  emerald("#50C878", "Emerald"),
+  eminence("#6C3082", "Eminence"),
+  englishGreen("#1B4D3E", "English green"),
+  englishLavender("#B48395", "English lavender"),
+  englishRed("#AB4B52", "English red"),
+  englishVermillion("#CC474B", "English vermillion"),
+  englishViolet("#563C5C", "English violet"),
+  erin("#00FF40", "Erin"),
+  etonBlue("#96C8A2", "Eton blue"),
+  fallow("#C19A6B", "Fallow"),
+  faluRed("#801818", "Falu red"),
+  fandango("#B53389", "Fandango"),
+  fandangoPink("#DE5285", "Fandango pink"),
+  fashionFuchsia("#F400A1", "Fashion fuchsia"),
+  fawn("#E5AA70", "Fawn"),
+  feldgrau("#4D5D53", "Feldgrau"),
+  feldspar("#FDD5B1", "Feldspar"),
+  fernGreen("#4F7942", "Fern green"),
+  ferrariRed("#FF2800", "Ferrari red"),
+  fieldDrab("#6C541E", "Field drab"),
+  firebrick("#B22222", "Firebrick"),
+  fireBrick('#B22222', 'Fire Brick'),
+  fireEngineRed("#CE2029", "Fire engine red"),
+  flame("#E25822", "Flame"),
+  flamingoPink("#FC8EAC", "Flamingo pink"),
+  flattery("#6B4423", "Flattery"),
+  flavescent("#F7E98E", "Flavescent"),
+  flax("#EEDC82", "Flax"),
+  flirt("#A2006D", "Flirt"),
+  floralWhite('#FFFAF0', 'Floral White'),
+  fluorescentOrange("#FFBF00", "Fluorescent orange"),
+  fluorescentPink("#FF1493", "Fluorescent pink"),
+  fluorescentYellow("#CCFF00", "Fluorescent yellow"),
+  folly("#FF004F", "Folly"),
+  forestGreen('#228B22', 'Forest Green'),
+  frenchBeige("#A67B5B", "French beige"),
+  frenchBistre("#856D4D", "French bistre"),
+  frenchBlue("#0072BB", "French blue"),
+  frenchFuchsia("#FD3F92", "French fuchsia"),
+  frenchLilac("#86608E", "French lilac"),
+  frenchLime("#9EFD38", "French lime"),
+  frenchMauve("#D473D4", "French mauve"),
+  frenchPink("#FD6C9E", "French pink"),
+  frenchPlum("#811453", "French plum"),
+  frenchPuce("#4E1609", "French puce"),
+  frenchRaspberry("#C72C48", "French raspberry"),
+  frenchRose("#F64A8A", "French rose"),
+  frenchSkyBlue("#77B5FE", "French sky blue"),
+  frenchViolet("#8806CE", "French violet"),
+  frenchWine("#AC1E44", "French wine"),
+  freshAir("#A6E7FF", "Fresh air"),
+  frostedMint("#DBFFF8", "Frosted mint"),
+  fuchsia('#FF00FF', 'Fuchsia'),
+  fuchsiaCrayola("#C154C1", "Fuchsia (Crayola)"),
+  fuchsiaPurple("#CC397B", "Fuchsia purple"),
+  fuchsiaRose("#C74375", "Fuchsia rose"),
+  fulvous("#E48400", "Fulvous"),
+  fuzzyWuzzy("#CC6666", "Fuzzy Wuzzy"),
+  gainsboro('#DCDCDC', 'Gainsboro'),
+  gamboge("#E49B0F", "Gamboge"),
+  genericViridian("#007F66", "Generic viridian"),
+  ghostWhite('#F8F8FF', 'Ghost White'),
+  giantsOrange("#FE5A1D", "Giants orange"),
+  glaucous("#6082B6", "Glaucous"),
+  glitter("#E6E8FA", "Glitter"),
+  glossyGrape("#AB92B3", "Glossy grape"),
+  goGreen("#00AB66", "GO green"),
+  gold('#FFD700', 'Gold'),
+  goldenBrown("#996515", "Golden brown"),
+  goldenPoppy("#FCC200", "Golden poppy"),
+  goldenrod("#DAA520", "Goldenrod"),
+  goldenRod('#DAA520', 'Golden Rod'),
+  goldenYellow("#FFDF00", "Golden yellow"),
+  goldFusion("#85754E", "Gold Fusion"),
+  graniteGray("#676767", "Granite gray"),
+  grannySmithApple("#A8E4A0", "Granny Smith apple"),
+  grape("#6F2DA8", "Grape"),
+  gray('#808080', 'Gray'),
+  grayAsparagus("#465945", "Gray asparagus"),
+  grayBlue("#8C92AC", "Gray blue"),
+  greenColor('#008000', 'Green'),
+  greenBlue("#1164B4", "Green blue"),
+  greenCrayola("#1CAC78", "Green (Crayola)"),
+  greenCyan("#009966", "Green cyan"),
+  greenLizard("#A7F432", "Green lizard"),
+  greenMunsell("#00A877", "Green (Munsell)"),
+  greenNCS("#009F6B", "Green (NCS)"),
+  greenPantone("#00AD43", "Green (Pantone)"),
+  greenPigment("#00A550", "Green (pigment)"),
+  greenRYB("#66B032", "Green (RYB)"),
+  greenSheen("#6EAEA1", "Green sheen"),
+  greenYellow('#ADFF2F', 'Green Yellow'),
+  grullo("#A99A86", "Grullo"),
+  gunmetal("#2a3439", "Gunmetal"),
+  guppieGreen("#00FF7F", "Guppie green"),
+  halayaUbe("#663854", "Halayà úbe"),
+  hanBlue("#446CCF", "Han blue"),
+  hanPurple("#5218FA", "Han purple"),
+  hansaYellow("#E9D66B", "Hansa yellow"),
+  harlequin("#3FFF00", "Harlequin"),
+  harlequinGreen("#46CB18", "Harlequin green"),
+  harvardCrimson("#C90016", "Harvard crimson"),
+  harvestGold("#DA9100", "Harvest gold"),
+  heartGold("#808000", "Heart gold"),
+  heatWave("#FF7A00", "Heat Wave"),
+  heliotrope("#DF73FF", "Heliotrope"),
+  heliotropeGray("#AA98A9", "Heliotrope gray"),
+  heliotropeMagenta("#AA00BB", "Heliotrope magenta"),
+  hollywoodCerise("#F400A1", "Hollywood cerise"),
+  honeydew("#F0FFF0", "Honeydew"),
+  honeyDew('#F0FFF0', 'Honey Dew'),
+  honoluluBlue("#006DB0", "Honolulu blue"),
+  hookerGreen("#49796B", "Hooker green"),
+  hotMagenta("#FF1DCE", "Hot magenta"),
+  hotPink('#FF69B4', 'Hot Pink'),
+  hunterGreen("#355E3B", "Hunter green"),
+  iceberg("#71A6D2", "Iceberg"),
+  icterine("#FCF75E", "Icterine"),
+  illuminatingEmerald("#319177", "Illuminating emerald"),
+  imperial("#602F6B", "Imperial"),
+  imperialBlue("#002395", "Imperial blue"),
+  imperialPurple("#66023C", "Imperial purple"),
+  imperialRed("#ED2939", "Imperial red"),
+  inchworm("#B2EC5D", "Inchworm"),
+  independence("#4C516D", "Independence"),
+  indiaGreen("#138808", "India green"),
+  indianRed('#CD5C5C', 'Indian Red'),
+  indianYellow("#E3A857", "Indian yellow"),
+  indigo('#4B0082', 'Indigo'),
+  indigoDye("#091F92", "Indigo dye"),
+  indigoWeb("#4B0082", "Indigo (web)"),
+  infrared("#FF496C", "Infrared"),
+  interdimensionalBlue("#360CCC", "Interdimensional blue"),
+  internationalKleinBlue("#002FA7", "International Klein Blue"),
+  internationalOrangeAerospace("#FF4F00", "International orange (aerospace)"),
+  internationalOrangeEngineering("#BA160C", "International orange (engineering)"),
+  internationalOrangeGoldenGateBridge("#C0362C", "International orange (Golden Gate Bridge)"),
+  iris("#5A4FCF", "Iris"),
+  irresistible("#B3446C", "Irresistible"),
+  isabelline("#F4F0EC", "Isabelline"),
+  islamicGreen("#009000", "Islamic green"),
+  italianSkyBlue("#B2FFFF", "Italian sky blue"),
+  ivory('#FFFFF0', 'Ivory'),
+  jade("#00A86B", "Jade"),
+  japaneseCarmine("#9D2933", "Japanese carmine"),
+  japaneseIndigo("#264348", "Japanese indigo"),
+  japaneseLaurel("#0A6906", "Japanese laurel"),
+  japaneseViolet("#5B3256", "Japanese violet"),
+  jasmine("#F8DE7E", "Jasmine"),
+  jasper("#D73B3E", "Jasper"),
+  jazzberryJam("#A50B5E", "Jazzberry jam"),
+  jellyBean("#DA614E", "Jelly bean"),
+  jet("#343434", "Jet"),
+  jonquil("#F4CA16", "Jonquil"),
+  jordyBlue("#8AB9F1", "Jordy blue"),
+  juneBud("#BDDA57", "June bud"),
+  jungleGreen("#29AB87", "Jungle green"),
+  kellyGreen("#4CBB17", "Kelly green"),
+  kenyanCopper("#7C1C05", "Kenyan copper"),
+  keppel("#3AB09E", "Keppel"),
+  keyLime("#E8F48C", "Key lime"),
+  khaki('#F0E68C', 'Khaki'),
+  khakiX11("#F0E68C", "Khaki (X11)"),
+  kiwi("#8EE53F", "Kiwi"),
+  kobe("#882D17", "Kobe"),
+  kobi("#E79FC4", "Kobi"),
+  kombuGreen("#354230", "Kombu green"),
+  kuCrimson("#E8000D", "KU crimson"),
+  languidLavender("#D6CADD", "Languid lavender"),
+  lapisLazuli("#26619C", "Lapis lazuli"),
+  laSalleGreen("#087830", "La Salle green"),
+  laserLemon("#FFFF66", "Laser lemon"),
+  laurelGreen("#A9BA9D", "Laurel green"),
+  lava("#CF1020", "Lava"),
+  lavender('#E6E6FA', 'Lavender'),
+  lavenderBlue("#CCCCFF", "Lavender blue"),
+  lavenderBlush('#FFF0F5', 'Lavender Blush'),
+  lavenderFloral("#B57EDC", "Lavender (floral)"),
+  lavenderGray("#C4C3D0", "Lavender gray"),
+  lavenderIndigo("#9457EB", "Lavender indigo"),
+  lavenderMagenta("#EE82EE", "Lavender magenta"),
+  lavenderMist("#E6E6FA", "Lavender mist"),
+  lavenderPink("#FBAED2", "Lavender pink"),
+  lavenderPurple("#967BB6", "Lavender purple"),
+  lavenderRose("#FBA0E3", "Lavender rose"),
+  lawnGreen('#7CFC00', 'Lawn Green'),
+  lemon("#FFF700", "Lemon"),
+  lemonChiffon('#FFFACD', 'Lemon Chiffon'),
+  lemonCurry("#CCA01D", "Lemon curry"),
+  lemonGlacier("#FDFF00", "Lemon glacier"),
+  lemonLime("#E3FF00", "Lemon lime"),
+  lemonMeringue("#F6EABE", "Lemon meringue"),
+  lemonYellow("#FFF44F", "Lemon yellow"),
+  liberty("#545AA7", "Liberty"),
+  licorice("#1A1110", "Licorice"),
+  lightApricot("#FDD5B1", "Light apricot"),
+  lightBlue('#ADD8E6', 'Light Blue'),
+  lightBrown("#B5651D", "Light brown"),
+  lightCarminePink("#E66771", "Light carmine pink"),
+  lightCoral('#F08080', 'Light Coral'),
+  lightCornflowerBlue("#93CCEA", "Light cornflower blue"),
+  lightCrimson("#F56991", "Light crimson"),
+  lightCyan('#E0FFFF', 'Light Cyan'),
+  lightDeepPink("#FF5CCD", "Light deep pink"),
+  lightFrenchBeige("#C8AD7F", "Light French beige"),
+  lightFuchsiaPink("#F984EF", "Light fuchsia pink"),
+  lightGoldenrodYellow("#FAFAD2", "Light goldenrod yellow"),
+  lightGoldenRodYellow('#FAFAD2', 'Light Golden Rod Yellow'),
+  lightGray('#D3D3D3', 'Light Gray'),
+  lightGreen('#90EE90', 'Light Green'),
+  lightHotPink("#FFB3DE", "Light hot pink"),
+  lightKhaki("#F0E68C", "Light khaki"),
+  lightMediumOrchid("#D39BCB", "Light medium orchid"),
+  lightMossGreen("#ADDFAD", "Light moss green"),
+  lightOrchid("#E6A8D7", "Light orchid"),
+  lightPastelPurple("#B19CD9", "Light pastel purple"),
+  lightPink('#FFB6C1', 'Light Pink'),
+  lightRedOchre("#E97451", "Light red ochre"),
+  lightSalmon('#FFA07A', 'Light Salmon'),
+  lightSalmonPink("#FF9999", "Light salmon pink"),
+  lightSeaGreen('#20B2AA', 'Light Sea Green'),
+  lightSkyBlue('#87CEFA', 'Light Sky Blue'),
+  lightSlateGray('#778899', 'Light Slate Gray'),
+  lightSteelBlue('#B0C4DE', 'Light Steel Blue'),
+  lightTaupe("#B38B6D", "Light taupe"),
+  lightThulianPink("#E68FAC", "Light Thulian pink"),
+  lightYellow('#FFFFE0', 'Light Yellow'),
+  lilac("#C8A2C8", "Lilac"),
+  lilacLuster("#AE98AA", "Lilac Luster"),
+  lime('#00FF00', 'Lime'),
+  limeGreen('#32CD32', 'Lime Green'),
+  limerick("#9DC209", "Limerick"),
+  lincolnGreen("#195905", "Lincoln green"),
+  linen('#FAF0E6', 'Linen'),
+  lion("#C19A6B", "Lion"),
+  liseranPurple("#DE6FA1", "Liseran purple"),
+  littleBoyBlue("#6CA0DC", "Little boy blue"),
+  liver("#674C47", "Liver"),
+  liverChestnut("#987456", "Liver chestnut"),
+  liverDogs("#B86D29", "Liver (dogs)"),
+  liverOrgan("#6C2E1F", "Liver (organ)"),
+  livid("#6699CC", "Livid"),
+  lumber("#FFE4CD", "Lumber"),
+  lust("#E62020", "Lust"),
+  magenta('#FF00FF', 'Magenta'),
+  magentaCrayola("#FF55A3", "Magenta (Crayola)"),
+  magentaDye("#CA1F7B", "Magenta (dye)"),
+  magentaHaze("#9F4576", "Magenta haze"),
+  magentaPantone("#D0417E", "Magenta (Pantone)"),
+  magentaProcess("#FF0090", "Magenta (process)"),
+  magicMint("#AAF0D1", "Magic mint"),
+  magnolia("#F8F4FF", "Magnolia"),
+  mahogany("#C04000", "Mahogany"),
+  maize("#FBEC5D", "Maize"),
+  maizeCrayola("#F2C649", "Maize (Crayola)"),
+  majorelleBlue("#6050DC", "Majorelle blue"),
+  malachite("#0BDA51", "Malachite"),
+  manatee("#979AAA", "Manatee"),
+  mandarin("#F37A48", "Mandarin"),
+  mango("#FDBE02", "Mango"),
+  mangoTango("#FF8243", "Mango Tango"),
+  mantis("#74C365", "Mantis"),
+  mardiGras("#880085", "Mardi Gras"),
+  marigold("#EAA221", "Marigold"),
+  maroon('#800000', 'Maroon'),
+  maroonCrayola("#C32148", "Maroon (Crayola)"),
+  maroonHTMLCSS("#800000", "Maroon (HTML/CSS)"),
+  maroonX11("#B03060", "Maroon (X11)"),
+  mauve("#E0B0FF", "Mauve"),
+  mauvelous("#EF98AA", "Mauvelous"),
+  mauveTaupe("#915F6D", "Mauve taupe"),
+  maximumBlue("#47ABCC", "Maximum blue"),
+  maximumBlueGreen("#30BFBF", "Maximum blue green"),
+  maximumBluePurple("#ACACE6", "Maximum blue purple"),
+  maximumGreen("#5E8C31", "Maximum green"),
+  maximumGreenYellow("#D9E650", "Maximum green yellow"),
+  maximumPurple("#733380", "Maximum purple"),
+  maximumRed("#D92121", "Maximum red"),
+  maximumRedPurple("#A63A79", "Maximum red purple"),
+  maximumYellow("#FAFA37", "Maximum yellow"),
+  maximumYellowRed("#F2BA49", "Maximum yellow red"),
+  mayaBlue("#73C2FB", "Maya blue"),
+  mayGreen("#4C9141", "May green"),
+  mediumAquamarine("#66DDAA", "Medium aquamarine"),
+  mediumAquaMarine('#66CDAA', 'Medium Aqua Marine'),
+  mediumBlue('#0000CD', 'Medium Blue'),
+  mediumCandyAppleRed("#E2062C", "Medium candy apple red"),
+  mediumCarmine("#AF4035", "Medium carmine"),
+  mediumChampagne("#F3E5AB", "Medium champagne"),
+  mediumElectricBlue("#035096", "Medium electric blue"),
+  mediumJungleGreen("#1C352D", "Medium jungle green"),
+  mediumLavenderMagenta("#DDA0DD", "Medium lavender magenta"),
+  mediumOrchid('#BA55D3', 'Medium Orchid'),
+  mediumPersianBlue("#0067A5", "Medium persian blue"),
+  mediumPurple('#9370DB', 'Medium Purple'),
+  mediumRedViolet("#BB3385", "Medium red violet"),
+  mediumRuby("#AA4069", "Medium ruby"),
+  mediumSeaGreen('#3CB371', 'Medium Sea Green'),
+  mediumSkyBlue("#80DAEB", "Medium sky blue"),
+  mediumSlateBlue('#7B68EE', 'Medium Slate Blue'),
+  mediumSpringBud("#C9DC87", "Medium spring bud"),
+  mediumSpringGreen('#00FA9A', 'Medium Spring Green'),
+  mediumTaupe("#674C47", "Medium taupe"),
+  mediumTurquoise('#48D1CC', 'Medium Turquoise'),
+  mediumTuscanRed("#79443B", "Medium tuscan red"),
+  mediumVermilion("#D9603B", "Medium vermilion"),
+  mediumVioletRed('#C71585', 'Medium Violet Red'),
+  mellowApricot("#F8B878", "Mellow apricot"),
+  mellowYellow("#F8DE7E", "Mellow yellow"),
+  melon("#FEBAAD", "Melon"),
+  metallicSeaweed("#0A7E8C", "Metallic seaweed"),
+  metallicSunburst("#9C7C38", "Metallic sunburst"),
+  mexicanPink("#E4007C", "Mexican pink"),
+  middleBlue("#7ED4E6", "Middle blue"),
+  middleBlueGreen("#8DD9CC", "Middle blue green"),
+  middleBluePurple("#8B72BE", "Middle blue purple"),
+  middleGreen("#4D8C57", "Middle green"),
+  middleGreenYellow("#ACBF60", "Middle green yellow"),
+  middleGrey("#8B8680", "Middle grey"),
+  middlePurple("#D982B5", "Middle purple"),
+  middleRed("#E58E73", "Middle red"),
+  middleRedPurple("#A55353", "Middle red purple"),
+  middleYellow("#FFEB00", "Middle yellow"),
+  middleYellowRed("#ECB176", "Middle yellow red"),
+  midnight("#702670", "Midnight"),
+  midnightBlue('#191970', 'Midnight Blue'),
+  midnightGreen("#004953", "Midnight green"),
+  mikadoYellow("#FFC40C", "Mikado yellow"),
+  milk("#FDFFF5", "Milk"),
+  mindaro("#E3F988", "Mindaro"),
+  ming("#36747D", "Ming"),
+  minionYellow("#F5E050", "Minion yellow"),
+  mint("#3EB489", "Mint"),
+  mintCream('#F5FFFA', 'Mint Cream'),
+  mintGreen("#98FF98", "Mint green"),
+  mistyMoss("#BBB477", "Misty moss"),
+  mistyRose('#FFE4E1', 'Misty Rose'),
+  moccasin('#FFE4B5', 'Moccasin'),
+  modeBeige("#967117", "Mode beige"),
+  morningBlue("#8DA399", "Morning blue"),
+  mossGreen("#8A9A5B", "Moss green"),
+  mountainMeadow("#30BA8F", "Mountain meadow"),
+  mountbattenPink("#997A8D", "Mountbatten pink"),
+  msuGreen("#18453B", "MSU green"),
+  mughalGreen("#306030", "Mughal green"),
+  mulberry("#C54B8C", "Mulberry"),
+  mummysTomb("#828E84", "Mummy's tomb"),
+  mustard("#FFDB58", "Mustard"),
+  myrtleGreen("#317873", "Myrtle green"),
+  nadeshikoPink("#F6ADC6", "Nadeshiko pink"),
+  napierGreen("#2A8000", "Napier green"),
+  naplesYellow("#FADA5E", "Naples yellow"),
+  navajoWhite('#FFDEAD', 'Navajo White'),
+  navy('#000080', 'Navy'),
+  navyPurple("#9457EB", "Navy purple"),
+  neonCarrot("#FFA343", "Neon carrot"),
+  neonFuchsia("#FE4164", "Neon fuchsia"),
+  neonGreen("#39FF14", "Neon green"),
+  newYorkPink("#D7837F", "New York pink"),
+  nickel("#727472", "Nickel"),
+  nonPhotoBlue("#A4DDED", "Non photo blue"),
+  northTexasGreen("#059033", "North Texas green"),
+  nyanza("#E9FFDB", "Nyanza"),
+  oceanBlue("#4F42B5", "Ocean blue"),
+  oceanGreen("#48BF91", "Ocean green"),
+  ochre("#CC7722", "Ochre"),
+  officeGreen("#008000", "Office green"),
+  oldBurgundy("#43302E", "Old burgundy"),
+  oldGold("#CFB53B", "Old gold"),
+  oldHeliotrope("#563C5C", "Old heliotrope"),
+  oldLace('#FDF5E6', 'Old Lace'),
+  oldLavender("#796878", "Old lavender"),
+  oldMauve("#673147", "Old mauve"),
+  oldMossGreen("#867E36", "Old moss green"),
+  oldRose("#C08081", "Old rose"),
+  oldSilver("#848482", "Old silver"),
+  olive('#808000', 'Olive'),
+  oliveDrab('#6B8E23', 'Olive Drab'),
+  oliveGreen("#B5B35C", "Olive green"),
+  olivine("#9AB973", "Olivine"),
+  onyx("#353839", "Onyx"),
+  opal("#A8C3BC", "Opal"),
+  operaMauve("#B784A7", "Opera mauve"),
+  orange('#FFA500', 'Orange'),
+  orangePeel("#FF9F00", "Orange peel"),
+  orangeRed('#FF4500', 'Orange Red'),
+  orangeSoda("#FA5B3D", "Orange soda"),
+  orangeYellow("#F5BD1F", "Orange yellow"),
+  orchid('#DA70D6', 'Orchid'),
+  orchidPink("#F2BDCD", "Orchid pink"),
+  oriolesOrange("#FB4F14", "Orioles orange"),
+  otterBrown("#654321", "Otter brown"),
+  ouCrimsonRed("#990000", "OU crimson red"),
+  outerSpace("#414A4C", "Outer space"),
+  outrageousOrange("#FF6E4A", "Outrageous orange"),
+  oxblood("#4A0000", "Oxblood"),
+  oxfordBlue("#002147", "Oxford blue"),
+  pacificBlue("#1CA9C9", "Pacific blue"),
+  pakistanGreen("#006600", "Pakistan green"),
+  palatinateBlue("#273BE2", "Palatinate blue"),
+  palatinatePurple("#682860", "Palatinate purple"),
+  paleAqua("#BCD4E6", "Pale aqua"),
+  paleBlue("#AFEEEE", "Pale blue"),
+  paleBrown("#987654", "Pale brown"),
+  paleCarmine("#AF4035", "Pale carmine"),
+  paleCerulean("#9BC4E2", "Pale cerulean"),
+  paleChestnut("#DDADAF", "Pale chestnut"),
+  paleCopper("#DA8A67", "Pale copper"),
+  paleCornflowerBlue("#ABCDEF", "Pale cornflower blue"),
+  paleCyan("#87D3F8", "Pale cyan"),
+  paleGold("#E6BE8A", "Pale gold"),
+  paleGoldenrod("#EEE8AA", "Pale goldenrod"),
+  paleGoldenRod('#EEE8AA', 'Pale Golden Rod'),
+  paleGreen('#98FB98', 'Pale Green'),
+  paleLavender("#DCD0FF", "Pale lavender"),
+  paleMagenta("#F984E5", "Pale magenta"),
+  paleMagentaPink("#FF99CC", "Pale magenta pink"),
+  palePink("#FADADD", "Pale pink"),
+  palePlum("#DDA0DD", "Pale plum"),
+  paleRedViolet("#DB7093", "Pale red violet"),
+  paleRobinEggBlue("#96DED1", "Pale robin egg blue"),
+  paleSilver("#C9C0BB", "Pale silver"),
+  paleSpringBud("#ECEBBD", "Pale spring bud"),
+  paleTaupe("#BC987E", "Pale taupe"),
+  paleTurquoise('#AFEEEE', 'Pale Turquoise'),
+  paleViolet("#CC99FF", "Pale violet"),
+  paleVioletRed('#DB7093', 'Pale Violet Red'),
+  pansyPurple("#78184A", "Pansy purple"),
+  paoloVeroneseGreen("#009B7D", "Paolo Veronese green"),
+  papayaWhip('#FFEFD5', 'Papaya Whip'),
+  paradisePink("#E63E62", "Paradise pink"),
+  parisGreen("#50C878", "Paris green"),
+  pastelBlue("#AEC6CF", "Pastel blue"),
+  pastelBrown("#836953", "Pastel brown"),
+  pastelGray("#CFCFC4", "Pastel gray"),
+  pastelGreen("#77DD77", "Pastel green"),
+  pastelMagenta("#F49AC2", "Pastel magenta"),
+  pastelOrange("#FFB347", "Pastel orange"),
+  pastelPink("#FFD1DC", "Pastel pink"),
+  pastelPurple("#B39EB5", "Pastel purple"),
+  pastelRed("#FF6961", "Pastel red"),
+  pastelViolet("#CB99C9", "Pastel violet"),
+  pastelYellow("#FDFD96", "Pastel yellow"),
+  patriarch("#800080", "Patriarch"),
+  paynesGrey("#536878", "Payne's grey"),
+  peach("#FFE5B4", "Peach"),
+  peachCrayola("#FFCBA4", "Peach (Crayola)"),
+  peachOrange("#FFCC99", "Peach orange"),
+  peachPuff('#FFDAB9', 'Peach Puff'),
+  peachYellow("#FADFAD", "Peach yellow"),
+  pear("#D1E231", "Pear"),
+  pearl("#EAE0C8", "Pearl"),
+  pearlAqua("#88D8C0", "Pearl aqua"),
+  pearlyPurple("#B768A2", "Pearly purple"),
+  peridot("#E6E200", "Peridot"),
+  periwinkle("#CCCCFF", "Periwinkle"),
+  periwinkleCrayola("#C3CDE6", "Periwinkle (Crayola)"),
+  permanentGeraniumLake("#E12C2C", "Permanent geranium lake"),
+  persianBlue("#1C39BB", "Persian blue"),
+  persianGreen("#00A693", "Persian green"),
+  persianIndigo("#32127A", "Persian indigo"),
+  persianOrange("#D99058", "Persian orange"),
+  persianPink("#F77FBE", "Persian pink"),
+  persianPlum("#701C1C", "Persian plum"),
+  persianRed("#CC3333", "Persian red"),
+  persianRose("#FE28A2", "Persian rose"),
+  persimmon("#EC5800", "Persimmon"),
+  peru('#CD853F', 'Peru'),
+  phlox("#DF00FF", "Phlox"),
+  phthaloBlue("#000F89", "Phthalo blue"),
+  phthaloGreen("#123524", "Phthalo green"),
+  pictonBlue("#45B1E8", "Picton blue"),
+  pictorialCarmine("#C30B4E", "Pictorial carmine"),
+  piggyPink("#FDDDE6", "Piggy pink"),
+  pineGreen("#01796F", "Pine green"),
+  pineTree("#2A2F23", "Pine tree"),
+  pink('#FFC0CB', 'Pink'),
+  pinkFlamingo("#FC74FD", "Pink flamingo"),
+  pinkLace("#FFDDF4", "Pink lace"),
+  pinkLavender("#D8B2D1", "Pink lavender"),
+  pinkOrange("#FF9966", "Pink orange"),
+  pinkPearl("#E7ACCF", "Pink pearl"),
+  pinkRaspberry("#980036", "Pink raspberry"),
+  pinkSherbet("#F78FA7", "Pink sherbet"),
+  pistachio("#93C572", "Pistachio"),
+  platinum("#E5E4E2", "Platinum"),
+  plum('#DDA0DD', 'Plum'),
+  plumpPurple("#5946B2", "Plump purple"),
+  plumWeb("#8E4585", "Plum (web)"),
+  polishedPine("#5DA493", "Polished pine"),
+  pompAndPower("#86608E", "Pomp and power"),
+  popstar("#BE4F62", "Popstar"),
+  portlandOrange("#FF5A36", "Portland orange"),
+  powderBlue('#B0E0E6', 'Powder Blue'),
+  princetonOrange("#F58025", "Princeton orange"),
+  prune("#701C1C", "Prune"),
+  prussianBlue("#003153", "Prussian blue"),
+  psychedelicPurple("#DF00FF", "Psychedelic purple"),
+  puce("#CC8899", "Puce"),
+  puceRed("#722F37", "Puce red"),
+  pullmanBrown("#644117", "Pullman brown"),
+  pullmanGreen("#3B331C", "Pullman green"),
+  pumpkin("#FF7518", "Pumpkin"),
+  purple('#800080', 'Purple'),
+  purple100("#E1BEE7", "Purple 100"),
+  purple200("#CE93D8", "Purple 200"),
+  purple300("#BA68C8", "Purple 300"),
+  purple400("#AB47BC", "Purple 400"),
+  purple500("#9C27B0", "Purple 500"),
+  purple600("#8E24AA", "Purple 600"),
+  purple700("#7B1FA2", "Purple 700"),
+  purple800("#6A1B9A", "Purple 800"),
+  purple900("#4A148C", "Purple 900"),
+  purpleA100("#EA80FC", "Purple A100"),
+  purpleA200("#E040FB", "Purple A200"),
+  purpleA400("#D500F9", "Purple A400"),
+  purpleA700("#AA00FF", "Purple A700"),
+  purpleHeart("#69359C", "Purple heart"),
+  purpleMountainMajesty("#9678B6", "Purple mountain majesty"),
+  purpleNavy("#4E5180", "Purple navy"),
+  purplePizzazz("#FE4EDA", "Purple pizzazz"),
+  purplePlum("#9C51B6", "Purple plum"),
+  purpleTaupe("#50404D", "Purple taupe"),
+  purpureus("#9A4EAE", "Purpureus"),
+  quartz("#51484F", "Quartz"),
+  queenBlue("#436B95", "Queen blue"),
+  queenPink("#E8CCD7", "Queen pink"),
+  quinacridoneMagenta("#8E3A59", "Quinacridone magenta"),
+  rackley("#5D8AA8", "Rackley"),
+  radicalRed("#FF355E", "Radical red"),
+  rajah("#FBAB60", "Rajah"),
+  raspberry("#E30B5C", "Raspberry"),
+  raspberryGlace("#915F6D", "Raspberry glacé"),
+  raspberryPink("#E25098", "Raspberry pink"),
+  raspberryRose("#B3446C", "Raspberry rose"),
+  rawSienna("#D68A59", "Raw sienna"),
+  rawUmber("#826644", "Raw umber"),
+  razzleDazzleRose("#FF33CC", "Razzle dazzle rose"),
+  razzmatazz("#E3256B", "Razzmatazz"),
+  razzmicBerry("#8D4E85", "Razzmic berry"),
+  rebeccaPurple('#663399', 'Rebecca Purple'),
+  redColor('#FF0000', 'Red'),
+  redBrown("#A52A2A", "Red brown"),
+  redCrayola("#EE204D", "Red (Crayola)"),
+  redDevil("#860111", "Red devil"),
+  redMunsell("#F2003C", "Red (Munsell)"),
+  redNcs("#C40233", "Red (NCS)"),
+  redOrange("#FF5349", "Red orange"),
+  redPantone("#ED2939", "Red (Pantone)"),
+  redPigment("#ED1C24", "Red (pigment)"),
+  redPurple("#E40078", "Red purple"),
+  redRyb("#FE2712", "Red (RYB)"),
+  redSalsa("#FD3A4A", "Red salsa"),
+  redViolet("#C71585", "Red violet"),
+  redwood("#A45A52", "Redwood"),
+  regalia("#522D80", "Regalia"),
+  registrationBlack("#000000", "Registration black"),
+  resolutionBlue("#002387", "Resolution blue"),
+  rhythm("#777696", "Rhythm"),
+  richBlack("#004040", "Rich black"),
+  richBlackFogra29("#010B13", "Rich black (FOGRA29)"),
+  richBlackFogra39("#010203", "Rich black (FOGRA39)"),
+  richBrilliantLavender("#F1A7FE", "Rich brilliant lavender"),
+  richCarmine("#D70040", "Rich carmine"),
+  richElectricBlue("#0892D0", "Rich electric blue"),
+  richLavender("#A76BCF", "Rich lavender"),
+  richLilac("#B666D2", "Rich lilac"),
+  richMaroon("#B03060", "Rich maroon"),
+  rifleGreen("#444C38", "Rifle green"),
+  robinEggBlue("#00CCCC", "Robin egg blue"),
+  rocketMetallic("#8A7F80", "Rocket metallic"),
+  romanSilver("#838996", "Roman silver"),
+  rose("#FF007F", "Rose"),
+  roseBonbon("#F9429E", "Rose bonbon"),
+  roseDust("#9E5E6F", "Rose dust"),
+  roseEbony("#674846", "Rose ebony"),
+  roseGold("#B76E79", "Rose gold"),
+  roseMadder("#E32636", "Rose madder"),
+  rosePink("#FF66CC", "Rose pink"),
+  roseQuartz("#AA98A9", "Rose quartz"),
+  roseRed("#C21E56", "Rose red"),
+  roseTaupe("#905D5D", "Rose taupe"),
+  roseVale("#AB4E52", "Rose vale"),
+  rosewood("#65000B", "Rosewood"),
+  rossoCorsa("#D40000", "Rosso corsa"),
+  rosyBrown('#BC8F8F', 'Rosy Brown'),
+  royalAzure("#0038A8", "Royal azure"),
+  royalBlue('#4169E1', 'Royal Blue'),
+  royalFuchsia("#CA2C92", "Royal fuchsia"),
+  royalPurple("#7851A9", "Royal purple"),
+  royalYellow("#FADA5E", "Royal yellow"),
+  rubineRed("#D10056", "Rubine red"),
+  ruby("#E0115F", "Ruby"),
+  rubyRed("#9B111E", "Ruby red"),
+  ruddy("#FF0028", "Ruddy"),
+  ruddyBrown("#BB6528", "Ruddy brown"),
+  ruddyPink("#E18E96", "Ruddy pink"),
+  rufous("#A81C07", "Rufous"),
+  russet("#80461B", "Russet"),
+  russianGreen("#679267", "Russian green"),
+  russianViolet("#32174D", "Russian violet"),
+  rust("#B7410E", "Rust"),
+  rustyRed("#DA2C43", "Rusty red"),
+  sacramentoStateGreen("#043927", "Sacramento State green"),
+  saddleBrown('#8B4513', 'Saddle Brown'),
+  safetyOrange("#FF7800", "Safety orange"),
+  safetyYellow("#EED202", "Safety yellow"),
+  saffron("#F4C430", "Saffron"),
+  salmon('#FA8072', 'Salmon'),
+  salmonPink("#FF91A4", "Salmon pink"),
+  sand("#C2B280", "Sand"),
+  sandDune("#967117", "Sand dune"),
+  sandstorm("#ECD540", "Sandstorm"),
+  sandyBrown('#F4A460', 'Sandy Brown'),
+  sandyTaupe("#967117", "Sandy taupe"),
+  sangria("#92000A", "Sangria"),
+  sapGreen("#507D2A", "Sap green"),
+  sapphire("#0F52BA", "Sapphire"),
+  sapphireBlue("#0067A5", "Sapphire blue"),
+  satinSheenGold("#CBA135", "Satin sheen gold"),
+  scarlet("#FF2400", "Scarlet"),
+  scarletRed("#CD202C", "Scarlet red"),
+  schaussPink("#FF91AF", "Schauss pink"),
+  schoolBusYellow("#FFD800", "School bus yellow"),
+  screaminGreen("#66FF66", "Screamin' Green"),
+  seaBlue("#006994", "Sea blue"),
+  seaGreen('#2E8B57', 'Sea Green'),
+  sealBrown("#59260B", "Seal brown"),
+  seashell("#FFF5EE", "Seashell"),
+  seaShell('#FFF5EE', 'Sea Shell'),
+  selectiveYellow("#FFBA00", "Selective yellow"),
+  sepia("#704214", "Sepia"),
+  shadow("#8A795D", "Shadow"),
+  shadowBlue("#778BA5", "Shadow blue"),
+  shampoo("#FFCFF1", "Shampoo"),
+  shamrockGreen("#009E60", "Shamrock green"),
+  sheenGreen("#8FD400", "Sheen green"),
+  shimmeringBlush("#D98695", "Shimmering blush"),
+  shinyShamrock("#5FA778", "Shiny shamrock"),
+  shockingPink("#FC0FC0", "Shocking pink"),
+  shockingPinkCrayola("#FF6FFF", "Shocking pink (Crayola)"),
+  sienna('#A0522D', 'Sienna'),
+  silver('#C0C0C0', 'Silver'),
+  silverChalice("#ACACAC", "Silver chalice"),
+  silverLakeBlue("#5D89BA", "Silver lake blue"),
+  silverPink("#C4AEAD", "Silver pink"),
+  silverSand("#BFC1C2", "Silver sand"),
+  sinopia("#CB410B", "Sinopia"),
+  skobeloff("#007474", "Skobeloff"),
+  skyBlue('#87CEEB', 'Sky Blue'),
+  skyMagenta("#CF71AF", "Sky magenta"),
+  slateBlue('#6A5ACD', 'Slate Blue'),
+  slateGray('#708090', 'Slate Gray'),
+  smalt("#003399", "Smalt"),
+  smitten("#C84186", "Smitten"),
+  smokyBlack("#100C08", "Smoky black"),
+  snow('#FFFAFA', 'Snow'),
+  soap("#CEC8EF", "Soap"),
+  solidPink("#893843", "Solid pink"),
+  sonicSilver("#757575", "Sonic silver"),
+  spaceCadet("#1D2951", "Space cadet"),
+  spanishBistre("#807532", "Spanish bistre"),
+  spanishBlue("#0070B8", "Spanish blue"),
+  spanishCarmine("#D10047", "Spanish carmine"),
+  spanishCrimson("#E51A4C", "Spanish crimson"),
+  spanishGray("#989898", "Spanish gray"),
+  spanishGreen("#009150", "Spanish green"),
+  spanishOrange("#E86100", "Spanish orange"),
+  spanishPink("#F7BFBE", "Spanish pink"),
+  spanishRed("#E60026", "Spanish red"),
+  spanishSkyBlue("#00FFFF", "Spanish sky blue"),
+  spanishViolet("#4C2882", "Spanish violet"),
+  spanishViridian("#007F5C", "Spanish viridian"),
+  spartanCrimson("#9E1316", "Spartan crimson"),
+  spicyMix("#8B5f4D", "Spicy mix"),
+  spiroDiscoBall("#0FC0FC", "Spiro Disco Ball"),
+  springBud("#A7FC00", "Spring bud"),
+  springGreen('#00FF7F', 'Spring Green'),
+  starCommandBlue("#007BB8", "Star command blue"),
+  steelBlue('#4682B4', 'Steel Blue'),
+  steelPink("#CC33CC", "Steel pink"),
+  stilDeGrainYellow("#FADA5E", "Stil de grain yellow"),
+  stizza("#990000", "Stizza"),
+  stormcloud("#4F666A", "Stormcloud"),
+  straw("#E4D96F", "Straw"),
+  strawberry("#FC5A8D", "Strawberry"),
+  sugarPlum("#914E75", "Sugar plum"),
+  sunset("#FAD6A5", "Sunset"),
+  sunsetOrange("#FD5E53", "Sunset orange"),
+  superPink("#CF6BA9", "Super pink"),
+  tan('#D2B48C', 'Tan'),
+  tangelo("#F94D00", "Tangelo"),
+  tangerine("#F28500", "Tangerine"),
+  tangerineYellow("#FFCC00", "Tangerine yellow"),
+  tangoPink("#E4717A", "Tango pink"),
+  taupe("#483C32", "Taupe"),
+  taupeGray("#8B8589", "Taupe gray"),
+  teaGreen("#D0F0C0", "Tea green"),
+  teal('#008080', 'Teal'),
+  tealBlue("#367588", "Teal blue"),
+  tealDeer("#99E6B3", "Teal deer"),
+  tealGreen("#00827F", "Teal green"),
+  teaRose("#F88379", "Tea rose"),
+  teleMagenta("#CF3476", "Telemagenta"),
+  tenne("#CD5700", "Tenné"),
+  terraCotta("#E2725B", "Terra cotta"),
+  thistle('#D8BFD8', 'Thistle'),
+  thulianPink("#DE6FA1", "Thulian pink"),
+  tickleMePink("#FC89AC", "Tickle Me Pink"),
+  tiffanyBlue("#0ABAB5", "Tiffany blue"),
+  tigerEye("#E08D3C", "Tiger eye"),
+  tigerOrange("#FD6A02", "Tiger orange"),
+  tigersEye("#E08D3C", "Tiger's eye"),
+  timberwolf("#DBD7D2", "Timberwolf"),
+  titaniumYellow("#EEE600", "Titanium yellow"),
+  tomato('#FF6347', 'Tomato'),
+  toolbox("#746CC0", "Toolbox"),
+  topaz("#FFC87C", "Topaz"),
+  tractorRed("#FD0E35", "Tractor red"),
+  transparent("#FFFFFFFF", "Transparent"),
+  trolleyGrey("#808080", "Trolley grey"),
+  tropicalRainForest("#00755E", "Tropical rain forest"),
+  trueBlue("#0073CF", "True blue"),
+  tuftsBlue("#417DC1", "Tufts blue"),
+  tulip("#FF878D", "Tulip"),
+  tumbleweed("#DEAA88", "Tumbleweed"),
+  turkishRose("#B57281", "Turkish rose"),
+  turquoise('#40E0D0', 'Turquoise'),
+  turquoiseBlue("#00FFEF", "Turquoise blue"),
+  turquoiseGreen("#A0D6B4", "Turquoise green"),
+  tuscan("#FAD6A5", "Tuscan"),
+  tuscanBrown("#6F4E37", "Tuscan brown"),
+  tuscanRed("#7C4848", "Tuscan red"),
+  tuscanTan("#A67B5B", "Tuscan tan"),
+  tuscany("#C09999", "Tuscany"),
+  twilightLavender("#8A496B", "Twilight lavender"),
+  tyrianPurple("#66023C", "Tyrian purple"),
+  uaBlue("#0033AA", "UA blue"),
+  uaRed("#D9004C", "UA red"),
+  ube("#8878C3", "Ube"),
+  uclaBlue("#536895", "UCLA blue"),
+  uclaGold("#FFB300", "UCLA gold"),
+  ufoGreen("#3CD070", "UFO green"),
+  ultramarine("#3F00FF", "Ultramarine"),
+  ultramarineBlue("#4166F5", "Ultramarine blue"),
+  ultraPink("#FF6FFF", "Ultra pink"),
+  ultraRed("#FC6C85", "Ultra red"),
+  umber("#635147", "Umber"),
+  unbleachedSilk("#FFDDCA", "Unbleached silk"),
+  unitedNationsBlue("#5B92E5", "United Nations blue"),
+  universityOfCaliforniaGold("#B78727", "University of California Gold"),
+  unmellowYellow("#FFFF66", "Unmellow yellow"),
+  upForestGreen("#014421", "UP Forest green"),
+  upMaroon("#7B1113", "UP maroon"),
+  upsdellRed("#AE2029", "Upsdell red"),
+  urobilin("#E1AD21", "Urobilin"),
+  usafaBlue("#004F98", "USAFA blue"),
+  uscCardinal("#990000", "USC Cardinal"),
+  uscGold("#FFCC00", "USC Gold"),
+  utahCrimson("#D3003F", "Utah crimson"),
+  vanilla("#F3E5AB", "Vanilla"),
+  vanillaIce("#F38FA9", "Vanilla ice"),
+  vegasGold("#C5B358", "Vegas gold"),
+  venetianRed("#C80815", "Venetian red"),
+  verdigris("#43B3AE", "Verdigris"),
+  vermilion("#E34234", "Vermilion"),
+  veronica("#A020F0", "Veronica"),
+  violet('#EE82EE', 'Violet'),
+  violetBlue("#324AB2", "Violet blue"),
+  violetRed("#F75394", "Violet red"),
+  viridian("#40826D", "Viridian"),
+  viridianGreen("#009698", "Viridian green"),
+  vistaBlue("#7C9ED9", "Vista blue"),
+  vividAuburn("#922724", "Vivid auburn"),
+  vividBurgundy("#9F1D35", "Vivid burgundy"),
+  vividCerise("#DA1D81", "Vivid cerise"),
+  vividCerulean("#00AAEE", "Vivid cerulean"),
+  vividCrimson("#CC0033", "Vivid crimson"),
+  vividGamboge("#FF9900", "Vivid gamboge"),
+  vividLimeGreen("#A6D608", "Vivid lime green"),
+  vividMalachite("#00CC33", "Vivid malachite"),
+  vividMulberry("#B80CE3", "Vivid mulberry"),
+  vividOrange("#FF5F00", "Vivid orange"),
+  vividOrangePeel("#FFA000", "Vivid orange peel"),
+  vividOrchid("#CC00FF", "Vivid orchid"),
+  vividRaspberry("#FF006C", "Vivid raspberry"),
+  vividRed("#F70D1A", "Vivid red"),
+  vividRedTangelo("#DF6124", "Vivid red tangelo"),
+  vividSkyBlue("#00CCFF", "Vivid sky blue"),
+  vividTangerine("#FFA089", "Vivid tangerine"),
+  vividVermilion("#E56024", "Vivid vermilion"),
+  vividViolet("#9F00FF", "Vivid violet"),
+  vividYellow("#FFE302", "Vivid yellow"),
+  volt("#CEFF00", "Volt"),
+  warmBlack("#004242", "Warm black"),
+  waterspout("#A4F4F9", "Waterspout"),
+  wenge("#645452", "Wenge"),
+  wheat('#F5DEB3', 'Wheat'),
+  white("#FFFFFF", "White"),
+  whiteSmoke("#F5F5F5", "White smoke"),
+  wildBlueYonder("#A2ADD0", "Wild blue yonder"),
+  wildOrchid("#D470A2", "Wild orchid"),
+  wildStrawberry("#FF43A4", "Wild strawberry"),
+  wildWatermelon("#FC6C85", "Wild watermelon"),
+  willpowerOrange("#FD5800", "Willpower orange"),
+  windsorTan("#A75502", "Windsor tan"),
+  wine("#722F37", "Wine"),
+  wineDregs("#673147", "Wine dregs"),
+  wintergreenDream("#56887D", "Wintergreen dream"),
+  winterSky("#FF007C", "Winter sky"),
+  winterWizard("#A0E6FF", "Winter wizard"),
+  wisteria("#C9A0DC", "Wisteria"),
+  woodBrown("#C19A6B", "Wood brown"),
+  xanadu("#738678", "Xanadu"),
+  yaleBlue("#0F4D92", "Yale blue"),
+  yellow("#FFFF00", "Yellow"),
+  yellowGreen('#9ACD32', 'Yellow Green'),
+  yellowOrange("#FFAE42", "Yellow orange"),
+  yellowRose("#FFF000", "Yellow rose"),
+  zaffre("#0014A8", "Zaffre"),
+  zinnwalditeBrown("#2C1608", "Zinnwaldite brown"),
+  zomp("#39A78E", "Zomp");
 
-/// Represents a color with a name and description.
-/// Its implements most of the methods of the [Color], [HSLColor] and [HSVColor] classes.
-/// Different from the [Color] class, this class values can be changed without copying the instance.
-class NamedColor implements Color, Comparable<NamedColor> {
-  late double _h, _s, _v;
-  late String _name;
-  late Color _scolor;
+  final String hexadecimal;
+  final String _name;
 
-  String description = "";
-
-  NamedColor([Color color = Colors.transparent, String? name, string description = ""]) {
-    name ??= NamedColors.getName(color.hexadecimal);
-    _loadColor(color);
-    _name = name ?? color.alphaHexadecimal;
-    description = description;
-  }
-
-  factory NamedColor.fromAHSL(alpha, hue, saturation, lightness, [string? name, string description = ""]) {
-    HSLColor hsl = HSLColor.fromAHSL(alpha, hue, saturation, lightness);
-    return NamedColor(hsl.toColor(), name, description);
-  }
-
-  @override
-  NamedColor.fromARGB(int a, int r, int g, int b, [string? name, string description = ""]) : this(Color.fromARGB(a, r, g, b), name, description);
-
-  factory NamedColor.fromCMYK(double c, double m, double y, double k, [string? name, string description = ""]) {
-    var r = 255 * (1 - c) * (1 - k);
-    var g = 255 * (1 - m) * (1 - k);
-    var b = 255 * (1 - y) * (1 - k);
-    return NamedColor.fromRGB(r.round(), g.round(), b.round(), name, description);
-  }
-
-  factory NamedColor.fromCss(String css) {
-    var color = NamedColor();
-    if (css.isHexadecimalColor) {
-      color.hexadecimal = css;
-    } else if (css.startsWith('rgba')) {
-      var values = css.substring(5, css.length - 1).split(',');
-      color.red = int.parse(values[0]);
-      color.green = int.parse(values[1]);
-      color.blue = int.parse(values[2]);
-      color.opacity = double.parse(values[3]);
-    } else if (css.startsWith('rgb')) {
-      var values = css.substring(4, css.length - 1).split(',');
-      color.red = int.parse(values[0]);
-      color.green = int.parse(values[1]);
-      color.blue = int.parse(values[2]);
-    } else if (css.startsWith('hsl')) {
-      var values = css.substring(4, css.length - 1).split(',');
-      color.hue = double.parse(values[0]);
-      color.saturation = double.parse(values[1]);
-      color.lightness = double.parse(values[2]);
-    } else if (css.startsWith('hsv')) {
-      var values = css.substring(4, css.length - 1).split(',');
-      color.hue = double.parse(values[0]);
-      color.saturation = double.parse(values[1]);
-      color.brightness = double.parse(values[2]);
-    } else {
-      throw ArgumentError('Invalid CSS color: $css');
-    }
-    return color;
-  }
-
-  NamedColor.fromInt(int argb, [string? name, string description = ""]) : this(Color(argb), name, description);
-
-  NamedColor.fromRGB(int r, int g, int b, [string? name, string description = ""]) : this.fromInt(255 << 24 | r << 16 | g << 8 | b, name, description);
-  NamedColor.fromString(String color, [string? name, this.description = ""]) {
-    _loadColor(color.asColor);
-    _name = name ?? color;
-  }
+  const NamedColor(this.hexadecimal, this._name);
 
   factory NamedColor.fromValue(dynamic value) {
     if (value is NamedColor) {
-      return NamedColor.fromString(value.hexadecimal, value.name, value.description);
-    } else if (value is Color) {
-      return NamedColor(value);
-    } else if (value is HSLColor) {
-      return NamedColor(value.toColor());
-    } else if (value is HSVColor) {
-      return NamedColor(value.toColor());
-    } else if (value is String) {
-      return NamedColor.fromString(value);
-    } else if (value is num) {
-      return NamedColor.fromInt(value.round());
-    } else {
-      return NamedColor.fromString(flatString(value));
+      return value;
     }
-  }
 
-  @override
-  int get alpha => _scolor.alpha;
-
-  set alpha(int value) => _loadColor(_scolor.withAlpha(value));
-  Iterable<NamedColor> get analogousColors => modColors([30, -30]);
-
-  int get argb => _scolor.value;
-
-  set argb(int value) => _loadColor(Color(value));
-
-  double get black => 1 - _v;
-
-  @override
-  int get blue => _scolor.blue;
-
-  set blue(int value) => _loadColor(_scolor.withBlue(value));
-
-  double get brightness => _v;
-
-  set brightness(double value) {
-    value = value.clamp(0.0, 1.0);
-    if (_v != value) {
-      _v = value;
-      _setColor();
+    if (value is Color) {
+      value = value.hexadecimal;
     }
-  }
 
-  NamedColor? get closestColor {
-    var min = double.infinity;
-    NamedColor? color;
-    for (var color in NamedColors.values) {
-      var d = color.color.distanceTo(this);
-      if (d < min) {
-        min = d;
-        color = color;
+    if (value is num) {
+      value = Color(value.round()).hexadecimal;
+    }
+
+    for (var color in values) {
+      if (color.hexadecimal.flatEqual(value) || color.alphaHexadecimal.flatEqual(value) || color.keyword.flatEqual(generateKeyword(value))) {
+        return color;
       }
     }
-    return color;
+    throw ArgumentError('Invalid named color: $value');
   }
 
-  string get closestColorName => closestColor?.name ?? '';
-
-  NamedColor get complementaryColor => modColor(180);
-
-  String get css => alpha == 255 ? 'rgb($red, $green, $blue)' : 'rgba($red, $green, $blue, $opacity)';
-
-  double get cyan => 1 - (red / 255);
-
-  /// The Dominant value of this color.
-  int get dominantValue => [red, green, blue].max;
+  @override
+  int get alpha => color.alpha;
 
   @override
-  int get green => _scolor.green;
+  int get blue => color.blue;
 
-  set green(int value) => _loadColor(_scolor.withGreen(value));
+  /// Returns the color of the named color.
+  Color get color => hexadecimal.asColor;
 
   @override
-  int get hashCode => _scolor.hashCode;
+  int get green => color.green;
 
-  String get hexadecimal => _scolor.hexadecimal;
+  string get keyword => generateKeyword(_name);
 
-  set hexadecimal(String value) => value.isHexadecimalColor ? _loadColor(value.asColor) : throw ArgumentError('Invalid hexadecimal color: $value');
+  string get name => _name.toTitleCase();
 
-  double get hue => _h;
+  @override
+  double get opacity => color.opacity;
 
-  set hue(double value) {
-    if (_h != value) {
-      _h = value;
-      while (_h < 0.0) {
-        _h += 360.0;
-      }
-      while (_h > 360.0) {
-        _h -= 360.0;
-      }
-      _h = _h.clampRotate(0.0, 360.0);
-      _setColor();
+  @override
+  int get red => color.red;
+
+  @override
+  int get value => color.value;
+
+  @override
+  double computeLuminance() => color.computeLuminance();
+
+  @override
+  Color withAlpha(int a) => color.withAlpha(a);
+
+  @override
+  Color withBlue(int b) => color.withBlue(b);
+
+  @override
+  Color withGreen(int g) => color.withGreen(g);
+
+  @override
+  Color withOpacity(double opacity) => color.withOpacity(opacity);
+
+  @override
+  Color withRed(int r) => color.withRed(r);
+
+  static bool isNamedColor(String value) {
+    try {
+      NamedColor.fromValue(value);
+      return true;
+    } catch (_) {
+      return false;
     }
-  }
-
-  double get lightness => hsl.lightness;
-
-  set lightness(double value) => _loadColor(HSLColor.fromColor(this).withLightness(value).toColor());
-
-  /// The Luminance of this color.
-  /// The Luminance is a measure of the brightness of a color.
-  double get luminance => 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-
-  double get magenta => 1 - (green / 255);
-
-  /// The Name of this color.
-  /// If the name is not set, it will return the closest color name from the [NamedColors] list.
-  String get name => _name.isEmpty ? closestColorName : _name;
-
-  set name(String value) => _name = value;
-
-  @override
-  double get opacity => alpha / 255.0;
-  set opacity(double value) => alpha = (value * 255).toInt();
-  @override
-  int get red => _scolor.red;
-  set red(int value) => _loadColor(_scolor.withRed(value));
-
-  double get saturation => _s;
-
-  set saturation(double value) {
-    value = value.clamp(0.0, 1.0);
-    if (_s != value) {
-      _s = value;
-      _setColor();
-    }
-  }
-
-  /// The Split-Complementary colors of this color.
-  Iterable<NamedColor> get splitComplementaryColors => modColors([150, 210]);
-
-  Iterable<NamedColor> get triadicColors => modColors([120, 240]);
-
-  @override
-  int get value => _scolor.value;
-
-  set value(int value) => _loadColor(Color(value));
-
-  double get yellow => 1 - (blue / 255);
-
-  NamedColor operator *(other) {
-    if (other is num) {
-      var red = (this.red * other).clamp(0, 255).round();
-      var green = (this.green * other).clamp(0, 255).round();
-      var blue = (this.blue * other).clamp(0, 255).round();
-      var alpha = (this.alpha * other).clamp(0, 255).round();
-      return NamedColor.fromARGB(alpha, red, green, blue);
-    }
-
-    var c = NamedColor.fromValue(other);
-    var red = (this.red * c.red).clamp(0, 255);
-    var green = (this.green * c.green).clamp(0, 255);
-    var blue = (this.blue * c.blue).clamp(0, 255);
-    var alpha = (this.alpha * c.alpha).clamp(0, 255);
-    return NamedColor.fromARGB(alpha, red, green, blue);
-  }
-
-  NamedColor operator +(other) {
-    if (other is num) {
-      var red = (this.red + other).clamp(0, 255).round();
-      var green = (this.green + other).clamp(0, 255).round();
-      var blue = (this.blue + other).clamp(0, 255).round();
-      var alpha = (this.alpha + other).clamp(0, 255).round();
-      return NamedColor.fromARGB(alpha, red, green, blue);
-    }
-
-    var c = NamedColor.fromValue(other);
-    var red = (this.red + c.red).clamp(0, 255);
-    var green = (this.green + c.green).clamp(0, 255);
-    var blue = (this.blue + c.blue).clamp(0, 255);
-    var alpha = (this.alpha + c.alpha).clamp(0, 255);
-    return NamedColor.fromARGB(alpha, red, green, blue);
-  }
-
-  NamedColor operator -(other) {
-    if (other is num) {
-      var red = (this.red - other).clamp(0, 255).round();
-      var green = (this.green - other).clamp(0, 255).round();
-      var blue = (this.blue - other).clamp(0, 255).round();
-      var alpha = (this.alpha - other).clamp(0, 255).round();
-      return NamedColor.fromARGB(alpha, red, green, blue);
-    }
-
-    var c = NamedColor.fromValue(other);
-    var red = (this.red - c.red).clamp(0, 255);
-    var green = (this.green - c.green).clamp(0, 255);
-    var blue = (this.blue - c.blue).clamp(0, 255);
-    var alpha = (this.alpha - c.alpha).clamp(0, 255);
-    return NamedColor.fromARGB(alpha, red, green, blue);
-  }
-
-  @override
-  operator ==(Object other) => hashCode == NamedColor.fromValue(other).hashCode;
-
-  /// Return a new instance of [NamedColor] with the same values as this instance.
-  NamedColor clone() => NamedColor(_scolor, _name, description);
-
-  @override
-  int compareTo(dynamic other) {
-    if (other is int) {
-      return argb.compareTo(other);
-    } else if (other is NamedColor) {
-      return argb.compareTo(other.argb);
-    } else if (other is Color) {
-      return argb.compareTo(other.value);
-    } else if (other is String) {
-      return argb.compareTo(NamedColor.fromValue(other).argb);
-    } else if (other is HSLColor) {
-      return other.toColor().value.compareTo(argb);
-    } else if (other is HSVColor) {
-      return other.toColor().value.compareTo(argb);
-    } else {
-      throw ArgumentError('Cannot compare $NamedColor with ${other.runtimeType}');
-    }
-  }
-
-  @override
-  double computeLuminance() => _scolor.computeLuminance();
-
-  /// Calculates the distance between this HSVColor and the provided [color].
-  ///
-  /// The distance is calculated by taking the absolute difference between the hue,
-  /// saturation, and brightness values of this color and the provided [color],
-  /// and summing them up.
-  ///
-  /// Returns the calculated distance.
-  double distanceTo(NamedColor color) {
-    var h = (hue - color.hue).abs();
-    var s = (saturation - color.saturation).abs();
-    var v = (brightness - color.brightness).abs();
-    return h + s + v;
-  }
-
-  NamedColor modColor(int degrees) => modColors([degrees]).first;
-
-  /// Returns a list of colors that are modified by the provided [degrees] int the color wheel.
-  Iterable<NamedColor> modColors(IntList degrees) => degrees
-      .map((degree) => NamedColor()
-        ..hue = (hue + degree) % 360
-        ..saturation = saturation
-        ..brightness = brightness)
-      .orderBy((x) => x.hue);
-
-  JsonMap toJson() {
-    return {
-      'name': name,
-      'description': description,
-      'hexadecimal': hexadecimal,
-      'rgb': [red, green, blue],
-      'hsl': [hue, saturation, lightness],
-      'hsv': [hue, saturation, brightness],
-      'cmyk': [cyan, magenta, yellow, black],
-      'css': css,
-      'luminance': luminance,
-      'brightness': brightness,
-      'dominantValue': dominantValue,
-      'closestColor': closestColorName,
-      'complementaryColor': complementaryColor.hexadecimal,
-      'analogousColors': analogousColors.map((c) => c.hexadecimal).toList(),
-      'triadicColors': triadicColors.map((c) => c.hexadecimal).toList(),
-      'splitComplementaryColors': splitComplementaryColors.map((c) => c.hexadecimal).toList(),
-    };
-  }
-
-  @override
-  String toString() => name;
-
-  @override
-  NamedColor withAlpha(int a) => _scolor.withAlpha(a).asNamedColor;
-
-  @override
-  NamedColor withBlue(int b) => _scolor.withBlue(b).asNamedColor;
-
-  @override
-  NamedColor withGreen(int g) => _scolor.withGreen(g).asNamedColor;
-
-  @override
-  NamedColor withOpacity(double opacity) => _scolor.withOpacity(opacity).asNamedColor;
-
-  @override
-  NamedColor withRed(int r) => _scolor.withRed(r).asNamedColor;
-
-  void _loadColor(Color color) {
-    _scolor = color;
-    _name = _scolor.toString();
-    double r = color.red / 255.0;
-    double g = color.green / 255.0;
-    double b = color.blue / 255.0;
-    double min = [r, g, b].min;
-    double max = [r, g, b].max;
-    _v = max;
-    double delta = max - min;
-    if (max == 0.0 || delta == 0.0) {
-      _h = 0.0;
-      _s = 0.0;
-    } else {
-      _s = delta / max;
-      if (r == max) {
-        _h = (g - b) / delta;
-      } else if (g == max) {
-        _h = 2.0 + (b - r) / delta;
-      } else {
-        _h = 4.0 + (r - g) / delta;
-      }
-      _h *= 60.0;
-      if (_h < 0.0) {
-        _h += 360.0;
-      }
-    }
-  }
-
-  void _setColor() {
-    if (_s > 0.0) {
-      double hue = _h / 60.0;
-      int hueFloor = hue.floor();
-      double f = hue - hueFloor;
-      double p = _v * (1.0 - _s);
-      double q = _v * (1.0 - _s * f);
-      double t = _v * (1.0 - _s * (1.0 - f));
-      switch (hueFloor) {
-        case 0:
-          _scolor = Color.fromARGB(255, (_v * 255).toInt(), (t * 255).toInt(), (p * 255).toInt());
-          break;
-        case 1:
-          _scolor = Color.fromARGB(255, (q * 255).toInt(), (_v * 255).toInt(), (p * 255).toInt());
-          break;
-        case 2:
-          _scolor = Color.fromARGB(255, (p * 255).toInt(), (_v * 255).toInt(), (t * 255).toInt());
-          break;
-        case 3:
-          _scolor = Color.fromARGB(255, (p * 255).toInt(), (q * 255).toInt(), (_v * 255).toInt());
-          break;
-        case 4:
-          _scolor = Color.fromARGB(255, (t * 255).toInt(), (p * 255).toInt(), (_v * 255).toInt());
-          break;
-        case 5:
-          _scolor = Color.fromARGB(255, (_v * 255).toInt(), (p * 255).toInt(), (q * 255).toInt());
-          break;
-        default:
-          _scolor = Color.fromARGB(255, (_v * 255).toInt(), (p * 255).toInt(), (q * 255).toInt());
-          break;
-      }
-    } else {
-      _scolor = Color.fromARGB(255, (_v * 255).toInt(), (_v * 255).toInt(), (_v * 255).toInt());
-    }
-  }
-
-  static List<NamedColor> createColors(List<dynamic> values) => values.map((color) => NamedColor.fromValue(color)).toList();
-
-  static NamedColor fromJson(JsonMap json) {
-    var color = NamedColor.fromValue(json['hexadecimal']);
-    color.name = json['name'];
-    color.description = json['description'];
-    return color;
   }
 }

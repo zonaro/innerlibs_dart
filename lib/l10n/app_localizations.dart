@@ -689,6 +689,72 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Yes'**
   String get yes;
+
+  /// No description provided for @opeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in {item}'**
+  String opeIn(Object item);
+
+  /// No description provided for @openItemIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {item} in {location}'**
+  String openItemIn(String item, String location);
+
+  /// No description provided for @dock.
+  ///
+  /// In en, this message translates to:
+  /// **'Dock'**
+  String get dock;
+
+  /// No description provided for @dockItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Dock {item}'**
+  String dockItem(String item);
+
+  /// No description provided for @undock.
+  ///
+  /// In en, this message translates to:
+  /// **'Undock'**
+  String get undock;
+
+  /// No description provided for @undockItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Undock {item}'**
+  String undockItem(String item);
+
+  /// No description provided for @show.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get show;
+
+  /// No description provided for @hide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hide;
+
+  /// No description provided for @loadingItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading {item}...'**
+  String loadingItem(Object item);
+
+  /// No description provided for @uninstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Uninstall'**
+  String get uninstall;
+
+  /// No description provided for @install.
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get install;
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {
