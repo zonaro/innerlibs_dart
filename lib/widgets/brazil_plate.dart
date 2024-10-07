@@ -35,7 +35,7 @@ abstract class LicensePlate extends StatelessWidget {
       return ThreeLettersPlateCategory.fromValue(value);
     } else if (TwoLettersPlate.isValidPlate(plate)) {
       return TwoLettersPlateCategory.fromValue(value);
-    } else if (value is PlateCategory || value is ThreeLettersPlateCategory || value is TwoLettersPlateCategory || value is MercosulPlateCategory) {
+    } else if ( value is ThreeLettersPlateCategory || value is TwoLettersPlateCategory || value is MercosulPlateCategory || value is PlateCategory) {
       return value;
     }
     return null;
@@ -68,7 +68,7 @@ abstract class LicensePlate extends StatelessWidget {
   /// The Mercosul license plate must be in the "AAA1A11" format.
   ///
   /// Returns the new plate in the old pattern.
-  static String convertToOldPlate(String? newPlate) {
+  static String convertToThreeLettersPlate(String? newPlate) {
     if (newPlate == null) {
       throw ArgumentError.notNull('newPlate');
     }
@@ -409,6 +409,9 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
 
   /// Styles the main license plate characters
   Text _getPlateChars(String chars, [double fontSize = 40]) {
+    if(ThreeLettersPlate.isValidPlate(chars)){
+      chars = LicensePlate.convertToMercosulPlate(chars);
+    }
     return Text(
       chars.toUpperCase(),
       style: TextStyle(
@@ -844,6 +847,9 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
 
   /// Styles the main license plate characters
   Text _getPlateChars(String chars, [double fontSize = 40]) {
+     if(MercosulPlate.isValidPlate(chars)){
+      chars = LicensePlate.convertToThreeLettersPlate(chars);
+    }
     return Text(
       chars.toUpperCase(),
       style: TextStyle(

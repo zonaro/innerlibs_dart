@@ -333,7 +333,7 @@ extension NumNullExtensions<T extends num?> on T {
   /// if the number is between two keys, the color is interpolated between the two colors.
   /// if the number is equal to a key, the color of the key is returned.
   /// if the number is null, the color is transparent.
-  /// if the color step is empty, the color is computed by [Color] constructor .
+  /// if the color step is empty, the color is computed by converting the int value into [Color] using the default constuctor .
   Color getColor([Map<T, Color> colorStep = const {}]) {
     if (this == null) {
       return Colors.transparent;

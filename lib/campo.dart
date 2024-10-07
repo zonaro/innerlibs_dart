@@ -620,7 +620,6 @@ class ValueField<T extends Object> extends StatefulWidget {
   final List<dynamic> Function(T)? searchOn;
   final Duration? debounce;
   final void Function(string)? onFieldSubmitted;
- 
 
   const ValueField({
     super.key,
@@ -670,6 +669,8 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   late List<TextInputFormatter> inputFormatters;
 
   int? maxLen;
+  TextEditingValue? tev;
+
   Iterable<T> get options => [value.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).last).toList();
 
   StringList Function(T?) get textValueSelector {
@@ -686,7 +687,6 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   }
 
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
-
   Future<List<T>> allOptions(string v) async {
     List<T> values = widget.options.toList();
     if (widget.asyncItems != null) {
@@ -706,12 +706,12 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   @override
   Widget build(BuildContext context) {
     _maxLenByType();
+
     if (widget.isAutoComplete || (useOptionsList == false)) {
       return Padding(
         padding: fieldsPadding,
         child: useOptionsList
             ? Autocomplete<T>(
-                initialValue: TextEditingValue(text: value.value != null ? textValueSelector(value.value as T).last : ""),
                 optionsViewBuilder: (context, onSelected, options) {
                   var opt = options.toList();
                   return Container(
@@ -719,20 +719,21 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
                     width: 100,
                     child: ListView.builder(
                         shrinkWrap: true,
-                        itemBuilder: (context, i) => itemBuilder(
-                              context,
-                              opt[i],
-                              false,
-                              value.value != null ? (i == opt.indexOf(value.value!)) : false,
-                            ).onTap(() => onSelected(opt[i])),
+                        itemBuilder: (context, i) => GestureDetector(
+                              onTap: () => onSelected(opt[i]),
+                              child: itemBuilder(
+                                context,
+                                opt[i],
+                                false,
+                                value.value != null ? (i == opt.indexOf(value.value!)) : false,
+                              ),
+                            ),
                         itemCount: opt.length),
                   );
                 },
                 onSelected: (v) => onChanged(v, textValueSelector(v).last),
                 displayStringForOption: (v) => textValueSelector(v).last,
-                optionsBuilder: (v) async {
-                  return await allOptions(v.text);
-                },
+                optionsBuilder: (v) async => await allOptions(v.text),
                 fieldViewBuilder: (context, textEditingController, fn, onFieldSubmitted) {
                   return Focus(
                     focusNode: _focusNode,
