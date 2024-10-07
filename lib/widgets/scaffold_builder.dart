@@ -353,9 +353,12 @@ class TabEntry<T> {
   final dynamic title;
   final dynamic subtitle;
   final IconData? icon;
+  final Widget? floatingActionButton;
   final Widget Function(T) builder;
 
   final void Function(string value)? onSearch;
+
+  FloatingActionButtonLocation? floatingActionButtonLocation;
 
   TabEntry({
     this.title,
@@ -363,14 +366,16 @@ class TabEntry<T> {
     this.icon,
     required this.builder,
     this.onSearch,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
   });
 
   string get subtitleString => subtitleWidget?.text | "";
-  // string get subtitleString => (subtitle is Text ? (subtitle as Text).data : subtitle.toString()) | "";
+
   Widget? get subtitleWidget => forceWidget(subtitle);
 
   string get titleString => titleWidget?.text | "";
-  // string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
+
   Widget? get titleWidget => forceWidget(title);
 }
 
@@ -416,9 +421,10 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
         ]
       ];
 
-  Widget? get floatingActionButton => indexController.pageEntry?.floatingActionButton ?? widget.floatingActionButton;
+  Widget? get floatingActionButton => indexController.tabEntry?.floatingActionButton ?? indexController.pageEntry?.floatingActionButton ?? widget.floatingActionButton;
 
-  FloatingActionButtonLocation? get floatingActionButtonLocation => indexController.pageEntry?.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
+  FloatingActionButtonLocation? get floatingActionButtonLocation =>
+      indexController.tabEntry?.floatingActionButtonLocation ?? indexController.pageEntry?.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
 
   bool get isSearchEnabled => onSearch != null;
 
