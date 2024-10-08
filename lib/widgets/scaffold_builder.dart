@@ -654,10 +654,10 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
 
   @override
   initState() {
+    super.initState();
     scaffoldKey = widget.scaffoldKey ?? GlobalKey<ScaffoldState>();
     indexController = widget.indexController;
     indexController.data ??= AwaiterData<T>(validateData: false);
-    super.initState();
     indexController.addListener(() {
       isSearching = false;
       setState(() {});

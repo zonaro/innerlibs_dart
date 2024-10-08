@@ -64,6 +64,59 @@ date get tomorrow => now.add(1.days);
 
 date get yesterday => now.subtract(1.days);
 
+/// Returns the [IconData] associated with the given app [category].
+IconData categoryIcon(String category) {
+  final Map<String, IconData> categoryIcons = {
+    "audio": Icons.audiotrack,
+    "book": Icons.book,
+    "books": Icons.book,
+    "business": Icons.business,
+    "communication": Icons.chat,
+    "drink": Icons.local_drink,
+    "education": Icons.school,
+    "entertainment": Icons.movie,
+    "finance": Icons.monetization_on,
+    "fitness": Icons.fitness_center,
+    "food": Icons.fastfood,
+    "game": Icons.games,
+    "games": Icons.games,
+    "health": Icons.fitness_center,
+    "home": Icons.home,
+    "house": Icons.home,
+    "image": Icons.image,
+    "images": Icons.image,
+    "lifestyle": Icons.favorite,
+    "local": Icons.map,
+    "magazines": Icons.article,
+    "magazine": Icons.article,
+    "map": Icons.map,
+    "maps": Icons.map,
+    "medical": Icons.local_hospital,
+    "message": Icons.chat,
+    "messages": Icons.chat,
+    "music": Icons.music_note,
+    "navigation": Icons.map,
+    "nature": Icons.nature,
+    "news": Icons.article,
+    "personalization": Icons.palette,
+    "photography": Icons.camera,
+    "picture": Icons.image,
+    "pictures": Icons.image,
+    "productivity": Icons.work,
+    "settings": Icons.settings,
+    "shopping": Icons.shopping_cart,
+    "social": Icons.people,
+    "sports": Icons.sports,
+    "tools": Icons.build,
+    "travel": Icons.airplanemode_active,
+    "utilities": Icons.settings,
+    "video": Icons.video_library,
+    "weather": Icons.wb_sunny,
+    "work": Icons.work,
+  };
+  return category.getUniqueWords.whereValid.map((x) => categoryIcons[x.toLowerCase()]).mostFrequent ?? Icons.category;
+}
+
 /// Try change a value of any type into a value of type [R].
 ///
 /// - If the value is `null`, returns `null` if R is nullable otherwise throws an exception.
@@ -1131,54 +1184,4 @@ mixin FilterFunctions {
         levenshteinDistance: levenshteinDistance,
         allIfEmpty: allIfEmpty);
   }
-}
-
-/// Returns the [IconData] associated with the given app [category].
-IconData categoryIcon(String category) {
-  final Map<String, IconData> categoryIcons = {
-    "audio": Icons.audiotrack,
-    "books": Icons.book,
-    "book": Icons.book,
-    "business": Icons.business,
-    "communication": Icons.chat,
-    "message": Icons.chat,
-    "messages": Icons.chat,
-    "education": Icons.school,
-    "entertainment": Icons.movie,
-    "finance": Icons.monetization_on,
-    "food": Icons.fastfood,
-    "drink": Icons.fastfood,
-    "games": Icons.games,
-    "game": Icons.games,
-    "health": Icons.fitness_center,
-    "fitness": Icons.fitness_center,
-    "house": Icons.home,
-    "home": Icons.home,
-    "images": Icons.image,
-    "image": Icons.image,
-    "picture": Icons.image,
-    "pictures": Icons.image,
-    "lifestyle": Icons.favorite,
-    "navigation": Icons.map,
-    "medical": Icons.local_hospital,
-    "music": Icons.music_note,
-    "magazines": Icons.article,
-    "news": Icons.article,
-    "personalization": Icons.palette,
-    "photography": Icons.camera,
-    "productivity": Icons.work,
-    "shopping": Icons.shopping_cart,
-    "social": Icons.people,
-    "sports": Icons.sports,
-    "tools": Icons.build,
-    "travel": Icons.airplanemode_active,
-    "video": Icons.video_library,
-    "weather": Icons.wb_sunny,
-    "map": Icons.map,
-    "local": Icons.map,
-    "maps": Icons.map,
-    "work": Icons.work,
-    "utilities": Icons.settings,
-  };
-  return category.getUniqueWords.whereValid.map((x) => categoryIcons[x.toLowerCase()]).mostFrequent ?? Icons.category;
 }
