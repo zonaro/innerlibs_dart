@@ -255,8 +255,10 @@ extension NumExtensions2<T extends num> on T {
 
   bool isEqual(num b) => this == b;
 
+ 
   bool isGreaterThan(num b) => this > b;
 
+ 
   bool isLowerThan(num b) => this < b;
 
   /// Returns a formatted quantity text based on the provided parameters.
@@ -413,5 +415,40 @@ extension NumNullExtensions<T extends num?> on T {
     } else {
       return (this! / total) as T;
     }
+  }
+
+
+  /// Returns the integer part of a decimal number into a Roman number.
+  string toRoman() {
+    if (this == null) {
+      return "";
+    }
+    var n = this!.round();
+    if (n < 1 || n > 3999) {
+      return "";
+    }
+    var roman = "";
+    var romanNumerals = {
+      1000: "M",
+      900: "CM",
+      500: "D",
+      400: "CD",
+      100: "C",
+      90: "XC",
+      50: "L",
+      40: "XL",
+      10: "X",
+      9: "IX",
+      5: "V",
+      4: "IV",
+      1: "I",
+    };
+    for (var value in romanNumerals.keys) {
+      while (n >= value) {
+        roman += romanNumerals[value]!;
+        n -= value;
+      }
+    }
+    return roman;
   }
 }
