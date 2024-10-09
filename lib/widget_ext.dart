@@ -18,9 +18,10 @@ extension KeyboardExtensions on KeyEvent {
   bool isControlShift(LogicalKeyboardKey key) => isControlPressed && isShiftPressed && key == logicalKey;
   bool isControlShiftAlt(LogicalKeyboardKey key) => isControlPressed && isShiftPressed && isAltPressed && key == logicalKey;
   bool isControlShiftAltMeta(LogicalKeyboardKey key) => isControlPressed && isMetaPressed && isShiftPressed && isAltPressed && key == logicalKey;
-
   bool isControlShiftMeta(LogicalKeyboardKey key) => isControlPressed && isMetaPressed && isShiftPressed && key == logicalKey;
+
   bool isKeyPressed(LogicalKeyboardKey key) => key == logicalKey;
+  bool isMeta(LogicalKeyboardKey key) => isMetaPressed && key == logicalKey;
   bool isShift(LogicalKeyboardKey key) => isShiftPressed && key == logicalKey;
   bool isShiftAlt(LogicalKeyboardKey key) => isShiftPressed && isAltPressed && key == logicalKey;
 }
