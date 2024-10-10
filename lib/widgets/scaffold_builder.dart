@@ -579,7 +579,7 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
           i.tabController = TabController(vsync: this, length: i.tabs.length, initialIndex: initial);
           i.tabController!.addListener(() {
             indexController.insertHistory(indexController.pageIndex, i.tabController!.index);
-            indexController.notifyListeners();
+            if (mounted) indexController.notifyListeners();
           });
         }
       }
@@ -660,7 +660,7 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
     indexController.data ??= AwaiterData<T>(validateData: false);
     indexController.addListener(() {
       isSearching = false;
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
 

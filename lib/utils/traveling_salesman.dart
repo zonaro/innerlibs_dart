@@ -1,70 +1,36 @@
-import 'dart:math';
-
-// Calculate the distance between two points on the Earth using Haversine formula
-double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-  const R = 6371000; // Radius of the Earth in meters
-  double dLat = (lat2 - lat1) * pi / 180.0;
-  double dLon = (lon2 - lon1) * pi / 180.0;
-
-  double a = sin(dLat / 2) * sin(dLat / 2) + cos(lat1 * pi / 180.0) * cos(lat2 * pi / 180.0) * sin(dLon / 2) * sin(dLon / 2);
-  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  double distance = R * c;
-
-  return distance; // Distance in meters
-}
+import 'package:innerlibs/innerlibs.dart';
 
 /// Return the speed in meters per second
-double calculateSpeed(double fromLatitude, double fromLongitude, DateTime fromDatetime, double toLatitude, double toLongitude, DateTime toDatetime) {
-  double distance = calculateDistance(fromLatitude, fromLongitude, toLatitude, toLongitude);
-  Duration timeDifference = toDatetime.difference(fromDatetime);
+double calculateSpeed(Distance distance, LatLngTime from, LatLngTime to, [LengthUnit unit = LengthUnit.Meter]) {
+  var d = distance.as(unit, from, to);
+  Duration timeDifference = to.timestamp.difference(from.timestamp);
   double timeInSeconds = timeDifference.inSeconds.toDouble();
-
-//  double speedKilometersPerHour = (speedMetersPerSecond * 3600) / 1000;
-
-  return distance / timeInSeconds;
+  return d / timeInSeconds;
 }
 
-double kilometersPerHourToMetersPerSecond(double kilometersPerHour) {
-  return kilometersToMeters(kilometersPerHour) / 3600;
-}
+/// Order a list of points using the Traveling Salesman Problem algorithm on a [LatLng] property of points
+///
+List<T> orderByPropertyTSP<T>(List<T> points, LatitudeLongitude? Function(T) latitudeLongitude, [Distance distance = const Distance()]) {
+  var p = points.whereNot((x) => latitudeLongitude(x) == null).toList();
+  if (p.isEmpty) return [];
 
-double kilometersToMeters(double kilometers) {
-  return kilometers * 1000;
-}
+  List<T> ordered = [p.first];
+  Set<int> visited = {};
 
-double metersPerSecondToKilometersPerHour(double metersPerSecond) {
-  return metersToKilometers(metersPerSecond) * 3600;
-}
-
-double metersToKilometers(double meters) {
-  return meters / 1000;
-}
-
-/// Order a list of points using the Traveling Salesman Problem algorithm
-List<T> orderByTSP<T>(
-  List<T> points,
-  LatitudeLongitude Function(T) latitudeLongitude,
-) {
-  if (points.isEmpty) return [];
-
-  List<T> ordered = [points.first];
-  Set<int> visited = {0};
-
-  while (ordered.length < points.length) {
+  while (ordered.length < p.length) {
     T last = ordered.last;
     double minDistance = double.infinity;
     int nextIndex = -1;
 
-    for (int i = 0; i < points.length; i++) {
+    for (int i = 0; i < p.length; i++) {
       if (!visited.contains(i)) {
-        double distance = calculateDistance(
-          latitudeLongitude(last).$1,
-          latitudeLongitude(last).$2,
-          latitudeLongitude(points[i]).$1,
-          latitudeLongitude(points[i]).$2,
+        double cmDistance = distance.as(
+          LengthUnit.Millimeter,
+          latitudeLongitude(last)!,
+          latitudeLongitude(p[i])!,
         );
-        if (distance < minDistance) {
-          minDistance = distance;
+        if (cmDistance < minDistance) {
+          minDistance = cmDistance;
           nextIndex = i;
         }
       }
@@ -76,7 +42,17 @@ List<T> orderByTSP<T>(
     }
   }
 
+  for (var i in points.whereNot(ordered.contains)) {
+    ordered.add(i);
+  }
+
   return ordered;
 }
 
-typedef LatitudeLongitude = (double, double);
+/// Order a list of [LatLng] points using the Traveling Salesman Problem algorithm
+List<T> orderByTSP<T extends LatLng>(List<T> points, [Distance distance = const Distance()]) => orderByPropertyTSP(points, (x) => x, distance);
+
+class LatLngTime extends LatLng {
+  final DateTime timestamp;
+  LatLngTime(super.latitude, super.longitude, [date? timestamp]) : timestamp = timestamp ?? DateTime.now();
+}

@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:innerlibs/innerlibs.dart';
+import 'package:latlong2/latlong.dart' as lat_long_path show Path;
 
 export 'package:brasil_fields/brasil_fields.dart' hide Estados;
 export 'package:collection/collection.dart' hide groupBy;
@@ -13,6 +14,7 @@ export 'package:darq/darq.dart';
 export 'package:gap/gap.dart';
 export 'package:get/get.dart';
 export 'package:innerlibs/innerlibs.dart';
+export 'package:latlong2/latlong.dart' hide Path;
 
 export 'align_extensions.dart';
 export 'alignment_extensions.dart';
@@ -67,7 +69,6 @@ export 'utils/traveling_salesman.dart';
 export 'validation_interface.dart';
 export 'widget_ext.dart';
 export 'widgets/avatar_image.dart';
-export 'widgets/badge.dart';
 export 'widgets/brazil_plate.dart';
 export 'widgets/custom_calendar.dart';
 export 'widgets/custom_date_range_picker.dart';
@@ -125,6 +126,10 @@ typedef JsonTable = List<JsonRow>;
 
 /// Alias for [List<List<Map<String, dynamic>>>], used to represent a set of data tables
 typedef JsonTableSet = List<JsonTable>;
+
+typedef LatitudeLongitude = LatLng;
+
+typedef LatLongPath = lat_long_path.Path;
 
 typedef money = decimal;
 

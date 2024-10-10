@@ -505,7 +505,7 @@ extension DialogExt on BuildContext {
                 timer.cancel();
                 operation.cancel();
               } else {
-                setState(() {});
+                if (context.mounted) setState(() {});
               }
             }
           });

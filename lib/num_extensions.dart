@@ -142,7 +142,7 @@ extension NumExtensions2<T extends num> on T {
     }
   }
 
-  Duration get microseconds => Duration(microseconds: round());
+  Duration get microseconds => Duration(microseconds: this.round());
 
   Duration get milliseconds => Duration(milliseconds: floor()) + Duration(microseconds: ((this % 1) * 1000).round());
 
@@ -232,7 +232,7 @@ extension NumExtensions2<T extends num> on T {
     return v;
   }
 
-  Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: round()).delay(callback);
+  Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: this.round()).delay(callback);
 
   /// Finds the greatest common divisor between this integer and the given integer [other].
   ///
@@ -240,7 +240,7 @@ extension NumExtensions2<T extends num> on T {
   ///
   /// Returns the greatest common divisor.
   int findGreatestCommonDivisor(int other) {
-    int a = round();
+    int a = this.round();
     while (other != 0) {
       var t = other;
       other = a % other;
@@ -255,10 +255,8 @@ extension NumExtensions2<T extends num> on T {
 
   bool isEqual(num b) => this == b;
 
- 
   bool isGreaterThan(num b) => this > b;
 
- 
   bool isLowerThan(num b) => this < b;
 
   /// Returns a formatted quantity text based on the provided parameters.
@@ -271,7 +269,7 @@ extension NumExtensions2<T extends num> on T {
   String quantityText(String plural, [String singular = "", bool includeNumber = true]) {
     var pre = (includeNumber ? toString() : "");
     if (plural.length > 1) {
-      if ((round() == 1 || round() == -1)) {
+      if ((this.round() == 1 ||this. round() == -1)) {
         pre = "$pre ${singular.ifBlank(plural.singular)}";
       } else {
         pre = "$pre $plural";
@@ -290,7 +288,7 @@ extension NumExtensions2<T extends num> on T {
   String quantityTextPt(String plural, [String singular = "", bool includeNumber = true]) {
     var pre = (includeNumber ? toString() : "");
     if (plural.length > 1) {
-      if ((round() == 1 || round() == -1)) {
+      if ((this.round() == 1 || this.round() == -1)) {
         pre = "$pre ${singular.ifBlank(plural.singularPt)}";
       } else {
         pre = "$pre $plural";
@@ -416,7 +414,6 @@ extension NumNullExtensions<T extends num?> on T {
       return (this! / total) as T;
     }
   }
-
 
   /// Returns the integer part of a decimal number into a Roman number.
   string toRoman() {

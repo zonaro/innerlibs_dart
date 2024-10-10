@@ -26,6 +26,7 @@ dependencies:
   gap: 
   dropdown_search: 
   mime:
+  latlong2:
   flutter_localizations:
     sdk: flutter
 

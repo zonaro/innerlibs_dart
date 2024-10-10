@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 /// Holds and validate the data loaded by a [FutureAwaiter]. Optionally expires after [expireDataAfter]
@@ -155,6 +156,12 @@ class _FutureAwaiterState<T> extends State<FutureAwaiter<T>> {
     }
   }
 
+  @override
+  void dispose() {
+    data.dispose();
+    super.dispose();
+  }
+
   empty() => widget.emptyChild ?? nil;
 
   error(Object e) {
@@ -168,12 +175,13 @@ class _FutureAwaiterState<T> extends State<FutureAwaiter<T>> {
 
   @override
   void initState() {
-    data = widget.data ?? AwaiterData<T>();
-    data.addListener(() {
-      if (mounted) setState(() {});
-    });
-
     super.initState();
+    data = widget.data ?? AwaiterData<T>();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      data.addListener(() {
+        if (mounted) Future.delayed(Duration.zero, () => setState(() {}));
+      });
+    });
   }
 
   Widget _buildWidget(AsyncSnapshot<T> snapshot) {

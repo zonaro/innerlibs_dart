@@ -13,7 +13,18 @@ extension Iconextension on IconData? {
     TextDirection? textDirection,
     bool? applyTextScaling,
   }) =>
-      (this ?? Icons.radio_button_off).asNullableIcon()!;
+      (this ?? Icons.radio_button_off).asNullableIcon(
+        size: size,
+        fill: fill,
+        weight: weight,
+        grade: grade,
+        opticalSize: opticalSize,
+        color: color,
+        shadows: shadows,
+        semanticLabel: semanticLabel,
+        textDirection: textDirection,
+        applyTextScaling: applyTextScaling,
+      )!;
 
   Icon? asNullableIcon({
     double? size,
