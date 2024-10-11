@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:innerlibs/innerlibs.dart';
 
-class Endereco implements Comparable<Endereco> {
+/// Classe que representa um endereço no Brasil
+class Endereco extends LatLng implements Comparable<Endereco> {
   final String cep;
   final String logradouro;
   final String numero;
@@ -21,7 +25,9 @@ class Endereco implements Comparable<Endereco> {
     this.gia,
     this.ddd,
     this.siafi,
-  });
+    double latitude = 0,
+    double longitude = 0,
+  }) : super(latitude, longitude);
 
   /// Retorna uma string contendo o bairro, cidade e estado concatenados, separados por hífen.
   ///
@@ -47,6 +53,8 @@ class Endereco implements Comparable<Endereco> {
   string get bairroCidadeEstadoCep => [bairroCidadeEstado, cep].whereValid.join(" - ").trim();
 
   int get codigoPais => 1058;
+
+  string get coordenadas => latitude != 0 && longitude != 0 ? "($latitude, $longitude)" : "";
 
   /// Retorna o endereço completo formatado.
   ///
@@ -81,6 +89,8 @@ class Endereco implements Comparable<Endereco> {
   ///
   /// Retorna uma string contendo o endereço completo.
   string get enderecoCompleto => [enderecoComCep, pais].whereValid.join(" - ").trim();
+
+  string get enderecoCompletoComCoordenadas => [enderecoCompleto, coordenadas].whereValid.join(" - ").trim();
 
   Estado? get estado => cidade?.estado;
 
@@ -144,6 +154,7 @@ class Endereco implements Comparable<Endereco> {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() => {
         'CEP': cep,
         'Logradouro': logradouro,
@@ -175,6 +186,55 @@ class Endereco implements Comparable<Endereco> {
       siafi: changeTo(json['siafi']),
       cidade: cidade,
     );
+  }
+
+  /// Busca um endereço no Nominatim do OpenStreetMap a partir de um texto de busca.
+  /// A latitude e longitude são referentes ao centro do endereço e não ao local designado.
+  /// o Número do endereço é extraido a partir do texto de busca, ja que OpenStreetMaps não retorna essa informação. Caso não seja encontrado, o número é vazio.
+  static Future<Iterable<Endereco>> searchOpenStreetMap(String query, {int limit = 5, bool viaCep = false}) async {
+    var url = Uri.parse("https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=$limit&q=$query");
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      var json = response.body;
+      JsonTable data = JsonTable.from(jsonDecode(json));
+
+      var futures = data.where((x) => (x['address']?['country_code'] ?? "") == "br").map((e) async {
+        try {
+          var numero = query.getUniqueWords.firstWhereOrNull((x) => x.isNumber) ?? "";
+          Endereco? viacepEndereco;
+          var cep = e['address']['postcode'];
+          if (viaCep && Brasil.validarCEP(cep)) {
+            viacepEndereco = await Brasil.pesquisarCEP(cep, numero);
+          }
+
+          var cidade = viacepEndereco?.cidade ??
+              await Cidade.pegar(e['address']['city_district'], e['address']['state']) ??
+              await Cidade.pegar(e['address']['village'], e['address']['state']) ??
+              await Cidade.pegar(e['address']['municipality'], e['address']['state']);
+
+          return Endereco(
+            cep: viacepEndereco?.cep ?? e['address']['postcode'],
+            logradouro: viacepEndereco?.logradouro ?? e['address']['road'] ?? "",
+            bairro: viacepEndereco?.bairro ?? e['address']['neighbourhood'] ?? "",
+            cidade: cidade,
+            numero: viacepEndereco?.numero ?? numero,
+            complemento: viacepEndereco?.complemento ?? "",
+            siafi: viacepEndereco?.siafi,
+            ddd: viacepEndereco?.ddd,
+            gia: viacepEndereco?.gia,
+            latitude: double.tryParse(e['lat']) ?? 0,
+            longitude: double.tryParse(e['lon']) ?? 0,
+          );
+        } on Exception catch (e) {
+          consoleLog(e);
+          return null;
+        }
+      });
+
+      return (await Future.wait(futures)).whereNotNull();
+    } else {
+      throw Exception("Erro ao buscar o endereço: ${response.statusCode}");
+    }
   }
 
   /// Tenta converter uma string em um endereço.
@@ -271,6 +331,7 @@ class Endereco implements Comparable<Endereco> {
 
     number = number.trimAll.trimAny([" ", ",", "-"]);
     complement = complement.trimAll.trimAny([" ", ",", "-"]);
+
     var d = Endereco(
       cep: postalCode,
       logradouro: address,
