@@ -156,12 +156,6 @@ class _FutureAwaiterState<T> extends State<FutureAwaiter<T>> {
     }
   }
 
-  @override
-  void dispose() {
-    data.dispose();
-    super.dispose();
-  }
-
   empty() => widget.emptyChild ?? nil;
 
   error(Object e) {
