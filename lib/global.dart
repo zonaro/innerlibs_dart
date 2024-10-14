@@ -581,6 +581,7 @@ bool isSameType<T, S>() => typeOf<T>() == typeOf<S?>() || typeOf<T>() == typeOf<
 /// - [String]s that are empty, equal to "null" or have only white spaces;
 /// - [num]s that are equal to `0`;
 /// - [DateTime]s that are equal to `minDate`;
+/// - [LatLng]s that are null or equal to (0,0);
 /// - [bool]s that are equal to `false`;
 /// - [Iterable]s that are empty or have only invalid values;
 /// - [Map]s that are empty or have only invalid values;
@@ -651,9 +652,11 @@ bool isValid<T>(T? object, {List<bool> Function(T?)? customValidator}) {
     if (customValidator != null) {
       return customValidator(object).contains(true);
     }
-
     if (object == null) {
       return false;
+    }
+    if (object is Validator) {
+      return object.validate().isEmpty;
     }
     if (object is String) {
       return object.nullIf((s) => s == null || s.trimAll.flatEqual("null")).isNotBlank;
@@ -668,8 +671,8 @@ bool isValid<T>(T? object, {List<bool> Function(T?)? customValidator}) {
       return object > minDate;
     }
 
-    if (object is Validator) {
-      return object.validate().isEmpty;
+    if (object is LatLng) {
+      return object.latitude.isValid() && object.longitude.isValid();
     }
 
     if (object is Iterable) {

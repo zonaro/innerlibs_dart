@@ -117,6 +117,8 @@ class Endereco extends LatLng implements Comparable<Endereco> {
 
   String get pais => "Brasil";
 
+  Uri get toGoogleMapsUri => Uri.parse("https://www.google.com/maps/search/?api=1&query=$latitude,$longitude");
+
   @override
   bool operator ==(Object other) => hashCode == other.hashCode;
 

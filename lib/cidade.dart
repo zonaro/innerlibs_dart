@@ -8,7 +8,18 @@ import 'package:innerlibs/innerlibs.dart';
 /// Esta classe contém informações sobre uma cidade, como se é capital,
 /// o código IBGE, o código SIAFI, o DDD, o fuso horário e o estado ao qual
 /// a cidade pertence.
-class Cidade implements Comparable<Cidade> {
+class Cidade extends LatLng implements Comparable<Cidade> {
+  /// Obtém uma lista de todas as cidades.
+  static Future<List<Cidade>> get pegarCidades async {
+    final data = await rootBundle.loadString('packages/innerlibs/lib/brasil.json', cache: true);
+    var items = JsonTable.from(jsonDecode(data));
+    List<Cidade> cidades = [];
+    for (var json in items) {
+      cidades.add(Cidade._(json['Nome'], json['Capital'], json['IBGE'], json['SIAFI'], json['DDD'], json['TimeZone'], json['Latitude'] ?? 0, json['Longitude'] ?? 0));
+    }
+    return cidades..sort((a, b) => a.nome.compareTo(b.nome));
+  }
+
   /// O nome da cidade.
   final String nome;
 
@@ -27,44 +38,16 @@ class Cidade implements Comparable<Cidade> {
   /// O fuso horário da cidade.
   final String timeZone;
 
+  Cidade._(this.nome, this.capital, this.ibge, this.siafi, this.ddd, this.timeZone, super.latitude, super.longitude);
+
   /// O estado ao qual a cidade pertence.
   Estado get estado => Estado.fromUForIbge(ibge);
 
+  @override
+  int get hashCode => Object.hash(ibge, 0);
+
   /// A região do estado ao qual a cidade pertence.
   Regiao get regiao => estado.regiao;
-
-  /// Obtém uma lista de todas as cidades.
-  static Future<List<Cidade>> get pegarCidades async {
-    final data = await rootBundle.loadString('packages/innerlibs/lib/brasil.json', cache: true);
-    var items = JsonTable.from(jsonDecode(data));
-    List<Cidade> cidades = [];
-    for (var json in items) {
-      cidades.add(Cidade._(json['Nome'], json['Capital'], json['IBGE'], json['SIAFI'], json['DDD'], json['TimeZone']));
-    }
-    return cidades..sort((a, b) => a.nome.compareTo(b.nome));
-  }
-
-  /// Obtém uma cidade a partir do nome, UF ou IBGE e estado.
-  ///
-  /// Parâmetros:
-  /// - [nomeCidadeOuIBGE]: O nome da cidade, UF ou IBGE.
-  /// - [nomeOuUFOuIBGE]: O nome do estado, UF ou IBGE (opcional).
-  static Future<Cidade?> pegar(dynamic nomeCidadeOuIBGE, [dynamic nomeOuUFOuIBGE]) async => await Brasil.pegarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE);
-
-  /// Pesquisa uma cidade no Brasil todo ou em algum estado especifico se [nomeOuUFOuIBGE] for especificado.
-  ///
-  /// Parâmetros:
-  /// - [nomeCidadeOuIBGE]: O nome da cidade, UF ou IBGE.
-  /// - [nomeOuUFOuIBGE]: O nome da cidade, UF ou IBGE (opcional).
-  static Future<Iterable<Cidade>> pesquisar(String nomeCidadeOuIBGE, [String nomeOuUFOuIBGE = ""]) async => await Brasil.pesquisarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE);
-
-  @override
-  String toString() => nome;
-
-  Cidade._(this.nome, this.capital, this.ibge, this.siafi, this.ddd, this.timeZone);
-
-  /// Converte a instância de Cidade para um mapa JSON.
-  Map<String, dynamic> toJson() => {'Nome': nome, 'Capital': capital, 'IBGE': ibge, 'SIAFI': siafi, 'DDD': ddd, 'TimeZone': timeZone, "Estado": estado.toJson()};
 
   @override
   bool operator ==(Object other) {
@@ -79,6 +62,11 @@ class Cidade implements Comparable<Cidade> {
     if (other is num) {
       return ibge == other.toDouble().floor();
     }
+
+    if (other is LatLng) {
+      return latitude == other.latitude && longitude == other.longitude;
+    }
+
     if (other is string) {
       if (other.isNumericOnly) {
         return ibge == int.parse(other);
@@ -91,8 +79,27 @@ class Cidade implements Comparable<Cidade> {
   }
 
   @override
-  int get hashCode => Object.hash(ibge, 0);
+  int compareTo(other) => nome.compareTo(other.nome);
+
+  /// Converte a instância de Cidade para um mapa JSON.
+  @override
+  Map<String, dynamic> toJson() =>
+      {'Nome': nome, 'Capital': capital, 'IBGE': ibge, 'SIAFI': siafi, 'DDD': ddd, 'TimeZone': timeZone, 'Latitude': latitude, 'Longitude': longitude, "Estado": estado.toJson()};
 
   @override
-  int compareTo(other) => nome.compareTo(other.nome);
+  String toString() => nome;
+
+  /// Obtém uma cidade a partir do nome, UF ou IBGE e estado.
+  ///
+  /// Parâmetros:
+  /// - [nomeCidadeOuIBGE]: O nome da cidade, UF ou IBGE.
+  /// - [nomeOuUFOuIBGE]: O nome do estado, UF ou IBGE (opcional).
+  static Future<Cidade?> pegar(dynamic nomeCidadeOuIBGE, [dynamic nomeOuUFOuIBGE]) async => await Brasil.pegarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE);
+
+  /// Pesquisa uma cidade no Brasil todo ou em algum estado especifico se [nomeOuUFOuIBGE] for especificado.
+  ///
+  /// Parâmetros:
+  /// - [nomeCidadeOuIBGE]: O nome da cidade, UF ou IBGE.
+  /// - [nomeOuUFOuIBGE]: O nome da cidade, UF ou IBGE (opcional).
+  static Future<Iterable<Cidade>> pesquisar(String nomeCidadeOuIBGE, [String nomeOuUFOuIBGE = ""]) async => await Brasil.pesquisarCidade(nomeCidadeOuIBGE, nomeOuUFOuIBGE);
 }

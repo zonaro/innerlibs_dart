@@ -1,59 +1,68 @@
 import 'package:innerlibs/innerlibs.dart';
 
 /// Represents a range of dates.
-class DateRange {
+class DateRange implements Duration {
+  List<date> _dates = [];
+
   /// Creates a new instance of the [DateRange] class with the specified start and end dates.
   DateRange(date startDate, [date? endDate]) {
     _dates = [startDate, endDate ?? startDate];
   }
 
-  /// Creates a [DateRange] representing today.
-  factory DateRange.today() => DateRange(today, today.endOfDay);
+  /// Creates a [DateRange] representing the specified number of days after the specified date.
+  /// - [date] The date to calculate the range from.
+  /// - [days] The number of days after the specified date.
+  factory DateRange.daysAfter(date date, int days) => DateRange(date, date.add(days.days).endOfDay);
 
-  /// Creates a [DateRange] representing yesterday.
-  factory DateRange.yesterday() => DateRange(yesterday, yesterday.endOfDay);
+  /// Creates a [DateRange] representing the specified number of days before today.
+  /// - [days] The number of days before today.
+  factory DateRange.daysAgo(int days) => DateRange(today.subtract(days.days), today.endOfDay);
 
-  /// Creates a [DateRange] representing tomorrow.
-  factory DateRange.tomorrow() => DateRange(tomorrow, tomorrow.endOfDay);
+  /// Creates a [DateRange] representing the specified number of days before the specified date.
+  /// - [date] The date to calculate the range from.
+  /// - [days] The number of days before the specified date.
+  factory DateRange.daysBefore(date date, int days) => DateRange(date.subtract(days.days), date.endOfDay);
 
-  /// Creates a [DateRange] representing yesterday and today.
-  DateRange.yesterdayToToday() : this(yesterday, today.endOfDay);
+  /// Creates a [DateRange] representing the specified number of days after today.
+  /// - [days] The number of days after today.
+  factory DateRange.daysFromNow(int days) => DateRange(today, today.add(days.days).endOfDay);
 
-  /// Creates a [DateRange] representing testerday, today and tomorrow.
-  DateRange.yesterdayToTomorrow() : this(yesterday, today.endOfDay);
+  DateRange.duration(DateTime date, Duration duration) {
+    _dates = [date, date.add(duration)];
+  }
 
-  /// Creates a [DateRange] representing the current week.
-  factory DateRange.thisWeek() => DateRange(today.firstDayOfWeek, today.lastDayOfWeek.endOfDay);
-
-  /// Creates a [DateRange] representing the previous week.
-  factory DateRange.lastWeek() => DateRange(today.previousWeek.firstDayOfWeek, today.previousWeek.lastDayOfWeek.endOfDay);
-
-  /// Creates a [DateRange] representing the next week.
-  factory DateRange.nextWeek() => DateRange(today.nextWeek.firstDayOfWeek, today.nextWeek.lastDayOfWeek.endOfDay);
-
-  /// Creates a [DateRange] representing the current month.
-  factory DateRange.thisMonth() => DateRange(today.firstDayOfMonth, today.lastDayOfMonth.endOfDay);
+  /// Creates a [DateRange] representing the previous bimester.
+  factory DateRange.lastBimester() => DateRange(today.previousBimester.firstDayOfBimester, today.previousBimester.lastDayOfBimester.endOfDay);
 
   /// Creates a [DateRange] representing the previous month.
   factory DateRange.lastMonth() => DateRange(today.previousMonth.firstDayOfMonth, today.previousMonth.lastDayOfMonth.endOfDay);
 
-  /// Creates a [DateRange] representing the next month.
-  factory DateRange.nextMonth() => DateRange(today.nextMonth.firstDayOfMonth, today.nextMonth.lastDayOfMonth.endOfDay);
-
-  /// Creates a [DateRange] representing the current quarter.
-  factory DateRange.thisQuarter() => DateRange(today.firstDayOfQuarter, today.lastDayOfQuarter.endOfDay);
-
   /// Creates a [DateRange] representing the previous quarter.
   factory DateRange.lastQuarter() => DateRange(today.previousQuarter.firstDayOfQuarter, today.previousQuarter.lastDayOfQuarter.endOfDay);
+
+  /// Creates a [DateRange] representing the previous semester.
+  factory DateRange.lastSemester() => DateRange(today.previousSemester.firstDayOfSemester, today.previousSemester.lastDayOfSemester.endOfDay);
+
+  /// Creates a [DateRange] representing the previous week.
+  factory DateRange.lastWeek() => DateRange(today.previousWeek.firstDayOfWeek, today.previousWeek.lastDayOfWeek.endOfDay);
+
+  /// Creates a [DateRange] representing the previous year.
+  factory DateRange.lastYear() => DateRange(today.previousYear.firstDayOfYear, today.previousYear.lastDayOfYear.endOfDay);
+
+  /// Creates a [DateRange] representing the next bimester.
+  factory DateRange.nextBimester() => DateRange(today.nextBimester.firstDayOfBimester, today.nextBimester.lastDayOfBimester.endOfDay);
+
+  /// Creates a [DateRange] representing the next month.
+  factory DateRange.nextMonth() => DateRange(today.nextMonth.firstDayOfMonth, today.nextMonth.lastDayOfMonth.endOfDay);
 
   /// Creates a [DateRange] representing the next quarter.
   factory DateRange.nextQuarter() => DateRange(today.nextQuarter.firstDayOfQuarter, today.nextQuarter.lastDayOfQuarter.endOfDay);
 
-  /// Creates a [DateRange] representing the current year.
-  factory DateRange.thisYear() => DateRange(today.firstDayOfYear, today.lastDayOfYear.endOfDay);
+  /// Creates a [DateRange] representing the next semester.
+  factory DateRange.nextSemester() => DateRange(today.nextSemester.firstDayOfSemester, today.nextSemester.lastDayOfSemester.endOfDay);
 
-  /// Creates a [DateRange] representing the previous year.
-  factory DateRange.lastYear() => DateRange(today.previousYear.firstDayOfYear, today.previousYear.lastDayOfYear.endOfDay);
+  /// Creates a [DateRange] representing the next week.
+  factory DateRange.nextWeek() => DateRange(today.nextWeek.firstDayOfWeek, today.nextWeek.lastDayOfWeek.endOfDay);
 
   /// Creates a [DateRange] representing the next year.
   factory DateRange.nextYear() => DateRange(today.nextYear.firstDayOfYear, today.nextYear.lastDayOfYear.endOfDay);
@@ -61,47 +70,38 @@ class DateRange {
   /// Creates a [DateRange] representing the current bimester.
   factory DateRange.thisBimester() => DateRange(today.firstDayOfBimester, today.lastDayOfBimester.endOfDay);
 
-  /// Creates a [DateRange] representing the previous bimester.
-  factory DateRange.lastBimester() => DateRange(today.previousBimester.firstDayOfBimester, today.previousBimester.lastDayOfBimester.endOfDay);
+  /// Creates a [DateRange] representing the current month.
+  factory DateRange.thisMonth() => DateRange(today.firstDayOfMonth, today.lastDayOfMonth.endOfDay);
 
-  /// Creates a [DateRange] representing the next bimester.
-  factory DateRange.nextBimester() => DateRange(today.nextBimester.firstDayOfBimester, today.nextBimester.lastDayOfBimester.endOfDay);
+  /// Creates a [DateRange] representing the current quarter.
+  factory DateRange.thisQuarter() => DateRange(today.firstDayOfQuarter, today.lastDayOfQuarter.endOfDay);
 
   /// Creates a [DateRange] representing the current trimester.
   factory DateRange.thisSemester() => DateRange(today.firstDayOfSemester, today.lastDayOfSemester.endOfDay);
 
-  /// Creates a [DateRange] representing the previous semester.
-  factory DateRange.lastSemester() => DateRange(today.previousSemester.firstDayOfSemester, today.previousSemester.lastDayOfSemester.endOfDay);
+  /// Creates a [DateRange] representing the current week.
+  factory DateRange.thisWeek() => DateRange(today.firstDayOfWeek, today.lastDayOfWeek.endOfDay);
 
-  /// Creates a [DateRange] representing the next semester.
-  factory DateRange.nextSemester() => DateRange(today.nextSemester.firstDayOfSemester, today.nextSemester.lastDayOfSemester.endOfDay);
+  /// Creates a [DateRange] representing the current year.
+  factory DateRange.thisYear() => DateRange(today.firstDayOfYear, today.lastDayOfYear.endOfDay);
 
-  /// Creates a [DateRange] representing the specified number of days before today.
-  /// - [days] The number of days before today.
-  factory DateRange.daysAgo(int days) => DateRange(today.subtract(days.days), today.endOfDay);
+  /// Creates a [DateRange] representing today.
+  factory DateRange.today() => DateRange(today, today.endOfDay);
 
-  /// Creates a [DateRange] representing the specified number of days after today.
-  /// - [days] The number of days after today.
-  factory DateRange.daysFromNow(int days) => DateRange(today, today.add(days.days).endOfDay);
+  /// Creates a [DateRange] representing tomorrow.
+  factory DateRange.tomorrow() => DateRange(tomorrow, tomorrow.endOfDay);
 
-  /// Creates a [DateRange] representing the specified number of days before the specified date.
-  /// - [date] The date to calculate the range from.
-  /// - [days] The number of days before the specified date.
-  factory DateRange.daysBefore(date date, int days) => DateRange(date.subtract(days.days), date.endOfDay);
+  /// Creates a [DateRange] representing yesterday.
+  factory DateRange.yesterday() => DateRange(yesterday, yesterday.endOfDay);
 
-  /// Creates a [DateRange] representing the specified number of days after the specified date.
-  /// - [date] The date to calculate the range from.
-  /// - [days] The number of days after the specified date.
-  factory DateRange.daysAfter(date date, int days) => DateRange(date, date.add(days.days).endOfDay);
+  /// Creates a [DateRange] representing yesterday and today.
+  DateRange.yesterdayToToday() : this(yesterday, today.endOfDay);
 
-  /// Gets the start date of the date range.
-  date get startDate => _dates.min;
+  /// Creates a [DateRange] representing testerday, today and tomorrow.
+  DateRange.yesterdayToTomorrow() : this(yesterday, today.endOfDay);
 
-  /// Sets the start date of the date range.
-  set startDate(date value) {
-    _dates = [..._dates, value];
-    _dates = [_dates.min, _dates.max];
-  }
+  /// Gets the duration of the date range.
+  Duration get duration => endDate.difference(startDate);
 
   /// Gets the end date of the date range.
   date get endDate => _dates.max;
@@ -112,28 +112,66 @@ class DateRange {
     _dates = [_dates.min, _dates.max];
   }
 
-  List<date> _dates = [];
+  /// Returns the hash code for this [DateRange] object.
+  @override
+  int get hashCode => Object.hash(startDate, endDate);
 
-  /// Gets the duration of the date range.
-  Duration get duration => endDate.difference(startDate);
+  @override
+  int get inDays => duration.inDays;
+
+  @override
+  int get inHours => duration.inHours;
+
+  @override
+  int get inMicroseconds => duration.inMicroseconds;
+
+  @override
+  int get inMilliseconds => duration.inMilliseconds;
+
+  @override
+  int get inMinutes => duration.inMinutes;
+
+  @override
+  int get inSeconds => duration.inSeconds;
+
+  /// Returns true if the date range is in the future.
+  bool get isFuture => startDate.isAfter(now);
+
+  @override
+  bool get isNegative => duration.isNegative;
 
   /// Returns true if today is in the date range.
   bool get isNow => now.isBetweenOrEqual(startDate, endDate);
 
-  /// Returns true if yesterday is in the date range.
-  bool contains(date date) => date.isBetweenOrEqual(startDate, endDate);
-
-  /// Checks if the date range contains the specified date range.
-  bool containsRange(DateRange range) => range.startDate.isBetweenOrEqual(startDate, endDate) && range.endDate.isBetweenOrEqual(startDate, endDate);
-
-  /// Checks if the date range intersects the specified date range.
-  bool intersects(DateRange range) => range.startDate.isBetweenOrEqual(startDate, endDate) || range.endDate.isBetweenOrEqual(startDate, endDate);
-
   /// Returns true if the date range is in the past.
   bool get isPast => endDate.isBefore(now);
 
-  /// Returns true if the date range is in the future.
-  bool get isFuture => startDate.isAfter(now);
+  /// Gets the start date of the date range.
+  date get startDate => _dates.min;
+
+  /// Sets the start date of the date range.
+  set startDate(date value) {
+    _dates = [..._dates, value];
+    _dates = [_dates.min, _dates.max];
+  }
+
+  @override
+  DateRange operator *(num factor) => DateRange.duration(startDate, duration * factor);
+
+  @override
+  DateRange operator +(Duration other) => DateRange.duration(startDate, duration + other);
+
+  @override
+  DateRange operator -(Duration other) => DateRange.duration(startDate, duration - other);
+
+  @override
+  Duration operator -() => -duration;
+
+  @override
+  bool operator <(Duration other) => duration < other;
+
+  @override
+  bool operator <=(Duration other) => duration <= other;
 
   /// Overrides the equality operator to compare the current [DateRange] object with another object.
   /// Returns `true` if the objects are equal, `false` otherwise.
@@ -159,7 +197,7 @@ class DateRange {
       return hashCode == other.hashCode;
     }
     if (other is int) {
-      return duration.inMilliseconds == other;
+      return inMilliseconds == other;
     }
     if (other is Duration) {
       return duration == other;
@@ -168,7 +206,7 @@ class DateRange {
       return contains(other);
     }
 
-    if (other is List<date>) {
+    if (other is Iterable<date>) {
       return other.min == startDate && other.max == endDate;
     }
 
@@ -182,19 +220,73 @@ class DateRange {
         return contains(other.toDate());
       }
       if (other.isNumber) {
-        return duration.inMilliseconds == other.toInt!;
+        return inMilliseconds == other.toInt!;
       }
     }
     return false;
   }
 
-  /// Returns the hash code for this [DateRange] object.
   @override
-  int get hashCode => Object.hash(startDate, endDate);
+  bool operator >(Duration other) => duration > other;
 
-  /// Returns a string representation of this [DateRange] object.
   @override
-  String toString() => '$startDate ~ $endDate - ${duration.formatted}';
+  bool operator >=(Duration other) => duration >= other;
+
+  @override
+  Duration abs() => duration.abs();
+
+  @override
+  int compareTo(Duration other) => duration.compareTo(other);
+
+  /// Returns true if yesterday is in the date range.
+  bool contains(date date) => date.isBetweenOrEqual(startDate, endDate);
+
+  /// Checks if the date range contains the specified date range.
+  bool containsRange(DateRange range) => range.startDate.isBetweenOrEqual(startDate, endDate) && range.endDate.isBetweenOrEqual(startDate, endDate);
+
+  /// Generates an iterable of [DateTime] objects representing each day within the date range.
+  Iterable<DateTime> days() sync* {
+    var i = startDate;
+    while (i.isBefore(endDate)) {
+      yield i;
+      i = i.add(const Duration(days: 1));
+    }
+    yield endDate;
+  }
+
+  /// Generates an iterable of [DateTime] objects representing each hour within the date range.
+  Iterable<DateTime> hours() sync* {
+    var i = startDate;
+    while (i.isBefore(endDate)) {
+      yield i;
+      i = i.add(const Duration(hours: 1));
+    }
+  }
+
+  /// Checks if the date range intersects the specified date range.
+  bool intersects(DateRange range) => range.startDate.isBetweenOrEqual(startDate, endDate) || range.endDate.isBetweenOrEqual(startDate, endDate);
+
+  /// Generates an iterable of [DateTime] objects representing each minute within the date range.
+  Iterable<DateTime> minutes() sync* {
+    var i = startDate;
+    while (i.isBefore(endDate)) {
+      yield i;
+      i = i.add(const Duration(minutes: 1));
+    }
+  }
+
+  /// Generates an iterable of [DateTime] objects representing each month within the date range.
+  Iterable<DateTime> months() sync* {
+    var i = startDate;
+    while (i.isBefore(endDate)) {
+      yield i;
+      if (i.month == 12) {
+        i = DateTime(i.year + 1, 1, i.day);
+      } else {
+        i = DateTime(i.year, i.month + 1, i.day);
+      }
+    }
+  }
 
   /// Returns a JSON-encodable representation of this [DateRange] object.
   Map<String, dynamic> toJson() => {
@@ -202,52 +294,16 @@ class DateRange {
         'endDate': endDate.toIso8601String(),
       };
 
-  /// Generates an iterable of [DateTime] objects representing each minute within the date range.
-  Iterable<DateTime> minutes() sync* {
-    var i = startDate;
-    while (i.isAfter(startDate) && i.isBefore(endDate)) {
-      yield i;
-      i = i.add(const Duration(minutes: 1));
-    }
-  }
-
-  /// Generates an iterable of [DateTime] objects representing each hour within the date range.
-  Iterable<DateTime> hours() sync* {
-    var i = startDate;
-    while (i.isAfter(startDate) && i.isBefore(endDate)) {
-      yield i;
-      i = i.add(const Duration(hours: 1));
-    }
-  }
-
-  /// Generates an iterable of [DateTime] objects representing each day within the date range.
-  Iterable<DateTime> days() sync* {
-    var i = startDate;
-    while (i.isAfter(startDate) && i.isBefore(endDate)) {
-      yield i;
-      i = i.add(const Duration(days: 1));
-    }
-  }
+  /// Returns a string representation of this [DateRange] object.
+  @override
+  String toString() => '$startDate ~ $endDate - ${duration.formatted}';
 
   /// Generates an iterable of [DateTime] objects representing each week within the date range.
   Iterable<DateTime> weeks() sync* {
     var i = startDate.firstDayOfWeek;
-    while (i.isAfter(startDate) && i.isBefore(endDate)) {
+    while (i.isBefore(endDate)) {
       yield i;
       i = i.add(const Duration(days: 7));
-    }
-  }
-
-  /// Generates an iterable of [DateTime] objects representing each month within the date range.
-  Iterable<DateTime> months() sync* {
-    var i = startDate;
-    while (i.isAfter(startDate) && i.isBefore(endDate)) {
-      yield i;
-      if (i.month == 12) {
-        i = DateTime(i.year + 1, 1, i.day);
-      } else {
-        i = DateTime(i.year, i.month + 1, i.day);
-      }
     }
   }
 
@@ -259,4 +315,7 @@ class DateRange {
       i = DateTime(i.year + 1, i.month, i.day);
     }
   }
+
+  @override
+  Duration operator ~/(int quotient) => duration ~/ quotient;
 }

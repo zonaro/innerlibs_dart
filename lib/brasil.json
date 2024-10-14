@@ -4,8 +4,10 @@
         "Capital": false,
         "IBGE": 1200013,
         "SIAFI": 643,
-        "DDD": 68,    
-        "TimeZone": "America/Rio_Branco"
+        "DDD": 68,
+        "TimeZone": "America/Rio_Branco",
+        "latitude": -9.82581,
+        "longitude": -66.897153
     },
     {
         "Nome": "Assis Brasil",
@@ -13,7 +15,9 @@
         "IBGE": 1200054,
         "SIAFI": 157,
         "DDD": 68,
-        "TimeZone": "America/Rio_Branco"
+        "TimeZone": "America/Rio_Branco",
+        "latitude": -10.9298,
+        "longitude": -69.5738
     },
     {
         "Nome": "Brasiléia",
@@ -4950,8 +4954,7 @@
         "SIAFI": 3971,
         "DDD": 74,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Abaiara",
         "Capital": false,
@@ -6423,8 +6426,7 @@
         "SIAFI": 1583,
         "DDD": 88,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Brasília",
         "Capital": true,
@@ -6432,8 +6434,7 @@
         "SIAFI": 9701,
         "DDD": 61,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Afonso Cláudio",
         "Capital": false,
@@ -7057,8 +7058,7 @@
         "SIAFI": 5705,
         "DDD": 27,
         "TimeZone": "America/Sao_Paulo"
-    }
- ,
+    },
     {
         "Nome": "Abadia de Goiás",
         "Capital": false,
@@ -9026,8 +9026,7 @@
         "SIAFI": 1068,
         "DDD": 62,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Açailândia",
         "Capital": false,
@@ -10763,8 +10762,7 @@
         "SIAFI": 1287,
         "DDD": 98,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Abadia dos Dourados",
         "Capital": false,
@@ -17588,8 +17586,7 @@
         "SIAFI": 5421,
         "DDD": 35,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Água Clara",
         "Capital": false,
@@ -18221,8 +18218,7 @@
         "SIAFI": 9187,
         "DDD": 67,
         "TimeZone": "America/Porto_Velho"
-    }
-,
+    },
     {
         "Nome": "Acorizal",
         "Capital": false,
@@ -19350,8 +19346,7 @@
         "SIAFI": 119,
         "DDD": 66,
         "TimeZone": "America/Porto_Velho"
-    }
-,
+    },
     {
         "Nome": "Abaetetuba",
         "Capital": false,
@@ -20503,8 +20498,7 @@
         "SIAFI": 571,
         "DDD": 94,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Água Branca",
         "Capital": false,
@@ -22288,8 +22282,7 @@
         "SIAFI": 542,
         "DDD": 83,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Abreu e Lima",
         "Capital": false,
@@ -23769,8 +23762,7 @@
         "SIAFI": 2293,
         "DDD": 81,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Acauã",
         "Capital": false,
@@ -25562,8 +25554,7 @@
         "SIAFI": 410,
         "DDD": 89,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Abatiá",
         "Capital": false,
@@ -28755,8 +28746,7 @@
         "SIAFI": 7949,
         "DDD": 44,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Angra dos Reis",
         "Capital": false,
@@ -29492,8 +29482,7 @@
         "SIAFI": 5925,
         "DDD": 24,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Acari",
         "Capital": false,
@@ -30829,8 +30818,7 @@
         "SIAFI": 1899,
         "DDD": 84,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Alta Floresta D'Oeste",
         "Capital": false,
@@ -30965,7 +30953,9 @@
         "IBGE": 1100205,
         "SIAFI": 3,
         "DDD": 69,
-        "TimeZone": "America/Porto_Velho"
+        "TimeZone": "America/Porto_Velho",
+        "latitude": -8.76077,
+        "longitude": -63.8999
     },
     {
         "Nome": "Presidente Médici",
@@ -31246,8 +31236,7 @@
         "SIAFI": 979,
         "DDD": 69,
         "TimeZone": "America/Porto_Velho"
-    }
-,
+    },
     {
         "Nome": "Amajari",
         "Capital": false,
@@ -31367,8 +31356,7 @@
         "SIAFI": 38,
         "DDD": 95,
         "TimeZone": "America/Porto_Velho"
-    }
-,
+    },
     {
         "Nome": "Aceguá",
         "Capital": false,
@@ -35344,8 +35332,7 @@
         "SIAFI": 5785,
         "DDD": 51,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Abdon Batista",
         "Capital": false,
@@ -37705,8 +37692,7 @@
         "SIAFI": 1192,
         "DDD": 48,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Amparo de São Francisco",
         "Capital": false,
@@ -38306,8 +38292,7 @@
         "SIAFI": 3251,
         "DDD": 79,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Adamantina",
         "Capital": false,
@@ -42810,7 +42795,9 @@
         "IBGE": 3550308,
         "SIAFI": 7107,
         "DDD": 11,
-        "TimeZone": "America/Sao_Paulo"
+        "TimeZone": "America/Sao_Paulo",
+        "latitude": -23.5505,
+        "longitude": -46.6333
     },
     {
         "Nome": "São Pedro",
@@ -43467,8 +43454,7 @@
         "SIAFI": 2959,
         "DDD": 19,
         "TimeZone": "America/Sao_Paulo"
-    }
-,
+    },
     {
         "Nome": "Abreulândia",
         "Capital": false,
@@ -44582,4 +44568,3 @@
         "TimeZone": "America/Sao_Paulo"
     }
 ]
- 

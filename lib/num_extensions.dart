@@ -9,9 +9,11 @@ extension DurationExtensions on Duration {
   String get formatted => getFormatted();
 
   string getFormatted({
-    bool includeMilliseconds = false,
-    bool includeMicroseconds = false,
+    bool? includeMilliseconds,
+    bool? includeMicroseconds,
   }) {
+    includeMicroseconds ??= inMicroseconds < 1000;
+    includeMilliseconds ??= inMilliseconds < 1000;
     var hours = inHours;
     var minutes = inMinutes.remainder(60);
     var seconds = inSeconds.remainder(60);
@@ -269,7 +271,7 @@ extension NumExtensions2<T extends num> on T {
   String quantityText(String plural, [String singular = "", bool includeNumber = true]) {
     var pre = (includeNumber ? toString() : "");
     if (plural.length > 1) {
-      if ((this.round() == 1 ||this. round() == -1)) {
+      if ((this.round() == 1 || this.round() == -1)) {
         pre = "$pre ${singular.ifBlank(plural.singular)}";
       } else {
         pre = "$pre $plural";
