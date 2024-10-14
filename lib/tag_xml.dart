@@ -146,7 +146,7 @@ class TagXml extends XmlElement implements Validator {
     }
   }
 
-  void setValueForNode<T, V>(String tag, V? value) => setTextValueForNode(tag, value?.toString());
+  void setValueForNode<T, V>(String tag, V? value) => setTextValueForNode(tag, value?.changeTo());
 
   /// Return the XML string representation of the node.
   @override
