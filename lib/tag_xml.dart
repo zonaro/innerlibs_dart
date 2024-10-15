@@ -117,6 +117,7 @@ class TagXml extends XmlElement implements Validator {
       if (v.hasParent) v.remove();
       listTag.children.add(v);
     }
+    if (listTag.hasParent == false) children.add(listTag);
   }
 
   /// Sets a child node with the given [childName] to the provided [value].
