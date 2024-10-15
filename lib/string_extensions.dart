@@ -1219,38 +1219,6 @@ extension StringExtensions on String {
     return stringArray.join();
   }
 
-  /// Returns the singular form of a plural noun.
-  /// If the string ends with 'ies', it removes the last 3 characters and appends 'y'.
-  /// If the string ends with 'es', it removes the last 2 characters.
-  /// If the string ends with 's', it removes the last character.
-  /// If none of the above conditions are met, it returns the original string.
-  String get singular {
-    if (endsWith('ies')) {
-      return '${removeLast(3)}y';
-    } else if (endsWith('es')) {
-      return removeLast(2);
-    } else if (endsWith('s')) {
-      return removeLast(1);
-    }
-    return this;
-  }
-
-  /// Returns the singular form of a Portuguese word.
-  /// If the word ends with 'ões', it removes the last 3 characters and appends 'ão'.
-  /// If the word ends with 'ães', it removes the last 3 characters and appends 'ão'.
-  /// If the word ends with 's', it removes the last character.
-  /// Otherwise, it returns the original word.
-  String get singularPt {
-    if (endsWith('ões')) {
-      return '${removeLast(3)}ão';
-    } else if (endsWith('ães')) {
-      return '${removeLast(3)}ão';
-    } else if (endsWith('s')) {
-      return removeLast(1);
-    }
-    return this;
-  }
-
   /// Splits the `String` into a `List` of lines ('\r\n' or '\n').
   ///
   /// If the `String` is `null`, an `ArgumentError` is thrown.
@@ -3010,6 +2978,34 @@ extension StringExtensions on String {
       text = text.replaceAll(wrappedKey, value?.toString() ?? "");
     });
     return text;
+  }
+
+  /// Returns the singular form of a plural noun.
+  String singular([string? locale]) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    locale ??= platformLocaleCode;
+    if (locale.flatEqualAny(['pt', 'pt_PT', 'pt_BR'])) {
+      if (endsWith('ões')) {
+        return '${removeLast(3)}ão';
+      } else if (endsWith('ães')) {
+        return '${removeLast(3)}ão';
+      } else if (endsWith('s')) {
+        return removeLast(1);
+      }
+      return this;
+    }
+
+    if (endsWith('ies')) {
+      return '${removeLast(3)}y';
+    } else if (endsWith('es')) {
+      return removeLast(2);
+    } else if (endsWith('s')) {
+      return removeLast(1);
+    }
+    return this;
   }
 
   /// slice a string into chunks

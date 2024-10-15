@@ -7,14 +7,6 @@ import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path;
 
 extension DirectoryExtensionPlus on Directory {
-  /// A getter that returns the count of all elements in the list synchronously.
-  ///
-  /// This getter accesses the `listAllSync` property and returns its length.
-  ///
-  /// Returns:
-  ///   An integer representing the number of elements in the list.
-  int get countSync => listAllSync.length;
-
   /// Asynchronously gets the count of items in the list.
   ///
   /// This getter returns the length of the list obtained from the `listAll`
@@ -23,6 +15,14 @@ extension DirectoryExtensionPlus on Directory {
   ///
   /// Returns a [Future<int>] that completes with the number of items in the list.
   Future<int> get count async => (await listAll).length;
+
+  /// A getter that returns the count of all elements in the list synchronously.
+  ///
+  /// This getter accesses the `listAllSync` property and returns its length.
+  ///
+  /// Returns:
+  ///   An integer representing the number of elements in the list.
+  int get countSync => listAllSync.length;
 
   /// Returns a [Future] that completes with an [Iterable] of [FileSystemEntity]
   /// objects representing the contents of the directory. The listing is not
@@ -55,17 +55,6 @@ extension DirectoryExtensionPlus on Directory {
   /// [FileSystemEntity] objects.
   Future<Iterable<FileSystemEntity>> get listAllRecursive async => await list(recursive: true).toList();
 
-  /// Returns a list of all file system entities in the current directory.
-  ///
-  /// This method lists all files and directories in the current directory
-  /// without recursing into subdirectories.
-  ///
-  /// Returns:
-  ///   A list of [FileSystemEntity] objects representing the files and
-  ///   directories in the current directory.
-
-  List<FileSystemEntity> get listAllSync => listSync(recursive: false);
-
   /// Returns a list of all file system entities within the current directory and
   /// its subdirectories, recursively. This method performs a synchronous
   /// operation to retrieve the list of entities.
@@ -83,6 +72,17 @@ extension DirectoryExtensionPlus on Directory {
   ///   A list of [FileSystemEntity] objects representing the files and
   ///   directories found within the current directory and its subdirectories.
   List<FileSystemEntity> get listAllRecursiveSync => listSync(recursive: true);
+
+  /// Returns a list of all file system entities in the current directory.
+  ///
+  /// This method lists all files and directories in the current directory
+  /// without recursing into subdirectories.
+  ///
+  /// Returns:
+  ///   A list of [FileSystemEntity] objects representing the files and
+  ///   directories in the current directory.
+
+  List<FileSystemEntity> get listAllSync => listSync(recursive: false);
 
   /// Asynchronously lists all directories within the current directory.
   ///
@@ -112,17 +112,6 @@ extension DirectoryExtensionPlus on Directory {
   /// Returns a [Future] that completes with an [Iterable] of [Directory] objects.
   Future<Iterable<Directory>> get listDirectoriesRecursive async => (await listAllRecursive).whereType<Directory>();
 
-  /// Returns an iterable of directories from the list of all file system entities.
-  ///
-  /// This getter filters the list of all file system entities and returns only
-  /// those that are of type [Directory].
-  ///
-  /// Example usage:
-  /// ```dart
-  /// Iterable<Directory> directories = someObject.listDirectoriesSync;
-  /// ```
-  Iterable<Directory> get listDirectoriesSync => listAllSync.whereType<Directory>();
-
   /// An extension property that recursively lists all directories in the current directory.
   ///
   /// This property returns an [Iterable] of [Directory] objects, which are filtered from
@@ -139,6 +128,17 @@ extension DirectoryExtensionPlus on Directory {
   ///
   /// Note: Ensure that `listAllRecursiveSync` is defined and returns an [Iterable] of file system entities.
   Iterable<Directory> get listDirectoriesRecursiveSync => listAllRecursiveSync.whereType<Directory>();
+
+  /// Returns an iterable of directories from the list of all file system entities.
+  ///
+  /// This getter filters the list of all file system entities and returns only
+  /// those that are of type [Directory].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// Iterable<Directory> directories = someObject.listDirectoriesSync;
+  /// ```
+  Iterable<Directory> get listDirectoriesSync => listAllSync.whereType<Directory>();
 
   /// Asynchronously retrieves a list of all files in the current directory.
   ///
@@ -171,17 +171,6 @@ extension DirectoryExtensionPlus on Directory {
   /// - A `Future` that completes with an `Iterable` of `File` objects.
   Future<Iterable<File>> get listFilesRecursive async => (await listAllRecursive).whereType<File>();
 
-  /// Returns an iterable of files from the list of all entities in the directory.
-  ///
-  /// This getter filters the list of all entities and returns only those that
-  /// are of type [File].
-  ///
-  /// Example:
-  /// ```dart
-  /// Iterable<File> files = directory.listFilesSync;
-  /// ```
-  Iterable<File> get listFilesSync => listAllSync.whereType<File>();
-
   /// Returns an iterable of all files found recursively within the directory.
   ///
   /// This getter filters the results of `listAllRecursiveSync` to include only
@@ -196,6 +185,57 @@ extension DirectoryExtensionPlus on Directory {
   /// }
   /// ```
   Iterable<File> get listFilesRecursiveSync => listAllRecursiveSync.whereType<File>();
+
+  /// Returns an iterable of files from the list of all entities in the directory.
+  ///
+  /// This getter filters the list of all entities and returns only those that
+  /// are of type [File].
+  ///
+  /// Example:
+  /// ```dart
+  /// Iterable<File> files = directory.listFilesSync;
+  /// ```
+  Iterable<File> get listFilesSync => listAllSync.whereType<File>();
+
+  Future<Directory> copy(Directory to, [bool skipTopDirectory = false]) async {
+    if (skipTopDirectory == false) {
+      to = Directory(path.join(to.path, name));
+    }
+    await to.create(recursive: true);
+    for (var f in await listAll) {
+      if (f is File) {
+        f.copy(to.path);
+      } else if (f is Directory) {
+        await f.copy(Directory(path.join(to.path)), false);
+      }
+    }
+    return to;
+  }
+
+  Future<Iterable<T>> search<T extends FileSystemEntity>(
+      {required dynamic searchTerms,
+      required Iterable<dynamic> Function(T)? searchOn,
+      int levenshteinDistance = 0,
+      bool ignoreCase = true,
+      bool ignoreDiacritics = true,
+      bool ignoreWordSplitters = true,
+      bool splitCamelCase = true,
+      bool useWildcards = false,
+      bool allIfEmpty = true,
+      bool recursive = true}) async {
+    searchOn ??= (x) => [x.name, x.path, x.title, x.directoryName, x.lastModified, x.lastAccessed];
+    return (recursive ? (await listAllRecursive) : (await listAll)).whereType<T>().search(
+      searchTerms: searchTerms,
+      searchOn: searchOn,
+      levenshteinDistance: levenshteinDistance,
+      ignoreCase: ignoreCase,
+      ignoreDiacritics: ignoreDiacritics,
+      ignoreWordSplitters: ignoreWordSplitters,
+      splitCamelCase: splitCamelCase,
+      useWildcards: useWildcards,
+      allIfEmpty: allIfEmpty,
+    );
+  }
 }
 
 extension FileExtensionPlus on File {
@@ -243,17 +283,15 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
   /// Get the index of the file or directory in the parent directory
   int get index => parent.listFilesSync.map((x) => x.id).toList().indexOf(id);
 
-  /// Get File or directory name
-  String get name => path.basename(this.path);
-
-  /// Get File or directory name without extension
-  String get nameWithoutExtension => path.basenameWithoutExtension(this.path);
-
-  /// Get the parent directory of the file or directory
-  string get relativePath => relativePathFrom(null);
-
-  /// Get the size of the file or directory
-  string get shortSize => size.formatFileSize;
+  date get lastAccessed {
+    if (this is File) {
+      return (this as File).lastAccessedSync();
+    }
+    if (this is Directory) {
+      return (this as Directory).listFilesRecursiveSync.map((e) => e.lastAccessedSync()).maxOrNull ?? minDate;
+    }
+    return minDate;
+  }
 
   date get lastModified {
     if (this is File) {
@@ -265,15 +303,17 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
     return minDate;
   }
 
-  date get lastAccessed {
-    if (this is File) {
-      return (this as File).lastAccessedSync();
-    }
-    if (this is Directory) {
-      return (this as Directory).listFilesRecursiveSync.map((e) => e.lastAccessedSync()).maxOrNull ?? minDate;
-    }
-    return minDate;
-  }
+  /// Get File or directory name
+  String get name => path.basename(this.path);
+
+  /// Get File or directory name without extension
+  String get nameWithoutExtension => path.basenameWithoutExtension(this.path);
+
+  /// Get the parent directory of the file or directory
+  string get relativePath => relativePathFrom(null);
+
+  /// Get the size of the file or directory
+  string get shortSize => size.formatFileSize;
 
   /// Get the size of the file or directory
   int get size {
@@ -321,9 +361,9 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
       "typeDescription": typeDescription,
       if (this is File) "Mime": (this as File).mimeType,
       "relativePath": relativePath,
-      if (this is File) "MD5CheckSum": await (this as File).md5Checksum,
+      if (this is File) "md5CheckSum": await (this as File).md5Checksum,
       if (this is Directory) "count": (this as Directory).count,
-      if (this is Directory) "Children": [for (var e in (this as Directory).listSync()) await e.toJson(rootUrlPath: rootUrlPath + e.relativePathFrom(e.parent.path))],
+      if (this is Directory) "children": [for (var e in (this as Directory).listSync()) await e.toJson(rootUrlPath: rootUrlPath + e.relativePathFrom(e.parent.path))],
     };
   }
 

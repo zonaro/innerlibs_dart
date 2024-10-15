@@ -49,10 +49,12 @@ class TagXml extends XmlElement implements Validator {
   /// Returns a child node with the given [tag] as an instance of [T].
   ///
   /// If the child node does not exist, it returns `null`.
-  T? getTagAs<T extends TagXml>(String tag, T Function() constructor) => mutate(findElements(tag).singleOrNull, constructor);
+  T? getTagAs<T extends TagXml>(String tag, T Function() constructor) => mutate(getFirstChild(tag), constructor);
 
   /// Returns an iterable of child nodes with the given [tagName] as instances of [T].
-  Iterable<T> getTagsFrom<T extends TagXml>(String tagName, T Function() constructor) => findElements(tagName).map((n) => mutate(n, constructor)!);
+  Iterable<T> getTagsFrom<T extends TagXml>(String tagName, T Function() itemConstructor) => findElements(tagName).map((n) => mutate(n, itemConstructor)!);
+  Iterable<T> getTagsFromNodeList<T extends TagXml>(String listName, string itemName, T Function() constructor) =>
+      childElements.firstWhereOrNull((x) => x.name.qualified.flatEqual(listName))?.childElements.where((x) => x.name.qualified.flatEqual(itemName)).map((n) => mutate(n, constructor)!) ?? [];
 
   /// Returns the text value from a specific child node with the given [tag].
   ///
@@ -61,10 +63,11 @@ class TagXml extends XmlElement implements Validator {
   T? getValueFromNode<T, U>(String tag, [T Function(U i)? parser]) {
     var x = findElements(tag).singleOrNull?.innerText;
     if (x == null) return null;
-    if (parser == null) return changeTo(x);
+    parser ??= changeTo;
     try {
       return parser(changeTo(x));
     } catch (e) {
+      consoleLog("Error parsing $x", error: e);
       return null;
     }
   }
@@ -106,11 +109,20 @@ class TagXml extends XmlElement implements Validator {
     }
   }
 
+  /// Add a node thats wrap a list of child nodes
+  void setNodeList<T extends TagXml, V extends TagXml>(String listRootTag, Iterable<V> values) {
+    var listTag = mutate(childElements.firstWhereOrNull((x) => x.name.qualified == listRootTag), () => TagXml.fromTagName(listRootTag), true)!;
+    listTag.children.clear();
+    for (var v in values) {
+      listTag.children.add(v);
+    }
+  }
+
   /// Sets a child node with the given [childName] to the provided [value].
   ///
   /// If the [value] is not `null`, it  adds the [value]'s as child.
   /// If the [value] is `null`, it removes the child node if it exists.
-  void setTagFrom<T extends TagXml>(String childName, T? value) {
+  T? setTagFrom<T extends TagXml>(String childName, T? value) {
     var n = findElements(childName).singleOrNull;
     if (n != null) {
       n.remove();
@@ -119,6 +131,7 @@ class TagXml extends XmlElement implements Validator {
       children.add(value);
       value.tagName = childName;
     }
+    return value;
   }
 
   /// Sets the text value for a specific child node with the given [tag].
@@ -190,8 +203,8 @@ class TagXml extends XmlElement implements Validator {
     if (element is T && force == false) return element;
     var newTag = constructor();
     while (element.children.isNotEmpty) {
-      var c = newTag.children.first;
-      c.remove();
+      var c = element.children.first;
+      element.children.remove(c);
       newTag.children.add(c);
     }
     while (element.attributes.isNotEmpty) {

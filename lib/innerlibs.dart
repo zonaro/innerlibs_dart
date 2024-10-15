@@ -140,5 +140,5 @@ typedef StringList = List<String>;
 class LatLngTime extends LatLng {
   final DateTime timestamp;
 
-  LatLngTime(super.latitude, super.longitude, DateTime? time) : timestamp = time ?? now;
+  LatLngTime(super.latitude, super.longitude, DateTime? timestamp) : timestamp = timestamp ?? now;
 }

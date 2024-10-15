@@ -166,6 +166,10 @@ R changeTo<R>(dynamic value) {
         return value.format() as R;
       }
 
+      if (value is Duration) {
+        return value.formatted as R;
+      }
+
       if (value is Map || value is List) {
         return jsonEncode(value) as R;
       }
@@ -267,7 +271,7 @@ String flatString(dynamic value) {
 List forceList(dynamic item) {
   return [
     if (item != null)
-      if (item is List) ...item else if (item is Iterable) ...item else if (item is Set) ...item else item
+      if (item is Iterable) ...item else item
   ];
 }
 

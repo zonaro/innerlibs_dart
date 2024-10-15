@@ -25,7 +25,9 @@
         "IBGE": 1200104,
         "SIAFI": 105,
         "DDD": 68,
-        "TimeZone": "America/Rio_Branco"
+        "TimeZone": "America/Rio_Branco",
+        "latitude": -11.009,
+        "longitude": -68.7341
     },
     {
         "Nome": "Bujari",
@@ -33,7 +35,9 @@
         "IBGE": 1200138,
         "SIAFI": 645,
         "DDD": 68,
-        "TimeZone": "America/Rio_Branco"
+        "TimeZone": "America/Rio_Branco",
+        "latitude": -9.81528,
+        "longitude": -67.955
     },
     {
         "Nome": "Capixaba",

@@ -30,7 +30,7 @@ extension CompareAndSwap<T extends Comparable> on T {
 }
 
 extension ObjectExtensions<T extends Object?> on T {
-  /// Returns flat representation string by removing diacritics, converting to lowercase, and trimming all whitespace.
+  /// Returns flat representation string by calling [toString()] and removing diacritics, converting to lowercase, and trimming all whitespace.
   string get asFlat => flatString(this);
 
   /// Checks if [this] is not a Blank value:

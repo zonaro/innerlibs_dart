@@ -63,10 +63,10 @@ void main() {
 
   group('DurationExtensions', () {
     test('getFormatted', () {
-      expect(const Duration(hours: 2, minutes: 30).getFormatted(), equals('2 h 30 min'));
-      expect(const Duration(minutes: 45, seconds: 30).getFormatted(), equals('45 min 30 s'));
-      expect(const Duration(seconds: 15, milliseconds: 500).getFormatted(includeMilliseconds: true), equals('15 s 500 ms'));
-      expect(const Duration(seconds: 10, microseconds: 200).getFormatted(includeMicroseconds: true), equals('10 s 200 µs'));
+      expect(const Duration(hours: 2, minutes: 30).format(), equals('2 h 30 min'));
+      expect(const Duration(minutes: 45, seconds: 30).format(), equals('45 min 30 s'));
+      expect(const Duration(seconds: 15, milliseconds: 500).format(includeMilliseconds: true), equals('15 s 500 ms'));
+      expect(const Duration(seconds: 10, microseconds: 200).format(includeMicroseconds: true), equals('10 s 200 µs'));
     });
 
     test('formatted', () {

@@ -6,9 +6,9 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
 extension DurationExtensions on Duration {
-  String get formatted => getFormatted();
+  String get formatted => format();
 
-  string getFormatted({
+  string format({
     bool? includeMilliseconds,
     bool? includeMicroseconds,
   }) {
@@ -33,7 +33,7 @@ extension DurationExtensions on Duration {
     if (includeMilliseconds && milliseconds > 0) {
       formatted += "$milliseconds ms ";
     }
-    if (includeMilliseconds && microseconds > 0) {
+    if (includeMicroseconds && microseconds > 0) {
       formatted += "$microseconds µs";
     }
     return formatted.trim();
@@ -234,7 +234,7 @@ extension NumExtensions2<T extends num> on T {
     return v;
   }
 
-  Future delay([FutureOr Function()? callback]) async => Duration(milliseconds: this.round()).delay(callback);
+  Future delay([FutureOr Function()? callback]) async => this.milliseconds.delay(callback);
 
   /// Finds the greatest common divisor between this integer and the given integer [other].
   ///
@@ -268,30 +268,11 @@ extension NumExtensions2<T extends num> on T {
   /// The [includeNumber] parameter determines whether to include the quantity number in the text. It is optional and defaults to true.
   ///
   /// The method returns a string representing the formatted quantity text.
-  String quantityText(String plural, [String singular = "", bool includeNumber = true]) {
+  String quantityText(String plural, [String singular = "", bool includeNumber = true, string? locale]) {
     var pre = (includeNumber ? toString() : "");
-    if (plural.length > 1) {
-      if ((this.round() == 1 || this.round() == -1)) {
-        pre = "$pre ${singular.ifBlank(plural.singular)}";
-      } else {
-        pre = "$pre $plural";
-      }
-    }
-    return pre;
-  }
-
-  /// Returns a formatted quantity text based on the provided parameters.
-  ///
-  /// The [plural] parameter represents the plural form of the quantity.
-  /// The [singular] parameter represents the singular form of the quantity. It is optional and defaults to an empty string.
-  /// The [includeNumber] parameter determines whether to include the quantity number in the text. It is optional and defaults to true.
-  ///
-  /// The method returns a string representing the formatted quantity text.
-  String quantityTextPt(String plural, [String singular = "", bool includeNumber = true]) {
-    var pre = (includeNumber ? toString() : "");
-    if (plural.length > 1) {
-      if ((this.round() == 1 || this.round() == -1)) {
-        pre = "$pre ${singular.ifBlank(plural.singularPt)}";
+    if (plural.isNotBlank) {
+      if ((this == 1 || this == -1)) {
+        pre = "$pre ${singular.ifBlank(plural.singular(locale))}";
       } else {
         pre = "$pre $plural";
       }
@@ -300,7 +281,8 @@ extension NumExtensions2<T extends num> on T {
   }
 
   /// Num to locale currency with symbol or not
-  String? toCurrency({bool? withSymbol, string? locale}) {
+  String toCurrency({bool? withSymbol, string? locale}) {
+    locale ??= platformLocaleCode;
     if (withSymbol == false) {
       return NumberFormat.simpleCurrency(name: '', locale: locale).format(this).trim();
     } else {
@@ -309,26 +291,18 @@ extension NumExtensions2<T extends num> on T {
   }
 
   /// Num to locale compact currency with symbol or not
-  String? toCurrencyCompact({bool? withSymbol}) {
-    if (isNullOrZero) {
-      return null;
+  String toCurrencyCompact({bool? withSymbol}) {
+    if (withSymbol == false) {
+      return NumberFormat.compactSimpleCurrency(name: '').format(this).trim();
     } else {
-      if (withSymbol == false) {
-        return NumberFormat.compactSimpleCurrency(name: '').format(this).trim();
-      } else {
-        return NumberFormat.compactSimpleCurrency().format(this).trim();
-      }
+      return NumberFormat.compactSimpleCurrency().format(this).trim();
     }
   }
 
   /// Num with specific fraction digits
   double toPrecision(int fractionDigits) {
-    if (isNullOrZero) {
-      return -1.0;
-    } else {
-      var mod = pow(10, fractionDigits.toDouble()).toDouble();
-      return ((this * mod).round().toDouble() / mod);
-    }
+    var mod = pow(10, fractionDigits.toDouble()).toDouble();
+    return ((this * mod).round().toDouble() / mod);
   }
 }
 
@@ -409,11 +383,15 @@ extension NumNullExtensions<T extends num?> on T {
     );
   }
 
-  T percentOf(T total) {
+  /// Returns the percentage of the current number in relation to the total number.
+  /// If the total number is null or 0, it returns 0.
+  /// Otherwise, it returns the percentage value.
+  /// The percentage is calculated as a double value between 0 and 1, where 1 represents 100%.
+  double percentOf(T total) {
     if (total == null || total == 0) {
-      return 0 as T;
+      return 0;
     } else {
-      return (this! / total) as T;
+      return (this! / total);
     }
   }
 
