@@ -63,8 +63,8 @@ class TagXml extends XmlElement implements Validator {
   T? getValueFromNode<T, U>(String tag, [T Function(U i)? parser]) {
     var x = findElements(tag).singleOrNull?.innerText;
     if (x == null) return null;
-    parser ??= changeTo;
     try {
+      if (parser == null) return changeTo(x);
       return parser(changeTo(x));
     } catch (e) {
       consoleLog("Error parsing $x", error: e);
@@ -114,6 +114,7 @@ class TagXml extends XmlElement implements Validator {
     var listTag = mutate(childElements.firstWhereOrNull((x) => x.name.qualified == listRootTag), () => TagXml.fromTagName(listRootTag), true)!;
     listTag.children.clear();
     for (var v in values) {
+      if (v.hasParent) v.remove();
       listTag.children.add(v);
     }
   }
@@ -175,7 +176,6 @@ class TagXml extends XmlElement implements Validator {
 
   /// Create a instance of [T] from a XML string and using the provided [constructor].
   /// The [constructor] is a function that creates a new instance of [T] and returns it.
-  /// Provide the [tagName] if [T] name is different fom tagName.
   static T? fromXmlString<T extends TagXml>(string xml, T Function() constructor) => fromXmlStringList(xml, constructor).firstOrNull;
 
   /// Create a list of instances of [T] from a XML string and using the provided [constructor].
@@ -195,29 +195,32 @@ class TagXml extends XmlElement implements Validator {
   /// - If the [XmlElement] is `null`, it returns `null`.
   /// - If the [XmlElement] is already an instance of [T], it returns the [XmlElement] as [T].
   /// - If the [XmlElement] is not an instance of [T], it creates a new instance of [T] and copies the attributes and children of the [XmlElement] to the new instance, insert the new instance in the parent of the [XmlElement] and remove the [XmlElement].
-  static T? mutate<T extends TagXml>(XmlElement? element, T Function() constructor, [bool force = false]) {
+  static T? mutate<T extends TagXml>(XmlNode? element, T Function() constructor, [bool force = false]) {
     if (element == null) {
       if (force) return constructor();
       return null;
     }
     if (element is T && force == false) return element;
     var newTag = constructor();
-    while (element.children.isNotEmpty) {
-      var c = element.children.first;
-      element.children.remove(c);
-      newTag.children.add(c);
-    }
+
     while (element.attributes.isNotEmpty) {
       var a = element.attributes.first;
       element.removeAttribute(a.name.qualified);
       newTag.setAttribute(a.name.qualified, a.value);
     }
-
-    if (element.hasParent) {
-      var index = element.parent!.children.indexOf(element);
-      element.parent!.children.insert(index, newTag);
-      element.remove();
+    while (element.children.isNotEmpty) {
+      var c = element.children.first;
+      element.children.remove(c);
+      newTag.children.add(c);
     }
-    return newTag;
+
+    if (element.hasParent && element.parent != null) {
+      var parent = element.parent!;
+      var index = parent.children.indexOf(element);
+      parent.children.remove(element);
+      parent.children.insert(index, newTag);
+    }
+
+    return newTag..compute();
   }
 }
