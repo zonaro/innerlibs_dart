@@ -96,49 +96,49 @@ abstract class InnerLibsLocalizations {
     Locale('pt', 'BR')
   ];
 
-  /// No description provided for @add.
+  /// Add
   ///
   /// In en, this message translates to:
   /// **'Add'**
   String get add;
 
-  /// No description provided for @app.
+  /// App
   ///
   /// In en, this message translates to:
   /// **'App'**
   String get app;
 
-  /// No description provided for @appName.
+  /// App Name
   ///
   /// In en, this message translates to:
   /// **'App Name'**
   String get appName;
 
-  /// No description provided for @appSettings.
+  /// App Settings
   ///
   /// In en, this message translates to:
   /// **'App Settings'**
   String get appSettings;
 
-  /// No description provided for @apps.
+  /// Apps
   ///
   /// In en, this message translates to:
   /// **'Apps'**
   String get apps;
 
-  /// No description provided for @back.
+  /// Back
   ///
   /// In en, this message translates to:
   /// **'Back'**
   String get back;
 
-  /// No description provided for @calculate.
+  /// Calculate
   ///
   /// In en, this message translates to:
   /// **'Calculate'**
   String get calculate;
 
-  /// No description provided for @call.
+  /// Call
   ///
   /// In en, this message translates to:
   /// **'Call'**
@@ -147,40 +147,40 @@ abstract class InnerLibsLocalizations {
   /// No description provided for @calltoItem.
   ///
   /// In en, this message translates to:
-  /// **'Call to {item}'**
+  /// **'Call {item}'**
   String calltoItem(String item);
 
-  /// No description provided for @cancel.
+  /// Cancel
   ///
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
 
-  /// No description provided for @categories.
+  /// Categories
   ///
   /// In en, this message translates to:
   /// **'Categories'**
   String get categories;
 
-  /// No description provided for @category.
+  /// Category
   ///
   /// In en, this message translates to:
   /// **'Category'**
   String get category;
 
-  /// No description provided for @city.
+  /// City
   ///
   /// In en, this message translates to:
   /// **'City'**
   String get city;
 
-  /// No description provided for @clear.
+  /// Clear
   ///
   /// In en, this message translates to:
   /// **'Clear'**
   String get clear;
 
-  /// No description provided for @close.
+  /// Close
   ///
   /// In en, this message translates to:
   /// **'Close'**
@@ -192,13 +192,13 @@ abstract class InnerLibsLocalizations {
   /// **'Close {item}'**
   String closeItem(String item);
 
-  /// No description provided for @color.
+  /// Color
   ///
   /// In en, this message translates to:
   /// **'Color'**
   String get color;
 
-  /// No description provided for @confirm.
+  /// Confirm
   ///
   /// In en, this message translates to:
   /// **'Confirm'**
@@ -216,19 +216,19 @@ abstract class InnerLibsLocalizations {
   /// **'Are you sure you want to delete {count, plural, =1{1 {singular}} other{{count} {plural}}}?'**
   String confirmDeleteMultiple(int count, String singular, String plural);
 
-  /// No description provided for @contacts.
-  ///
-  /// In en, this message translates to:
-  /// **'Contacts'**
-  String get contacts;
-
-  /// No description provided for @contact.
+  /// Contact
   ///
   /// In en, this message translates to:
   /// **'Contact'**
   String get contact;
 
-  /// No description provided for @country.
+  /// Contacts
+  ///
+  /// In en, this message translates to:
+  /// **'Contacts'**
+  String get contacts;
+
+  /// Country
   ///
   /// In en, this message translates to:
   /// **'Country'**
@@ -240,103 +240,115 @@ abstract class InnerLibsLocalizations {
   /// **'Could not find {item}.'**
   String couldNotFindItem(String item);
 
-  /// No description provided for @date.
+  /// Date
   ///
   /// In en, this message translates to:
-  /// **'Data'**
+  /// **'Date'**
   String get date;
 
-  /// No description provided for @dateOutOfRange.
+  /// Date out of range
   ///
   /// In en, this message translates to:
   /// **'Date out of range'**
   String get dateOutOfRange;
 
-  /// No description provided for @defaultWord.
+  /// Default
   ///
   /// In en, this message translates to:
   /// **'Default'**
   String get defaultWord;
 
-  /// No description provided for @delete.
+  /// Delete
   ///
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
 
-  /// No description provided for @edit.
+  /// Dock
+  ///
+  /// In en, this message translates to:
+  /// **'Dock'**
+  String get dock;
+
+  /// No description provided for @dockItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Dock {item}'**
+  String dockItem(String item);
+
+  /// Edit
   ///
   /// In en, this message translates to:
   /// **'Edit'**
   String get edit;
 
-  /// No description provided for @empty.
+  /// Empty
   ///
   /// In en, this message translates to:
   /// **'Empty'**
   String get empty;
 
-  /// No description provided for @error.
+  /// Error
   ///
   /// In en, this message translates to:
   /// **'Error'**
   String get error;
 
-  /// No description provided for @estate.
+  /// Estate
   ///
   /// In en, this message translates to:
   /// **'Estate'**
   String get estate;
 
-  /// No description provided for @file.
+  /// File
   ///
   /// In en, this message translates to:
   /// **'File'**
   String get file;
 
-  /// No description provided for @fileDate.
+  /// File Date
   ///
   /// In en, this message translates to:
   /// **'File Date'**
   String get fileDate;
 
-  /// No description provided for @fileName.
+  /// File Name
   ///
   /// In en, this message translates to:
   /// **'File Name'**
   String get fileName;
 
-  /// No description provided for @fileOwner.
+  /// File Owner
   ///
   /// In en, this message translates to:
   /// **'File Owner'**
   String get fileOwner;
 
-  /// No description provided for @filePermissions.
+  /// File Permissions
   ///
   /// In en, this message translates to:
   /// **'File Permissions'**
   String get filePermissions;
 
-  /// No description provided for @fileSize.
+  /// File Size
   ///
   /// In en, this message translates to:
   /// **'File Size'**
   String get fileSize;
 
-  /// No description provided for @fileType.
+  /// File Type
   ///
   /// In en, this message translates to:
   /// **'File Type'**
   String get fileType;
 
-  /// No description provided for @files.
+  /// Files
   ///
   /// In en, this message translates to:
   /// **'Files'**
   String get files;
 
-  /// No description provided for @find.
+  /// Find
   ///
   /// In en, this message translates to:
   /// **'Find'**
@@ -354,47 +366,65 @@ abstract class InnerLibsLocalizations {
   /// **'Find {item}'**
   String findItem(String item);
 
-  /// No description provided for @finish.
+  /// Finish
   ///
   /// In en, this message translates to:
   /// **'Finish'**
   String get finish;
 
-  /// No description provided for @folder.
+  /// Folder
   ///
   /// In en, this message translates to:
   /// **'Folder'**
   String get folder;
 
-  /// No description provided for @folderName.
+  /// Folder Name
   ///
   /// In en, this message translates to:
   /// **'Folder Name'**
   String get folderName;
 
-  /// No description provided for @grid.
+  /// Grid
   ///
   /// In en, this message translates to:
   /// **'Grid'**
   String get grid;
 
-  /// No description provided for @gridSize.
+  /// Grid Size
   ///
   /// In en, this message translates to:
   /// **'Grid Size'**
   String get gridSize;
 
-  /// No description provided for @gridView.
+  /// Grid View
   ///
   /// In en, this message translates to:
   /// **'Grid View'**
   String get gridView;
 
-  /// No description provided for @info.
+  /// Height
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get height;
+
+  /// Hide
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hide;
+
+  /// Info
   ///
   /// In en, this message translates to:
   /// **'Info'**
   String get info;
+
+  /// Install
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get install;
 
   /// No description provided for @installItem.
   ///
@@ -411,8 +441,8 @@ abstract class InnerLibsLocalizations {
   /// No description provided for @itemNotFound.
   ///
   /// In en, this message translates to:
-  /// **'{Item} not found'**
-  String itemNotFound(String item, Object Item);
+  /// **'{item} not found'**
+  String itemNotFound(String item);
 
   /// No description provided for @itemNotFoundIn.
   ///
@@ -420,55 +450,61 @@ abstract class InnerLibsLocalizations {
   /// **'{item} not found in {location}'**
   String itemNotFoundIn(String item, String location);
 
-  /// No description provided for @list.
+  /// List
   ///
   /// In en, this message translates to:
   /// **'List'**
   String get list;
 
-  /// No description provided for @listView.
+  /// List View
   ///
   /// In en, this message translates to:
   /// **'List View'**
   String get listView;
 
-  /// No description provided for @loading.
+  /// Loading
   ///
   /// In en, this message translates to:
   /// **'Loading'**
   String get loading;
 
-  /// No description provided for @login.
+  /// Loading {item}...
+  ///
+  /// In en, this message translates to:
+  /// **'Loading {item}...'**
+  String loadingItem(String item);
+
+  /// Login
   ///
   /// In en, this message translates to:
   /// **'Login'**
   String get login;
 
-  /// No description provided for @logout.
+  /// Logout
   ///
   /// In en, this message translates to:
   /// **'Logout'**
   String get logout;
 
-  /// No description provided for @main.
+  /// Main
   ///
   /// In en, this message translates to:
   /// **'Main'**
   String get main;
 
-  /// No description provided for @map.
+  /// Map
   ///
   /// In en, this message translates to:
   /// **'Map'**
   String get map;
 
-  /// No description provided for @mapView.
+  /// Map View
   ///
   /// In en, this message translates to:
   /// **'Map View'**
   String get mapView;
 
-  /// No description provided for @name.
+  /// Name
   ///
   /// In en, this message translates to:
   /// **'Name'**
@@ -480,41 +516,47 @@ abstract class InnerLibsLocalizations {
   /// **'New {item}'**
   String newItem(String item);
 
-  /// No description provided for @next.
+  /// Next
   ///
   /// In en, this message translates to:
   /// **'Next'**
   String get next;
 
-  /// No description provided for @no.
+  /// No
   ///
   /// In en, this message translates to:
   /// **'No'**
   String get no;
 
-  /// No description provided for @notFound.
+  /// Not Found
   ///
   /// In en, this message translates to:
   /// **'Not Found'**
   String get notFound;
 
-  /// No description provided for @number.
+  /// Number
   ///
   /// In en, this message translates to:
   /// **'Number'**
   String get number;
 
-  /// No description provided for @ok.
+  /// OK
   ///
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
 
-  /// No description provided for @open.
+  /// Open
   ///
   /// In en, this message translates to:
   /// **'Open'**
   String get open;
+
+  /// No description provided for @openIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in {item}'**
+  String openIn(String item);
 
   /// No description provided for @openItem.
   ///
@@ -522,49 +564,55 @@ abstract class InnerLibsLocalizations {
   /// **'Open {item}'**
   String openItem(String item);
 
-  /// No description provided for @owner.
+  /// No description provided for @openItemIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {item} in {location}'**
+  String openItemIn(String item, String location);
+
+  /// Owner
   ///
   /// In en, this message translates to:
   /// **'Owner'**
   String get owner;
 
-  /// No description provided for @password.
+  /// Password
   ///
   /// In en, this message translates to:
   /// **'Password'**
   String get password;
 
-  /// No description provided for @phone.
+  /// Phone
   ///
   /// In en, this message translates to:
   /// **'Phone'**
   String get phone;
 
-  /// No description provided for @previous.
+  /// Previous
   ///
   /// In en, this message translates to:
   /// **'Previous'**
   String get previous;
 
-  /// No description provided for @register.
+  /// Register
   ///
   /// In en, this message translates to:
   /// **'Register'**
   String get register;
 
-  /// No description provided for @results.
+  /// Results
   ///
   /// In en, this message translates to:
   /// **'Results'**
   String get results;
 
-  /// No description provided for @save.
+  /// Save
   ///
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
 
-  /// No description provided for @search.
+  /// Search
   ///
   /// In en, this message translates to:
   /// **'Search'**
@@ -582,7 +630,7 @@ abstract class InnerLibsLocalizations {
   /// **'Search for {item} in {location}'**
   String searchForIn(String item, String location);
 
-  /// No description provided for @send.
+  /// Send
   ///
   /// In en, this message translates to:
   /// **'Send'**
@@ -600,41 +648,65 @@ abstract class InnerLibsLocalizations {
   /// **'Send to {item}'**
   String sendtoItem(String item);
 
-  /// No description provided for @settings.
+  /// Settings
   ///
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
 
-  /// No description provided for @size.
+  /// Show
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get show;
+
+  /// Size
   ///
   /// In en, this message translates to:
   /// **'Size'**
   String get size;
 
-  /// No description provided for @success.
+  /// Success
   ///
   /// In en, this message translates to:
   /// **'Success'**
   String get success;
 
-  /// No description provided for @table.
+  /// Table
   ///
   /// In en, this message translates to:
   /// **'Table'**
   String get table;
 
-  /// No description provided for @tableView.
+  /// Table View
   ///
   /// In en, this message translates to:
   /// **'Table View'**
   String get tableView;
 
-  /// No description provided for @to.
+  /// To
   ///
   /// In en, this message translates to:
   /// **'To'**
   String get to;
+
+  /// Undock
+  ///
+  /// In en, this message translates to:
+  /// **'Undock'**
+  String get undock;
+
+  /// No description provided for @undockItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Undock {item}'**
+  String undockItem(String item);
+
+  /// Uninstall
+  ///
+  /// In en, this message translates to:
+  /// **'Uninstall'**
+  String get uninstall;
 
   /// No description provided for @uninstallItem.
   ///
@@ -648,113 +720,53 @@ abstract class InnerLibsLocalizations {
   /// **'Update {item}'**
   String updateItem(String item);
 
-  /// No description provided for @username.
+  /// Username
   ///
   /// In en, this message translates to:
   /// **'Username'**
   String get username;
 
-  /// No description provided for @value.
+  /// Value
   ///
   /// In en, this message translates to:
   /// **'Value'**
   String get value;
 
-  /// No description provided for @view.
+  /// View
   ///
   /// In en, this message translates to:
   /// **'View'**
   String get view;
 
-  /// No description provided for @viewType.
+  /// View Type
   ///
   /// In en, this message translates to:
   /// **'View Type'**
   String get viewType;
 
-  /// No description provided for @wallpaper.
+  /// Wallpaper
   ///
   /// In en, this message translates to:
   /// **'Wallpaper'**
   String get wallpaper;
 
-  /// No description provided for @warning.
+  /// Warning
   ///
   /// In en, this message translates to:
   /// **'Warning'**
   String get warning;
 
-  /// No description provided for @yes.
+  /// Width
+  ///
+  /// In en, this message translates to:
+  /// **'Width'**
+  String get width;
+
+  /// Yes
   ///
   /// In en, this message translates to:
   /// **'Yes'**
   String get yes;
-
-  /// No description provided for @opeIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Open in {item}'**
-  String opeIn(Object item);
-
-  /// No description provided for @openItemIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Open {item} in {location}'**
-  String openItemIn(String item, String location);
-
-  /// No description provided for @dock.
-  ///
-  /// In en, this message translates to:
-  /// **'Dock'**
-  String get dock;
-
-  /// No description provided for @dockItem.
-  ///
-  /// In en, this message translates to:
-  /// **'Dock {item}'**
-  String dockItem(String item);
-
-  /// No description provided for @undock.
-  ///
-  /// In en, this message translates to:
-  /// **'Undock'**
-  String get undock;
-
-  /// No description provided for @undockItem.
-  ///
-  /// In en, this message translates to:
-  /// **'Undock {item}'**
-  String undockItem(String item);
-
-  /// No description provided for @show.
-  ///
-  /// In en, this message translates to:
-  /// **'Show'**
-  String get show;
-
-  /// No description provided for @hide.
-  ///
-  /// In en, this message translates to:
-  /// **'Hide'**
-  String get hide;
-
-  /// No description provided for @loadingItem.
-  ///
-  /// In en, this message translates to:
-  /// **'Loading {item}...'**
-  String loadingItem(Object item);
-
-  /// No description provided for @uninstall.
-  ///
-  /// In en, this message translates to:
-  /// **'Uninstall'**
-  String get uninstall;
-
-  /// No description provided for @install.
-  ///
-  /// In en, this message translates to:
-  /// **'Install'**
-  String get install;
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

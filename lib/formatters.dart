@@ -23,7 +23,7 @@ class NumberInputFormatter extends TextInputFormatter {
     if (simb != null) {
       newText = newText.removeWhere(
         (x) => x.isNotIn([
-          ...StringHelpers.numberChars,
+          ...Get.numberChars,
           simb.DECIMAL_SEP,
         ]),
       );

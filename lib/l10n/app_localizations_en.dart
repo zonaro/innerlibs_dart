@@ -34,7 +34,7 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String calltoItem(String item) {
-    return 'Call to $item';
+    return 'Call $item';
   }
 
   @override
@@ -89,10 +89,10 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
-  String get contacts => 'Contacts';
+  String get contact => 'Contact';
 
   @override
-  String get contact => 'Contact';
+  String get contacts => 'Contacts';
 
   @override
   String get country => 'Country';
@@ -103,7 +103,7 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
-  String get date => 'Data';
+  String get date => 'Date';
 
   @override
   String get dateOutOfRange => 'Date out of range';
@@ -113,6 +113,14 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get delete => 'Delete';
+
+  @override
+  String get dock => 'Dock';
+
+  @override
+  String dockItem(String item) {
+    return 'Dock $item';
+  }
 
   @override
   String get edit => 'Edit';
@@ -182,7 +190,16 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get gridView => 'Grid View';
 
   @override
+  String get height => 'Height';
+
+  @override
+  String get hide => 'Hide';
+
+  @override
   String get info => 'Info';
+
+  @override
+  String get install => 'Install';
 
   @override
   String installItem(String item) {
@@ -195,8 +212,8 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
-  String itemNotFound(String item, Object Item) {
-    return '$Item not found';
+  String itemNotFound(String item) {
+    return '$item not found';
   }
 
   @override
@@ -212,6 +229,11 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get loading => 'Loading';
+
+  @override
+  String loadingItem(String item) {
+    return 'Loading $item...';
+  }
 
   @override
   String get login => 'Login';
@@ -255,8 +277,18 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get open => 'Open';
 
   @override
+  String openIn(String item) {
+    return 'Open in $item';
+  }
+
+  @override
   String openItem(String item) {
     return 'Open $item';
+  }
+
+  @override
+  String openItemIn(String item, String location) {
+    return 'Open $item in $location';
   }
 
   @override
@@ -310,6 +342,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get show => 'Show';
+
+  @override
   String get size => 'Size';
 
   @override
@@ -323,6 +358,17 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get to => 'To';
+
+  @override
+  String get undock => 'Undock';
+
+  @override
+  String undockItem(String item) {
+    return 'Undock $item';
+  }
+
+  @override
+  String get uninstall => 'Uninstall';
 
   @override
   String uninstallItem(String item) {
@@ -353,48 +399,8 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get warning => 'Warning';
 
   @override
+  String get width => 'Width';
+
+  @override
   String get yes => 'Yes';
-
-  @override
-  String opeIn(Object item) {
-    return 'Open in $item';
-  }
-
-  @override
-  String openItemIn(String item, String location) {
-    return 'Open $item in $location';
-  }
-
-  @override
-  String get dock => 'Dock';
-
-  @override
-  String dockItem(String item) {
-    return 'Dock $item';
-  }
-
-  @override
-  String get undock => 'Undock';
-
-  @override
-  String undockItem(String item) {
-    return 'Undock $item';
-  }
-
-  @override
-  String get show => 'Show';
-
-  @override
-  String get hide => 'Hide';
-
-  @override
-  String loadingItem(Object item) {
-    return 'Loading $item...';
-  }
-
-  @override
-  String get uninstall => 'Uninstall';
-
-  @override
-  String get install => 'Install';
 }

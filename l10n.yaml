@@ -5,3 +5,5 @@ output-class: InnerLibsLocalizations
 nullable-getter: false
 use-escaping: true
 synthetic-package: false  
+arb-translate-context: "common translations for any context"
+arb-translate-api-key: AIzaSyBmowJYgE1nFue8dzpV2QvaVEROU3l6qDE

@@ -2,45 +2,93 @@
     "@@author": "Kaizonaro",
     "@@locale": "en",
     "add": "Add",
+    "@add": {
+        "description": "Add"
+    },
     "app": "App",
+    "@app": {
+        "description": "App"
+    },
     "appName": "App Name",
+    "@appName": {
+        "description": "App Name"
+    },
     "appSettings": "App Settings",
+    "@appSettings": {
+        "description": "App Settings"
+    },
     "apps": "Apps",
+    "@apps": {
+        "description": "Apps"
+    },
     "back": "Back",
+    "@back": {
+        "description": "Back"
+    },
     "calculate": "Calculate",
+    "@calculate": {
+        "description": "Calculate"
+    },
     "call": "Call",
-    "calltoItem": "Call to {item}",
+    "@call": {
+        "description": "Call"
+    },
+    "calltoItem": "Call {item}",
     "@calltoItem": {
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to call"
+                "description": "The item to be called"
             }
         }
     },
     "cancel": "Cancel",
+    "@cancel": {
+        "description": "Cancel"
+    },
     "categories": "Categories",
+    "@categories": {
+        "description": "Categories"
+    },
     "category": "Category",
+    "@category": {
+        "description": "Category"
+    },
     "city": "City",
+    "@city": {
+        "description": "City"
+    },
     "clear": "Clear",
+    "@clear": {
+        "description": "Clear"
+    },
     "close": "Close",
+    "@close": {
+        "description": "Close"
+    },
     "closeItem": "Close {item}",
     "@closeItem": {
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to close"
+                "description": "The item to be closed"
             }
         }
     },
     "color": "Color",
+    "@color": {
+        "description": "Color"
+    },
     "confirm": "Confirm",
+    "@confirm": {
+        "description": "Confirm"
+    },
     "confirmDelete": "Are you sure you want to delete {item}?",
     "@confirmDelete": {
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to delete"
+                "description": "The item to be deleted"
             }
         }
     },
@@ -50,7 +98,7 @@
             "count": {
                 "type": "int",
                 "format": "compact",
-                "description": "The number of items to delete"
+                "description": "The number of items to be deleted"
             },
             "singular": {
                 "type": "String",
@@ -62,9 +110,18 @@
             }
         }
     },
-    "contacts": "Contacts",
     "contact": "Contact",
+    "@contact": {
+        "description": "Contact"
+    },
+    "contacts": "Contacts",
+    "@contacts": {
+        "description": "Contacts"
+    },
     "country": "Country",
+    "@country": {
+        "description": "Country"
+    },
     "couldNotFindItem": "Could not find {item}.",
     "@couldNotFindItem": {
         "placeholders": {
@@ -74,29 +131,93 @@
             }
         }
     },
-    "date": "Data",
+    "date": "Date",
+    "@date": {
+        "description": "Date"
+    },
     "dateOutOfRange": "Date out of range",
+    "@dateOutOfRange": {
+        "description": "Date out of range"
+    },
     "defaultWord": "Default",
+    "@defaultWord": {
+        "description": "Default"
+    },
     "delete": "Delete",
+    "@delete": {
+        "description": "Delete"
+    },
+    "dock": "Dock",
+    "@dock": {
+        "description": "Dock"
+    },
+    "dockItem": "Dock {item}",
+    "@dockItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to be docked"
+            }
+        }
+    },
     "edit": "Edit",
+    "@edit": {
+        "description": "Edit"
+    },
     "empty": "Empty",
+    "@empty": {
+        "description": "Empty"
+    },
     "error": "Error",
+    "@error": {
+        "description": "Error"
+    },
     "estate": "Estate",
+    "@estate": {
+        "description": "Estate"
+    },
     "file": "File",
+    "@file": {
+        "description": "File"
+    },
     "fileDate": "File Date",
+    "@fileDate": {
+        "description": "File Date"
+    },
     "fileName": "File Name",
+    "@fileName": {
+        "description": "File Name"
+    },
     "fileOwner": "File Owner",
+    "@fileOwner": {
+        "description": "File Owner"
+    },
     "filePermissions": "File Permissions",
+    "@filePermissions": {
+        "description": "File Permissions"
+    },
     "fileSize": "File Size",
+    "@fileSize": {
+        "description": "File Size"
+    },
     "fileType": "File Type",
+    "@fileType": {
+        "description": "File Type"
+    },
     "files": "Files",
+    "@files": {
+        "description": "Files"
+    },
     "find": "Find",
+    "@find": {
+        "description": "Find"
+    },
     "findIn": "Find in {item}",
     "@findIn": {
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to find in"
+                "description": "The item to be found in"
             }
         }
     },
@@ -105,23 +226,56 @@
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to find"
+                "description": "The item to be found"
             }
         }
     },
     "finish": "Finish",
+    "@finish": {
+        "description": "Finish"
+    },
     "folder": "Folder",
+    "@folder": {
+        "description": "Folder"
+    },
     "folderName": "Folder Name",
+    "@folderName": {
+        "description": "Folder Name"
+    },
     "grid": "Grid",
+    "@grid": {
+        "description": "Grid"
+    },
     "gridSize": "Grid Size",
+    "@gridSize": {
+        "description": "Grid Size"
+    },
     "gridView": "Grid View",
+    "@gridView": {
+        "description": "Grid View"
+    },
+    "height": "Height",
+    "@height": {
+        "description": "Height"
+    },
+    "hide": "Hide",
+    "@hide": {
+        "description": "Hide"
+    },
     "info": "Info",
+    "@info": {
+        "description": "Info"
+    },
+    "install": "Install",
+    "@install": {
+        "description": "Install"
+    },
     "installItem": "Install {item}",
     "@installItem": {
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to install"
+                "description": "The item to be installed"
             }
         }
     },
@@ -134,7 +288,7 @@
             }
         }
     },
-    "itemNotFound": "{Item} not found",
+    "itemNotFound": "{item} not found",
     "@itemNotFound": {
         "placeholders": {
             "item": {
@@ -157,14 +311,51 @@
         }
     },
     "list": "List",
+    "@list": {
+        "description": "List"
+    },
     "listView": "List View",
+    "@listView": {
+        "description": "List View"
+    },
     "loading": "Loading",
+    "@loading": {
+        "description": "Loading"
+    },
+    "loadingItem": "Loading {item}...",
+    "@loadingItem": {
+        "description": "Loading {item}...",
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to be loaded"
+            }
+        }
+    },
     "login": "Login",
+    "@login": {
+        "description": "Login"
+    },
     "logout": "Logout",
+    "@logout": {
+        "description": "Logout"
+    },
     "main": "Main",
+    "@main": {
+        "description": "Main"
+    },
     "map": "Map",
+    "@map": {
+        "description": "Map"
+    },
     "mapView": "Map View",
+    "@mapView": {
+        "description": "Map View"
+    },
     "name": "Name",
+    "@name": {
+        "description": "Name"
+    },
     "newItem": "New {item}",
     "@newItem": {
         "placeholders": {
@@ -175,110 +366,44 @@
         }
     },
     "next": "Next",
+    "@next": {
+        "description": "Next"
+    },
     "no": "No",
+    "@no": {
+        "description": "No"
+    },
     "notFound": "Not Found",
+    "@notFound": {
+        "description": "Not Found"
+    },
     "number": "Number",
+    "@number": {
+        "description": "Number"
+    },
     "ok": "OK",
+    "@ok": {
+        "description": "OK"
+    },
     "open": "Open",
+    "@open": {
+        "description": "Open"
+    },
+    "openIn": "Open in {item}",
+    "@openIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to be opened in"
+            }
+        }
+    },
     "openItem": "Open {item}",
     "@openItem": {
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to open"
-            }
-        }
-    },
-    "owner": "Owner",
-    "password": "Password",
-    "phone": "Phone",
-    "previous": "Previous",
-    "register": "Register",
-    "results": "Results",
-    "save": "Save",
-    "search": "Search",
-    "searchFor": "Search for {item}...",
-    "@searchFor": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to search for"
-            }
-        }
-    },
-    "searchForIn": "Search for {item} in {location}",
-    "@searchForIn": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to search for"
-            },
-            "location": {
-                "type": "String",
-                "description": "The location to search in"
-            }
-        }
-    },
-    "send": "Send",
-    "sendItemToItem": "Send {item1} to {item2}",
-    "@sendItemToItem": {
-        "placeholders": {
-            "item1": {
-                "type": "String",
-                "description": "The first item to send"
-            },
-            "item2": {
-                "type": "String",
-                "description": "The second item to send"
-            }
-        }
-    },
-    "sendtoItem": "Send to {item}",
-    "@sendtoItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to send"
-            }
-        }
-    },
-    "settings": "Settings",
-    "size": "Size",
-    "success": "Success",
-    "table": "Table",
-    "tableView": "Table View",
-    "to": "To",
-    "uninstallItem": "Uninstall {item}",
-    "@uninstallItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to uninstall"
-            }
-        }
-    },
-    "updateItem": "Update {item}",
-    "@updateItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to update"
-            }
-        }
-    },
-    "username": "Username",
-    "value": "Value",
-    "view": "View",
-    "viewType": "View Type",
-    "wallpaper": "Wallpaper",
-    "warning": "Warning",
-    "yes": "Yes",
-    "opeIn": "Open in {item}",
-    "@openIn": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to open in"
+                "description": "The item to be opened"
             }
         }
     },
@@ -287,37 +412,187 @@
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to open"
+                "description": "The item to be opened"
             },
             "location": {
                 "type": "String",
-                "description": "The location to open the item in"
+                "description": "The location to be opened"
             }
         }
     },
-    "dock": "Dock",
-    "dockItem": "Dock {item}",
-    "@dockItem": {
+    "owner": "Owner",
+    "@owner": {
+        "description": "Owner"
+    },
+    "password": "Password",
+    "@password": {
+        "description": "Password"
+    },
+    "phone": "Phone",
+    "@phone": {
+        "description": "Phone"
+    },
+    "previous": "Previous",
+    "@previous": {
+        "description": "Previous"
+    },
+    "register": "Register",
+    "@register": {
+        "description": "Register"
+    },
+    "results": "Results",
+    "@results": {
+        "description": "Results"
+    },
+    "save": "Save",
+    "@save": {
+        "description": "Save"
+    },
+    "search": "Search",
+    "@search": {
+        "description": "Search"
+    },
+    "searchFor": "Search for {item}...",
+    "@searchFor": {
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to dock"
+                "description": "The item to be searched"
             }
         }
     },
+    "searchForIn": "Search for {item} in {location}",
+    "@searchForIn": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to be searched"
+            },
+            "location": {
+                "type": "String",
+                "description": "The location to be searched"
+            }
+        }
+    },
+    "send": "Send",
+    "@send": {
+        "description": "Send"
+    },
+    "sendItemToItem": "Send {item1} to {item2}",
+    "@sendItemToItem": {
+        "placeholders": {
+            "item1": {
+                "type": "String",
+                "description": "The first item to be sent"
+            },
+            "item2": {
+                "type": "String",
+                "description": "The second item to be sent"
+            }
+        }
+    },
+    "sendtoItem": "Send to {item}",
+    "@sendtoItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to be sent"
+            }
+        }
+    },
+    "settings": "Settings",
+    "@settings": {
+        "description": "Settings"
+    },
+    "show": "Show",
+    "@show": {
+        "description": "Show"
+    },
+    "size": "Size",
+    "@size": {
+        "description": "Size"
+    },
+    "success": "Success",
+    "@success": {
+        "description": "Success"
+    },
+    "table": "Table",
+    "@table": {
+        "description": "Table"
+    },
+    "tableView": "Table View",
+    "@tableView": {
+        "description": "Table View"
+    },
+    "to": "To",
+    "@to": {
+        "description": "To"
+    },
     "undock": "Undock",
+    "@undock": {
+        "description": "Undock"
+    },
     "undockItem": "Undock {item}",
     "@undockItem": {
         "placeholders": {
             "item": {
                 "type": "String",
-                "description": "The item to undock"
+                "description": "The item to be undocked"
             }
         }
     },
-    "show": "Show",
-    "hide": "Hide",
-    "loadingItem": "Loading {item}...",
     "uninstall": "Uninstall",
-    "install": "Install"
+    "@uninstall": {
+        "description": "Uninstall"
+    },
+    "uninstallItem": "Uninstall {item}",
+    "@uninstallItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to be uninstalled"
+            }
+        }
+    },
+    "updateItem": "Update {item}",
+    "@updateItem": {
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "The item to be updated"
+            }
+        }
+    },
+    "username": "Username",
+    "@username": {
+        "description": "Username"
+    },
+    "value": "Value",
+    "@value": {
+        "description": "Value"
+    },
+    "view": "View",
+    "@view": {
+        "description": "View"
+    },
+    "viewType": "View Type",
+    "@viewType": {
+        "description": "View Type"
+    },
+    "wallpaper": "Wallpaper",
+    "@wallpaper": {
+        "description": "Wallpaper"
+    },
+    "warning": "Warning",
+    "@warning": {
+        "description": "Warning"
+    },
+    "width": "Width",
+    "@width": {
+        "description": "Width"
+    },
+    "yes": "Yes",
+    "@yes": {
+        "description": "Yes"
+    }
 }

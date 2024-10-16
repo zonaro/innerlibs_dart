@@ -1,207 +1,161 @@
+import 'dart:io';
+
 import 'package:innerlibs/innerlibs.dart';
 
 /// Break Line char
-const breakLine = "\r\n";
+string get breakLine => Get.breakLineChars.first;
 
 /// `String` helpers
-class StringHelpers {
-  static Map<String, dynamic> leetAlphabet = {
-    "a": ['∆', '4', '/-\\', '/_\\', '@', '/\\', 'Д'],
-    "b": ['8', '|3', '13', '|}', '|8', '|B', '|8', 'ß', 'в', 'ь'],
-    "c": ['<', '{', '[', '(', '©', '¢'],
-    "d": ['|)', '|}', '|]', '|>'],
-    "e": ['3', '£', '₤', '€'],
-    "f": ['7', '|=', 'ph', '|#', '|"', 'ƒ'],
-    "g": ['9', '[', '[+', '6'],
-    "h": ['#', '|-|', '[-]', '{-}', '}-{', '}{', '|=|', '[=]', '/-/', ':-:', 'н'],
-    "i": ['1', '|', '!'],
-    "j": ['√', '_|', '_/', '_7', '_)', '_]', '_}'],
-    "k": ['|<', '1<', 'l<', '|{', 'l{'],
-    "l": ['|_', '|', '1', ']['],
-    "m": ['|/|', '^^', '/\\/\\', '/X\\', '[]/][', '[]V[]', ' ][\\//][', '(V)', '//., .\\', 'N\\', 'м'],
-    "n": ['||', '//', '/V', '][\\][', 'И', 'и', 'п'],
-    "o": ['0', '()', '[]', '{}', '<>', 'Ø', 'oh', 'Θ', 'ө'],
-    "p": ['|o', '|O', '|>', '|*', '|°', '|D', '/o', '[]D', '|7'],
-    "q": ['O_', '(,)', '0', 'kw'],
-    "r": ['|2', '12', '|^', 'l2', 'Я', '®'],
-    "s": ['5', '\$', '§'],
-    "t": ['7', '+', "'|'", '`|`', '~|~', '-|-', "']['", 'т'],
-    "v": ['V'],
-    "u": ['|_|', '\\_\\', '/_/', '\\_/', '(_)', '[_]', '{_}'],
-    "w": ['\\/\\/', '(/\\)', '\\^/', '|/|', '\\X/', 'VV', '\\_|_/', '\\//\\//', 'Ш', '2u', 'V/'],
-    "x": ['%', '*', '><', 'Ж'],
-    "y": ['¥', '|/', 'Ч'],
-    "z": ['5', '>_'],
-  };
-
-  static Iterable<string> validLetters = [
-    // GREEK VARIATION
-    "Α",
-    "A",
-    // GREEK VARIATION
-    "Β",
-    "B",
-    // GREEK VARIATION
-    "Ε",
-    "E",
-    // GREEK VARIATION
-    "Ζ",
-    "Z",
-    // GREEK VARIATION
-    "Η",
-    "H",
-    // GREEK VARIATION
-    "Ι",
-    "I",
-    // GREEK VARIATION
-    "Κ",
-    "K",
-    // GREEK VARIATION
-    "Μ",
-    "M",
-    // GREEK VARIATION
-    "Ν",
-    "N",
-    // GREEK VARIATION
-    "Ο",
-    "O",
-    // GREEK VARIATION
-    "Ρ",
-    "P",
-    // GREEK VARIATION
-    "Τ",
-    "T",
-    // GREEK VARIATION
-    "Υ",
-    "Y",
-    // GREEK VARIATION
-    "Χ",
-    "X"
-  ];
-
-  static Map<String, String> greekToLatin = {
-    'ά': 'a',
-    'Α': 'a',
-    'έ': 'e',
-    'Έ': 'e',
-    'Ε': 'e',
-    'ή': 'i',
-    'Η': 'i',
-    'η': 'i',
-    'Ή': 'i',
-    'ί': 'i',
-    'Ι': 'i',
-    'Ί': 'i',
-    'Ϊ': 'i',
-    'ϊ': 'i',
-    'ΐ': 'i',
-    'ό': 'o',
-    'Ό': 'o',
-    'Ο': 'o',
-    'ο': 'o',
-    'ύ': 'y',
-    'υ': 'y',
-    'Ύ': 'y',
-    'Ϋ': 'y',
-    'ϋ': 'y',
-    'ε': 'e',
-    'ευ': 'ef',
-    'εύ': 'ef',
-    'α': 'a',
-    'αυ': 'av',
-    'αύ': 'av',
-    'β': 'v',
-    'Β': 'v',
-    'γ': 'g',
-    'Γ': 'g',
-    'δ': 'd',
-    'Δ': 'd',
-    'ζ': 'z',
-    'Ζ': 'z',
-    'θ': 'th',
-    'Θ': 'th',
-    'ι': 'i',
-    'κ': 'k',
-    'Κ': 'k',
-    'λ': 'l',
-    'Λ': 'l',
-    'μ': 'm',
-    'Μ': 'm',
-    'ν': 'n',
-    'Ν': 'n',
-    'ξ': 'ks',
-    'Ξ': 'ks',
-    'π': 'p',
-    'Π': 'p',
-    'ρ': 'r',
-    'Ρ': 'r',
-    'σ': 's',
-    'Σ': 's',
-    'ς': 's',
-    'τ': 't',
-    'Τ': 't',
-    'φ': 'f',
-    'Φ': 'f',
-    'χ': 'x',
-    'Χ': 'x',
-    'ψ': 'ps',
-    'Ψ': 'ps',
-    'ω': 'o',
-    'Ω': 'o',
-    'Ώ': 'o',
-    'ώ': 'o',
-  };
-
+extension StringHelpers on GetInterface {
   /// Chars from Aa to Zz
-  static Iterable<string> get alphaChars => [...alphaUpperChars, ...alphaLowerChars]..sort();
+  Iterable<string> get alphaChars => [...alphaUpperChars, ...alphaLowerChars]..sort();
 
   /// Chars from a to z
-  static Iterable<string> get alphaLowerChars => [...lowerConsonants, ...lowerVowels]..sort();
+  Iterable<string> get alphaLowerChars => [...lowerConsonants, ...lowerVowels]..sort();
 
   /// Chars from Aa to Zz and Numbers (0 to 9)
-  static Iterable<string> get alphaNumericChars => [...alphaChars, ...numberChars]..sort();
+  Iterable<string> get alphaNumericChars => [...alphaChars, ...numberChars]..sort();
 
   /// Chars from A to Z
-  static Iterable<string> get alphaUpperChars => alphaLowerChars.map((e) => e.toUpperCase()).toList();
+  Iterable<string> get alphaUpperChars => alphaLowerChars.map((e) => e.toUpperCase()).toList();
 
   /// Line feed and carriage retrun
-  static Iterable<string> get breakLineChars => ["\n", "\r", breakLine];
+  Iterable<string> get breakLineChars => [Platform.lineTerminator, "\n", "\r", "\r\n"].distinct();
 
   /// Double-Quotes, Single-Quotes, Close Brackets etc
-  static Iterable<string> get closeWrappers => openCloseWrappers.map((x) => x.$2);
+  Iterable<string> get closeWrappers => openCloseWrappers.map((x) => x.$2);
 
   /// Upper and lower case consonants
-  static Iterable<string> get consonants => [...upperConsonants, ...lowerConsonants]..sort();
+  Iterable<string> get consonants => [...upperConsonants, ...lowerConsonants]..sort();
 
   /// Dot, Question mark and Exclamation Mark
-  static Iterable<string> get endOfSentenceChars => [".", "?", "!"];
+  Iterable<string> get endOfSentenceChars => [".", "?", "!"];
+
+  Map<String, String> get greekToLatin => {
+        'ά': 'a',
+        'Α': 'a',
+        'έ': 'e',
+        'Έ': 'e',
+        'Ε': 'e',
+        'ή': 'i',
+        'Η': 'i',
+        'η': 'i',
+        'Ή': 'i',
+        'ί': 'i',
+        'Ι': 'i',
+        'Ί': 'i',
+        'Ϊ': 'i',
+        'ϊ': 'i',
+        'ΐ': 'i',
+        'ό': 'o',
+        'Ό': 'o',
+        'Ο': 'o',
+        'ο': 'o',
+        'ύ': 'y',
+        'υ': 'y',
+        'Ύ': 'y',
+        'Ϋ': 'y',
+        'ϋ': 'y',
+        'ε': 'e',
+        'ευ': 'ef',
+        'εύ': 'ef',
+        'α': 'a',
+        'αυ': 'av',
+        'αύ': 'av',
+        'β': 'v',
+        'Β': 'v',
+        'γ': 'g',
+        'Γ': 'g',
+        'δ': 'd',
+        'Δ': 'd',
+        'ζ': 'z',
+        'Ζ': 'z',
+        'θ': 'th',
+        'Θ': 'th',
+        'ι': 'i',
+        'κ': 'k',
+        'Κ': 'k',
+        'λ': 'l',
+        'Λ': 'l',
+        'μ': 'm',
+        'Μ': 'm',
+        'ν': 'n',
+        'Ν': 'n',
+        'ξ': 'ks',
+        'Ξ': 'ks',
+        'π': 'p',
+        'Π': 'p',
+        'ρ': 'r',
+        'Ρ': 'r',
+        'σ': 's',
+        'Σ': 's',
+        'ς': 's',
+        'τ': 't',
+        'Τ': 't',
+        'φ': 'f',
+        'Φ': 'f',
+        'χ': 'x',
+        'Χ': 'x',
+        'ψ': 'ps',
+        'Ψ': 'ps',
+        'ω': 'o',
+        'Ω': 'o',
+        'Ώ': 'o',
+        'ώ': 'o',
+      };
 
   /// Ident char (tab)
-  static Iterable<string> get identChars => ["\t"];
+  Iterable<string> get identChars => ["\t"];
 
   /// Invisible char (white space, line feed, ident, carriage return)
-  static Iterable<string> get invisibleChars => [...whiteSpaceChars, ...breakLineChars, ...identChars];
+  Iterable<string> get invisibleChars => [...whiteSpaceChars, ...breakLineChars, ...identChars];
+
+  Map<String, StringList> get leetAlphabet => {
+        "a": ['∆', '4', '/-\\', '/_\\', '@', '/\\', 'Д'],
+        "b": ['8', '|3', '13', '|}', '|8', '|B', '|8', 'ß', 'в', 'ь'],
+        "c": ['<', '{', '[', '(', '©', '¢'],
+        "d": ['|)', '|}', '|]', '|>'],
+        "e": ['3', '£', '₤', '€'],
+        "f": ['7', '|=', 'ph', '|#', '|"', 'ƒ'],
+        "g": ['9', '[', '[+', '6'],
+        "h": ['#', '|-|', '[-]', '{-}', '}-{', '}{', '|=|', '[=]', '/-/', ':-:', 'н'],
+        "i": ['1', '|', '!'],
+        "j": ['√', '_|', '_/', '_7', '_)', '_]', '_}'],
+        "k": ['|<', '1<', 'l<', '|{', 'l{'],
+        "l": ['|_', '|', '1', ']['],
+        "m": ['|/|', '^^', '/\\/\\', '/X\\', '[]/][', '[]V[]', ' ][\\//][', '(V)', '//., .\\', 'N\\', 'м'],
+        "n": ['||', '//', '/V', '][\\][', 'И', 'и', 'п'],
+        "o": ['0', '()', '[]', '{}', '<>', 'Ø', 'oh', 'Θ', 'ө'],
+        "p": ['|o', '|O', '|>', '|*', '|°', '|D', '/o', '[]D', '|7'],
+        "q": ['O_', '(,)', '0', 'kw'],
+        "r": ['|2', '12', '|^', 'l2', 'Я', '®'],
+        "s": ['5', '\$', '§'],
+        "t": ['7', '+', "'|'", '`|`', '~|~', '-|-', "']['", 'т'],
+        "v": ['V'],
+        "u": ['|_|', '\\_\\', '/_/', '\\_/', '(_)', '[_]', '{_}'],
+        "w": ['\\/\\/', '(/\\)', '\\^/', '|/|', '\\X/', 'VV', '\\_|_/', '\\//\\//', 'Ш', '2u', 'V/'],
+        "x": ['%', '*', '><', 'Ж'],
+        "y": ['¥', '|/', 'Ч'],
+        "z": ['5', '>_'],
+      };
 
   /// Lower consonants
-  static Iterable<string> get lowerConsonants => ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"];
+  Iterable<string> get lowerConsonants => ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"];
 
   /// Lower vowels
-  static Iterable<string> get lowerVowels => ["a", "e", "i", "o", "u", "y"];
+  Iterable<string> get lowerVowels => ["a", "e", "i", "o", "u", "y"];
 
   /// Semicolon, colon and comma
-  static Iterable<string> get midSentenceChars => [":", ";", ","];
+  Iterable<string> get midSentenceChars => [":", ";", ","];
 
   /// Numbers from 0 to 9
-  static Iterable<string> get numberChars => ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  Iterable<string> get numberChars => ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-  static Iterable<(string, string)> get openCloseWrappers => [
+  Iterable<(string, string)> get openCloseWrappers => [
         ("(", ")"),
         ("{", "}"),
         ("[", "]"),
         ("<", ">"),
-        ("\"", "\""),
-        ("'", "'"),
-        ("`", "`"),
         ("\\", "/"),
         ("/", "\\"),
         ("/*", "*/"),
@@ -212,24 +166,69 @@ class StringHelpers {
       ];
 
   /// Double-Quotes, Single-Quotes, Open Brackets etc
-  static Iterable<String> get openWrappers => openCloseWrappers.map((x) => x.$1);
+  Iterable<String> get openWrappers => openCloseWrappers.map((x) => x.$1);
 
-  /// Double-Quotes, Single-Quotes
-  static Iterable<string> get quotes => ["\"", "'", "`"];
+  /// Double-Quotes, Single-Quotes and Back-Ticks
+  Iterable<string> get quotes => ["\"", "'", "`"];
 
   /// Upper consonants
-  static Iterable<string> get upperConsonants => lowerConsonants.map((e) => e.toUpperCase()).toList();
+  Iterable<string> get upperConsonants => lowerConsonants.map((e) => e.toUpperCase()).toList();
 
   /// Upper vowels
-  static Iterable<string> get upperVowels => lowerVowels.map((e) => e.toUpperCase()).toList();
+  Iterable<string> get upperVowels => lowerVowels.map((e) => e.toUpperCase()).toList();
+
+  Iterable<string> get validLetters => [
+        // GREEK VARIATION
+        "Α",
+        "A",
+        // GREEK VARIATION
+        "Β",
+        "B",
+        // GREEK VARIATION
+        "Ε",
+        "E",
+        // GREEK VARIATION
+        "Ζ",
+        "Z",
+        // GREEK VARIATION
+        "Η",
+        "H",
+        // GREEK VARIATION
+        "Ι",
+        "I",
+        // GREEK VARIATION
+        "Κ",
+        "K",
+        // GREEK VARIATION
+        "Μ",
+        "M",
+        // GREEK VARIATION
+        "Ν",
+        "N",
+        // GREEK VARIATION
+        "Ο",
+        "O",
+        // GREEK VARIATION
+        "Ρ",
+        "P",
+        // GREEK VARIATION
+        "Τ",
+        "T",
+        // GREEK VARIATION
+        "Υ",
+        "Y",
+        // GREEK VARIATION
+        "Χ",
+        "X"
+      ];
 
   /// Upper and lower vowels
-  static Iterable<string> get vowels => [...upperVowels, ...lowerVowels]..sort();
+  Iterable<string> get vowels => [...upperVowels, ...lowerVowels]..sort();
 
   /// White space char
-  static Iterable<string> get whiteSpaceChars => [" "];
+  Iterable<string> get whiteSpaceChars => [" "];
 
-  static StringList get wordSplitters => [
+  StringList get wordSplitters => [
         ...breakLineChars,
         ...whiteSpaceChars,
         ...identChars,
@@ -240,5 +239,5 @@ class StringHelpers {
       ];
 
   /// Double-Quotes, Single-Quotes, Open and Close Brackets etc
-  static Iterable<string> get wrappers => [...openWrappers, ...closeWrappers];
+  Iterable<string> get wrappers => [...openWrappers, ...closeWrappers];
 }

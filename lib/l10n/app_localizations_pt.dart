@@ -89,10 +89,10 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   }
 
   @override
-  String get contacts => 'Contatos';
+  String get contact => 'Contato';
 
   @override
-  String get contact => 'Contato';
+  String get contacts => 'Contatos';
 
   @override
   String get country => 'País';
@@ -113,6 +113,14 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get delete => 'Excluir';
+
+  @override
+  String get dock => 'Acoplar';
+
+  @override
+  String dockItem(String item) {
+    return 'Acoplar $item';
+  }
 
   @override
   String get edit => 'Editar';
@@ -182,7 +190,16 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get gridView => 'Visualização em Grade';
 
   @override
+  String get height => 'Altura';
+
+  @override
+  String get hide => 'Ocultar';
+
+  @override
   String get info => 'Informação';
+
+  @override
+  String get install => 'Instalar';
 
   @override
   String installItem(String item) {
@@ -195,8 +212,8 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   }
 
   @override
-  String itemNotFound(String item, Object Item) {
-    return '$Item não encontrado';
+  String itemNotFound(String item) {
+    return '$item não encontrado';
   }
 
   @override
@@ -212,6 +229,11 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get loading => 'Carregando';
+
+  @override
+  String loadingItem(String item) {
+    return 'Carregando $item...';
+  }
 
   @override
   String get login => 'Entrar';
@@ -255,8 +277,18 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get open => 'Abrir';
 
   @override
+  String openIn(String item) {
+    return 'Abrir em $item';
+  }
+
+  @override
   String openItem(String item) {
     return 'Abrir $item';
+  }
+
+  @override
+  String openItemIn(String item, String location) {
+    return 'Abrir $item em $location';
   }
 
   @override
@@ -310,6 +342,9 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get settings => 'Configurações';
 
   @override
+  String get show => 'Mostrar';
+
+  @override
   String get size => 'Tamanho';
 
   @override
@@ -323,6 +358,17 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get to => 'Para';
+
+  @override
+  String get undock => 'Desacoplar';
+
+  @override
+  String undockItem(String item) {
+    return 'Desacoplar $item';
+  }
+
+  @override
+  String get uninstall => 'Desinstalar';
 
   @override
   String uninstallItem(String item) {
@@ -353,50 +399,10 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get warning => 'Aviso';
 
   @override
+  String get width => 'Largura';
+
+  @override
   String get yes => 'Sim';
-
-  @override
-  String opeIn(Object item) {
-    return 'Abrir em $item';
-  }
-
-  @override
-  String openItemIn(String item, String location) {
-    return 'Abrir $item em $location';
-  }
-
-  @override
-  String get dock => 'Acoplar';
-
-  @override
-  String dockItem(String item) {
-    return 'Acoplar $item';
-  }
-
-  @override
-  String get undock => 'Desacoplar';
-
-  @override
-  String undockItem(String item) {
-    return 'Desacoplar $item';
-  }
-
-  @override
-  String get show => 'Mostrar';
-
-  @override
-  String get hide => 'Ocultar';
-
-  @override
-  String loadingItem(Object item) {
-    return 'Carregando $item...';
-  }
-
-  @override
-  String get uninstall => 'Desinstalar';
-
-  @override
-  String get install => 'Instalar';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

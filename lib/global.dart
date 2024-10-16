@@ -732,16 +732,16 @@ String randomWord([int length = 0]) {
   String word = '';
 
   if (length == 1) {
-    return StringHelpers.lowerVowels.randomItem!;
+    return Get.lowerVowels.randomItem!;
   }
 
   while (word.length < length) {
-    String consonant = StringHelpers.lowerConsonants.randomItem!;
+    String consonant = Get.lowerConsonants.randomItem!;
     if (consonant == 'q' && word.length + 3 <= length) {
       word += 'qu';
     } else {
       while (consonant == 'q') {
-        consonant = StringHelpers.lowerConsonants.randomItem!;
+        consonant = Get.lowerConsonants.randomItem!;
       }
       if (word.length + 1 <= length) {
         word += consonant;
@@ -749,7 +749,7 @@ String randomWord([int length = 0]) {
     }
 
     if (word.length + 1 <= length) {
-      word += StringHelpers.lowerVowels.randomItem!;
+      word += Get.lowerVowels.randomItem!;
     }
   }
 

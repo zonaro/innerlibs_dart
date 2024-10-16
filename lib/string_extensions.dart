@@ -470,7 +470,7 @@ extension StringExtensions on String {
   }
 
   /// return a string in a firendly format
-  string get friendlyName => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(StringHelpers.endOfSentenceChars).toTitleCase();
+  string get friendlyName => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(Get.endOfSentenceChars).toTitleCase();
 
   /// Return a checksum digit for a barcode
   String get generateBarcodeCheckSum {
@@ -566,7 +566,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return [];
     }
-    return splitAny(StringHelpers.wordSplitters);
+    return splitAny(Get.wordSplitters);
   }
 
   /// Checks if string contains at least one Capital Letter
@@ -654,7 +654,7 @@ extension StringExtensions on String {
   /// ```dart
   /// bool isCloseWrap = ")".isCloseWrapChar(); // returns true;
   /// ```
-  bool get isCloseWrap => StringHelpers.closeWrappers.contains(this);
+  bool get isCloseWrap => Get.closeWrappers.contains(this);
 
   /// Checks if the `String` provided is a valid credit card number using Luhn Algorithm.
   ///
@@ -872,7 +872,7 @@ extension StringExtensions on String {
   /// ```dart
   /// bool isOpenWrap = "(".isOpenWrapChar(); // returns true;
   /// ```
-  bool get isOpenWrap => StringHelpers.openWrappers.contains(this);
+  bool get isOpenWrap => Get.openWrappers.contains(this);
 
   /// Checks whether the `String` is a palindrome.
   ///
@@ -1090,7 +1090,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return removeAny(StringHelpers.breakLineChars);
+    return removeAny(Get.breakLineChars);
   }
 
   /// Removes diacritics from the string.
@@ -1177,7 +1177,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return removeAny(StringHelpers.whiteSpaceChars);
+    return removeAny(Get.whiteSpaceChars);
   }
 
   /// Removes all word splitters from the `String`.
@@ -1185,7 +1185,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return removeAny(StringHelpers.wordSplitters);
+    return removeAny(Get.wordSplitters);
   }
 
   /// Returns the `String` reversed.
@@ -1294,7 +1294,7 @@ extension StringExtensions on String {
   /// String result = input.toCamelCaseJoin;
   /// print(result); // Output: "helloWorld"
   /// ```
-  string get toCamelCaseJoin => toCamelCase.splitAny(StringHelpers.wordSplitters).join('');
+  string get toCamelCaseJoin => toCamelCase.splitAny(Get.wordSplitters).join('');
 
   /// Converts a `String` to`double` if possible.
   ///
@@ -1361,14 +1361,12 @@ extension StringExtensions on String {
       return blankIfNull;
     }
     final letters = split('');
-
     final leetLetters = [];
     for (var e in letters) {
-      final count = StringHelpers.leetAlphabet[e].length;
+      final count = Get.leetAlphabet[e]?.length ?? 0;
       final random = randomInt(0, count - 1);
-      leetLetters.add(StringHelpers.leetAlphabet[e][random]);
+      leetLetters.add(Get.leetAlphabet[e]?[random] ?? e);
     }
-
     return leetLetters.join();
   }
 
@@ -1389,7 +1387,6 @@ extension StringExtensions on String {
     if (isBlank) {
       return null;
     }
-
     return num.tryParse(this);
   }
 
@@ -1400,7 +1397,7 @@ extension StringExtensions on String {
   /// Returns a `Size` object.
   Size get toSize {
     var text = this;
-    text = text.replaceMany(["px", ";"], " ").toLowerCase().trimAll;
+    text = text.replaceMany(["px", ";", ":"], " ").toLowerCase().trimAll;
     text = text.replaceMany(["largura", "width", "a "], "w ");
     text = text.replaceMany(["altura", "height", "l "], "h ");
 
