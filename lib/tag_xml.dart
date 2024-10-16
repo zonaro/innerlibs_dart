@@ -182,10 +182,12 @@ class TagXml extends XmlElement implements Validator {
   /// Create a list of instances of [T] from a XML string and using the provided [constructor].
   /// The [constructor] is a function that creates a new instance of [T] and returns it.
   /// Provide the [tagName] if [T] name is different fom tagName.
-  static List<T> fromXmlStringList<T extends TagXml>(string xml, T Function() constructor) {
+  static Iterable<T> fromXmlStringList<T extends TagXml>(string xml, T Function() constructor) {
     if (xml.isBlank) return [];
     try {
-      return XmlDocument.parse(xml).findAllElements(constructor().tagName).map((tag) => TagXml.mutate(tag, constructor)!).toList();
+      var tags = XmlDocument.parse(xml).findAllElements(constructor().tagName);
+      var typedTags = tags.map((x) => mutate(x, constructor)).whereNotNull();
+      return typedTags;
     } catch (e) {
       consoleLog("$e", error: e);
       return [];
@@ -202,6 +204,7 @@ class TagXml extends XmlElement implements Validator {
       return null;
     }
     if (element is T && force == false) return element;
+    
     var newTag = constructor();
 
     while (element.attributes.isNotEmpty) {
@@ -227,5 +230,5 @@ class TagXml extends XmlElement implements Validator {
 }
 
 class TypeTag<T extends TagXml> extends TagXml {
-  TypeTag() : super.fromTagName("$T");
+  TypeTag() : super.fromTagName("$T".camelCase!);
 }
