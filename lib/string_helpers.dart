@@ -145,6 +145,23 @@ extension StringHelpers on GetInterface {
   /// Lower vowels
   Iterable<string> get lowerVowels => ["a", "e", "i", "o", "u", "y"];
 
+  Iterable<string> get mathOperators => [
+        "+",
+        "-",
+        "*",
+        "/",
+        "%",
+        "^",
+        "&",
+        "|",
+        "~",
+        ">",
+        "<",
+        "=",
+        "!",
+        "?",
+      ];
+
   /// Semicolon, colon and comma
   Iterable<string> get midSentenceChars => [":", ";", ","];
 
@@ -156,12 +173,11 @@ extension StringHelpers on GetInterface {
         ("{", "}"),
         ("[", "]"),
         ("<", ">"),
-        ("\\", "/"),
-        ("/", "\\"),
-        ("/*", "*/"),
         ("¿", "?"),
         ("¡", "!"),
         ("«", "»"),
+        (slashChars.first, slashChars.last),
+        (slashChars.last, slashChars.first),
         ...quotes.map((x) => (x, x)),
       ];
 
@@ -170,6 +186,30 @@ extension StringHelpers on GetInterface {
 
   /// Double-Quotes, Single-Quotes and Back-Ticks
   Iterable<string> get quotes => ["\"", "'", "`"];
+
+  Iterable<string> get slashChars => ["\\", "|", "/"];
+
+  Iterable<string> get specialChars => [
+        "@",
+        "#",
+        "\$",
+        "%",
+        "^",
+        "&",
+        "*",
+        "-",
+        "_",
+        "+",
+        "=",
+        "|",
+        "~",
+        ...quotes,
+        ...openWrappers,
+        ...closeWrappers,
+        ...midSentenceChars,
+        ...endOfSentenceChars,
+        ...mathOperators,
+      ];
 
   /// Upper consonants
   Iterable<string> get upperConsonants => lowerConsonants.map((e) => e.toUpperCase()).toList();

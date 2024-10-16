@@ -669,7 +669,7 @@ bool isValid<T>(T? object, {List<bool> Function(T?)? customValidator}) {
       return object;
     }
     if (object is num) {
-      return object != 0;
+      return object != 0 && object.isNaN == false;
     }
     if (object is DateTime) {
       return object > minDate;
@@ -695,7 +695,7 @@ bool isValid<T>(T? object, {List<bool> Function(T?)? customValidator}) {
 
     return object.toString().isValid();
   } catch (e) {
-    consoleLog("IsValid => ", error: e);
+    consoleLog("IsValid => $e", error: e);
     return false;
   }
 }
@@ -722,6 +722,11 @@ int randomInt([int min = 0, int max = 999999]) {
 
 /// Generates a random double between the specified [min] and [max] percent values.
 double randomPercent([int min = 0, int max = 100]) => randomInt(min.clamp(0, 100), max.clamp(0, 100)) / 100;
+
+String randomString([int length = 10]) {
+  var chars = [...Get.alphaNumericChars, Get.specialChars];
+  return List.generate(length, (index) => [randomInt(0, chars.length - 1)]).join();
+}
 
 /// Generates a random string of the specified [length].
 /// If the [length] is not provided, a random length between 2 and 15 is used.

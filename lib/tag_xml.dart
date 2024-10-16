@@ -225,3 +225,7 @@ class TagXml extends XmlElement implements Validator {
     return newTag..compute();
   }
 }
+
+class TypeTag<T extends TagXml> extends TagXml {
+  TypeTag() : super.fromTagName("$T");
+}
