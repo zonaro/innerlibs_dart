@@ -663,7 +663,7 @@ bool isValid<T>(T? object, {List<bool> Function(T?)? customValidator}) {
       return object.validate().isEmpty;
     }
     if (object is String) {
-      return object.nullIf((s) => s == null || s.trimAll.flatEqual("null")).isNotBlank;
+      return object.nullIf((s) => "$s".trimAll.flatEqualAny(["null", ""])) != null;
     }
     if (object is bool) {
       return object;

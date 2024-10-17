@@ -234,8 +234,10 @@ extension StringExtensions on String {
         } else if (values.length == 4) {
           return HSVColor.fromAHSV(double.parse(values[3]), double.parse(values[0]), double.parse(values[1]), double.parse(values[2])).toColor();
         }
-      } else if (NamedColor.isNamedColor(this)) {
-        return NamedColor.fromValue(this);
+      } else {
+        try {
+          return NamedColor.fromValue(this);
+        } finally {}
       }
 
       if (contains("*")) {
@@ -2591,8 +2593,6 @@ extension StringExtensions on String {
 
     return mostFrequent;
   }
-
-  String? nullIf(bool Function(String? s) fn) => asIf(fn, null, this);
 
   /// Return null if [this] equals [comparisonString]. Otherwise return [this].
   ///

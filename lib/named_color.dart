@@ -1190,12 +1190,5 @@ enum NamedColor implements Color {
   @override
   Color withRed(int r) => color.withRed(r);
 
-  static bool isNamedColor(String value) {
-    try {
-      NamedColor.fromValue(value);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
+  
 }

@@ -13,6 +13,15 @@ class ColorUtils {
 }
 
 extension ColorExtensions<T extends Color> on T {
+  bool isNamedColor(String value) {
+    try {
+      NamedColor.fromValue(value);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   String get alphaHexadecimal => '#${value.toRadixString(16).padLeft(8, '0')}';
 
   Iterable<Color> get analogousColors => modColors([30, -30]);

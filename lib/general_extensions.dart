@@ -36,7 +36,6 @@ extension ObjectExtensions<T extends Object?> on T {
   /// Checks if [this] is not a Blank value:
   ///(Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
   bool get isNotValid => !isValid();
-
   bool get isNullable {
     try {
       // throws an exception if T is not nullable
@@ -428,7 +427,8 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(value.map((e) => generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(
+          value.map((e) => generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
 
   bool keywordEqual(
     T value, {
@@ -437,7 +437,14 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) == generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) ==
+      generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
+
+  T? nullIf(bool Function(T) test) => test(this) ? null : this;
+
+  T? nullIfBool(bool value) => nullIf((x) => value);
+
+  T? nullIfValue(T value) => nullIf((x) => x == value);
 
   T? valid(List<bool> Function(T?)? validations, [string? throwErrorMessage]) => _valid(this, validations, throwErrorMessage);
 }

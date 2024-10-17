@@ -234,7 +234,8 @@ extension NumExtensions2<T extends num> on T {
     return v;
   }
 
-  Future delay([FutureOr Function()? callback]) async => this.milliseconds.delay(callback);
+  /// delay a callback for the given milliseconds
+  FutureOr<F> delay<F>([FutureOr<F> Function()? callback]) async => await this.milliseconds.delay(callback);
 
   /// Finds the greatest common divisor between this integer and the given integer [other].
   ///
@@ -291,13 +292,17 @@ extension NumExtensions2<T extends num> on T {
   }
 
   /// Num to locale compact currency with symbol or not
-  String toCurrencyCompact({bool? withSymbol}) {
+  String toCurrencyCompact({bool? withSymbol, string? locale}) {
+    locale ??= platformLocaleCode;
     if (withSymbol == false) {
-      return NumberFormat.compactSimpleCurrency(name: '').format(this).trim();
+      return NumberFormat.compactSimpleCurrency(name: '', locale: locale).format(this).trim();
     } else {
-      return NumberFormat.compactSimpleCurrency().format(this).trim();
+      return NumberFormat.compactSimpleCurrency(locale: locale).format(this).trim();
     }
   }
+
+  /// return a number as a string according to the locale
+  string toLocalizedString([string? locale]) => NumberFormat.decimalPattern(locale ?? platformLocaleCode).format(this);
 
   /// Num with specific fraction digits
   double toPrecision(int fractionDigits) {
