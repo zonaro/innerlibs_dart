@@ -225,7 +225,7 @@ extension IterablesExtension<T> on Iterable<T> {
     bool allIfEmpty = true,
     CharMatch<T> keyCharSearches = const {},
   }) =>
-      FilterFunctions.search(
+      Get.search(
         items: this,
         searchTerms: searchTerms,
         searchOn: searchOn,
@@ -430,7 +430,7 @@ extension ListExtension2<T> on List<T> {
 
 extension MapSearch<K, V> on Iterable<Map<K, V>> {
   Iterable<Map<K, V>> searchMap({required Iterable<V> searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
-    return FilterFunctions.searchMap<K, V>(
+    return Get.searchMap<K, V>(
       items: this,
       searchTerms: searchTerms,
       keys: keys,

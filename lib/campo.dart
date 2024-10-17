@@ -755,7 +755,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
         child: DropdownSearch<T>(
           filterFn: (item, filters) =>
               filters.isBlank ||
-              FilterFunctions.fullFilterFunction(
+              Get.fullFilterFunction(
                 searchTerms: filters.split(";").whereValid,
                 searchOn: searchOn(item),
               ),

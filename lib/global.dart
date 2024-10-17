@@ -166,6 +166,10 @@ R changeTo<R>(dynamic value) {
         return value.format() as R;
       }
 
+      if (value is num) {
+        return value.toLocalizedString() as R;
+      }
+
       if (value is Duration) {
         return value.formatted as R;
       }
@@ -817,7 +821,7 @@ typedef CharMatch<T> = Map<string, bool Function(string search, string keyword, 
 ///
 /// This mixin contains static methods that can be used to transform strings, count search results,
 /// perform Levenshtein distance calculations, and apply filters based on search terms.
-mixin FilterFunctions {
+extension FilterFunctions on GetInterface {
   /// Calculates the Jaro similarity score between an item and a list of search terms.
   ///
   /// The Jaro similarity score is a measure of the similarity between two strings.
@@ -832,7 +836,7 @@ mixin FilterFunctions {
   /// The [splitCamelCase] parameter specifies whether to split camel case words when comparing strings (default is true).
   ///
   /// Returns the sum of the Jaro similarity scores between the item and each search term.
-  static double countJaro({
+  double countJaro({
     required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     bool ignoreCase = true,
@@ -880,7 +884,7 @@ mixin FilterFunctions {
   ///
   /// Returns the count of [searchTerms] that have a Levenshtein distance less than or equal to [levenshteinDistance].
 
-  static int countLevenshtein({
+  int countLevenshtein({
     required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     required int levenshteinDistance,
@@ -932,7 +936,7 @@ mixin FilterFunctions {
   /// - [useWildcards]: A boolean indicating whether to use wildcards (*) for matching (true) or a standard `string.contains()` (false) (default is false).
   ///
   /// The function returns the count of occurrences of the search terms in the item.
-  static int countSearch({
+  int countSearch({
     required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     bool ignoreCase = true,
@@ -990,7 +994,7 @@ mixin FilterFunctions {
   /// The [useWildcards] parameter is an optional parameter that specifies whether to use wildcards when performing the filter.
   ///
   /// The function returns `true` if the item passes the filter, and `false` otherwise.
-  static bool fullFilterFunction({
+  bool fullFilterFunction({
     required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     int levenshteinDistance = 0,
@@ -1032,7 +1036,7 @@ mixin FilterFunctions {
   ///
   /// Returns `true` if there is at least one search term within the specified Levenshtein distance of the item,
   /// and `false` otherwise.
-  static bool levenshteinFunction({
+  bool levenshteinFunction({
     required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     required int levenshteinDistance,
@@ -1056,7 +1060,7 @@ mixin FilterFunctions {
   /// Returns an iterable of items that match the search criteria, ordered by relevance.
   /// The relevance is determined by the number of matches and the Levenshtein distance (if applicable).
 
-  static Iterable<T> search<T>({
+  Iterable<T> search<T>({
     required Iterable<T> items,
     required dynamic searchTerms,
     required Iterable<dynamic> Function(T) searchOn,
@@ -1106,7 +1110,7 @@ mixin FilterFunctions {
 
     l = items
         .where(
-          (item) => FilterFunctions.searchFunction(
+          (item) => Get.searchFunction(
             searchTerms: searches,
             searchOn: searchOn(item),
             ignoreCase: ignoreCase,
@@ -1121,7 +1125,7 @@ mixin FilterFunctions {
     if (l.isEmpty && levenshteinDistance > 0) {
       l = items
           .where(
-            (item) => FilterFunctions.levenshteinFunction(
+            (item) => levenshteinFunction(
               searchTerms: searches,
               searchOn: searchOn(item),
               levenshteinDistance: levenshteinDistance,
@@ -1152,7 +1156,7 @@ mixin FilterFunctions {
   /// - [useWildcards]: Whether to use wildcards (*) for partial matching. Defaults to false.
   ///
   /// Returns `true` if the item matches any of the search terms based on the given criteria, `false` otherwise.
-  static bool searchFunction({
+  bool searchFunction({
     required dynamic searchTerms,
     required Iterable<dynamic> searchOn,
     int levenshteinDistance = 0,
@@ -1181,7 +1185,7 @@ mixin FilterFunctions {
   /// The [allIfEmpty] parameter determines whether to return all [JsonRow] objects if the search term is empty.
   ///
   /// Returns an iterable of [JsonRow] objects that match the search criteria.
-  static Iterable<Map<K, V>> searchMap<K, V>({required Iterable<Map<K, V>> items, required dynamic searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
+  Iterable<Map<K, V>> searchMap<K, V>({required Iterable<Map<K, V>> items, required dynamic searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
     if (keys.isEmpty) {
       keys = items.expand((e) => e.keys).distinct().toList();
     }

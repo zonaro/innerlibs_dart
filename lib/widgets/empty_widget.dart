@@ -28,7 +28,7 @@ import 'package:innerlibs/innerlibs.dart';
 
 class EmptyWidget extends StatefulWidget {
   /// Display image, Text or icon
-  final dynamic image;
+  final dynamic child;
 
   /// Set text for subTitle
   final String? subTitle;
@@ -45,10 +45,10 @@ class EmptyWidget extends StatefulWidget {
   /// Hides the background circular ball animation
   ///
   /// By default `false` value is set
-  final bool hideBackgroundAnimation;
+  final bool showBackgroundAnimation;
 
   /// Background color for the circular ball animation
-  final Color? backgroundColor;
+  final Color backgroundColor;
 
   /// Shadow color for the circular ball animation
   final Color? shadowColor;
@@ -59,9 +59,9 @@ class EmptyWidget extends StatefulWidget {
     this.subTitle,
     this.subtitleTextStyle,
     this.titleTextStyle,
-    this.image,
-    this.hideBackgroundAnimation = false,
-    this.backgroundColor,
+    this.child,
+    this.showBackgroundAnimation = true,
+    this.backgroundColor = Colors.transparent,
     this.shadowColor,
   });
 
@@ -147,7 +147,7 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
           offset: const Offset(0, 0),
           color: widget.shadowColor ?? context.colorScheme.primary,
         ),
-        BoxShadow(blurRadius: 30, offset: const Offset(20, 0), color: widget.backgroundColor ?? context.colorScheme.surface, spreadRadius: -5),
+        BoxShadow(blurRadius: 30, offset: const Offset(20, 0), color: widget.backgroundColor, spreadRadius: -5),
       ], shape: BoxShape.circle),
     );
   }
@@ -165,7 +165,7 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
         },
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: forceWidget(widget.image, fit: BoxFit.contain, alignment: Alignment.center),
+          child: forceWidget(widget.child, fit: BoxFit.contain, alignment: Alignment.center),
         ),
       ),
     );
@@ -189,7 +189,7 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
     _titleTextStyle = widget.titleTextStyle ?? context.theme.typography.dense.headlineSmall!.copyWith(color: context.colorScheme.primary);
     _subtitleTextStyle = widget.subtitleTextStyle ?? context.theme.typography.dense.bodyLarge!.copyWith(color: context.colorScheme.primary);
 
-    bool noImage = widget.image == null;
+    bool noImage = widget.child == null;
 
     return FadeTransition(
       opacity: _widgetController,
@@ -199,7 +199,7 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            if (!widget.hideBackgroundAnimation)
+            if (widget.showBackgroundAnimation)
               RotationTransition(
                 turns: _backgroundController,
                 child: _imageBackground(),

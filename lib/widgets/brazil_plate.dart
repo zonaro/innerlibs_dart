@@ -35,7 +35,7 @@ abstract class LicensePlate extends StatelessWidget {
       return ThreeLettersPlateCategory.fromValue(value);
     } else if (TwoLettersPlate.isValidPlate(plate)) {
       return TwoLettersPlateCategory.fromValue(value);
-    } else if ( value is ThreeLettersPlateCategory || value is TwoLettersPlateCategory || value is MercosulPlateCategory || value is PlateCategory) {
+    } else if (value is ThreeLettersPlateCategory || value is TwoLettersPlateCategory || value is MercosulPlateCategory || value is PlateCategory) {
       return value;
     }
     return null;
@@ -409,7 +409,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
 
   /// Styles the main license plate characters
   Text _getPlateChars(String chars, [double fontSize = 40]) {
-    if(ThreeLettersPlate.isValidPlate(chars)){
+    if (ThreeLettersPlate.isValidPlate(chars)) {
       chars = LicensePlate.convertToMercosulPlate(chars);
     }
     return Text(
@@ -455,13 +455,13 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
 }
 
 enum MercosulPlateCategory implements PlateCategory {
-  particular(0, Colors.white, Colors.black, Colors.black),
-  comercial(1, Colors.white, Colors.red, Colors.red),
-  especial(2, Colors.white, Colors.green, Colors.green),
-  oficial(3, Colors.white, Colors.blue, Colors.blue),
-  diplomatico(4, Colors.white, Color(0xffdaa520), Color(0xffdaa520)),
-  colecionador(5, Colors.white, Colors.grey, Colors.grey),
-  colecionadorNacional(6, Colors.black, Colors.white, Colors.white);
+  particular(0, Colors.white, Colors.black, Colors.black, 'Particular'),
+  comercial(1, Colors.white, Colors.red, Colors.red, 'Comercial'),
+  especial(2, Colors.white, Colors.green, Colors.green, 'Especial'),
+  oficial(3, Colors.white, Colors.blue, Colors.blue, 'Oficial'),
+  diplomatico(4, Colors.white, Color(0xffdaa520), Color(0xffdaa520), 'Diplomático'),
+  colecionador(5, Colors.white, Colors.grey, Colors.grey, 'Colecionador'),
+  colecionadorNacional(6, Colors.black, Colors.white, Colors.white, 'Colecionador Nacional');
 
   @override
   final int value;
@@ -472,7 +472,10 @@ enum MercosulPlateCategory implements PlateCategory {
   @override
   final Color textColor;
 
-  const MercosulPlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor);
+  @override
+  final String name;
+
+  const MercosulPlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor, this.name);
 
   factory MercosulPlateCategory.fromInt(int value) {
     switch (value) {
@@ -585,8 +588,9 @@ abstract class PlateCategory {
   final Color backgroundColor;
   final Color borderColor;
   final Color textColor;
+  final String name;
 
-  const PlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor);
+  const PlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor, this.name);
 
   factory PlateCategory.fromInt(int value) => throw UnimplementedError();
   factory PlateCategory.fromString(String value) => throw UnimplementedError();
@@ -847,7 +851,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
 
   /// Styles the main license plate characters
   Text _getPlateChars(String chars, [double fontSize = 40]) {
-     if(MercosulPlate.isValidPlate(chars)){
+    if (MercosulPlate.isValidPlate(chars)) {
       chars = LicensePlate.convertToThreeLettersPlate(chars);
     }
     return Text(
@@ -891,14 +895,14 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
 }
 
 enum ThreeLettersPlateCategory implements PlateCategory {
-  particular(0, Colors.grey, Colors.grey, Colors.black),
-  comercial(1, Color(0xFFD32F2F), Color(0xFFB71C1C), Colors.white),
-  especial(2, Color(0xFF388E3C), Color(0xFF1B5E20), Colors.white),
-  oficial(3, Color(0xFFFFFFFF), Color(0xFFececec), Colors.black),
-  diplomatico(4, Color(0xFF1976D2), Color(0xFF0D47A1), Colors.white),
-  colecionador(5, Color(0xFF353535), Color(0xFF242424), Colors.white),
-  aprendizagem(6, Color(0xFFFFFFFF), Color(0xFFececec), Color(0xFFD32F2F)),
-  representacao(7, Color(0xFF353535), Color(0xFF242424), Color(0xffdaa520));
+  particular(0, Colors.grey, Colors.grey, Colors.black, 'Particular'),
+  comercial(1, Color(0xFFD32F2F), Color(0xFFB71C1C), Colors.white, 'Comercial'),
+  especial(2, Color(0xFF388E3C), Color(0xFF1B5E20), Colors.white, 'Especial'),
+  oficial(3, Color(0xFFFFFFFF), Color(0xFFececec), Colors.black, 'Oficial'),
+  diplomatico(4, Color(0xFF1976D2), Color(0xFF0D47A1), Colors.white, 'Diplomático'),
+  colecionador(5, Color(0xFF353535), Color(0xFF242424), Colors.white, 'Colecionador'),
+  aprendizagem(6, Color(0xFFFFFFFF), Color(0xFFececec), Color(0xFFD32F2F), 'Aprendizagem'),
+  representacao(7, Color(0xFF353535), Color(0xFF242424), Color(0xffdaa520), 'Representação');
 
   @override
   final int value;
@@ -908,8 +912,10 @@ enum ThreeLettersPlateCategory implements PlateCategory {
   final Color borderColor;
   @override
   final Color textColor;
+  @override
+  final String name;
 
-  const ThreeLettersPlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor);
+  const ThreeLettersPlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor, this.name);
 
   factory ThreeLettersPlateCategory.fromInt(int value) {
     switch (value) {
@@ -1288,8 +1294,8 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
 }
 
 enum TwoLettersPlateCategory implements PlateCategory {
-  particular(0, Colors.amber, Color(0xFFFFB300), Colors.black),
-  comercial(1, Color(0xFFC62828), Color(0xFFB71C1C), Colors.white);
+  particular(0, Colors.amber, Color(0xFFFFB300), Colors.black, 'Particular'),
+  comercial(1, Color(0xFFC62828), Color(0xFFB71C1C), Colors.white, 'Comercial');
 
   @override
   final int value;
@@ -1299,8 +1305,10 @@ enum TwoLettersPlateCategory implements PlateCategory {
   final Color borderColor;
   @override
   final Color textColor;
+  @override
+  final String name;
 
-  const TwoLettersPlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor);
+  const TwoLettersPlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor, this.name);
 
   factory TwoLettersPlateCategory.fromInt(int value) {
     switch (value) {
