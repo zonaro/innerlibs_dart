@@ -199,12 +199,13 @@ extension DirectoryExtensionPlus on Directory {
 
   Future<Directory> copy(Directory to, [bool skipTopDirectory = false]) async {
     if (skipTopDirectory == false) {
-      to = Directory(path.join(to.path, name));
+      to = Directory(path.join(to.path, name).fixSlash(isNativeDesktop));
     }
     await to.create(recursive: true);
     for (var f in await listAll) {
       if (f is File) {
-        f.copy(to.path);
+        var p = path.join(to.path, f.name).fixSlash(isNativeDesktop);
+        f.copy(p);
       } else if (f is Directory) {
         await f.copy(Directory(path.join(to.path)), false);
       }
@@ -225,16 +226,16 @@ extension DirectoryExtensionPlus on Directory {
       bool recursive = true}) async {
     searchOn ??= (x) => [x.name, x.path, x.title, x.directoryName, x.lastModified, x.lastAccessed];
     return (recursive ? (await listAllRecursive) : (await listAll)).whereType<T>().search(
-      searchTerms: searchTerms,
-      searchOn: searchOn,
-      levenshteinDistance: levenshteinDistance,
-      ignoreCase: ignoreCase,
-      ignoreDiacritics: ignoreDiacritics,
-      ignoreWordSplitters: ignoreWordSplitters,
-      splitCamelCase: splitCamelCase,
-      useWildcards: useWildcards,
-      allIfEmpty: allIfEmpty,
-    );
+          searchTerms: searchTerms,
+          searchOn: searchOn,
+          levenshteinDistance: levenshteinDistance,
+          ignoreCase: ignoreCase,
+          ignoreDiacritics: ignoreDiacritics,
+          ignoreWordSplitters: ignoreWordSplitters,
+          splitCamelCase: splitCamelCase,
+          useWildcards: useWildcards,
+          allIfEmpty: allIfEmpty,
+        );
   }
 }
 
