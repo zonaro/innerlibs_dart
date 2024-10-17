@@ -48,7 +48,7 @@ class EmptyWidget extends StatefulWidget {
   final bool showBackgroundAnimation;
 
   /// Background color for the circular ball animation
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// Shadow color for the circular ball animation
   final Color? shadowColor;
@@ -61,7 +61,7 @@ class EmptyWidget extends StatefulWidget {
     this.titleTextStyle,
     this.child,
     this.showBackgroundAnimation = true,
-    this.backgroundColor = Colors.transparent,
+    this.backgroundColor,
     this.shadowColor,
   });
 
@@ -147,7 +147,7 @@ class _EmptyListWidgetState extends State<EmptyWidget> with TickerProviderStateM
           offset: const Offset(0, 0),
           color: widget.shadowColor ?? context.colorScheme.primary,
         ),
-        BoxShadow(blurRadius: 30, offset: const Offset(20, 0), color: widget.backgroundColor, spreadRadius: -5),
+        BoxShadow(blurRadius: 30, offset: const Offset(20, 0), color: widget.backgroundColor ?? context.colorScheme.surface, spreadRadius: -5),
       ], shape: BoxShape.circle),
     );
   }
