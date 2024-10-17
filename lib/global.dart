@@ -125,23 +125,24 @@ IconData categoryIcon(String category) {
 /// - If [R] is [num], parses the value as a [num] using the `num.parse()` method.
 /// - If [R] is [int], parses the value as an [int] using the `int.parse()` method.
 /// - If [R] is [double], parses the value as a [double] using the `double.parse()` method.
-/// - If [R] is [String], returns the value as a [String].
+/// - If [R] is [String], returns the value as a [String] using `jsonEncode()`.
 /// - If [R] is [bool], converts the value to a [bool] using the `asBool()` method.
 /// - If [R] is [Widget], converts the value to a [Widget] using the `forceWidget()` method.
 /// - If [R] is [Text], converts the value to a [Text] using the `asText()` method.
 /// - If [R] is [List], converts the value to a [List] containing the value.
 /// - if [R] is another type, try returns the value as [R].
-/// - If none of the above conditions are met, logs an error message and returns `null`.
-R changeTo<R>(dynamic value) {
+/// - If none of the above conditions are met, throws an exception.
+R changeTo<R>(dynamic value, [String? locale]) {
+  locale = (locale ?? platformLocaleCode).nullIfBlank;
   if (value is R) return value;
   if (value != null) {
-    consoleLog("Changing $value from ${value.runtimeType} to $R");
-    var nf = NumberFormat(null, platformLocaleCode);
+    // consoleLog("Changing $value from ${value.runtimeType} to $R");
+    var nf = NumberFormat(null, locale);
     if (isSameType<R, DateTime>()) {
-      return "$value".toDate() as R;
+      return "$value".toDate(null, locale) as R;
     } else if (isSameType<R, int>()) {
       if (value is DateTime) {
-        return changeTo(value.millisecondsSinceEpoch);
+        return changeTo(value.millisecondsSinceEpoch, locale);
       } else if (value is num) {
         return value.toInt() as R;
       } else {
@@ -149,36 +150,36 @@ R changeTo<R>(dynamic value) {
       }
     } else if (isSameType<R, double>()) {
       if (value is DateTime) {
-        return changeTo(value.millisecondsSinceEpoch);
+        return changeTo(value.millisecondsSinceEpoch, locale);
       } else if (value is num) {
         return value.toDouble() as R;
       } else {
-        return (nf.tryParse(changeTo(value))?.toDouble() ?? double.parse(changeTo<string>(value).ifBlank("0").removeLetters)) as R;
+        return (nf.tryParse(changeTo(value, locale))?.toDouble() ?? double.parse(changeTo<string>(value, locale).ifBlank("0").removeLetters)) as R;
       }
     } else if (isSameType<R, num>()) {
       if (value is DateTime) {
-        return changeTo(value.millisecondsSinceEpoch);
+        return changeTo(value.millisecondsSinceEpoch, locale);
       } else {
-        return (nf.tryParse(changeTo(value)) ?? num.parse(changeTo<string>(value).ifBlank("0").removeLetters)) as R;
+        return (nf.tryParse(changeTo(value, locale)) ?? num.parse(changeTo<string>(value, locale).ifBlank("0").removeLetters)) as R;
       }
     } else if (isSameType<R, String>()) {
       if (value is DateTime) {
         return value.format() as R;
-      }
-
-      if (value is num) {
-        return value.toLocalizedString() as R;
-      }
-
-      if (value is Duration) {
+      } else if (value is Duration) {
         return value.formatted as R;
-      }
-
-      if (value is Map || value is List) {
+      } else if (value is num) {
+        return nf.format(value) as R;
+      } else if (value is Uri) {
+        return value.toString() as R;
+      } else if (value is Widget) {
+        return value.text as R;
+      } else if (value is List) {
         return jsonEncode(value) as R;
+      } else if (value is Map) {
+        return jsonEncode(value) as R;
+      } else {
+        return "$value" as R;
       }
-
-      return "$value" as R;
     } else if (isSameType<R, bool>()) {
       return "$value".asBool() as R;
     } else if (isSameType<R, Uri>()) {
@@ -191,7 +192,6 @@ R changeTo<R>(dynamic value) {
       return forceList(value) as R;
     }
   } else {
-    consoleLog("Changing NULL to $R");
     if (isNullable<R>()) {
       return null as R;
     } else if (isSameType<R, string>()) {
@@ -209,7 +209,7 @@ R changeTo<R>(dynamic value) {
     } else if (isSameType<R, List>()) {
       return [] as R;
     } else if (isSameType<R, Text>()) {
-      return const Text("NULL") as R;
+      return const Text("") as R;
     } else if (isSameType<R, Widget>()) {
       return nil as R;
     }

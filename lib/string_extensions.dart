@@ -1532,6 +1532,21 @@ extension StringExtensions on String {
     }).join("\r\n");
   }
 
+  /// remove
+  String get unwrap {
+    if (isBlank) {
+      return blankIfNull;
+    }
+
+    var t = trim();
+    if (t.startsWithAny(Get.openWrappers)) {
+      if (t.endsWith(t.first().getOppositeWrap)) {
+        t = t.removeFirst().removeLast();
+      }
+    }
+    return t;
+  }
+
   /// Returns the URL-decoded version of the string.
   ///
   /// Example:

@@ -141,8 +141,9 @@ class TagXml extends XmlElement implements Validator {
   /// If the child node does not exist, it creates a new one with the provided [value].
   /// If the [value] is `null`, the child node will be removed if it exists.
   ///
-  void setTextValueForNode<T>(String tag, string? value) {
+  void setValueForNode<T, V>(String tag, V? value) {
     var element = findElements(tag).singleOrNull;
+
     if (value == null) {
       if (element != null) {
         element.remove();
@@ -150,18 +151,18 @@ class TagXml extends XmlElement implements Validator {
         return;
       }
     } else {
+      string svalue = changeTo(value, "");
+      consoleLog("Setting $tag to $svalue");
       if (element == null) {
         // If the element does not exist, create a new one with the provided value
         final newNode = XmlElement(XmlName(tag));
-        newNode.innerText = value;
+        newNode.innerText = svalue;
         children.add(newNode);
       } else {
-        element.innerText = value;
+        element.innerText = svalue;
       }
     }
   }
-
-  void setValueForNode<T, V>(String tag, V? value) => setTextValueForNode(tag, value?.changeTo());
 
   /// Return the XML string representation of the node.
   @override
@@ -186,7 +187,7 @@ class TagXml extends XmlElement implements Validator {
     if (xml.isBlank) return [];
     try {
       var tags = XmlDocument.parse(xml).findAllElements(constructor().tagName);
-      var typedTags = tags.map((x) => mutate(x, constructor)).whereNotNull();
+      var typedTags = tags.map((x) => mutate(x, constructor)).whereNotNull().toList();
       return typedTags;
     } catch (e) {
       consoleLog("$e", error: e);
@@ -204,7 +205,7 @@ class TagXml extends XmlElement implements Validator {
       return null;
     }
     if (element is T && force == false) return element;
-    
+
     var newTag = constructor();
 
     while (element.attributes.isNotEmpty) {
@@ -225,7 +226,7 @@ class TagXml extends XmlElement implements Validator {
       parent.children.insert(index, newTag);
     }
 
-    return newTag..compute();
+    return newTag;
   }
 }
 
