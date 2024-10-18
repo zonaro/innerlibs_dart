@@ -594,5 +594,13 @@
     "yes": "Yes",
     "@yes": {
         "description": "Yes"
+    },
+    "command": "Command",
+    "@command": {
+        "description": "Command"
+    },
+    "commands": "Commands",
+    "@commands": {
+        "description": "Commands"
     }
 }

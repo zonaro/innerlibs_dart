@@ -767,6 +767,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Yes'**
   String get yes;
+
+  /// Command
+  ///
+  /// In en, this message translates to:
+  /// **'Command'**
+  String get command;
+
+  /// Commands
+  ///
+  /// In en, this message translates to:
+  /// **'Commands'**
+  String get commands;
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

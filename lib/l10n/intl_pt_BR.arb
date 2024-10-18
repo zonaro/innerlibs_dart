@@ -112,5 +112,7 @@
     "wallpaper": "Papel de Parede",
     "warning": "Aviso",
     "width": "Largura",
-    "yes": "Sim"
+    "yes": "Sim",
+    "command": "Comando",
+    "commands": "Comandos"
 }

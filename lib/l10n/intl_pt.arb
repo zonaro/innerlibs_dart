@@ -594,5 +594,13 @@
     "yes": "Sim",
     "@yes": {
         "description": "Sim"
+    },
+    "command": "Comando",
+    "@command": {
+        "description": "Comando"
+    },
+    "commands": "Comandos",
+    "@commands": {
+        "description": "Comandos"
     }
 }

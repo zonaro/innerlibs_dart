@@ -403,4 +403,10 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get yes => 'Yes';
+
+  @override
+  String get command => 'Command';
+
+  @override
+  String get commands => 'Commands';
 }
