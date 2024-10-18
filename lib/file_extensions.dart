@@ -199,12 +199,12 @@ extension DirectoryExtensionPlus on Directory {
 
   Future<Directory> copy(Directory to, [bool skipTopDirectory = false]) async {
     if (skipTopDirectory == false) {
-      to = Directory(path.join(to.path, name).fixSlash(isNativeDesktop));
+      to = Directory(path.join(to.path, name).fixPath);
     }
     await to.create(recursive: true);
     for (var f in await listAll) {
       if (f is File) {
-        var p = path.join(to.path, f.name).fixSlash(isNativeDesktop);
+        var p = path.join(to.path, f.name).fixPath;
         f.copy(p);
       } else if (f is Directory) {
         await f.copy(Directory(path.join(to.path)), false);

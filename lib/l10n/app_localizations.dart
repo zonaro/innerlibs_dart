@@ -92,8 +92,7 @@ abstract class InnerLibsLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('pt'),
-    Locale('pt', 'BR')
+    Locale('pt')
   ];
 
   /// Add
@@ -798,15 +797,6 @@ class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLoc
 
 InnerLibsLocalizations lookupInnerLibsLocalizations(Locale locale) {
 
-  // Lookup logic when language+country codes are specified.
-  switch (locale.languageCode) {
-    case 'pt': {
-  switch (locale.countryCode) {
-    case 'BR': return InnerLibsLocalizationsPtBr();
-   }
-  break;
-   }
-  }
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
