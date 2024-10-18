@@ -33,9 +33,6 @@ extension ObjectExtensions<T extends Object?> on T {
   /// Returns flat representation string by calling [toString()] and removing diacritics, converting to lowercase, and trimming all whitespace.
   string get asFlat => flatString(this);
 
-  /// Checks if [this] is not a Blank value:
-  ///(Null, empty or only white spaces for [String], 0 for [num] , [DateTimeExtensions.min] for [DateTime], Call [isNotValid] recursively on [List] or [Map] values. Other class types, call [ToString()] and check ).
-  bool get isNotValid => !isValid();
   bool get isNullable {
     try {
       // throws an exception if T is not nullable
@@ -344,6 +341,10 @@ extension ObjectExtensions<T extends Object?> on T {
   }
 
   bool isNotIn(dynamic items) => !isIn(items);
+
+  /// Checks if object has a invalid value. See [isValid] for more details.
+  ///  
+  bool isNotValid([List<bool> Function(T?)? customValidator]) => !isValid(customValidator);
 
   /// Checks if [Object] has a valid value.
   ///

@@ -505,8 +505,8 @@ class FabSave<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FabTextBase(
-      label: id.isNotValid ? context.translations.register : context.translations.save,
-      icon: id.isNotValid ? Icons.edit : Icons.save,
+      label: id.isNotValid() ? context.translations.register : context.translations.save,
+      icon: id.isNotValid() ? Icons.edit : Icons.save,
       onPressed: onPressed,
       heroTag: (T.runtimeType, id, randomInt()),
     );

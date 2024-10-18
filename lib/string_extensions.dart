@@ -24,7 +24,7 @@ extension NullStringExtension on String? {
   /// Returns the string if it is blank, otherwise returns "0".
   String get zeroIfBlank => ifBlank("0")!;
 
-  String blankCoalesce(List<string?> newString) {
+  String blankCoalesce(Iterable<string?> newString) {
     var x = [blankIfNull, ...newString];
     return x.firstWhereOrNull((e) => e.isNotBlank).blankIfNull;
   }
@@ -56,8 +56,8 @@ extension NullStringExtension on String? {
   ///
   /// - Parameter input: The input string to be split.
   /// - Returns: A list of substrings split by whitespace outside of quotes.
-  List<String> splitArguments(String input) {
-    if (input.isBlank) {
+  Iterable<string> get splitArguments {
+    if (isBlank) {
       return [];
     }
     List<String> result = [];
@@ -65,8 +65,8 @@ extension NullStringExtension on String? {
     bool inSingleQuotes = false;
     bool inDoubleQuotes = false;
 
-    for (int i = 0; i < input.length; i++) {
-      String char = input[i];
+    for (int i = 0; i < this!.length; i++) {
+      String char = this![i];
 
       if (char == '"' && !inSingleQuotes) {
         inDoubleQuotes = !inDoubleQuotes;
@@ -2786,7 +2786,7 @@ extension StringExtensions on String {
   }
 
   /// Continuously removes from the beginning & the end of the `String`, any match in [patterns].
-  String removeFirstAndLastAny(List<String?> patterns) => removeFirstAny(patterns).removeLastAny(patterns);
+  String removeFirstAndLastAny(Iterable<String?> patterns) => removeFirstAny(patterns).removeLastAny(patterns);
 
   /// Removes any [pattern] match from the beginning & the end of the `String`.
   ///
@@ -2804,7 +2804,7 @@ extension StringExtensions on String {
   /// ```dart
   /// String s = "esentis".removeFirstAny(["s", "ng"]);// returns "esentis";
   /// ```
-  String removeFirstAny(List<String?> patterns) {
+  String removeFirstAny(Iterable<String?> patterns) {
     var from = this;
     if (from.isNotBlank) {
       for (var pattern in patterns) {
@@ -2963,7 +2963,7 @@ extension StringExtensions on String {
 
   /// Replaces the placeholders in the `String` with the values from the provided [params] list.
   /// The placeholders are indexes surrounded by `{{` and `}}`.
-  String replaceMustachesWithList(List<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{{');
+  String replaceMustachesWithList(Iterable<dynamic> params) => replaceWrappedWithList(values: params, openWrapChar: '{{');
 
   /// Replaces the placeholders in the `String` with the values from the provided [params] map.
   /// The placeholders are defined by the `{{key}}` format.
@@ -3028,9 +3028,9 @@ extension StringExtensions on String {
 
   /// Replaces the placeholders in the `String` with the values from the provided [values] list.
   /// The placeholders are indexes surrounded by [openWrapChar] and [closeWrapChar].
-  String replaceWrappedWithList({required List<dynamic> values, required String openWrapChar, String? closeWrapChar}) {
+  String replaceWrappedWithList({required Iterable<dynamic> values, required String openWrapChar, String? closeWrapChar}) {
     if (isBlank) return blankIfNull;
-    return replaceWrappedWithMap(values: values.toMap((x) => MapEntry(values.indexOf(x).toString(), x)), openWrapChar: openWrapChar, closeWrapChar: closeWrapChar);
+    return replaceWrappedWithMap(values: Map.fromEntries(values.select((x,i) => MapEntry(i.toString(), x))), openWrapChar: openWrapChar, closeWrapChar: closeWrapChar);
   }
 
   /// Replaces the placeholders in the `String` with the values from the provided [values] map.
@@ -3082,7 +3082,7 @@ extension StringExtensions on String {
   /// The `delimiters` parameter is a list of strings that represent the delimiters to use for splitting the string.
   ///
   /// Returns a list of strings that are the result of splitting the original string using the specified delimiters.
-  List<String> splitAny(List<String> delimiters) {
+  List<String> splitAny(Iterable<String> delimiters) {
     List<String> result = [this];
     for (String delimiter in delimiters) {
       List<String> temp = [];
@@ -3108,7 +3108,7 @@ extension StringExtensions on String {
   /// var chunks = input.splitChunk(chunkSizes);
   /// print(chunks); // Output: ['Hello', ', ', 'world!']
   /// ```
-  List<String> splitChunk(List<int> chunkSizes) {
+  List<String> splitChunk(Iterable<int> chunkSizes) {
     List<String> chunks = [];
     var input = this;
     while (input.isNotEmpty) {
@@ -3148,7 +3148,7 @@ extension StringExtensions on String {
     return [parts.join(pattern), last];
   }
 
-  List<String> splitWith(List<String> delimiters) {
+  List<String> splitWith(Iterable<String> delimiters) {
     List<String> result = [];
     if (isBlank) return result;
     if (delimiters.isEmpty) return [this];
@@ -3292,7 +3292,7 @@ extension StringExtensions on String {
     return result.trim();
   }
 
-  string trimAny(List<String?> patterns) => removeLastAny(patterns).removeFirstAny(patterns);
+  string trimAny(Iterable<String?> patterns) => removeLastAny(patterns).removeFirstAny(patterns);
 
   /// Truncates a long `String` in the middle while retaining the beginning and the end.
   ///

@@ -60,12 +60,12 @@ class TagXml extends XmlElement implements Validator {
   ///
   /// If the child node does not exist or if there are multiple child nodes with the same [tag],
   /// it returns `null`.
-  T? getValueFromNode<T, U>(String tag, [T Function(U i)? parser]) {
+  T? getValueFromNode<T>(String tag, [T Function(string i)? parser]) {
     var x = findElements(tag).singleOrNull?.innerText;
     if (x == null) return null;
     try {
       if (parser == null) return changeTo(x);
-      return parser(changeTo(x));
+      return parser(x);
     } catch (e) {
       consoleLog("Error parsing $x", error: e);
       return null;

@@ -1053,7 +1053,7 @@ abstract interface class Brasil {
   /// Valida um número de PIS.
   static bool validarPIS(dynamic numero) {
     string text = "$numero";
-    if (text.isNotValid) {
+    if (text.isNotValid()) {
       return false;
     }
 
