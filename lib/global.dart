@@ -132,13 +132,17 @@ IconData categoryIcon(String category) {
 /// - If [R] is [List], converts the value to a [List] containing the value.
 /// - if [R] is another type, try returns the value as [R].
 /// - If none of the above conditions are met, throws an exception.
+///
+/// if [locale] is provided, it is used to format and parse numbers and dates.
 R changeTo<R>(dynamic value, [String? locale]) {
-  locale = (locale ?? platformLocaleCode).nullIfBlank;
+  locale = locale?.nullIfBlank;
   if (value is R) return value;
   if (value != null) {
     // consoleLog("Changing $value from ${value.runtimeType} to $R");
-    var nf = NumberFormat(null, locale);
+    NumberFormat? nf = locale == null ? null : NumberFormat(null, locale);
     if (isSameType<R, DateTime>()) {
+      if (value is num) return DateTime.fromMillisecondsSinceEpoch(value.round()) as R;
+      if (locale == null) return date.parse("$value") as R;
       return "$value".toDate(null, locale) as R;
     } else if (isSameType<R, int>()) {
       if (value is DateTime) {
@@ -154,13 +158,13 @@ R changeTo<R>(dynamic value, [String? locale]) {
       } else if (value is num) {
         return value.toDouble() as R;
       } else {
-        return (nf.tryParse(changeTo(value, locale))?.toDouble() ?? double.parse(changeTo<string>(value, locale).ifBlank("0").removeLetters)) as R;
+        return (nf?.tryParse(changeTo(value, locale))?.toDouble() ?? double.parse(changeTo<string>(value, locale).ifBlank("0").removeLetters)) as R;
       }
     } else if (isSameType<R, num>()) {
       if (value is DateTime) {
         return changeTo(value.millisecondsSinceEpoch, locale);
       } else {
-        return (nf.tryParse(changeTo(value, locale)) ?? num.parse(changeTo<string>(value, locale).ifBlank("0").removeLetters)) as R;
+        return (nf?.tryParse(changeTo(value, locale)) ?? num.parse(changeTo<string>(value, locale).ifBlank("0").removeLetters)) as R;
       }
     } else if (isSameType<R, String>()) {
       if (value is DateTime) {
@@ -168,7 +172,7 @@ R changeTo<R>(dynamic value, [String? locale]) {
       } else if (value is Duration) {
         return value.formatted as R;
       } else if (value is num) {
-        return nf.format(value) as R;
+        return (nf?.format(value) ?? "$value") as R;
       } else if (value is Uri) {
         return value.toString() as R;
       } else if (value is Widget) {
