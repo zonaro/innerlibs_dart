@@ -142,3 +142,5 @@ class LatLngTime extends LatLng {
 
   LatLngTime(super.latitude, super.longitude, DateTime? timestamp) : timestamp = timestamp ?? now;
 }
+
+GetInterface get inn => Get;
