@@ -343,7 +343,7 @@ extension ObjectExtensions<T extends Object?> on T {
   bool isNotIn(dynamic items) => !isIn(items);
 
   /// Checks if object has a invalid value. See [isValid] for more details.
-  ///  
+  ///
   bool isNotValid([List<bool> Function(T?)? customValidator]) => !isValid(customValidator);
 
   /// Checks if [Object] has a valid value.
