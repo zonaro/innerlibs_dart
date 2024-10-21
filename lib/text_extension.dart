@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
 extension StyledText<T extends Text> on T {
+  
   string get text => data ?? textSpan?.toPlainText() ?? "";
  
 
@@ -38,8 +39,7 @@ extension StyledText<T extends Text> on T {
     TextHeightBehavior? textHeightBehavior,
   }) =>
       Text(
-        data ?? this.data ?? "",
-        
+        data ?? this.data ?? "",        
         style: style ?? this.style,
         strutStyle: strutStyle ?? this.strutStyle,
         textAlign: textAlign ?? this.textAlign,
