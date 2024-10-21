@@ -602,5 +602,21 @@
     "commands": "Comandos",
     "@commands": {
         "description": "Comandos"
+    },
+    "pending": "Pendente",
+    "@pending": {
+        "description": "Pendente"
+    },
+    "completed": "Concluído",
+    "@completed": {
+        "description": "Concluído"
+    },
+    "failed": "Falhou",
+    "@failed": {
+        "description": "Falhou"
+    },
+    "finished": "Finalizado",
+    "@finished": {
+        "description": "Finalizado"
     }
 }

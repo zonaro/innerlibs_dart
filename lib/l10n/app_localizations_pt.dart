@@ -409,4 +409,16 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get commands => 'Comandos';
+
+  @override
+  String get pending => 'Pendente';
+
+  @override
+  String get finished => 'Finalizado';
+
+  @override
+  String get failed => 'Falhou';
+
+  @override
+  String get completed => 'Concluído';
 }
