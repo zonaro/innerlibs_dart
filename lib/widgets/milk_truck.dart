@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -39,42 +38,27 @@ class MilkTruck extends StatelessWidget {
     this.rotationAngle = 0.0,
   });
 
-  factory MilkTruck.fromTheme({required ThemeData theme, required double width}) {
-    if (theme.brightness == ui.Brightness.dark) {
-      return MilkTruck(
-        width: width,
-        boxColor: theme.colorScheme.secondary,
-        patchColor: theme.colorScheme.primary,
-        truckColor: theme.colorScheme.secondary,
-        strokeColor: theme.colorScheme.onSurface,
-        bumperColor: theme.colorScheme.onSurface,
-        headLightColor: theme.colorScheme.onSurface,
-        rearViewMirrorColor: theme.colorScheme.onSurface,
-        frontGrilleColor: theme.colorScheme.onSurface,
-        ornamentColor: theme.colorScheme.onSurface,
-        windshieldColor: theme.colorScheme.onSurface,
-      );
-    } else {
-      return MilkTruck(
-        width: width,
-        boxColor: theme.colorScheme.secondary,
-        patchColor: theme.colorScheme.primary,
-        truckColor: theme.colorScheme.secondary,
-        strokeColor: theme.colorScheme.onSurface,
-        bumperColor: theme.colorScheme.onSurface,
-        headLightColor: theme.colorScheme.onSurface,
-        rearViewMirrorColor: theme.colorScheme.onSurface,
-        frontGrilleColor: theme.colorScheme.onSurface,
-        ornamentColor: theme.colorScheme.onSurface,
-        windshieldColor: theme.colorScheme.onSurface,
-      );
-    }
+  factory MilkTruck.fromTheme({required ThemeData theme, required double width, double rotationAngle = 0.0}) {
+    return MilkTruck(
+      width: width,
+      boxColor: theme.colorScheme.secondary,
+      patchColor: theme.colorScheme.primary.makeLighter(),
+      truckColor: theme.colorScheme.primary,
+      strokeColor: theme.colorScheme.tertiary,
+      bumperColor: theme.colorScheme.onSurface.makeDarker(),
+      headLightColor: theme.colorScheme.onSurface.makeLighter(),
+      rearViewMirrorColor: theme.colorScheme.onSurface,
+      frontGrilleColor: theme.colorScheme.onSurface,
+      ornamentColor: theme.colorScheme.secondary,
+      windshieldColor: theme.colorScheme.onSurface,
+      rotationAngle: rotationAngle,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Transform.rotate(
-      angle: -math.pi / rotationAngle,
+    return RotationTransition(
+      turns: AlwaysStoppedAnimation(rotationAngle / 360),
       child: CustomPaint(
         size: Size(width, (width * 1.8903846153846153).toDouble()),
         painter: _CaminhaoPainter(

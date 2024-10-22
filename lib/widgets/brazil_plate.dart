@@ -283,20 +283,15 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: context.theme.copyWith(
-        typography: Typography.material2014(),
-      ),
-      child: _externalWrapper(
-        child: _internalWrapper(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _countryTopBar(),
-              _charactersContent(),
-            ],
-          ),
+    return _externalWrapper(
+      child: _internalWrapper(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _countryTopBar(),
+            _charactersContent(),
+          ],
         ),
       ),
     );
@@ -313,14 +308,19 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
 
   /// Draws the area in which will be printed the main license plate characters.
   Widget _charactersContent() {
-    return SizedBox(
-      height: realHeight * _lettersHeightRelation,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _getPlateChars(plate, realHeight * _lettersHeightRelation),
-        ],
+    return Theme(
+      data: Get.context!.theme.copyWith(
+        typography: Typography.material2014(),
+      ),
+      child: SizedBox(
+        height: realHeight * _lettersHeightRelation,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _getPlateChars(plate, realHeight * _lettersHeightRelation),
+          ],
+        ),
       ),
     );
   }
@@ -733,11 +733,11 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-        data: context.theme.copyWith(
-          typography: Typography.material2014(),
-        ),
-        child: _externalWrapper(child: _internalWrapper(child: _charactersContent())));
+    return _externalWrapper(
+      child: _internalWrapper(
+        child: _charactersContent(),
+      ),
+    );
   }
 
   @override
@@ -1181,11 +1181,11 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-        data: context.theme.copyWith(
-          typography: Typography.material2014(),
-        ),
-        child: _externalWrapper(child: _internalWrapper(child: _charactersContent())));
+    return _externalWrapper(
+      child: _internalWrapper(
+        child: _charactersContent(),
+      ),
+    );
   }
 
   @override
