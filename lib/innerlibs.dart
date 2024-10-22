@@ -86,6 +86,7 @@ export 'widgets/responsive_grid.dart';
 export 'widgets/scaffold_builder.dart';
 export 'widgets/shimmer.dart';
 export 'widgets/square_button.dart';
+export 'widgets/milk_truck.dart';
 
 typedef bytes = Uint8List;
 
