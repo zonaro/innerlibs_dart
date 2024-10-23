@@ -23,12 +23,6 @@ abstract class Validator {
 }
 
 extension ValidatorClassExtensions on Validator {
-  /// Returns `true` if the instance is valid, otherwise returns `false`.
-  bool get isValidInstance => validate().isEmpty;
-
-  /// Returns `true` if the instance is invalid, otherwise returns `false`.
-  bool get isNotValidInstance => !isValidInstance;
-
   /// Validates the object and throws an exception if there are any errors.
   ///
   /// This method calls the `validate` method to retrieve a list of errors.

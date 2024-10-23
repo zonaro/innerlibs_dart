@@ -40,7 +40,7 @@ class TagXml extends XmlElement implements Validator {
     if (throwException) {
       validateOrThrow((errors) => InvalidException("This $tagName is not valid:", errors));
     }
-    return isValidInstance;
+    return this.isValid();
   }
 
   /// Returns a child node with the given [tagName].

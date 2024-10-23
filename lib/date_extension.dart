@@ -375,6 +375,9 @@ extension DateTimeExtensions on DateTime {
   /// Checks if the date is the same as the specified [other] date, ignoring time.
   bool isSameDate(DateTime other) => year == other.year && month == other.month && day == other.day;
 
+  // Checks if the month and year is the same as the specified [other] date, ignoring time.
+  bool isSameMonthYear(DateTime other) => year == other.year && month == other.month;
+
   /// Returns the last day of the month group.
   date lastDayOfMonthGroup(int group) => DateTime(year, lastMonthOfGroup(group) + 1, 0);
 

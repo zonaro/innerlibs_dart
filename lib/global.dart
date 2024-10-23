@@ -575,7 +575,7 @@ String identArrow({required int length, String pattern = " "}) {
 /// Checks if the given [object] is not valid (see [isValid] function).
 ///
 /// Returns `true` if the [object] is not valid, `false` otherwise.
-bool isNotValid<T>(T object, {List<bool> Function(T?)? customValidator}) => !isValid(object, customValidator: customValidator);
+bool isNotValid<T>(T object, {Iterable<bool> Function(T?)? customValidator}) => !isValid(object, customValidator: customValidator);
 
 /// Checks if the types `T` is nullable (equal T?)
 bool isNullable<T>() => typeOf<T?>() == typeOf<T>();
@@ -659,7 +659,7 @@ bool isSameType<T, S>() => typeOf<T>() == typeOf<S?>() || typeOf<T>() == typeOf<
 /// print(isValidPerson); // Output: true
 /// ```
 ///
-bool isValid<T>(T? object, {List<bool> Function(T?)? customValidator}) {
+bool isValid<T>(T? object, {Iterable<bool> Function(T?)? customValidator}) {
   try {
     if (customValidator != null) {
       return customValidator(object).contains(true);
