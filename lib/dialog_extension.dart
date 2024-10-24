@@ -265,15 +265,7 @@ extension DialogExt on BuildContext {
             )
           : null;
 
-  Future<void> dialog(dynamic content,
-      {String? title,
-      List<String> buttons = const [],
-      String? cancelButton,
-      Function(String)? onDone,
-      Color? positiveTitleColor,
-      Color? cancelTitleColor,
-      double? fontSize,
-      bool barrierDismissible = true}) async {
+  Future<void> dialog(dynamic content, {String? title, List<String> buttons = const [], String? cancelButton, Function(String)? onDone, Color? positiveTitleColor, Color? cancelTitleColor, double? fontSize, bool barrierDismissible = true}) async {
     List<Widget> arrWidget = [];
 
     if (buttons.isEmpty) {
@@ -490,6 +482,7 @@ extension DialogExt on BuildContext {
     late CancelableOperation<T?> operation;
     Duration? remainTime = timeout;
     Timer? timer;
+    var alertKey = GlobalKey();
     showDialog(
       context: this,
       barrierDismissible: false,
@@ -511,6 +504,7 @@ extension DialogExt on BuildContext {
           });
         }
         return AlertDialog.adaptive(
+          key: alertKey,
           actions: [
             if (cancelTaskButton != null) ...[
               ElevatedButton(
@@ -546,11 +540,15 @@ extension DialogExt on BuildContext {
     operation = CancelableOperation.fromFuture(() async {
       try {
         var result = await task();
-        pop(result);
+        if (alertKey.currentContext != null) {
+          pop(result);
+        }
         return result;
       } catch (e) {
         if (onError != null) {
-          pop(null);
+          if (alertKey.currentContext != null) {
+            pop(null);
+          }
           onError(e); // Call onError function if provided
         }
       }
