@@ -292,6 +292,8 @@ extension StringExtensions on String {
   /// Return a base64 encoded string
   string get base64 => base64Encode(utf8.encode(this));
 
+  String get blankIfZero => blankIf((s) => s == "0");
+
   /// Splits a camel case string into individual words.
   /// Returns a list of strings representing the words in the camel case string.
   StringList get camelSplit => camelSplitString.split(" ");
@@ -1822,7 +1824,6 @@ extension StringExtensions on String {
   /// String result = text.between('[', ']'); // returns 'world'
   /// ```
   String between(String before, String after) => this.before(before).after(after);
-
   String blankIf(bool Function(String? s) fn) => asIf(fn, "", this) ?? "";
 
   String? blankIfEqual(String? comparisonString) => blankIf((s) => s == comparisonString);
