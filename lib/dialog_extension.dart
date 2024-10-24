@@ -483,59 +483,65 @@ extension DialogExt on BuildContext {
     Duration? remainTime = timeout;
     Timer? timer;
     var alertKey = GlobalKey();
-    showDialog(
+    showGeneralDialog(
       context: this,
       barrierDismissible: false,
-      builder: (BuildContext context) => StatefulBuilder(builder: (BuildContext context, setState) {
-        if (cancelTaskButton == null && onCancel != null) {
-          cancelTaskButton = context.translations.cancel;
-        }
-        if (timeout != null && timeout.inSeconds > 0) {
-          timer ??= Timer.periodic(1.seconds, (timer) {
-            if (remainTime != null) {
-              remainTime = remainTime! - 1.seconds;
-              if (remainTime!.inSeconds <= 0) {
-                timer.cancel();
-                operation.cancel();
-              } else {
-                if (context.mounted) setState(() {});
+      pageBuilder: (BuildContext context, animation, secondaryAnimation) => PopScope(
+        canPop: onCancel != null,
+        onPopInvokedWithResult: (didPop, _) async {
+          if (didPop) await operation.cancel();
+        },
+        child: StatefulBuilder(builder: (BuildContext context, setState) {
+          if (cancelTaskButton == null && onCancel != null) {
+            cancelTaskButton = context.translations.cancel;
+          }
+          if (timeout != null && timeout.inSeconds > 0) {
+            timer ??= Timer.periodic(1.seconds, (timer) {
+              if (remainTime != null) {
+                remainTime = remainTime! - 1.seconds;
+                if (remainTime!.inSeconds <= 0) {
+                  timer.cancel();
+                  operation.cancel();
+                } else {
+                  if (context.mounted) setState(() {});
+                }
               }
-            }
-          });
-        }
-        return AlertDialog.adaptive(
-          key: alertKey,
-          actions: [
-            if (cancelTaskButton != null) ...[
-              ElevatedButton(
-                onPressed: () async {
-                  if (cancelConfirmationText == null || await context.confirm(cancelConfirmationText, textCancel: noButton, textOK: yesButton)) {
-                    await operation.cancel();
-                  }
-                },
-                child: forceWidget(cancelTaskButton),
-              ),
+            });
+          }
+          return AlertDialog.adaptive(
+            key: alertKey,
+            actions: [
+              if (cancelTaskButton != null) ...[
+                ElevatedButton(
+                  onPressed: () async {
+                    if (cancelConfirmationText == null || await context.confirm(cancelConfirmationText, textCancel: noButton, textOK: yesButton)) {
+                      await operation.cancel();
+                    }
+                  },
+                  child: forceWidget(cancelTaskButton),
+                ),
+              ],
             ],
-          ],
-          content: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                remainTime != null && remainTime!.inSeconds > 0
-                    ? CircularProgressIndicator(
-                        value: 1 - (remainTime!.inSeconds / timeout!.inSeconds),
-                        backgroundColor: Colors.grey.withOpacity(.1),
-                      )
-                    : const CircularProgressIndicator(),
-                if (loadingText != null) forceWidget(loadingText)!,
-                if (remainTimeWidget != null && remainTime != null && remainTime!.inSeconds > 0) forceWidget(remainTimeWidget(remainTime!))!,
-              ].whereNotNull().toList()
-                ..insertBetween(const Gap(20)),
+            content: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  remainTime != null && remainTime!.inSeconds > 0
+                      ? CircularProgressIndicator(
+                          value: 1 - (remainTime!.inSeconds / timeout!.inSeconds),
+                          backgroundColor: Colors.grey.withOpacity(.1),
+                        )
+                      : const CircularProgressIndicator(),
+                  if (loadingText != null) forceWidget(loadingText)!,
+                  if (remainTimeWidget != null && remainTime != null && remainTime!.inSeconds > 0) forceWidget(remainTimeWidget(remainTime!))!,
+                ].whereNotNull().toList()
+                  ..insertBetween(const Gap(20)),
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
     operation = CancelableOperation.fromFuture(() async {
       try {
