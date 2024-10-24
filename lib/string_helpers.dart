@@ -16,6 +16,10 @@ extension StringHelpers on GetInterface {
   /// Chars from Aa to Zz and Numbers (0 to 9)
   Iterable<string> get alphaNumericChars => [...alphaChars, ...numberChars]..sort();
 
+  Iterable<string> get alphaNumericSpecialChars => [...alphaNumericChars, ...specialChars]..sort();
+
+  Iterable<string> get emailChars => [...Get.alphaNumericChars, '@', '.', '_', '-'];
+
   /// Chars from A to Z
   Iterable<string> get alphaUpperChars => alphaLowerChars.map((e) => e.toUpperCase()).toList();
 
