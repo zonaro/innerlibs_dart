@@ -459,7 +459,7 @@ extension DialogExt on BuildContext {
   ///
   /// The [yesButton] parameter is the text to be displayed on the OK button. It can be of any type and will be converted to a string.
   ///
-  /// The [noButton] parameter is the text to be displayed on the cancel button. It can be of any type and will be converted to a string.
+  /// The [noButton] parameter is the text to be displayed on the NO button. It can be of any type and will be converted to a string.
   ///
   /// The [cancelConfirmationText] parameter is an optional message to be displayed before canceling the task. If provided, the user will be prompted to confirm the cancellation.
   ///
