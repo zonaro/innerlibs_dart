@@ -113,17 +113,17 @@ abstract class InnerLibsLocalizations {
   /// **'App Name'**
   String get appName;
 
-  /// App Settings
-  ///
-  /// In en, this message translates to:
-  /// **'App Settings'**
-  String get appSettings;
-
   /// Apps
   ///
   /// In en, this message translates to:
   /// **'Apps'**
   String get apps;
+
+  /// App Settings
+  ///
+  /// In en, this message translates to:
+  /// **'App Settings'**
+  String get appSettings;
 
   /// Back
   ///
@@ -191,11 +191,41 @@ abstract class InnerLibsLocalizations {
   /// **'Close {item}'**
   String closeItem(String item);
 
+  /// No description provided for @collect.
+  ///
+  /// In en, this message translates to:
+  /// **'Collect'**
+  String get collect;
+
+  /// No description provided for @collects.
+  ///
+  /// In en, this message translates to:
+  /// **'Collects'**
+  String get collects;
+
   /// Color
   ///
   /// In en, this message translates to:
   /// **'Color'**
   String get color;
+
+  /// Command
+  ///
+  /// In en, this message translates to:
+  /// **'Command'**
+  String get command;
+
+  /// Commands
+  ///
+  /// In en, this message translates to:
+  /// **'Commands'**
+  String get commands;
+
+  /// Completed
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
 
   /// Confirm
   ///
@@ -213,7 +243,7 @@ abstract class InnerLibsLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Are you sure you want to delete {count, plural, =1{1 {singular}} other{{count} {plural}}}?'**
-  String confirmDeleteMultiple(int count, String singular, String plural);
+  String confirmDeleteMultiple(int count, String plural, String singular);
 
   /// Contact
   ///
@@ -227,17 +257,17 @@ abstract class InnerLibsLocalizations {
   /// **'Contacts'**
   String get contacts;
 
-  /// Country
-  ///
-  /// In en, this message translates to:
-  /// **'Country'**
-  String get country;
-
   /// No description provided for @couldNotFindItem.
   ///
   /// In en, this message translates to:
   /// **'Could not find {item}.'**
   String couldNotFindItem(String item);
+
+  /// Country
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
 
   /// Date
   ///
@@ -262,6 +292,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
+
+  /// Device
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get device;
 
   /// Dock
   ///
@@ -299,6 +335,12 @@ abstract class InnerLibsLocalizations {
   /// **'Estate'**
   String get estate;
 
+  /// Failed
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
+
   /// File
   ///
   /// In en, this message translates to:
@@ -329,6 +371,12 @@ abstract class InnerLibsLocalizations {
   /// **'File Permissions'**
   String get filePermissions;
 
+  /// Files
+  ///
+  /// In en, this message translates to:
+  /// **'Files'**
+  String get files;
+
   /// File Size
   ///
   /// In en, this message translates to:
@@ -340,12 +388,6 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'File Type'**
   String get fileType;
-
-  /// Files
-  ///
-  /// In en, this message translates to:
-  /// **'Files'**
-  String get files;
 
   /// Find
   ///
@@ -370,6 +412,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Finish'**
   String get finish;
+
+  /// Finished
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get finished;
 
   /// Folder
   ///
@@ -491,6 +539,12 @@ abstract class InnerLibsLocalizations {
   /// **'Main'**
   String get main;
 
+  /// Main Color
+  ///
+  /// In en, this message translates to:
+  /// **'Main Color'**
+  String get mainColor;
+
   /// Map
   ///
   /// In en, this message translates to:
@@ -580,6 +634,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Password'**
   String get password;
+
+  /// Pending
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
 
   /// Phone
   ///
@@ -766,42 +826,6 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Yes'**
   String get yes;
-
-  /// Command
-  ///
-  /// In en, this message translates to:
-  /// **'Command'**
-  String get command;
-
-  /// Commands
-  ///
-  /// In en, this message translates to:
-  /// **'Commands'**
-  String get commands;
-
-  /// Pending
-  ///
-  /// In en, this message translates to:
-  /// **'Pending'**
-  String get pending;
-
-  /// Finished
-  ///
-  /// In en, this message translates to:
-  /// **'Finished'**
-  String get finished;
-
-  /// Failed
-  ///
-  /// In en, this message translates to:
-  /// **'Failed'**
-  String get failed;
-
-  /// Completed
-  ///
-  /// In en, this message translates to:
-  /// **'Completed'**
-  String get completed;
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

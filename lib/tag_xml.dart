@@ -2,7 +2,7 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 
 /// Represents an XML tag that can behave like a POCO class and implement validations and computations
-class TagXml extends XmlElement implements Validator {
+class TagXml extends XmlElement implements Validator, Comparable {
   /// Constructs a [TagXml] instance with the given [name].
   TagXml.fromTagName(String name) : super((XmlName(name)));
 
@@ -30,6 +30,10 @@ class TagXml extends XmlElement implements Validator {
     mutate(this, () => TagXml.fromTagName(value), true);
   }
 
+  /// compare this tag with another tag
+  @override
+  int compareTo(other) => 0;
+
   /// compute this tag
   void compute() {}
 
@@ -53,8 +57,8 @@ class TagXml extends XmlElement implements Validator {
 
   /// Returns an iterable of child nodes with the given [tagName] as instances of [T].
   Iterable<T> getTagsFrom<T extends TagXml>(String tagName, T Function() itemConstructor) => findElements(tagName).map((n) => mutate(n, itemConstructor)!);
-  Iterable<T> getTagsFromNodeList<T extends TagXml>(String listName, string itemName, T Function() constructor) =>
-      childElements.firstWhereOrNull((x) => x.name.qualified.flatEqual(listName))?.childElements.where((x) => x.name.qualified.flatEqual(itemName)).map((n) => mutate(n, constructor)!) ?? [];
+
+  Iterable<T> getTagsFromNodeList<T extends TagXml>(String listName, string itemName, T Function() constructor) => childElements.firstWhereOrNull((x) => x.name.qualified.flatEqual(listName))?.childElements.where((x) => x.name.qualified.flatEqual(itemName)).map((n) => mutate(n, constructor)!) ?? [];
 
   /// Returns the text value from a specific child node with the given [tag].
   ///
@@ -130,6 +134,7 @@ class TagXml extends XmlElement implements Validator {
       n.remove();
     }
     if (value != null) {
+      if(value.hasParent) value.remove();
       children.add(value);
       value.tagName = childName;
     }

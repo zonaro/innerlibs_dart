@@ -1,622 +1,670 @@
 {
-    "@@author": "Kaizonaro",
-    "@@locale": "en",
-    "add": "Add",
-    "@add": {
-        "description": "Add"
-    },
-    "app": "App",
-    "@app": {
-        "description": "App"
-    },
-    "appName": "App Name",
-    "@appName": {
-        "description": "App Name"
-    },
-    "appSettings": "App Settings",
-    "@appSettings": {
-        "description": "App Settings"
-    },
-    "apps": "Apps",
-    "@apps": {
-        "description": "Apps"
-    },
-    "back": "Back",
-    "@back": {
-        "description": "Back"
-    },
-    "calculate": "Calculate",
-    "@calculate": {
-        "description": "Calculate"
-    },
-    "call": "Call",
-    "@call": {
-        "description": "Call"
-    },
-    "calltoItem": "Call {item}",
-    "@calltoItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be called"
-            }
-        }
-    },
-    "cancel": "Cancel",
-    "@cancel": {
-        "description": "Cancel"
-    },
-    "categories": "Categories",
-    "@categories": {
-        "description": "Categories"
-    },
-    "category": "Category",
-    "@category": {
-        "description": "Category"
-    },
-    "city": "City",
-    "@city": {
-        "description": "City"
-    },
-    "clear": "Clear",
-    "@clear": {
-        "description": "Clear"
-    },
-    "close": "Close",
-    "@close": {
-        "description": "Close"
-    },
-    "closeItem": "Close {item}",
-    "@closeItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be closed"
-            }
-        }
-    },
-    "color": "Color",
-    "@color": {
-        "description": "Color"
-    },
-    "confirm": "Confirm",
-    "@confirm": {
-        "description": "Confirm"
-    },
-    "confirmDelete": "Are you sure you want to delete {item}?",
-    "@confirmDelete": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be deleted"
-            }
-        }
-    },
-    "confirmDeleteMultiple": "Are you sure you want to delete {count, plural, =1{1 {singular}} other{{count} {plural}}}?",
-    "@confirmDeleteMultiple": {
-        "placeholders": {
-            "count": {
-                "type": "int",
-                "format": "compact",
-                "description": "The number of items to be deleted"
-            },
-            "singular": {
-                "type": "String",
-                "description": "The singular form of the item"
-            },
-            "plural": {
-                "type": "String",
-                "description": "The plural form of the item"
-            }
-        }
-    },
-    "contact": "Contact",
-    "@contact": {
-        "description": "Contact"
-    },
-    "contacts": "Contacts",
-    "@contacts": {
-        "description": "Contacts"
-    },
-    "country": "Country",
-    "@country": {
-        "description": "Country"
-    },
-    "couldNotFindItem": "Could not find {item}.",
-    "@couldNotFindItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item that could not be found"
-            }
-        }
-    },
-    "date": "Date",
-    "@date": {
-        "description": "Date"
-    },
-    "dateOutOfRange": "Date out of range",
-    "@dateOutOfRange": {
-        "description": "Date out of range"
-    },
-    "defaultWord": "Default",
-    "@defaultWord": {
-        "description": "Default"
-    },
-    "delete": "Delete",
-    "@delete": {
-        "description": "Delete"
-    },
-    "dock": "Dock",
-    "@dock": {
-        "description": "Dock"
-    },
-    "dockItem": "Dock {item}",
-    "@dockItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be docked"
-            }
-        }
-    },
-    "edit": "Edit",
-    "@edit": {
-        "description": "Edit"
-    },
-    "empty": "Empty",
-    "@empty": {
-        "description": "Empty"
-    },
-    "error": "Error",
-    "@error": {
-        "description": "Error"
-    },
-    "estate": "Estate",
-    "@estate": {
-        "description": "Estate"
-    },
-    "file": "File",
-    "@file": {
-        "description": "File"
-    },
-    "fileDate": "File Date",
-    "@fileDate": {
-        "description": "File Date"
-    },
-    "fileName": "File Name",
-    "@fileName": {
-        "description": "File Name"
-    },
-    "fileOwner": "File Owner",
-    "@fileOwner": {
-        "description": "File Owner"
-    },
-    "filePermissions": "File Permissions",
-    "@filePermissions": {
-        "description": "File Permissions"
-    },
-    "fileSize": "File Size",
-    "@fileSize": {
-        "description": "File Size"
-    },
-    "fileType": "File Type",
-    "@fileType": {
-        "description": "File Type"
-    },
-    "files": "Files",
-    "@files": {
-        "description": "Files"
-    },
-    "find": "Find",
-    "@find": {
-        "description": "Find"
-    },
-    "findIn": "Find in {item}",
-    "@findIn": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be found in"
-            }
-        }
-    },
-    "findItem": "Find {item}",
-    "@findItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be found"
-            }
-        }
-    },
-    "finish": "Finish",
-    "@finish": {
-        "description": "Finish"
-    },
-    "folder": "Folder",
-    "@folder": {
-        "description": "Folder"
-    },
-    "folderName": "Folder Name",
-    "@folderName": {
-        "description": "Folder Name"
-    },
-    "grid": "Grid",
-    "@grid": {
-        "description": "Grid"
-    },
-    "gridSize": "Grid Size",
-    "@gridSize": {
-        "description": "Grid Size"
-    },
-    "gridView": "Grid View",
-    "@gridView": {
-        "description": "Grid View"
-    },
-    "height": "Height",
-    "@height": {
-        "description": "Height"
-    },
-    "hide": "Hide",
-    "@hide": {
-        "description": "Hide"
-    },
-    "info": "Info",
-    "@info": {
-        "description": "Info"
-    },
-    "install": "Install",
-    "@install": {
-        "description": "Install"
-    },
-    "installItem": "Install {item}",
-    "@installItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be installed"
-            }
-        }
-    },
-    "invalidItem": "Invalid {item}.",
-    "@invalidItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The invalid item"
-            }
-        }
-    },
-    "itemNotFound": "{item} not found",
-    "@itemNotFound": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item that was not found"
-            }
-        }
-    },
-    "itemNotFoundIn": "{item} not found in {location}",
-    "@itemNotFoundIn": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item that was not found"
-            },
-            "location": {
-                "type": "String",
-                "description": "The location where the item was not found"
-            }
-        }
-    },
-    "list": "List",
-    "@list": {
-        "description": "List"
-    },
-    "listView": "List View",
-    "@listView": {
-        "description": "List View"
-    },
-    "loading": "Loading",
-    "@loading": {
-        "description": "Loading"
-    },
-    "loadingItem": "Loading {item}...",
-    "@loadingItem": {
-        "description": "Loading {item}...",
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be loaded"
-            }
-        }
-    },
-    "login": "Login",
-    "@login": {
-        "description": "Login"
-    },
-    "logout": "Logout",
-    "@logout": {
-        "description": "Logout"
-    },
-    "main": "Main",
-    "@main": {
-        "description": "Main"
-    },
-    "map": "Map",
-    "@map": {
-        "description": "Map"
-    },
-    "mapView": "Map View",
-    "@mapView": {
-        "description": "Map View"
-    },
-    "name": "Name",
-    "@name": {
-        "description": "Name"
-    },
-    "newItem": "New {item}",
-    "@newItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The new item"
-            }
-        }
-    },
-    "next": "Next",
-    "@next": {
-        "description": "Next"
-    },
-    "no": "No",
-    "@no": {
-        "description": "No"
-    },
-    "notFound": "Not Found",
-    "@notFound": {
-        "description": "Not Found"
-    },
-    "number": "Number",
-    "@number": {
-        "description": "Number"
-    },
-    "ok": "OK",
-    "@ok": {
-        "description": "OK"
-    },
-    "open": "Open",
-    "@open": {
-        "description": "Open"
-    },
-    "openIn": "Open in {item}",
-    "@openIn": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be opened in"
-            }
-        }
-    },
-    "openItem": "Open {item}",
-    "@openItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be opened"
-            }
-        }
-    },
-    "openItemIn": "Open {item} in {location}",
-    "@openItemIn": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be opened"
-            },
-            "location": {
-                "type": "String",
-                "description": "The location to be opened"
-            }
-        }
-    },
-    "owner": "Owner",
-    "@owner": {
-        "description": "Owner"
-    },
-    "password": "Password",
-    "@password": {
-        "description": "Password"
-    },
-    "phone": "Phone",
-    "@phone": {
-        "description": "Phone"
-    },
-    "previous": "Previous",
-    "@previous": {
-        "description": "Previous"
-    },
-    "register": "Register",
-    "@register": {
-        "description": "Register"
-    },
-    "results": "Results",
-    "@results": {
-        "description": "Results"
-    },
-    "save": "Save",
-    "@save": {
-        "description": "Save"
-    },
-    "search": "Search",
-    "@search": {
-        "description": "Search"
-    },
-    "searchFor": "Search for {item}...",
-    "@searchFor": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be searched"
-            }
-        }
-    },
-    "searchForIn": "Search for {item} in {location}",
-    "@searchForIn": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be searched"
-            },
-            "location": {
-                "type": "String",
-                "description": "The location to be searched"
-            }
-        }
-    },
-    "send": "Send",
-    "@send": {
-        "description": "Send"
-    },
-    "sendItemToItem": "Send {item1} to {item2}",
-    "@sendItemToItem": {
-        "placeholders": {
-            "item1": {
-                "type": "String",
-                "description": "The first item to be sent"
-            },
-            "item2": {
-                "type": "String",
-                "description": "The second item to be sent"
-            }
-        }
-    },
-    "sendtoItem": "Send to {item}",
-    "@sendtoItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be sent"
-            }
-        }
-    },
-    "settings": "Settings",
-    "@settings": {
-        "description": "Settings"
-    },
-    "show": "Show",
-    "@show": {
-        "description": "Show"
-    },
-    "size": "Size",
-    "@size": {
-        "description": "Size"
-    },
-    "success": "Success",
-    "@success": {
-        "description": "Success"
-    },
-    "table": "Table",
-    "@table": {
-        "description": "Table"
-    },
-    "tableView": "Table View",
-    "@tableView": {
-        "description": "Table View"
-    },
-    "to": "To",
-    "@to": {
-        "description": "To"
-    },
-    "undock": "Undock",
-    "@undock": {
-        "description": "Undock"
-    },
-    "undockItem": "Undock {item}",
-    "@undockItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be undocked"
-            }
-        }
-    },
-    "uninstall": "Uninstall",
-    "@uninstall": {
-        "description": "Uninstall"
-    },
-    "uninstallItem": "Uninstall {item}",
-    "@uninstallItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be uninstalled"
-            }
-        }
-    },
-    "updateItem": "Update {item}",
-    "@updateItem": {
-        "placeholders": {
-            "item": {
-                "type": "String",
-                "description": "The item to be updated"
-            }
-        }
-    },
-    "username": "Username",
-    "@username": {
-        "description": "Username"
-    },
-    "value": "Value",
-    "@value": {
-        "description": "Value"
-    },
-    "view": "View",
-    "@view": {
-        "description": "View"
-    },
-    "viewType": "View Type",
-    "@viewType": {
-        "description": "View Type"
-    },
-    "wallpaper": "Wallpaper",
-    "@wallpaper": {
-        "description": "Wallpaper"
-    },
-    "warning": "Warning",
-    "@warning": {
-        "description": "Warning"
-    },
-    "width": "Width",
-    "@width": {
-        "description": "Width"
-    },
-    "yes": "Yes",
-    "@yes": {
-        "description": "Yes"
-    },
-    "command": "Command",
-    "@command": {
-        "description": "Command"
-    },
-    "commands": "Commands",
-    "@commands": {
-        "description": "Commands"
-    },
-    "pending": "Pending",
-    "@pending": {
-        "description": "Pending"
-    },
-    "finished": "Finished",
-    "@finished": {
-        "description": "Finished"
-    },
-    "failed": "Failed",
-    "@failed": {
-        "description": "Failed"
-    },
-    "completed": "Completed",
-    "@completed": {
-        "description": "Completed"
+  "@@locale": "en",
+  "@@author": "Kaizonaro",
+  "add": "Add",
+  "@add": {
+    "description": "Add"
+  },
+  "app": "App",
+  "@app": {
+    "description": "App"
+  },
+  "appName": "App Name",
+  "@appName": {
+    "description": "App Name"
+  },
+  "apps": "Apps",
+  "@apps": {
+    "description": "Apps"
+  },
+  "appSettings": "App Settings",
+  "@appSettings": {
+    "description": "App Settings"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back"
+  },
+  "calculate": "Calculate",
+  "@calculate": {
+    "description": "Calculate"
+  },
+  "call": "Call",
+  "@call": {
+    "description": "Call"
+  },
+  "calltoItem": "Call {item}",
+  "@calltoItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be called",
+        "type": "String"
+      }
     }
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel"
+  },
+  "categories": "Categories",
+  "@categories": {
+    "description": "Categories"
+  },
+  "category": "Category",
+  "@category": {
+    "description": "Category"
+  },
+  "city": "City",
+  "@city": {
+    "description": "City"
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Clear"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close"
+  },
+  "closeItem": "Close {item}",
+  "@closeItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be closed",
+        "type": "String"
+      }
+    }
+  },
+  "collect": "Collect",
+  "@collect": {
+    "description": "Collect"
+  },
+  "collects": "Collects",
+  "@collects": {
+    "description": "Collects"
+  },
+  "color": "Color",
+  "@color": {
+    "description": "Color"
+  },
+  "command": "Command",
+  "@command": {
+    "description": "Command"
+  },
+  "commands": "Commands",
+  "@commands": {
+    "description": "Commands"
+  },
+  "completed": "Completed",
+  "@completed": {
+    "description": "Completed"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm"
+  },
+  "confirmDelete": "Are you sure you want to delete {item}?",
+  "@confirmDelete": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be deleted",
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteMultiple": "Are you sure you want to delete {count, plural, =1{1 {singular}} other{{count} {plural}}}?",
+  "@confirmDeleteMultiple": {
+    "placeholders": {
+      "count": {
+        "description": "The number of items to be deleted",
+        "format": "compact",
+        "type": "int"
+      },
+      "plural": {
+        "description": "The plural form of the item",
+        "type": "String"
+      },
+      "singular": {
+        "description": "The singular form of the item",
+        "type": "String"
+      }
+    }
+  },
+  "contact": "Contact",
+  "@contact": {
+    "description": "Contact"
+  },
+  "contacts": "Contacts",
+  "@contacts": {
+    "description": "Contacts"
+  },
+  "couldNotFindItem": "Could not find {item}.",
+  "@couldNotFindItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item that could not be found",
+        "type": "String"
+      }
+    }
+  },
+  "country": "Country",
+  "@country": {
+    "description": "Country"
+  },
+  "date": "Date",
+  "@date": {
+    "description": "Date"
+  },
+  "dateOutOfRange": "Date out of range",
+  "@dateOutOfRange": {
+    "description": "Date out of range"
+  },
+  "days": "Days",
+  "@days": {
+    "description": "Days"
+  },
+  "decades": "Decades",
+  "@decades": {
+    "description": "Decades"
+  },
+  "defaultWord": "Default",
+  "@defaultWord": {
+    "description": "Default"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete"
+  },
+  "device": "Device",
+  "@device": {
+    "description": "Device"
+  },
+  "dock": "Dock",
+  "@dock": {
+    "description": "Dock"
+  },
+  "dockItem": "Dock {item}",
+  "@dockItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be docked",
+        "type": "String"
+      }
+    }
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit"
+  },
+  "empty": "Empty",
+  "@empty": {
+    "description": "Empty"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Error"
+  },
+  "estate": "Estate",
+  "@estate": {
+    "description": "Estate"
+  },
+  "failed": "Failed",
+  "@failed": {
+    "description": "Failed"
+  },
+  "file": "File",
+  "@file": {
+    "description": "File"
+  },
+  "fileDate": "File Date",
+  "@fileDate": {
+    "description": "File Date"
+  },
+  "fileName": "File Name",
+  "@fileName": {
+    "description": "File Name"
+  },
+  "fileOwner": "File Owner",
+  "@fileOwner": {
+    "description": "File Owner"
+  },
+  "filePermissions": "File Permissions",
+  "@filePermissions": {
+    "description": "File Permissions"
+  },
+  "files": "Files",
+  "@files": {
+    "description": "Files"
+  },
+  "fileSize": "File Size",
+  "@fileSize": {
+    "description": "File Size"
+  },
+  "fileType": "File Type",
+  "@fileType": {
+    "description": "File Type"
+  },
+  "find": "Find",
+  "@find": {
+    "description": "Find"
+  },
+  "findIn": "Find in {item}",
+  "@findIn": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be found in",
+        "type": "String"
+      }
+    }
+  },
+  "findItem": "Find {item}",
+  "@findItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be found",
+        "type": "String"
+      }
+    }
+  },
+  "finish": "Finish",
+  "@finish": {
+    "description": "Finish"
+  },
+  "finished": "Finished",
+  "@finished": {
+    "description": "Finished"
+  },
+  "folder": "Folder",
+  "@folder": {
+    "description": "Folder"
+  },
+  "folderName": "Folder Name",
+  "@folderName": {
+    "description": "Folder Name"
+  },
+  "grid": "Grid",
+  "@grid": {
+    "description": "Grid"
+  },
+  "gridSize": "Grid Size",
+  "@gridSize": {
+    "description": "Grid Size"
+  },
+  "gridView": "Grid View",
+  "@gridView": {
+    "description": "Grid View"
+  },
+  "height": "Height",
+  "@height": {
+    "description": "Height"
+  },
+  "hide": "Hide",
+  "@hide": {
+    "description": "Hide"
+  },
+  "hours": "Hours",
+  "@hours": {
+    "description": "Hours"
+  },
+  "info": "Info",
+  "@info": {
+    "description": "Info"
+  },
+  "install": "Install",
+  "@install": {
+    "description": "Install"
+  },
+  "installItem": "Install {item}",
+  "@installItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be installed",
+        "type": "String"
+      }
+    }
+  },
+  "invalidItem": "Invalid {item}.",
+  "@invalidItem": {
+    "placeholders": {
+      "item": {
+        "description": "The invalid item",
+        "type": "String"
+      }
+    }
+  },
+  "itemNotFound": "{item} not found",
+  "@itemNotFound": {
+    "placeholders": {
+      "item": {
+        "description": "The item that was not found",
+        "type": "String"
+      }
+    }
+  },
+  "itemNotFoundIn": "{item} not found in {location}",
+  "@itemNotFoundIn": {
+    "placeholders": {
+      "item": {
+        "description": "The item that was not found",
+        "type": "String"
+      },
+      "location": {
+        "description": "The location where the item was not found",
+        "type": "String"
+      }
+    }
+  },
+  "list": "List",
+  "@list": {
+    "description": "List"
+  },
+  "listView": "List View",
+  "@listView": {
+    "description": "List View"
+  },
+  "loading": "Loading",
+  "@loading": {
+    "description": "Loading"
+  },
+  "loadingItem": "Loading {item}...",
+  "@loadingItem": {
+    "description": "Loading {item}...",
+    "placeholders": {
+      "item": {
+        "description": "The item to be loaded",
+        "type": "String"
+      }
+    }
+  },
+  "login": "Login",
+  "@login": {
+    "description": "Login"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout"
+  },
+  "main": "Main",
+  "@main": {
+    "description": "Main"
+  },
+  "mainColor": "Main Color",
+  "@mainColor": {
+    "description": "Main Color"
+  },
+  "map": "Map",
+  "@map": {
+    "description": "Map"
+  },
+  "mapView": "Map View",
+  "@mapView": {
+    "description": "Map View"
+  },
+  "minutes": "Minutes",
+  "@minutes": {
+    "description": "Minutes"
+  },
+  "months": "Months",
+  "@months": {
+    "description": "Months"
+  },
+  "name": "Name",
+  "@name": {
+    "description": "Name"
+  },
+  "newItem": "New {item}",
+  "@newItem": {
+    "placeholders": {
+      "item": {
+        "description": "The new item",
+        "type": "String"
+      }
+    }
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Next"
+  },
+  "no": "No",
+  "@no": {
+    "description": "No"
+  },
+  "notFound": "Not Found",
+  "@notFound": {
+    "description": "Not Found"
+  },
+  "number": "Number",
+  "@number": {
+    "description": "Number"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "OK"
+  },
+  "open": "Open",
+  "@open": {
+    "description": "Open"
+  },
+  "openIn": "Open in {item}",
+  "@openIn": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be opened in",
+        "type": "String"
+      }
+    }
+  },
+  "openItem": "Open {item}",
+  "@openItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be opened",
+        "type": "String"
+      }
+    }
+  },
+  "openItemIn": "Open {item} in {location}",
+  "@openItemIn": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be opened",
+        "type": "String"
+      },
+      "location": {
+        "description": "The location to be opened",
+        "type": "String"
+      }
+    }
+  },
+  "owner": "Owner",
+  "@owner": {
+    "description": "Owner"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password"
+  },
+  "pending": "Pending",
+  "@pending": {
+    "description": "Pending"
+  },
+  "phone": "Phone",
+  "@phone": {
+    "description": "Phone"
+  },
+  "previous": "Previous",
+  "@previous": {
+    "description": "Previous"
+  },
+  "register": "Register",
+  "@register": {
+    "description": "Register"
+  },
+  "results": "Results",
+  "@results": {
+    "description": "Results"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Search"
+  },
+  "searchFor": "Search for {item}...",
+  "@searchFor": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be searched",
+        "type": "String"
+      }
+    }
+  },
+  "searchForIn": "Search for {item} in {location}",
+  "@searchForIn": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be searched",
+        "type": "String"
+      },
+      "location": {
+        "description": "The location to be searched",
+        "type": "String"
+      }
+    }
+  },
+  "seconds": "Seconds",
+  "@seconds": {
+    "description": "Seconds"
+  },
+  "send": "Send",
+  "@send": {
+    "description": "Send"
+  },
+  "sendItemToItem": "Send {item1} to {item2}",
+  "@sendItemToItem": {
+    "placeholders": {
+      "item1": {
+        "description": "The first item to be sent",
+        "type": "String"
+      },
+      "item2": {
+        "description": "The second item to be sent",
+        "type": "String"
+      }
+    }
+  },
+  "sendtoItem": "Send to {item}",
+  "@sendtoItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be sent",
+        "type": "String"
+      }
+    }
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings"
+  },
+  "show": "Show",
+  "@show": {
+    "description": "Show"
+  },
+  "size": "Size",
+  "@size": {
+    "description": "Size"
+  },
+  "success": "Success",
+  "@success": {
+    "description": "Success"
+  },
+  "table": "Table",
+  "@table": {
+    "description": "Table"
+  },
+  "tableView": "Table View",
+  "@tableView": {
+    "description": "Table View"
+  },
+  "to": "To",
+  "@to": {
+    "description": "To"
+  },
+  "undock": "Undock",
+  "@undock": {
+    "description": "Undock"
+  },
+  "undockItem": "Undock {item}",
+  "@undockItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be undocked",
+        "type": "String"
+      }
+    }
+  },
+  "uninstall": "Uninstall",
+  "@uninstall": {
+    "description": "Uninstall"
+  },
+  "uninstallItem": "Uninstall {item}",
+  "@uninstallItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be uninstalled",
+        "type": "String"
+      }
+    }
+  },
+  "updateItem": "Update {item}",
+  "@updateItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be updated",
+        "type": "String"
+      }
+    }
+  },
+  "username": "Username",
+  "@username": {
+    "description": "Username"
+  },
+  "value": "Value",
+  "@value": {
+    "description": "Value"
+  },
+  "view": "View",
+  "@view": {
+    "description": "View"
+  },
+  "viewType": "View Type",
+  "@viewType": {
+    "description": "View Type"
+  },
+  "wallpaper": "Wallpaper",
+  "@wallpaper": {
+    "description": "Wallpaper"
+  },
+  "warning": "Warning",
+  "@warning": {
+    "description": "Warning"
+  },
+  "weeks": "Weeks",
+  "@weeks": {
+    "description": "Weeks"
+  },
+  "width": "Width",
+  "@width": {
+    "description": "Width"
+  },
+  "years": "Years",
+  "@years": {
+    "description": "Years"
+  },
+  "yes": "Yes",
+  "@yes": {
+    "description": "Yes"
+  }
 }

@@ -11,13 +11,9 @@ import 'package:intl/intl.dart' hide TextDirection;
 final _random = Random();
 
 bool get isAndroid => GetPlatform.isAndroid;
-
 bool get isApple => (isIOS || isMacOS);
-
 bool get isDesktop => (isMacOS || isWindows || isLinux);
-
 bool get isFuchsia => GetPlatform.isFuchsia;
-
 bool get isGoogle => (isAndroid || isFuchsia);
 bool get isIOS => GetPlatform.isIOS;
 bool get isLinux => GetPlatform.isLinux;
@@ -33,36 +29,39 @@ bool get isNativeLinux => isLinux && !isWeb;
 bool get isNativeMacOS => isMacOS && !isWeb;
 bool get isNativeMobile => isMobile && !isWeb;
 bool get isNativeWindows => isWindows && !isWeb;
-bool get isPlatformDarkMode => PlatformDispatcher.instance.platformBrightness == Brightness.dark;
-bool get isPlatformLightMode => Get.isPlatformDarkMode == false;
+bool get isPlatformDarkMode => platformBrightness == Brightness.dark;
+bool get isPlatformLightMode => platformBrightness == Brightness.light;
 bool get isWeb => GetPlatform.isWeb;
 bool get isWindows => GetPlatform.isWindows;
+
 date get lastWeek => now.lastDayOfWeek - 7.days;
-
-DateTime get maxDate => DateTime.utc(9999, 12, 31, 23, 59, 59);
-
-DateTime get minDate => DateTime.fromMicrosecondsSinceEpoch(0);
-
+date get maxDate => DateTime.utc(9999, 12, 31, 23, 59, 59);
+date get minDate => DateTime.fromMicrosecondsSinceEpoch(0);
 date get now => DateTime.now();
 
 /// Returns the platform brightness of the device.
-Brightness get platformBrightness => PlatformDispatcher.instance.platformBrightness;
+Brightness get platformBrightness => platformDispatcher.platformBrightness;
+
+/// Returns the platform dispatcher of the device.
+PlatformDispatcher get platformDispatcher => PlatformDispatcher.instance;
 
 /// Returns the locale of the platform.
-Locale get platformLocale => PlatformDispatcher.instance.locale;
+Locale get platformLocale => platformDispatcher.locale;
 
 /// Returns the language code of the platform locale.
 String get platformLocaleCode => platformLocale.toLanguageTag();
 
 // Returns the list of locales that user defined in the system settings.
-Iterable<Locale> get platformLocales => PlatformDispatcher.instance.locales;
+Iterable<Locale> get platformLocales => platformDispatcher.locales;
 
+/// Returns the current year
 int get thisYear => now.year;
-date get today => now.at(hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0);
 
-date get tomorrow => now.add(1.days);
+date get today => now.beginOfDay;
 
-date get yesterday => now.subtract(1.days);
+date get tomorrow => today.add(1.days);
+
+date get yesterday => today.subtract(1.days);
 
 /// Returns the [IconData] associated with the given app [category].
 IconData categoryIcon(String category) {
@@ -832,12 +831,12 @@ extension FilterFunctions on GetInterface {
   /// This function takes an item, a list of search terms, and various options to customize the comparison.
   /// It returns the sum of the Jaro similarity scores between the item and each search term.
   ///
-  /// The [searchTerms] parameter is an iterable of search terms to compare against the item.
-  /// The [searchOn] parameter is a function that takes the item and returns an iterable of values to search on.
-  /// The [ignoreCase] parameter specifies whether to ignore case when comparing strings (default is true).
-  /// The [ignoreDiacritics] parameter specifies whether to ignore diacritics when comparing strings (default is true).
-  /// The [ignoreWordSplitters] parameter specifies whether to ignore word splitters when comparing strings (default is true).
-  /// The [splitCamelCase] parameter specifies whether to split camel case words when comparing strings (default is true).
+  /// - The [searchTerms] parameter is an iterable of search terms to compare against the item.
+  /// - The [searchOn] parameter is a function that takes the item and returns an iterable of values to search on.
+  /// - The [ignoreCase] parameter specifies whether to ignore case when comparing strings (default is true).
+  /// - The [ignoreDiacritics] parameter specifies whether to ignore diacritics when comparing strings (default is true).
+  /// - The [ignoreWordSplitters] parameter specifies whether to ignore word splitters when comparing strings (default is true).
+  /// - The [splitCamelCase] parameter specifies whether to split camel case words when comparing strings (default is true).
   ///
   /// Returns the sum of the Jaro similarity scores between the item and each search term.
   double countJaro({
@@ -988,14 +987,14 @@ extension FilterFunctions on GetInterface {
   /// the search terms to filter on, the function to extract search terms from the item,
   /// and several optional parameters to customize the filtering behavior.
   ///
-  /// The [searchTerms] parameter is an iterable of search terms to filter on.
-  /// The [searchOn] parameter is a function that takes in an item and returns an iterable of search terms extracted from the item.
-  /// The [levenshteinDistance] parameter is an optional parameter that specifies the maximum Levenshtein distance allowed for a match.
-  /// The [ignoreCase] parameter is an optional parameter that specifies whether to ignore case when performing the filter.
-  /// The [ignoreDiacritics] parameter is an optional parameter that specifies whether to ignore diacritics when performing the filter.
-  /// The [ignoreWordSplitters] parameter is an optional parameter that specifies whether to ignore word splitters when performing the filter.
-  /// The [splitCamelCase] parameter is an optional parameter that specifies whether to split camel case words when performing the filter.
-  /// The [useWildcards] parameter is an optional parameter that specifies whether to use wildcards when performing the filter.
+  /// - The [searchTerms] parameter contains search terms to filter on. If [searchTerms] is a Iterable, the function will return `true` if any of the search terms match the item.
+  /// - The [searchOn] parameter is a function that takes in an item and returns an iterable of search terms extracted from the item.
+  /// - The [levenshteinDistance] parameter is an optional parameter that specifies the maximum Levenshtein distance allowed for a match.
+  /// - The [ignoreCase] parameter is an optional parameter that specifies whether to ignore case when performing the filter.
+  /// - The [ignoreDiacritics] parameter is an optional parameter that specifies whether to ignore diacritics when performing the filter.
+  /// - The [ignoreWordSplitters] parameter is an optional parameter that specifies whether to ignore word splitters when performing the filter.
+  /// - The [splitCamelCase] parameter is an optional parameter that specifies whether to split camel case words when performing the filter.
+  /// - The [useWildcards] parameter is an optional parameter that specifies whether to use wildcards when performing the filter.
   ///
   /// The function returns `true` if the item passes the filter, and `false` otherwise.
   bool fullFilterFunction({
@@ -1032,9 +1031,8 @@ extension FilterFunctions on GetInterface {
   /// and a maximum allowed Levenshtein distance. It returns `true` if there is at least one search term that is within
   /// the specified Levenshtein distance of the item, and `false` otherwise.
   ///
-  /// The [item] parameter is the item to compare against the search terms.
   /// The [searchTerms] parameter is the collection of search terms to compare against the item.
-  /// The [searchOn] parameter is a function that takes an item and returns the search terms to compare against.
+  /// The [searchOn] parameter is a list of search terms to compare against.
   /// The [levenshteinDistance] parameter is the maximum allowed Levenshtein distance.
   /// The [ignoreCase] parameter specifies whether to ignore case when comparing strings. It is `true` by default.
   ///
@@ -1056,10 +1054,10 @@ extension FilterFunctions on GetInterface {
 
   /// Searches the iterable for items that match the specified search criteria.
   ///
-  /// The [searchTerms] parameter specifies the term to search for. Can be a string or a list of strings.
-  /// The [searchOn] parameter is a function that returns a list of strings to search on for each item.
-  /// The [levenshteinDistance] parameter specifies the maximum Levenshtein distance allowed for fuzzy matching.
-  /// The [ignoreCase], [ignoreDiacritics], [ignoreWordSplitters], [splitCamelCase], [useWildcards], and [allIfEmpty] parameters control various search options.
+  /// - The [searchTerms] parameter specifies the term to search for. Can be a string or a list of strings.
+  /// - The [searchOn] parameter is a function that returns a list of strings to search on for each item.
+  /// - The [levenshteinDistance] parameter specifies the maximum Levenshtein distance allowed for fuzzy matching.
+  /// - The [ignoreCase], [ignoreDiacritics], [ignoreWordSplitters], [splitCamelCase], [useWildcards], and [allIfEmpty] parameters control various search options.
   ///
   /// Returns an iterable of items that match the search criteria, ordered by relevance.
   /// The relevance is determined by the number of matches and the Levenshtein distance (if applicable).

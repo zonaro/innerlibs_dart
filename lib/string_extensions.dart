@@ -1056,6 +1056,15 @@ extension StringExtensions on String {
     return replaceAll(regex, '');
   }
 
+  String get onlyLettersOrNumbers {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    // ignore: unnecessary_raw_strings
+    var regex = RegExp(r'([^a-zA-Z0-9\s]+)');
+    return replaceAll(regex, '');
+  }
+
   /// Returns only the numbers from the `String`.
   /// ### Example
   /// ```dart

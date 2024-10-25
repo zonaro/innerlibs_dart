@@ -18,10 +18,10 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get appName => 'App Name';
 
   @override
-  String get appSettings => 'App Settings';
+  String get apps => 'Apps';
 
   @override
-  String get apps => 'Apps';
+  String get appSettings => 'App Settings';
 
   @override
   String get back => 'Back';
@@ -61,7 +61,22 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
+  String get collect => 'Collect';
+
+  @override
+  String get collects => 'Collects';
+
+  @override
   String get color => 'Color';
+
+  @override
+  String get command => 'Command';
+
+  @override
+  String get commands => 'Commands';
+
+  @override
+  String get completed => 'Completed';
 
   @override
   String get confirm => 'Confirm';
@@ -72,7 +87,7 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
-  String confirmDeleteMultiple(int count, String singular, String plural) {
+  String confirmDeleteMultiple(int count, String plural, String singular) {
     final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
       locale: localeName,
       
@@ -95,12 +110,12 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get contacts => 'Contacts';
 
   @override
-  String get country => 'Country';
-
-  @override
   String couldNotFindItem(String item) {
     return 'Could not find $item.';
   }
+
+  @override
+  String get country => 'Country';
 
   @override
   String get date => 'Date';
@@ -113,6 +128,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get delete => 'Delete';
+
+  @override
+  String get device => 'Device';
 
   @override
   String get dock => 'Dock';
@@ -135,6 +153,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get estate => 'Estate';
 
   @override
+  String get failed => 'Failed';
+
+  @override
   String get file => 'File';
 
   @override
@@ -150,13 +171,13 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get filePermissions => 'File Permissions';
 
   @override
+  String get files => 'Files';
+
+  @override
   String get fileSize => 'File Size';
 
   @override
   String get fileType => 'File Type';
-
-  @override
-  String get files => 'Files';
 
   @override
   String get find => 'Find';
@@ -173,6 +194,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get finish => 'Finish';
+
+  @override
+  String get finished => 'Finished';
 
   @override
   String get folder => 'Folder';
@@ -245,6 +269,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get main => 'Main';
 
   @override
+  String get mainColor => 'Main Color';
+
+  @override
   String get map => 'Map';
 
   @override
@@ -296,6 +323,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get password => 'Password';
+
+  @override
+  String get pending => 'Pending';
 
   @override
   String get phone => 'Phone';
@@ -403,22 +433,4 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get yes => 'Yes';
-
-  @override
-  String get command => 'Command';
-
-  @override
-  String get commands => 'Commands';
-
-  @override
-  String get pending => 'Pending';
-
-  @override
-  String get finished => 'Finished';
-
-  @override
-  String get failed => 'Failed';
-
-  @override
-  String get completed => 'Completed';
 }

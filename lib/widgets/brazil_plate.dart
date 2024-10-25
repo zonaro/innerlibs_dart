@@ -28,6 +28,17 @@ abstract class LicensePlate extends StatelessWidget {
 
   Color gettextColor();
 
+  static PlateCategory? categoryFromIdentifier(String value) {
+    if (value.startsWith("M") && value.removeFirstEqual("M").isNumber) {
+      return MercosulPlateCategory.fromValue(value);
+    } else if (value.startsWith("3L") && value.removeFirstEqual("3L").isNumber) {
+      return ThreeLettersPlateCategory.fromValue(value);
+    } else if (value.startsWith("2L") && value.removeFirstEqual("2L").isNumber) {
+      return TwoLettersPlateCategory.fromValue(value);
+    }
+    return null;
+  }
+
   static PlateCategory? categoryFromPlate(String plate, dynamic value) {
     if (MercosulPlate.isValidPlate(plate)) {
       return MercosulPlateCategory.fromValue(value);
@@ -140,6 +151,9 @@ abstract class LicensePlate extends StatelessWidget {
     }
     throw Exception('Invalid category');
   }
+
+  /// validate if [String] is a valid plate number
+  static bool isValidPlate(String plate) => MercosulPlate.isValidPlate(plate) || ThreeLettersPlate.isValidPlate(plate) || TwoLettersPlate.isValidPlate(plate);
 }
 
 /// A widget that draws a Mercosul plate on the screen.
@@ -538,6 +552,13 @@ enum MercosulPlateCategory implements PlateCategory {
     if (value is int) {
       return MercosulPlateCategory.fromInt(value);
     } else if (value is String) {
+      if (value.startsWith("M") && value.removeFirstEqual("M").isNumber) {
+        return MercosulPlateCategory.fromInt(value.removeFirstEqual("M").onlyNumbersInt);
+      }
+      if (value.startsWith("3L") && value.removeFirstEqual("3L").isNumber) {
+        return MercosulPlateCategory.fromThreeLetters(ThreeLettersPlateCategory.fromValue(value));
+      }
+
       return MercosulPlateCategory.fromString(value);
     } else if (value is MercosulPlateCategory) {
       return value;
@@ -568,6 +589,9 @@ enum MercosulPlateCategory implements PlateCategory {
   }
 
   @override
+  String get identifier => "M$value";
+
+  @override
   String toString() {
     switch (this) {
       case MercosulPlateCategory.particular:
@@ -594,12 +618,13 @@ abstract class PlateCategory {
   final Color borderColor;
   final Color textColor;
   final String name;
-
   const PlateCategory(this.value, this.backgroundColor, this.borderColor, this.textColor, this.name);
 
   factory PlateCategory.fromInt(int value) => throw UnimplementedError();
+
   factory PlateCategory.fromString(String value) => throw UnimplementedError();
   factory PlateCategory.fromValue(dynamic value) => throw UnimplementedError();
+  String get identifier => "PC$value";
 }
 
 /// A widget that prints a license plate in the
@@ -988,6 +1013,12 @@ enum ThreeLettersPlateCategory implements PlateCategory {
     if (value is int) {
       return ThreeLettersPlateCategory.fromInt(value);
     } else if (value is String) {
+      if (value.startsWith("3L") && value.removeFirstEqual("3L").isNumber) {
+        return ThreeLettersPlateCategory.fromInt(value.removeFirstEqual("3L").onlyNumbersInt);
+      }
+      if (value.startsWith("M") && value.removeFirstEqual("M").isNumber) {
+        return ThreeLettersPlateCategory.fromMercosul(MercosulPlateCategory.fromInt(value.removeFirstEqual("M").onlyNumbersInt));
+      }
       return ThreeLettersPlateCategory.fromString(value);
     } else if (value is ThreeLettersPlateCategory) {
       return value;
@@ -1019,6 +1050,9 @@ enum ThreeLettersPlateCategory implements PlateCategory {
         return MercosulPlateCategory.particular;
     }
   }
+
+  @override
+  String get identifier => "3L$value";
 
   double get lettersHeightRelation {
     if (this == ThreeLettersPlateCategory.representacao) {
@@ -1353,6 +1387,9 @@ enum TwoLettersPlateCategory implements PlateCategory {
     if (value is int) {
       return TwoLettersPlateCategory.fromInt(value);
     } else if (value is String) {
+      if (value.startsWith("2L") && value.removeFirstEqual("2L").isNumber) {
+        return TwoLettersPlateCategory.fromInt(value.removeFirstEqual("2L").onlyNumbersInt);
+      }
       return TwoLettersPlateCategory.fromString(value);
     } else if (value is TwoLettersPlateCategory) {
       return value;
@@ -1360,6 +1397,9 @@ enum TwoLettersPlateCategory implements PlateCategory {
       throw Exception('Invalid value: $value');
     }
   }
+
+  @override
+  String get identifier => "2L$value";
 
   @override
   String toString() {
