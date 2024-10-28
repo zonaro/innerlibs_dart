@@ -2,6 +2,13 @@ import 'package:flutter/services.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
+class CamelCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(text: newValue.text.toCamelCase, selection: newValue.selection);
+  }
+}
+
 class LicensePlateFormatter extends TextInputFormatter {
   final bool includeHiphen;
 
@@ -12,11 +19,11 @@ class LicensePlateFormatter extends TextInputFormatter {
   LicensePlateFormatter({
     this.includeHiphen = true,
     this.allowThreeLetters = true,
-    this.allowTwoLetters = true,
+    this.allowTwoLetters = false,
     this.allowMercosul = true,
   });
 
-  bool get isThreeLettersFirst => allowThreeLetters || allowMercosul;
+  bool get _is3LettersCompatible => allowThreeLetters || allowMercosul;
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
@@ -25,19 +32,20 @@ class LicensePlateFormatter extends TextInputFormatter {
     var plate = newValue.text.toUpperCase().onlyLettersOrNumbers.first(7);
 
     var arr = plate.toArray;
-    if (arr.isEmpty) return newValue;
+    if (arr.isEmpty) return const TextEditingValue(text: '', selection: TextSelection.collapsed(offset: 0));
 
     arr[0] = arr[0].isLettersOnly ? arr[0] : '';
     if (arr.length >= 2) arr[1] = arr[1].isLettersOnly ? arr[1] : '';
 
-    if (isThreeLettersFirst && allowTwoLetters) {
+    if (_is3LettersCompatible && allowTwoLetters) {
       if (arr.length >= 3) arr[2] = arr[2].isLettersOnly || arr[2].isNumericOnly ? arr[2] : '';
-    } else if (isThreeLettersFirst) {
+    } else if (_is3LettersCompatible && !allowTwoLetters) {
       if (arr.length >= 3) arr[2] = arr[2].isLettersOnly ? arr[2] : '';
-    } else {
+    } else if (!_is3LettersCompatible && allowTwoLetters) {
       if (arr.length >= 3) arr[2] = arr[2].isNumericOnly ? arr[2] : '';
     }
-    bool isTwoLetterNow = (arr[0].isLettersOnly && arr[1].isLettersOnly && arr[2].isNumericOnly) || !allowMercosul && !allowThreeLetters;
+
+    bool isTwoLetterNow = (allowTwoLetters && (arr[0].isLettersOnly && arr[1].isLettersOnly && arr[2].isNumericOnly));
 
     if (isTwoLetterNow) {
       if (arr.length >= 4) arr[3] = arr[3].isNumericOnly ? arr[3] : '';
@@ -71,6 +79,13 @@ class LicensePlateFormatter extends TextInputFormatter {
       text: plate,
       selection: TextSelection.collapsed(offset: plate.length),
     );
+  }
+}
+
+class LowerCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(text: newValue.text.toLowerCase(), selection: newValue.selection);
   }
 }
 
@@ -116,12 +131,19 @@ class NumberInputFormatter extends TextInputFormatter {
   }
 }
 
+class PascalCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(text: newValue.text.toCamelCase.capitalizeFirst ?? "", selection: newValue.selection);
+  }
+}
+
 class PercentFormatter extends TextInputFormatter {
   int? decimalDigits;
-  final bool autoCalculate;
+  final bool calculateDecimal;
   string? locale;
 
-  PercentFormatter({this.decimalDigits, this.autoCalculate = false, this.locale});
+  PercentFormatter({this.decimalDigits, this.calculateDecimal = false, this.locale});
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
@@ -134,9 +156,11 @@ class PercentFormatter extends TextInputFormatter {
 
     String formattedValue = "";
 
+    string newValueText = newValue.text.trimAll;
+
     // Remove any non-digit characters
-    for (int i = 0; i < newValue.text.length; i++) {
-      var e = newValue.text.charAt(i);
+    for (int i = 0; i < newValueText.length; i++) {
+      var e = newValueText.charAt(i);
       if (i == 0 && (e == minusSign)) {
         formattedValue += e;
         continue;
@@ -149,7 +173,7 @@ class PercentFormatter extends TextInputFormatter {
         formattedValue += e;
         continue;
       }
-      if (e == percentSign && i == newValue.text.length - 1) {
+      if (e == percentSign && i == newValueText.length - 1) {
         formattedValue += e;
         continue;
       }
@@ -187,7 +211,7 @@ class PercentFormatter extends TextInputFormatter {
 
     // Add the percent sign if necessary
     if (hasPercentSign) {
-      if (autoCalculate) {
+      if (calculateDecimal) {
         formattedValue = (double.parse(formattedValue.removeAny([percentSign])) / 100).toStringAsFixed(decimalDigits!);
       } else {
         formattedValue += percentSign;
@@ -203,6 +227,13 @@ class PercentFormatter extends TextInputFormatter {
       text: formattedValue,
       selection: TextSelection.collapsed(offset: (formattedValue.contains(percentSign) ? formattedValue.indexOf(percentSign) - 1 : formattedValue.length).clamp(0, formattedValue.length - 1)),
     );
+  }
+}
+
+class TitleCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(text: newValue.text.toTitleCase(), selection: newValue.selection);
   }
 }
 
