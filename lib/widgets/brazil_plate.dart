@@ -860,29 +860,24 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
     if (MercosulPlate.isValidPlate(chars)) {
       chars = LicensePlate.convertToThreeLettersPlate(chars);
     }
-    return Theme(
-      data: context.theme.copyWith(
-        typography: Typography.material2014(),
+    return Text(
+      chars.toUpperCase(),
+      style: TextStyle(
+        height: 1.03,
+        fontSize: fontSize,
+        letterSpacing: 4 * (fontSize / 98),
+        fontFamily: _fontFamily,
+        package: 'innerlibs',
+        color: getTextColor(),
+        shadows: [
+          Shadow(
+            color: Colors.black.withOpacity(0.5),
+            blurRadius: 2 * (fontSize / 98),
+            offset: Offset(2 * (fontSize / 98), 2 * (fontSize / 98)),
+          ),
+        ],
       ),
-      child: Text(
-        chars.toUpperCase(),
-        style: TextStyle(
-          height: 1.03,
-          fontSize: fontSize * 1.1,
-          letterSpacing: 4 * (fontSize / 98),
-          fontFamily: _fontFamily,
-          package: 'innerlibs',
-          color: getTextColor(),
-          shadows: [
-            Shadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 2 * (fontSize / 98),
-              offset: Offset(2 * (fontSize / 98), 2 * (fontSize / 98)),
-            ),
-          ],
-        ),
-        textAlign: TextAlign.center,
-      ),
+      textAlign: TextAlign.center,
     );
   }
 
@@ -1264,7 +1259,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
         chars.toUpperCase(),
         style: TextStyle(
           height: 1,
-          fontSize: fontSize * 1.05,
+          fontSize: fontSize * .9,
           fontFamily: _fontFamily,
           package: 'innerlibs',
           color: getTextColor(),
