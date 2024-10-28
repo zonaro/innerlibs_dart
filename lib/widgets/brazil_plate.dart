@@ -9,6 +9,7 @@ abstract class LicensePlate extends StatelessWidget {
   final Color? backgroundColor;
   final Color? borderColor;
   final Color? textColor;
+  final bool compact;
 
   final PlateCategory? category;
   const LicensePlate(
@@ -21,12 +22,13 @@ abstract class LicensePlate extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.textColor,
+    this.compact = false,
   });
   Color getBackgroundColor();
 
   Color getBorderColor();
 
-  Color gettextColor();
+  Color getTextColor();
 
   static PlateCategory? categoryFromIdentifier(String value) {
     if (value.startsWith("M") && value.removeFirstEqual("M").isNumber) {
@@ -110,6 +112,7 @@ abstract class LicensePlate extends StatelessWidget {
     Color? borderColor,
     Color? textColor,
     Color? topBarColor,
+    bool compact = false,
   }) {
     category ??= categoryFromPlate(plate, "particular") ?? MercosulPlateCategory.particular;
 
@@ -123,6 +126,7 @@ abstract class LicensePlate extends StatelessWidget {
         backgroundColor: backgroundColor,
         borderColor: borderColor,
         textColor: textColor,
+        compact: compact,
       );
     } else if (category is MercosulPlateCategory) {
       return MercosulPlate(
@@ -135,6 +139,7 @@ abstract class LicensePlate extends StatelessWidget {
         borderColor: borderColor,
         textColor: textColor,
         topBarColor: topBarColor,
+        compact: compact,
       );
     } else if (category is TwoLettersPlateCategory) {
       return TwoLettersPlate(
@@ -147,6 +152,7 @@ abstract class LicensePlate extends StatelessWidget {
         backgroundColor: backgroundColor,
         borderColor: borderColor,
         textColor: textColor,
+        compact: compact,
       );
     }
     throw Exception('Invalid category');
@@ -242,6 +248,9 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
 
   final Color? topBarColor;
 
+  @override
+  final bool compact;
+
   /// Class constructor. To obtain the original aspect ratio  of a real
   /// license plate, only provide a value for width
   /// OR height, so it will keep the original proportion automatically.
@@ -262,6 +271,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
     this.borderColor,
     this.textColor,
     this.topBarColor,
+    this.compact = false,
   });
 
   /// Evaluates the real height that will be considered
@@ -318,23 +328,19 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
   Color getBorderColor() => borderColor ?? textColor ?? category.borderColor;
 
   @override
-  Color gettextColor() => textColor ?? borderColor ?? category.textColor;
+  Color getTextColor() => textColor ?? borderColor ?? category.textColor;
 
   /// Draws the area in which will be printed the main license plate characters.
   Widget _charactersContent() {
-    return Theme(
-      data: Get.context!.theme.copyWith(
-        typography: Typography.material2014(),
-      ),
-      child: SizedBox(
-        height: realHeight * _lettersHeightRelation,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _getPlateChars(plate, realHeight * _lettersHeightRelation),
-          ],
-        ),
+    return Container(
+      color: getBackgroundColor(),
+      height: realHeight * _lettersHeightRelation,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _getPlateChars(plate, realHeight * _lettersHeightRelation),
+        ],
       ),
     );
   }
@@ -434,11 +440,12 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
     return Text(
       chars.toUpperCase(),
       style: TextStyle(
-        fontSize: fontSize,
+        height: 1.2,
+        fontSize: fontSize * .83,
         letterSpacing: 2 * (fontSize / 98),
         fontFamily: 'fe',
         package: 'innerlibs',
-        color: gettextColor(),
+        color: getTextColor(),
       ),
       textAlign: TextAlign.center,
     );
@@ -453,16 +460,17 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
       ),
       child: Stack(
         children: [
-          Positioned(
-            bottom: -10 * (realWidth / 1000),
-            left: 0,
-            child: Text(countryAcronymLetters.toUpperCase(),
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 50 * (realWidth / 1000),
-                  color: getBackgroundColor().getContrastColor(100),
-                )),
-          ),
+          if (compact == false)
+            Positioned(
+              bottom: -10 * (realWidth / 1000),
+              left: 0,
+              child: Text(countryAcronymLetters.toUpperCase(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 50 * (realWidth / 1000),
+                    color: getBackgroundColor().getContrastColor(100),
+                  )),
+            ),
           child,
         ],
       ),
@@ -521,29 +529,13 @@ enum MercosulPlateCategory implements PlateCategory {
     if (value.isNumber) {
       return MercosulPlateCategory.fromInt(value.toInt!);
     }
-    switch (generateKeyword(value)) {
-      case 'particular':
-        return MercosulPlateCategory.particular;
-
-      case 'comercial':
-        return MercosulPlateCategory.comercial;
-
-      case 'especial':
-        return MercosulPlateCategory.especial;
-
-      case 'oficial':
-        return MercosulPlateCategory.oficial;
-
-      case 'diplomatico':
-        return MercosulPlateCategory.diplomatico;
-
-      case 'colecionador':
-        return MercosulPlateCategory.colecionador;
-      case 'colecionadornacional':
-        return MercosulPlateCategory.colecionadorNacional;
-      default:
-        throw Exception('Invalid value');
+    if (value.startsWith("M") && value.removeFirstEqual("M").isNumber) {
+      return MercosulPlateCategory.fromInt(value.removeFirstEqual("M").onlyNumbersInt);
     }
+    if (value.startsWith("3L") && value.removeFirstEqual("3L").isNumber) {
+      return MercosulPlateCategory.fromThreeLetters(ThreeLettersPlateCategory.fromValue(value));
+    }
+    return values.firstWhere((e) => generateKeyword(e.name).flatEqual(generateKeyword(value)) || value.flatEqual(e.identifier));
   }
 
   factory MercosulPlateCategory.fromThreeLetters(ThreeLettersPlateCategory category) => category.convertToMercosul;
@@ -552,20 +544,13 @@ enum MercosulPlateCategory implements PlateCategory {
     if (value is int) {
       return MercosulPlateCategory.fromInt(value);
     } else if (value is String) {
-      if (value.startsWith("M") && value.removeFirstEqual("M").isNumber) {
-        return MercosulPlateCategory.fromInt(value.removeFirstEqual("M").onlyNumbersInt);
-      }
-      if (value.startsWith("3L") && value.removeFirstEqual("3L").isNumber) {
-        return MercosulPlateCategory.fromThreeLetters(ThreeLettersPlateCategory.fromValue(value));
-      }
-
       return MercosulPlateCategory.fromString(value);
     } else if (value is MercosulPlateCategory) {
       return value;
     } else if (value is ThreeLettersPlateCategory) {
       return MercosulPlateCategory.fromThreeLetters(value);
     } else {
-      throw Exception('Invalid value: $value');
+      throw Exception('Invalid value');
     }
   }
 
@@ -592,24 +577,7 @@ enum MercosulPlateCategory implements PlateCategory {
   String get identifier => "M$value";
 
   @override
-  String toString() {
-    switch (this) {
-      case MercosulPlateCategory.particular:
-        return 'Particular';
-      case MercosulPlateCategory.comercial:
-        return 'Comercial';
-      case MercosulPlateCategory.especial:
-        return 'Especial';
-      case MercosulPlateCategory.oficial:
-        return 'Oficial';
-      case MercosulPlateCategory.diplomatico:
-        return 'Diplomático';
-      case MercosulPlateCategory.colecionador:
-        return 'Colecionador';
-      case MercosulPlateCategory.colecionadorNacional:
-        return 'Colecionador Nacional';
-    }
-  }
+  String toString() => name;
 }
 
 abstract class PlateCategory {
@@ -624,7 +592,7 @@ abstract class PlateCategory {
 
   factory PlateCategory.fromString(String value) => throw UnimplementedError();
   factory PlateCategory.fromValue(dynamic value) => throw UnimplementedError();
-  String get identifier => "PC$value";
+  String get identifier => throw UnimplementedError();
 }
 
 /// A widget that prints a license plate in the
@@ -707,6 +675,9 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
   @override
   final Color? textColor;
 
+  @override
+  final bool compact;
+
   /// Class constructor. To obtain the original aspect ratio  of a real
   /// license plate, only provide a value for width
   /// OR height, so it will keep the original proportion automatically.
@@ -723,6 +694,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
     this.backgroundColor,
     this.borderColor,
     this.textColor,
+    this.compact = false,
   });
 
   /// Evaluates the real height that will be considered
@@ -759,8 +731,9 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
   @override
   Widget build(BuildContext context) {
     return _externalWrapper(
+      context,
       child: _internalWrapper(
-        child: _charactersContent(),
+        child: _charactersContent(context),
       ),
     );
   }
@@ -772,10 +745,10 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
   Color getBorderColor() => borderColor ?? backgroundColor ?? category.borderColor;
 
   @override
-  Color gettextColor() => textColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.textColor;
+  Color getTextColor() => textColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.textColor;
 
   /// Draws the area in which will be printed the main license plate characters.
-  Widget _charactersContent() {
+  Widget _charactersContent(BuildContext context) {
     final String letters = plate.replaceAll("-", "").substring(0, 3);
     final String numbers = plate.replaceAll("-", "").substring(3, 7);
 
@@ -785,14 +758,13 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (category == ThreeLettersPlateCategory.representacao) ...[
+          if (category == ThreeLettersPlateCategory.representacao)
             Image.asset(
               'assets/images/brasaoOficial.png',
               package: 'innerlibs',
               fit: BoxFit.contain,
             ),
-          ],
-          _getPlateChars(letters, realHeight * _lettersHeightRelation * category.lettersHeightRelation),
+          _getPlateChars(context, letters, realHeight * _lettersHeightRelation * category.lettersHeightRelation),
           SizedBox(
             width: 4 * (realWidth / 500),
           ),
@@ -809,14 +781,14 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
                   ),
                 ],
                 borderRadius: BorderRadius.circular(5 * (realWidth / 1000)),
-                color: gettextColor(),
+                color: getTextColor(),
               ),
             ),
           ),
           SizedBox(
             width: 4 * (realWidth / 500),
           ),
-          _getPlateChars(numbers, realHeight * _lettersHeightRelation * category.lettersHeightRelation),
+          _getPlateChars(context, numbers, realHeight * _lettersHeightRelation * category.lettersHeightRelation),
         ],
       ),
     );
@@ -847,7 +819,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
               fontSize: realHeight * _localityContainerLettersRelation,
               fontFamily: _fontFamily,
               package: 'innerlibs',
-              color: gettextColor(),
+              color: getTextColor(),
             ),
           )),
       SizedBox(
@@ -857,7 +829,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
   }
 
   /// Draws the outer borders.
-  Widget _externalWrapper({required Widget child}) {
+  Widget _externalWrapper(BuildContext context, {required Widget child}) {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -879,33 +851,38 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
         realWidth * _rightBorderRelation,
         realHeight * _verticalBorderRelation,
       ),
-      child: _internalWrapper(child: _charactersContent()),
+      child: _internalWrapper(child: _charactersContent(context)),
     );
   }
 
   /// Styles the main license plate characters
-  Text _getPlateChars(String chars, [double fontSize = 40]) {
+  Widget _getPlateChars(BuildContext context, String chars, [double fontSize = 40]) {
     if (MercosulPlate.isValidPlate(chars)) {
       chars = LicensePlate.convertToThreeLettersPlate(chars);
     }
-    return Text(
-      chars.toUpperCase(),
-      style: TextStyle(
-        height: 1.03,
-        fontSize: fontSize * 1.1,
-        letterSpacing: 4 * (fontSize / 98),
-        fontFamily: _fontFamily,
-        package: 'innerlibs',
-        color: gettextColor(),
-        shadows: [
-          Shadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 2 * (fontSize / 98),
-            offset: Offset(2 * (fontSize / 98), 2 * (fontSize / 98)),
-          ),
-        ],
+    return Theme(
+      data: context.theme.copyWith(
+        typography: Typography.material2014(),
       ),
-      textAlign: TextAlign.center,
+      child: Text(
+        chars.toUpperCase(),
+        style: TextStyle(
+          height: 1.03,
+          fontSize: fontSize * 1.1,
+          letterSpacing: 4 * (fontSize / 98),
+          fontFamily: _fontFamily,
+          package: 'innerlibs',
+          color: getTextColor(),
+          shadows: [
+            Shadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 2 * (fontSize / 98),
+              offset: Offset(2 * (fontSize / 98), 2 * (fontSize / 98)),
+            ),
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -980,33 +957,7 @@ enum ThreeLettersPlateCategory implements PlateCategory {
     if (value.isNumber) {
       return ThreeLettersPlateCategory.fromInt(value.toInt!);
     }
-    switch (generateKeyword(value)) {
-      case 'particular':
-        return ThreeLettersPlateCategory.particular;
-
-      case 'comercial':
-        return ThreeLettersPlateCategory.comercial;
-
-      case 'especial':
-        return ThreeLettersPlateCategory.especial;
-
-      case 'oficial':
-        return ThreeLettersPlateCategory.oficial;
-
-      case 'diplomatico':
-        return ThreeLettersPlateCategory.diplomatico;
-
-      case 'colecionador':
-        return ThreeLettersPlateCategory.colecionador;
-
-      case 'aprendizagem':
-        return ThreeLettersPlateCategory.aprendizagem;
-
-      case 'representacao':
-        return ThreeLettersPlateCategory.representacao;
-      default:
-        throw Exception('Invalid value');
-    }
+    return values.firstWhere((e) => generateKeyword(e.name).flatEqual(generateKeyword(value)) || value.flatEqual(e.identifier));
   }
 
   factory ThreeLettersPlateCategory.fromValue(dynamic value) {
@@ -1163,6 +1114,9 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
   @override
   final Color? textColor;
 
+  @override
+  final bool compact;
+
   /// Class constructor. To obtain the original aspect ratio  of a real
   /// license plate, only provide a value for width
   /// OR height, so it will keep the original proportion automatically.
@@ -1180,6 +1134,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
     this.backgroundColor,
     this.borderColor,
     this.textColor,
+    this.compact = false,
   });
 
   /// Evaluates the real height that will be considered
@@ -1216,8 +1171,9 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
   @override
   Widget build(BuildContext context) {
     return _externalWrapper(
+      context,
       child: _internalWrapper(
-        child: _charactersContent(),
+        child: _charactersContent(context),
       ),
     );
   }
@@ -1229,17 +1185,17 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
   Color getBorderColor() => borderColor ?? backgroundColor ?? category.borderColor;
 
   @override
-  Color gettextColor() => textColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.textColor;
+  Color getTextColor() => textColor ?? (backgroundColor ?? borderColor)?.getContrastColor(100) ?? category.textColor;
 
   /// Draws the area in which will be printed the main license plate characters.
-  Widget _charactersContent() {
+  Widget _charactersContent(BuildContext context) {
     return SizedBox(
       height: realHeight * _lettersHeightRelation,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _getPlateChars(plate, realHeight * _lettersHeightRelation),
+          _getPlateChars(context, plate, realHeight * _lettersHeightRelation),
         ],
       ),
     );
@@ -1262,7 +1218,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
               fontSize: realHeight * _localityContainerLettersRelation,
               fontFamily: _fontFamily,
               package: 'innerlibs',
-              color: gettextColor(),
+              color: getTextColor(),
             ),
           )),
       SizedBox(
@@ -1272,7 +1228,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
   }
 
   /// Draws the outer borders.
-  Widget _externalWrapper({required Widget child}) {
+  Widget _externalWrapper(BuildContext context, {required Widget child}) {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -1294,29 +1250,34 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
         realWidth * _rightBorderRelation,
         realHeight * _verticalBorderRelation,
       ),
-      child: _internalWrapper(child: _charactersContent()),
+      child: _internalWrapper(child: _charactersContent(context)),
     );
   }
 
   /// Styles the main license plate characters
-  Text _getPlateChars(String chars, [double fontSize = 40]) {
-    return Text(
-      chars.toUpperCase(),
-      style: TextStyle(
-        height: 1,
-        fontSize: fontSize * 1.05,
-        fontFamily: _fontFamily,
-        package: 'innerlibs',
-        color: gettextColor(),
-        shadows: [
-          Shadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 1 * (fontSize / 98),
-            offset: Offset(1 * (fontSize / 98), 1 * (fontSize / 98)),
-          ),
-        ],
+  Widget _getPlateChars(BuildContext context, String chars, [double fontSize = 40]) {
+    return Theme(
+      data: context.theme.copyWith(
+        typography: Typography.material2014(),
       ),
-      textAlign: TextAlign.center,
+      child: Text(
+        chars.toUpperCase(),
+        style: TextStyle(
+          height: 1,
+          fontSize: fontSize * 1.05,
+          fontFamily: _fontFamily,
+          package: 'innerlibs',
+          color: getTextColor(),
+          shadows: [
+            Shadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 1 * (fontSize / 98),
+              offset: Offset(1 * (fontSize / 98), 1 * (fontSize / 98)),
+            ),
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -1330,14 +1291,12 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [if (showLocality) ..._countryTopBar(), child],
+        children: [if (showLocality && !compact) ..._countryTopBar(), child],
       ),
     );
   }
 
-  static bool isValidPlate(String plate) {
-    return RegExp(r'^[A-Z]{2}[-]?\d{4}$').hasMatch(plate);
-  }
+  static bool isValidPlate(String plate) => RegExp(r'^[A-Z]{2}[-]?\d{4}$').hasMatch(plate);
 }
 
 enum TwoLettersPlateCategory implements PlateCategory {
@@ -1372,15 +1331,7 @@ enum TwoLettersPlateCategory implements PlateCategory {
     if (value.isNumber) {
       return TwoLettersPlateCategory.fromInt(value.toInt!);
     }
-    switch (generateKeyword(value)) {
-      case 'particular':
-        return TwoLettersPlateCategory.particular;
-
-      case 'comercial':
-        return TwoLettersPlateCategory.comercial;
-      default:
-        throw Exception('Invalid value');
-    }
+    return values.firstWhere((e) => generateKeyword(e.name).flatEqual(generateKeyword(value)) || value.flatEqual(e.identifier));
   }
 
   factory TwoLettersPlateCategory.fromValue(dynamic value) {

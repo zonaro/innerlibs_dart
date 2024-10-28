@@ -100,6 +100,8 @@ class CampoListaCidade extends StatelessWidget {
   final void Function(Cidade?) onChanged;
   final String? Function(Cidade?)? validator;
   final String? label;
+  final bool readOnly;
+  final IconData? icon;
 
   const CampoListaCidade({
     super.key,
@@ -108,13 +110,17 @@ class CampoListaCidade extends StatelessWidget {
     required this.onChanged,
     this.validator,
     this.label,
+    this.readOnly = false,
+    this.icon = Icons.location_city,
   });
 
   @override
   Widget build(BuildContext context) {
     return ValueField<Cidade>(
+      icon: icon,
       asyncItems: (s) async => (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao)).toList(),
       validator: validator,
+      readOnly: readOnly,
       textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", item?.ibge.toString()].whereNotNull().toList(),
       searchOn: (item) => [
         item.nome,
@@ -759,6 +765,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
                 searchTerms: filters.split(";").whereValid,
                 searchOn: searchOn(item),
               ),
+          enabled: !widget.readOnly,
           compareFn: (item1, item2) => textValueSelector(item1).last == textValueSelector(item2).last,
           popupProps: popupFields(
             context,

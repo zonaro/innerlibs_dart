@@ -1,8 +1,78 @@
 import 'package:flutter/services.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/number_symbols.dart';
-import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
+
+class LicensePlateFormatter extends TextInputFormatter {
+  final bool includeHiphen;
+
+  final bool allowThreeLetters;
+  final bool allowTwoLetters;
+  final bool allowMercosul;
+
+  LicensePlateFormatter({
+    this.includeHiphen = true,
+    this.allowThreeLetters = true,
+    this.allowTwoLetters = true,
+    this.allowMercosul = true,
+  });
+
+  bool get isThreeLettersFirst => allowThreeLetters || allowMercosul;
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (allowMercosul == false && allowThreeLetters == false && allowTwoLetters == false) return newValue;
+
+    var plate = newValue.text.toUpperCase().onlyLettersOrNumbers.first(7);
+
+    var arr = plate.toArray;
+    if (arr.isEmpty) return newValue;
+
+    arr[0] = arr[0].isLettersOnly ? arr[0] : '';
+    if (arr.length >= 2) arr[1] = arr[1].isLettersOnly ? arr[1] : '';
+
+    if (isThreeLettersFirst && allowTwoLetters) {
+      if (arr.length >= 3) arr[2] = arr[2].isLettersOnly || arr[2].isNumericOnly ? arr[2] : '';
+    } else if (isThreeLettersFirst) {
+      if (arr.length >= 3) arr[2] = arr[2].isLettersOnly ? arr[2] : '';
+    } else {
+      if (arr.length >= 3) arr[2] = arr[2].isNumericOnly ? arr[2] : '';
+    }
+    bool isTwoLetterNow = (arr[0].isLettersOnly && arr[1].isLettersOnly && arr[2].isNumericOnly) || !allowMercosul && !allowThreeLetters;
+
+    if (isTwoLetterNow) {
+      if (arr.length >= 4) arr[3] = arr[3].isNumericOnly ? arr[3] : '';
+      if (arr.length >= 5) arr[4] = arr[4].isNumericOnly ? arr[4] : '';
+      if (arr.length >= 6) arr[5] = arr[5].isNumericOnly ? arr[5] : '';
+      if (arr.length >= 7) arr[6] = '';
+    } else {
+      if (arr.length >= 4) arr[3] = arr[3].isNumericOnly ? arr[3] : '';
+      if (allowMercosul && !allowThreeLetters) {
+        if (arr.length >= 5) arr[4] = arr[4].isLettersOnly ? arr[4] : '';
+      } else if (!allowMercosul && allowThreeLetters) {
+        if (arr.length >= 5) arr[4] = arr[4].isNumericOnly ? arr[4] : '';
+      } else if (allowMercosul && allowThreeLetters) {
+        if (arr.length >= 5) arr[4] = (arr[4].isNumericOnly || arr[4].isLettersOnly) ? arr[4] : '';
+      }
+      if (arr.length >= 6) arr[5] = arr[5].isNumericOnly ? arr[5] : '';
+      if (arr.length >= 7) arr[6] = arr[6].isNumericOnly ? arr[6] : '';
+    }
+
+    plate = arr.join();
+
+    if (includeHiphen && TwoLettersPlate.isValidPlate(plate)) {
+      plate = plate.insertAt(2, '-');
+    }
+
+    if (includeHiphen && ThreeLettersPlate.isValidPlate(plate)) {
+      plate = plate.insertAt(3, '-');
+    }
+
+    return TextEditingValue(
+      text: plate,
+      selection: TextSelection.collapsed(offset: plate.length),
+    );
+  }
+}
 
 class NumberInputFormatter extends TextInputFormatter {
   NumberFormat? format;
@@ -19,7 +89,7 @@ class NumberInputFormatter extends TextInputFormatter {
 
     String newText = newValue.text;
 
-    var simb = numberFormatSymbols[format!.locale] as NumberSymbols?;
+    var simb = Get.localeNumberSymbols(locale!);
     if (simb != null) {
       newText = newText.removeWhere(
         (x) => x.isNotIn([
@@ -57,7 +127,7 @@ class PercentFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     locale ??= platformLocaleCode;
     decimalDigits ??= NumberFormat.decimalPattern(locale).decimalDigits ?? 4;
-    var simb = numberFormatSymbols[locale] as NumberSymbols?;
+    var simb = Get.localeNumberSymbols(locale!);
     var decimalSeparator = simb?.DECIMAL_SEP ?? ".";
     var minusSign = simb?.MINUS_SIGN ?? "-";
     var percentSign = simb?.PERCENT ?? "%";
@@ -133,5 +203,12 @@ class PercentFormatter extends TextInputFormatter {
       text: formattedValue,
       selection: TextSelection.collapsed(offset: (formattedValue.contains(percentSign) ? formattedValue.indexOf(percentSign) - 1 : formattedValue.length).clamp(0, formattedValue.length - 1)),
     );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(text: newValue.text.toUpperCase(), selection: newValue.selection);
   }
 }

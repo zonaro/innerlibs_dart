@@ -87,6 +87,21 @@ class InfoUsuario implements Validator {
     informacoesComplementares[key] = value;
   }
 
+factory InfoUsuario.fromJson(JsonMap json) {
+    return InfoUsuario(
+      nome: json["nome"],
+      sobrenome: json["sobrenome"],
+      cpfCnpj: json["cpfCnpj"],
+      rg: json["rg"],
+      cnh: json["cnh"],
+      pis: json["pis"],
+      emails: forceListOf(json["emails"]),
+      telefones: forceListOf(json["telefones"]).map((e) => Telefone(e)).toList(),
+      enderecos: forceListOf(json["enderecos"]),
+      informacoesComplementares: JsonMap.from(json)..removeWhere((k, v) => k.flatEqualAny( ["nome", "sobrenome", "cpfCnpj", "rg", "cnh", "pis", "emails", "telefones", "enderecos"])),
+    );
+  }
+
   JsonMap toJson() => {
         "nome": nome,
         "sobrenome": sobrenome,

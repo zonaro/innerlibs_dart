@@ -68,8 +68,10 @@ extension IterablesExtension<T> on Iterable<T> {
   /// Returns a random item from the list.
   T? get randomItem => orderByRandom.firstOrNull;
 
+  Iterable<T> get whereNotBlank => where((e) => e != null && flatString(e).isNotBlank);
+
   /// return only valid items (see [Object.isValid])
-  Iterable<T> get whereValid => where((e) => (e as Object?).isValid());
+  Iterable<T> get whereValid => where((e) => isValid(e));
 
   /// Checks if this list contains all elements from [otherList].
   bool containsAll(Iterable<T> otherList) {

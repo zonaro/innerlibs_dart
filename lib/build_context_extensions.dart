@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
+import 'package:intl/number_symbols.dart';
+import 'package:intl/number_symbols_data.dart';
 
 typedef ScreenTierMap<T> = Map<T, ScreenTier>;
 
@@ -103,6 +105,8 @@ extension BuildContextExtensions on BuildContext {
   /// component.
   Color get hoverColor => theme.hoverColor;
 
+  InnerLibsLocalizations get innerLibsLocalizations => InnerLibsLocalizations.of(this);
+
   bool get is16x9 => aspectRatioString == "16:9";
 
   bool get is1x1 => aspectRatioString == "1:1";
@@ -174,9 +178,7 @@ extension BuildContextExtensions on BuildContext {
   Size get logicalScreenSize => flutterView.physicalSize / pixelRatio;
 
   double get logicalWidth => logicalScreenSize.width;
-
   MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
-  InnerLibsLocalizations get innerLibsLocalizations => InnerLibsLocalizations.of(this);
 
   /// Returns the [ModalRoute] associated with this [BuildContext].
   ///
@@ -438,6 +440,12 @@ extension BuildContextExtensions on BuildContext {
 }
 
 extension MoreGetExtensions on GetInterface {
+  Iterable<NumberSymbols> get allNumberSymbols => numberFormatSymbols.values.whereType<NumberSymbols>();
+
+  NumberSymbols? get currentLocaleNumberSymbols => localeNumberSymbols(deviceLocale?.languageCode ?? platformLocaleCode);
+
   // Returns the current [ScreenTier] based on the current [width] of the screen.
   ScreenTier get screenTier => ScreenTier.fromWidth(width);
+
+  NumberSymbols? localeNumberSymbols(string localeCode) => allNumberSymbols.firstWhere((element) => element.NAME.flatEqual(localeCode));
 }

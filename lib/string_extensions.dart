@@ -1080,6 +1080,17 @@ extension StringExtensions on String {
     return replaceAll(regex, '');
   }
 
+  String get onlyNumbersDotsAndCommas {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    // ignore: unnecessary_raw_strings
+    var regex = RegExp(r'([^0-9.,]+)');
+    return replaceAll(regex, '');
+  }
+
+  double get onlyNumbersDouble => onlyNumbersDotsAndCommas.toDouble ?? 0;
+
   /// Returns the integer representation of the string, considering only the numeric characters.
   /// If the string does not contain any numeric characters, it returns null.
   int get onlyNumbersInt => onlyNumbers.toInt ?? 0;
