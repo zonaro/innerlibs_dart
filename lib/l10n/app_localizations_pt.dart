@@ -124,6 +124,12 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get dateOutOfRange => 'Data fora do intervalo';
 
   @override
+  String get days => 'Dias';
+
+  @override
+  String get decades => 'Décadas';
+
+  @override
   String get defaultWord => 'Padrão';
 
   @override
@@ -220,6 +226,9 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get hide => 'Ocultar';
 
   @override
+  String get hours => 'Horas';
+
+  @override
   String get info => 'Informação';
 
   @override
@@ -276,6 +285,12 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get mapView => 'Visualização do Mapa';
+
+  @override
+  String get minutes => 'Minutos';
+
+  @override
+  String get months => 'Meses';
 
   @override
   String get name => 'Nome';
@@ -356,6 +371,9 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   }
 
   @override
+  String get seconds => 'Segundos';
+
+  @override
   String get send => 'Enviar';
 
   @override
@@ -370,6 +388,14 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get settings => 'Configurações';
+
+  @override
+  String get share => 'Compartilhar';
+
+  @override
+  String shareItem(String item) {
+    return 'compartilhar $item';
+  }
 
   @override
   String get show => 'Mostrar';
@@ -429,7 +455,13 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get warning => 'Aviso';
 
   @override
+  String get weeks => 'Semanas';
+
+  @override
   String get width => 'Largura';
+
+  @override
+  String get years => 'Anos';
 
   @override
   String get yes => 'Sim';

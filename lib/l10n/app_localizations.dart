@@ -191,13 +191,13 @@ abstract class InnerLibsLocalizations {
   /// **'Close {item}'**
   String closeItem(String item);
 
-  /// No description provided for @collect.
+  /// Collect
   ///
   /// In en, this message translates to:
   /// **'Collect'**
   String get collect;
 
-  /// No description provided for @collects.
+  /// Collects
   ///
   /// In en, this message translates to:
   /// **'Collects'**
@@ -280,6 +280,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Date out of range'**
   String get dateOutOfRange;
+
+  /// Days
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get days;
+
+  /// Decades
+  ///
+  /// In en, this message translates to:
+  /// **'Decades'**
+  String get decades;
 
   /// Default
   ///
@@ -461,6 +473,12 @@ abstract class InnerLibsLocalizations {
   /// **'Hide'**
   String get hide;
 
+  /// Hours
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get hours;
+
   /// Info
   ///
   /// In en, this message translates to:
@@ -556,6 +574,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Map View'**
   String get mapView;
+
+  /// Minutes
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get minutes;
+
+  /// Months
+  ///
+  /// In en, this message translates to:
+  /// **'Months'**
+  String get months;
 
   /// Name
   ///
@@ -689,6 +719,12 @@ abstract class InnerLibsLocalizations {
   /// **'Search for {item} in {location}'**
   String searchForIn(String item, String location);
 
+  /// Seconds
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get seconds;
+
   /// Send
   ///
   /// In en, this message translates to:
@@ -712,6 +748,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// Share
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @shareItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Share {item}'**
+  String shareItem(String item);
 
   /// Show
   ///
@@ -815,11 +863,23 @@ abstract class InnerLibsLocalizations {
   /// **'Warning'**
   String get warning;
 
+  /// Weeks
+  ///
+  /// In en, this message translates to:
+  /// **'Weeks'**
+  String get weeks;
+
   /// Width
   ///
   /// In en, this message translates to:
   /// **'Width'**
   String get width;
+
+  /// Years
+  ///
+  /// In en, this message translates to:
+  /// **'Years'**
+  String get years;
 
   /// Yes
   ///

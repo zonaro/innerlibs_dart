@@ -568,6 +568,19 @@
   "@settings": {
     "description": "Configurações"
   },
+  "share": "Compartilhar",
+  "@share": {
+    "description": "Compartilhar"
+  },
+  "shareItem": "compartilhar {item}",
+  "@shareItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser compartilhado",
+        "type": "String"
+      }
+    }
+  },
   "show": "Mostrar",
   "@show": {
     "description": "Mostrar"
