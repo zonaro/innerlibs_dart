@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
@@ -28,7 +29,99 @@ mixin DateUtils {
   /// print(days); // [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
   /// ```
 
-  static List<string> days([dynamic locale]) => [for (var i = 1; i <= 7; i++) DateFormat.E(locale).format(DateTime(now.year, 1, i))];
+  static List<string> days([string? locale]) => [for (var i = 1; i <= 7; i++) DateFormat.E(locale).format(DateTime(now.year, 1, i))];
+
+  static Iterable<Color> getColorsForMonth(int month) {
+    switch (month) {
+      case 1: // Janeiro - Verão
+      case 2: // Fevereiro - Verão
+      case 12: // Dezembro - Verão
+        return [Colors.yellow, Colors.orange, Colors.red];
+      case 3: // Março - Outono
+      case 4: // Abril - Outono
+      case 5: // Maio - Outono
+        return [Colors.brown, Colors.deepOrange, NamedColors.gold];
+      case 6: // Junho - Inverno
+      case 7: // Julho - Inverno
+      case 8: // Agosto - Inverno
+        return [Colors.blue, Colors.grey, Colors.black];
+      case 9: // Setembro - Primavera
+      case 10: // Outubro - Primavera
+      case 11: // Novembro - Primavera
+        return [Colors.green, Colors.pink, Colors.lightBlue];
+      default:
+        return []; // Retorna preto se o mês for inválido
+    }
+  }
+
+  static Gradient getGradientForMonth({
+    required int month,
+    AlignmentGeometry begin = Alignment.topCenter,
+    AlignmentGeometry end = Alignment.bottomCenter,
+    List<double>? stops,
+    TileMode tileMode = TileMode.clamp,
+    GradientTransform? transform,
+  }) {
+    final colors = getColorsForMonth(month).toList();
+    return LinearGradient(
+      colors: colors,
+      begin: begin,
+      end: end,
+      stops: stops,
+      tileMode: tileMode,
+      transform: transform,
+    );
+  }
+
+  static Iterable<Color> getHealthColorsForMonth(int month) {
+    switch (month) {
+      case 1: // Janeiro
+        return [Colors.white, Colors.purple]; // Saúde mental e hanseníase
+      case 2: // Fevereiro
+        return [Colors.purple, Colors.orange]; // Lúpus, Alzheimer, fibromialgia e leucemia
+      case 3: // Março
+        return [Colors.red, Colors.blue]; // Câncer renal e câncer colorretal
+      case 4: // Abril
+        return [Colors.blue, Colors.green]; // Autismo e segurança no trabalho
+      case 5: // Maio
+        return [Colors.red, Colors.yellow]; // Hepatite e câncer de bexiga
+      case 6: // Junho
+        return [Colors.red, Colors.orange]; // Anemia e câncer de pele
+      case 7: // Julho
+        return [Colors.yellow, Colors.green]; // Hepatite e câncer de bexiga
+      case 8: // Agosto
+        return [Colors.green, Colors.lime]; // Aleitamento materno e linfoma
+      case 9: // Setembro
+        return [Colors.yellow, Colors.green]; // Prevenção ao suicídio e câncer de intestino
+      case 10: // Outubro
+        return [Colors.pink]; // Câncer de mama
+      case 11: // Novembro
+        return [Colors.blue]; // Câncer de próstata
+      case 12: // Dezembro
+        return [Colors.red]; // Prevenção à AIDS
+      default:
+        return []; // Retorna preto se o mês for inválido
+    }
+  }
+
+  static Gradient getHealthGradientForMonth({
+    required int month,
+    AlignmentGeometry begin = Alignment.topCenter,
+    AlignmentGeometry end = Alignment.bottomCenter,
+    List<double>? stops,
+    TileMode tileMode = TileMode.clamp,
+    GradientTransform? transform,
+  }) {
+    final colors = getHealthColorsForMonth(month).toList();
+    return LinearGradient(
+      colors: colors,
+      begin: begin,
+      end: end,
+      stops: stops,
+      tileMode: tileMode,
+      transform: transform,
+    );
+  }
 
   /// Returns the last day of the specified month.
   ///
@@ -52,7 +145,7 @@ mixin DateUtils {
   ///
   /// Note: The [locale] parameter is optional.
   /// If not provided, the default locale will be used.
-  static string month(int month, [dynamic locale]) => months(locale)[month.clampRotate(1, 12) - 1];
+  static string month(int month, [string? locale]) => months(locale)[month.clampRotate(1, 12) - 1];
 
   /// Returns a list of month names.
   ///
@@ -64,7 +157,7 @@ mixin DateUtils {
   /// List<String> months = months();
   /// print(months); // Output: [January, February, March, April, May, June, July, August, September, October, November, December]
   /// ```
-  static List<string> months([dynamic locale]) => [for (var i = 1; i <= 12; i++) DateFormat.MMMM(locale).format(DateTime(thisYear, i, 1))];
+  static List<string> months([string? locale]) => [for (var i = 1; i <= 12; i++) DateFormat.MMMM(locale).format(DateTime(thisYear, i, 1))];
 }
 
 /// Extension methods for the `DateTime` class.
@@ -115,6 +208,8 @@ extension DateTimeExtensions on DateTime {
   /// Extension method to calculate the duration from the current date and time to the given date and time.
   Duration get fromNow => now.difference(this);
 
+  Iterable<Color> get healthMonthColors => DateUtils.getHealthColorsForMonth(month);
+
   /// Check if this year is a Leap Year
   bool get isLeapYear => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
 
@@ -147,6 +242,8 @@ extension DateTimeExtensions on DateTime {
 
   /// Returns the last day of the year for the given date.
   date get lastDayOfYear => DateTime(year, 12, 31);
+
+  Iterable<Color> get monthColors => DateUtils.getColorsForMonth(month);
 
   /// Returns the next bimester
   date get nextBimester => date(year, lastDayOfBimester.add(1.days).month, day.clampMax(lastDayOfBimester.add(1.days).lastDayOfMonth.day));
@@ -359,6 +456,15 @@ extension DateTimeExtensions on DateTime {
     return DateFormat(format, locale).format(this);
   }
 
+  Gradient healthMonthGradient({
+    AlignmentGeometry begin = Alignment.topCenter,
+    AlignmentGeometry end = Alignment.bottomCenter,
+    List<double>? stops,
+    TileMode tileMode = TileMode.clamp,
+    GradientTransform? transform,
+  }) =>
+      DateUtils.getHealthGradientForMonth(month: month, begin: begin, end: end, stops: stops, tileMode: tileMode, transform: transform);
+
   /// Checks if the current date is between the specified start and end dates (exclusive).
   ///
   /// Returns `true` if the current date is after the start date and before the end date.
@@ -384,18 +490,27 @@ extension DateTimeExtensions on DateTime {
   /// Returns the last month of the group.
   int lastMonthOfGroup(int group) => (firstMonthOfGroup(group) + group) - 1;
 
+  Gradient monthGradient({
+    AlignmentGeometry begin = Alignment.topCenter,
+    AlignmentGeometry end = Alignment.bottomCenter,
+    List<double>? stops,
+    TileMode tileMode = TileMode.clamp,
+    GradientTransform? transform,
+  }) =>
+      DateUtils.getGradientForMonth(month: month, begin: begin, end: end, stops: stops, tileMode: tileMode, transform: transform);
+
   /// Returns the month group number.
   int monthGroupNumber(int group) => ((month - 1) ~/ group) + 1;
 
   /// Get Month
   ///
   /// Returns month string in the format January, February etc
-  String monthName([dynamic locale]) => DateUtils.month(month, locale);
+  String monthName([string? locale]) => DateUtils.month(month, locale);
 
   /// Readable Date
   ///
   /// Returns date string in the format Tuesday 1 January 2022
-  String readableDate([dynamic locale]) => '${weekDayName(locale)} $day ${monthName(locale)} $year';
+  String readableDate([string? locale]) => '${weekDayName(locale)} $day ${monthName(locale)} $year';
 
   /// Readable DateTime
   ///

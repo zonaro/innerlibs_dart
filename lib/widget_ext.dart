@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:innerlibs/innerlibs.dart';
@@ -43,6 +45,15 @@ extension WidgetExt on Widget {
     // ignore: invalid_use_of_protected_member
     createElement().visitChildren(findTextWidgetsRecursive);
     return textWidgets.map((x) => x.text);
+  }
+
+  Widget blurEffect([double sigmaX = 5, double sigmaY = 5, TileMode tileMode = TileMode.clamp]) {
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaX, tileMode: tileMode),
+        child: this,
+      ),
+    );
   }
 
   /// wrap a widget using a [Function] if [test] is true

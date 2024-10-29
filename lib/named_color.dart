@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:innerlibs/innerlibs.dart';
 
+typedef NamedColors = NamedColor;
+
 /// A Enum containing all the named colors. Also implements the [Color] interface, so it can be used as a [Color].
 enum NamedColor implements Color {
   absoluteZero("#0048BA", "Absolute Zero"),
@@ -1189,6 +1191,4 @@ enum NamedColor implements Color {
 
   @override
   Color withRed(int r) => color.withRed(r);
-
-  
 }

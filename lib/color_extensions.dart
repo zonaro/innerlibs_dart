@@ -13,22 +13,13 @@ class ColorUtils {
 }
 
 extension ColorExtensions<T extends Color> on T {
-  bool isNamedColor(String value) {
-    try {
-      NamedColor.fromValue(value);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
   String get alphaHexadecimal => '#${value.toRadixString(16).padLeft(8, '0')}';
 
   Iterable<Color> get analogousColors => modColors([30, -30]);
 
   int get argb => value;
-  double get black => 1 - hsv.value;
 
+  double get black => 1 - hsv.value;
   double get brightness => hsv.value;
 
   NamedColor? get closestColor {
@@ -62,11 +53,15 @@ extension ColorExtensions<T extends Color> on T {
 
   double get hue => hsl.hue;
 
+  bool get isDark => brightness < 0.5;
+
+  bool get isLight => !isDark;
+
   double get lightness => hsl.lightness;
 
   /// The Luminance of this color.
   /// The Luminance is a measure of the brightness of a color.
-  double get luminance => 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+  double get luminance => computeLuminance();
 
   double get magenta => 1 - (green / 255);
 
@@ -171,10 +166,15 @@ extension ColorExtensions<T extends Color> on T {
   /// Percent: Grau de mesclagem da cor escura ou clara
   ///
   /// Retorna uma cor clara se a primeira cor for escura, uma cor escura se a primeira for clara
-  Color getContrastColor(double percent) {
-    double a = 1 - (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
-    int d = a < 0.5 ? 0 : 255;
-    return mergeWith(Color.fromRGBO(d, d, d, 1), percent);
+  Color getContrastColor([double percent = .8]) => luminance < 0.5 ? this.makeDarker(percent) : this.makeLighter(percent);
+
+  bool isNamedColor(String value) {
+    try {
+      NamedColor.fromValue(value);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   /// Mescla duas cores usando Lerp
