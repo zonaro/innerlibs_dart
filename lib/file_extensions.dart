@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path;
@@ -213,17 +214,7 @@ extension DirectoryExtensionPlus on Directory {
     return to;
   }
 
-  Future<Iterable<T>> search<T extends FileSystemEntity>(
-      {required dynamic searchTerms,
-      required Iterable<dynamic> Function(T)? searchOn,
-      int levenshteinDistance = 0,
-      bool ignoreCase = true,
-      bool ignoreDiacritics = true,
-      bool ignoreWordSplitters = true,
-      bool splitCamelCase = true,
-      bool useWildcards = false,
-      bool allIfEmpty = true,
-      bool recursive = true}) async {
+  Future<Iterable<T>> search<T extends FileSystemEntity>({required dynamic searchTerms, required Iterable<dynamic> Function(T)? searchOn, int levenshteinDistance = 0, bool ignoreCase = true, bool ignoreDiacritics = true, bool ignoreWordSplitters = true, bool splitCamelCase = true, bool useWildcards = false, bool allIfEmpty = true, bool recursive = true}) async {
     searchOn ??= (x) => [x.name, x.path, x.title, x.directoryName, x.lastModified, x.lastAccessed];
     return (recursive ? (await listAllRecursive) : (await listAll)).whereType<T>().search(
           searchTerms: searchTerms,
@@ -276,6 +267,96 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
       return this.path;
     }
     return path.basename(this.path);
+  }
+
+  /// Get the best icon for the file or directory
+  IconData get icon {
+    if (this is Directory) {
+      return FontAwesome.folder;
+    } else if (this is File) {
+      switch ((this as File).fileExtensionWithoutDot.toLowerCase()) {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+        case 'bmp':
+        case 'webp':
+        case 'svg':
+        case 'tiff':
+        case 'ico':
+          return FontAwesome.file_image;
+        case 'pdf':
+          return FontAwesome.file_pdf;
+        case 'doc':
+        case 'docx':
+          return FontAwesome.file_word;
+        case 'xls':
+        case 'xlsx':
+        case 'csv':
+          return FontAwesome.file_excel;
+        case 'ppt':
+        case 'pptx':
+        case 'pps':
+          return FontAwesome.file_powerpoint;
+        case 'txt':
+        case 'md':
+          return FontAwesome.file_lines;
+        case 'html':
+        case 'htm':
+        case 'css':
+        case 'js':
+        case 'dart':
+        case 'json':
+        case 'xml':
+        case 'yaml':
+        case 'yml':
+        case 'cs':
+        case 'java':
+        case 'php':
+        case 'py':
+          return FontAwesome.file_code;
+        case 'sql':
+          return FontAwesome.database_solid;
+        case 'zip':
+        case 'rar':
+        case '7z':
+        case 'tar':
+        case 'gz':
+        case 'bz2':
+        case 'xz':
+        case 'zst':
+          return FontAwesome.file_zipper;
+        case 'mp3':
+        case 'wav':
+        case 'flac':
+        case 'ogg':
+        case 'm4a':
+        case 'wma':
+        case 'aac':
+        case 'opus':
+          return FontAwesome.file_audio;
+        case 'mp4':
+        case 'mkv':
+        case 'webm':
+        case 'flv':
+        case 'mov':
+        case 'wmv':
+        case '3gp':
+        case '3g2':
+        case 'm4v':
+        case 'avi':
+          return FontAwesome.file_video;
+        case 'apk':
+        case 'appbundle':
+          return FontAwesome.android_brand;
+        case 'exe':
+        case 'msi':
+          return FontAwesome.window_maximize;
+        default:
+          return FontAwesome.file;
+      }
+    }
+    return FontAwesome.file;
   }
 
   /// Get the ID of the file or directory

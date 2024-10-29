@@ -27,6 +27,7 @@ dependencies:
   dropdown_search: 
   mime:
   latlong2:
+  icons_plus:
   flutter_localizations:
     sdk: flutter
 

@@ -45,7 +45,9 @@
         "IBGE": 1200179,
         "SIAFI": 647,
         "DDD": 68,
-        "TimeZone": "America/Rio_Branco"
+        "TimeZone": "America/Rio_Branco",
+        "latitude": -10.566,
+        "longitude": -67.686
     },
     {
         "Nome": "Cruzeiro do Sul",
@@ -54,6 +56,7 @@
         "SIAFI": 107,
         "DDD": 68,
         "TimeZone": "America/Rio_Branco"
+
     },
     {
         "Nome": "Epitaciolândia",

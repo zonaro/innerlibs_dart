@@ -13,6 +13,7 @@ export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
 export 'package:gap/gap.dart';
 export 'package:get/get.dart';
+export 'package:icons_plus/icons_plus.dart';
 export 'package:innerlibs/innerlibs.dart';
 export 'package:latlong2/latlong.dart' hide Path;
 
@@ -78,6 +79,7 @@ export 'widgets/floating_area.dart';
 export 'widgets/future_awaiter.dart';
 export 'widgets/icon_card.dart';
 export 'widgets/image_card.dart';
+export 'widgets/milk_truck.dart';
 export 'widgets/min_size.dart';
 export 'widgets/nil.dart';
 export 'widgets/placeholders.dart';
@@ -86,7 +88,8 @@ export 'widgets/responsive_grid.dart';
 export 'widgets/scaffold_builder.dart';
 export 'widgets/shimmer.dart';
 export 'widgets/square_button.dart';
-export 'widgets/milk_truck.dart';
+
+GetInterface get inn => Get;
 
 typedef bytes = Uint8List;
 
@@ -102,6 +105,7 @@ typedef Dictionary<K, V> = Map<K, V>;
 typedef DirectoryInfo = Directory;
 typedef DoubleList = List<double>;
 typedef Estados = Estado;
+
 typedef FileBytes = bytes;
 
 /// C# alias for [File]
@@ -143,5 +147,3 @@ class LatLngTime extends LatLng {
 
   LatLngTime(super.latitude, super.longitude, DateTime? timestamp) : timestamp = timestamp ?? now;
 }
-
-GetInterface get inn => Get;
