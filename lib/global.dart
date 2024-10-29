@@ -6,7 +6,9 @@ import 'dart:math' show Random, min, max;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' hide TextDirection;
+import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 
 final _random = Random();
 
@@ -569,6 +571,16 @@ String identArrow({required int length, String pattern = " "}) {
   }
   if (reverse) pattern = pattern.toArray.map((x) => x.getOppositeWrap).reverse().join();
   return pattern;
+}
+
+/// Initializes the inner libraries.
+/// - Ensures that the Flutter binding is initialized.
+/// - Finds the system locale.
+/// - Initializes date formatting using the system locale.
+Future<void> innerLibsInit() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var location = await findSystemLocale();
+  await initializeDateFormatting(location);
 }
 
 /// Checks if the given [object] is not valid (see [isValid] function).

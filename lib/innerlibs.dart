@@ -11,6 +11,7 @@ import 'package:latlong2/latlong.dart' as lat_long_path show Path;
 export 'package:brasil_fields/brasil_fields.dart' hide Estados;
 export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
+export 'package:date_field/date_field.dart';
 export 'package:gap/gap.dart';
 export 'package:get/get.dart';
 export 'package:icons_plus/icons_plus.dart';

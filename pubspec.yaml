@@ -28,6 +28,7 @@ dependencies:
   mime:
   latlong2:
   icons_plus:
+  date_field:
   flutter_localizations:
     sdk: flutter
 
