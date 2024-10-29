@@ -284,7 +284,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
     if (height != null) {
       return height!;
     } else {
-      return realWidth * _heightRelation;
+      return (realWidth * _heightRelation);
     }
   }
 
@@ -313,7 +313,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _countryTopBar(),
+            if (compact == false) _countryTopBar(),
             _charactersContent(),
           ],
         ),
@@ -464,12 +464,14 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
             Positioned(
               bottom: -10 * (realWidth / 1000),
               left: 0,
-              child: Text(countryAcronymLetters.toUpperCase(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 50 * (realWidth / 1000),
-                    color: getBackgroundColor().getContrastColor(100),
-                  )),
+              child: Text(
+                countryAcronymLetters.toUpperCase(),
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 50 * (realWidth / 1000),
+                  color: getBackgroundColor().getContrastColor(100),
+                ),
+              ),
             ),
           child,
         ],
@@ -707,7 +709,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
     if (height != null) {
       return height!;
     } else {
-      return realWidth * _heightRelation;
+      return (realWidth * _heightRelation);
     }
   }
 
@@ -891,7 +893,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [if (locality != null) ..._countryTopBar(), child],
+        children: [if (locality != null && compact == false) ..._countryTopBar(), child],
       ),
     );
   }
