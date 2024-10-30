@@ -15,4 +15,8 @@ extension SizeExtensions on Size {
     var gcd = w.findGreatestCommonDivisor(h.floor());
     return '${w ~/ gcd}$separator${h ~/ gcd}';
   }
+
+  double get max => height > width ? height : width;
+  double get min => height < width ? height : width;
+
 }

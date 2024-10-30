@@ -16,6 +16,7 @@ extension BuildContextExtensions on BuildContext {
 
   double get aspectRatio => width / height;
 
+  Iterable<string> get aspectRatioParts => aspectRatioString.split(":");
   string get aspectRatioString => screenSize.getAspectRatioString();
 
   /// Middle size of the body styles.
@@ -447,5 +448,15 @@ extension MoreGetExtensions on GetInterface {
   // Returns the current [ScreenTier] based on the current [width] of the screen.
   ScreenTier get screenTier => ScreenTier.fromWidth(width);
 
+  closeDialog() => Get.until((route) => Get.isDialogOpen == true);
+
+  bool focus([int times = 1]) => Get.context!.focus(times);
+
   NumberSymbols? localeNumberSymbols(string localeCode) => allNumberSymbols.firstWhere((element) => element.NAME.flatEqual(localeCode));
+
+  void unfocus({UnfocusDisposition disposition = UnfocusDisposition.scope}) => Get.context!.unfocus(disposition: disposition);
+
+  void untilFirst({int? id}) => Get.until((route) => route.isFirst, id: id);
+
+  void untilRoute(String screenName, {int? id}) => Get.until((route) => route.settings.name == screenName, id: id);
 }

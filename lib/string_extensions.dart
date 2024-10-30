@@ -1982,7 +1982,7 @@ extension StringExtensions on String {
   /// ```
   bool containsAny(Iterable<string?> patterns) {
     if (isNotBlank) {
-      for (String? item in patterns.where((element) => element.isNotBlank)) {
+      for (String? item in patterns.whereNotNull().where((element) => element.isNotEmpty)) {
         if (contains(item!)) {
           return true;
         }
@@ -2064,7 +2064,7 @@ extension StringExtensions on String {
   }
 
   /// Procura valores em uma string usando expressões regulares
-  List<String> findByRegex(String pattern, {bool caseSensitive = true, bool multiLine = false}) {
+  Iterable<String> findByRegex(String pattern, {bool caseSensitive = true, bool multiLine = false}) {
     RegExp regExp = RegExp(
       pattern,
       caseSensitive: caseSensitive,
@@ -2075,7 +2075,7 @@ extension StringExtensions on String {
   }
 
   /// Procura numeros em uma string e retorna uma lista deles
-  List<String> findNumbers() {
+  Iterable<String> findNumbers() {
     var l = <String>[];
     var numbers = split(RegExp(r'\D+'));
     for (var value in numbers) {
@@ -2508,6 +2508,8 @@ extension StringExtensions on String {
 
     return charCount.values.every((count) => count == 0);
   }
+
+  bool isBetween(String before, String after) => between(before, after).contains(this);
 
   /// Checks if the `String` exists in a given `Iterable<String>`
   /// ### Example
