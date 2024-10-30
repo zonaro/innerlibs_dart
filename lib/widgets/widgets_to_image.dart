@@ -10,7 +10,7 @@ typedef WidgetToImage = RepaintBoundary;
 extension WidgetsToImageKey on GlobalKey {
   /// Render a image from widget by this [GlobalKey] and return as [bytes]
   /// Remember to surround your widget with [WidgetsToImage] and give it this [GlobalKey]
-  Future<bytes> getBytes({
+  Future<bytes> renderImageAsBytes({
     double pixelRatio = 6,
   }) async {
     try {
@@ -45,7 +45,7 @@ extension WidgetsToImageKey on GlobalKey {
     double pixelRatio = 6,
   }) async {
     try {
-      final image = await getBytes(pixelRatio: pixelRatio);
+      final image = await renderImageAsBytes(pixelRatio: pixelRatio);
       if ((await file.parent.exists()) == false) {
         await file.parent.create(recursive: true);
       }

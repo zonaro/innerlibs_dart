@@ -183,6 +183,8 @@ extension BuildContextExtensions on BuildContext {
   Size get logicalScreenSize => flutterView.physicalSize / pixelRatio;
 
   double get logicalWidth => logicalScreenSize.width;
+  double get longestSide => screenSize.longestSide;
+
   MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
 
   /// Returns the [ModalRoute] associated with this [BuildContext].
@@ -209,20 +211,20 @@ extension BuildContextExtensions on BuildContext {
 
   /// Returns the color of the surface text on the current theme.
   Color get onSurfaceColor => theme.colorScheme.onSurface;
-
   //Padding in physical pixels
   ViewPadding get padding => flutterView.padding;
-  double get paddingBottom => flutterView.padding.bottom / flutterView.devicePixelRatio;
 
+  double get paddingBottom => flutterView.padding.bottom / flutterView.devicePixelRatio;
   //Safe area paddings in logical pixels
   double get paddingLeft => flutterView.padding.left / flutterView.devicePixelRatio;
-  double get paddingRight => flutterView.padding.right / flutterView.devicePixelRatio;
 
+  double get paddingRight => flutterView.padding.right / flutterView.devicePixelRatio;
   double get paddingTop => flutterView.padding.top / flutterView.devicePixelRatio;
   double get physicalAspectRatio => physicalWidth / physicalHeight;
-  string get physicalAspectRatioString => physicalScreenSize.getAspectRatioString();
 
+  string get physicalAspectRatioString => physicalScreenSize.getAspectRatioString();
   double get physicalHeight => physicalScreenSize.height;
+
   //Size in physical pixels
   Size get physicalScreenSize => flutterView.physicalSize;
 
