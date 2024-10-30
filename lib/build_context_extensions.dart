@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/number_symbols.dart';
 import 'package:intl/number_symbols_data.dart';
@@ -17,6 +18,7 @@ extension BuildContextExtensions on BuildContext {
   double get aspectRatio => width / height;
 
   Iterable<string> get aspectRatioParts => aspectRatioString.split(":");
+
   string get aspectRatioString => screenSize.getAspectRatioString();
 
   /// Middle size of the body styles.
@@ -38,13 +40,15 @@ extension BuildContextExtensions on BuildContext {
   /// Body styles are used for longer passages of text.
   TextStyle? get bodySmall => textTheme.bodySmall;
 
-  // COLOR
-
   /// performs a simple [Theme.of(context).bottomAppBarTheme] action and returns given [bottomAppBarTheme]
   BottomAppBarTheme get bottomAppBarTheme => theme.bottomAppBarTheme;
 
+  // COLOR
+
   /// performs a simple [Theme.of(context).bottomSheetTheme] action and returns given [bottomSheetTheme]
   BottomSheetThemeData get bottomSheetTheme => theme.bottomSheetTheme;
+
+  RenderRepaintBoundary? get boundary => [findRenderObject()].whereNotNull().whereType<RenderRepaintBoundary>().firstOrNull;
 
   /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
   ColorScheme get colorScheme => theme.colorScheme;
