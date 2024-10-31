@@ -89,6 +89,7 @@ export 'widgets/responsive_grid.dart';
 export 'widgets/scaffold_builder.dart';
 export 'widgets/shimmer.dart';
 export 'widgets/square_button.dart';
+export 'widgets/widgets_to_image.dart';
 
 GetInterface get inn => Get;
 
