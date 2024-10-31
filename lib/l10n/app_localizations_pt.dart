@@ -153,6 +153,15 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get empty => 'Vazio';
 
   @override
+  String get emulate => 'Emular';
+
+  @override
+  String get emulator => 'Emulador';
+
+  @override
+  String get emulators => 'Emuladores';
+
+  @override
   String get error => 'Erro';
 
   @override
@@ -169,6 +178,9 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get fileName => 'Nome do Arquivo';
+
+  @override
+  String get fileNotFound => 'Arquivo não encontrado';
 
   @override
   String get fileOwner => 'Proprietário do Arquivo';
@@ -209,6 +221,12 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get folderName => 'Nome da Pasta';
+
+  @override
+  String get game => 'Jogo';
+
+  @override
+  String get games => 'Jogos';
 
   @override
   String get grid => 'Grade';
@@ -340,10 +358,32 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get password => 'Senha';
 
   @override
+  String get pause => 'Pausar';
+
+  @override
+  String get paused => 'Pausado';
+
+  @override
+  String pauseItem(String item) {
+    return 'Pausar $item';
+  }
+
+  @override
   String get pending => 'Pendente';
 
   @override
   String get phone => 'Telefone';
+
+  @override
+  String get play => 'Jogar';
+
+  @override
+  String get playing => 'Jogando';
+
+  @override
+  String playItem(String item) {
+    return 'Jogar $item';
+  }
 
   @override
   String get previous => 'Anterior';
@@ -465,4 +505,18 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get yes => 'Sim';
+
+  @override
+  String get you => 'Você';
+
+  @override
+  String get library => 'Biblioteca';
+
+  @override
+  String get libraries => 'Bibliotecas';
+
+  @override
+  String itemLibrary(String item) {
+    return 'Biblioteca de $item';
+  }
 }

@@ -335,6 +335,24 @@ abstract class InnerLibsLocalizations {
   /// **'Empty'**
   String get empty;
 
+  /// Emulate
+  ///
+  /// In en, this message translates to:
+  /// **'Emulate'**
+  String get emulate;
+
+  /// Emulator
+  ///
+  /// In en, this message translates to:
+  /// **'Emulator'**
+  String get emulator;
+
+  /// Emulators
+  ///
+  /// In en, this message translates to:
+  /// **'Emulators'**
+  String get emulators;
+
   /// Error
   ///
   /// In en, this message translates to:
@@ -370,6 +388,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'File Name'**
   String get fileName;
+
+  /// File not found
+  ///
+  /// In en, this message translates to:
+  /// **'File not found'**
+  String get fileNotFound;
 
   /// File Owner
   ///
@@ -442,6 +466,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Folder Name'**
   String get folderName;
+
+  /// Game
+  ///
+  /// In en, this message translates to:
+  /// **'Game'**
+  String get game;
+
+  /// Games
+  ///
+  /// In en, this message translates to:
+  /// **'Games'**
+  String get games;
 
   /// Grid
   ///
@@ -665,6 +701,24 @@ abstract class InnerLibsLocalizations {
   /// **'Password'**
   String get password;
 
+  /// Pause
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// Paused
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// No description provided for @pauseItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause {item}'**
+  String pauseItem(String item);
+
   /// Pending
   ///
   /// In en, this message translates to:
@@ -676,6 +730,24 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Phone'**
   String get phone;
+
+  /// Play
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// Playing
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get playing;
+
+  /// No description provided for @playItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Play {item}'**
+  String playItem(String item);
 
   /// Previous
   ///
@@ -886,6 +958,30 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Yes'**
   String get yes;
+
+  /// You
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get you;
+
+  /// Library
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get library;
+
+  /// Libraries
+  ///
+  /// In en, this message translates to:
+  /// **'Libraries'**
+  String get libraries;
+
+  /// No description provided for @itemLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} Library'**
+  String itemLibrary(String item);
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

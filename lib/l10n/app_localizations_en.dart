@@ -153,6 +153,15 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get empty => 'Empty';
 
   @override
+  String get emulate => 'Emulate';
+
+  @override
+  String get emulator => 'Emulator';
+
+  @override
+  String get emulators => 'Emulators';
+
+  @override
   String get error => 'Error';
 
   @override
@@ -169,6 +178,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get fileName => 'File Name';
+
+  @override
+  String get fileNotFound => 'File not found';
 
   @override
   String get fileOwner => 'File Owner';
@@ -209,6 +221,12 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get folderName => 'Folder Name';
+
+  @override
+  String get game => 'Game';
+
+  @override
+  String get games => 'Games';
 
   @override
   String get grid => 'Grid';
@@ -340,10 +358,32 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get password => 'Password';
 
   @override
+  String get pause => 'Pause';
+
+  @override
+  String get paused => 'Paused';
+
+  @override
+  String pauseItem(String item) {
+    return 'Pause $item';
+  }
+
+  @override
   String get pending => 'Pending';
 
   @override
   String get phone => 'Phone';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get playing => 'Playing';
+
+  @override
+  String playItem(String item) {
+    return 'Play $item';
+  }
 
   @override
   String get previous => 'Previous';
@@ -465,4 +505,18 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get yes => 'Yes';
+
+  @override
+  String get you => 'You';
+
+  @override
+  String get library => 'Library';
+
+  @override
+  String get libraries => 'Libraries';
+
+  @override
+  String itemLibrary(String item) {
+    return '$item Library';
+  }
 }

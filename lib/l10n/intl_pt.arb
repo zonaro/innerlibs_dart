@@ -200,6 +200,18 @@
   "@empty": {
     "description": "Vazio"
   },
+  "emulate": "Emular",
+  "@emulate": {
+    "description": "Emular"
+  },
+  "emulator": "Emulador",
+  "@emulator": {
+    "description": "Emulador"
+  },
+  "emulators": "Emuladores",
+  "@emulators": {
+    "description": "Emuladores"
+  },
   "error": "Erro",
   "@error": {
     "description": "Erro"
@@ -223,6 +235,10 @@
   "fileName": "Nome do Arquivo",
   "@fileName": {
     "description": "Nome do Arquivo"
+  },
+  "fileNotFound": "Arquivo não encontrado",
+  "@fileNotFound": {
+    "description": "Arquivo não encontrado"
   },
   "fileOwner": "Proprietário do Arquivo",
   "@fileOwner": {
@@ -281,6 +297,14 @@
   "folderName": "Nome da Pasta",
   "@folderName": {
     "description": "Nome da Pasta"
+  },
+  "game": "Jogo",
+  "@game": {
+    "description": "Jogo"
+  },
+  "games": "Jogos",
+  "@games": {
+    "description": "Jogos"
   },
   "grid": "Grade",
   "@grid": {
@@ -484,6 +508,23 @@
   "@password": {
     "description": "Senha"
   },
+  "pause": "Pausar",
+  "@pause": {
+    "description": "Pausar"
+  },
+  "paused": "Pausado",
+  "@paused": {
+    "description": "Pausado"
+  },
+  "pauseItem": "Pausar {item}",
+  "@pauseItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser pausado",
+        "type": "String"
+      }
+    }
+  },
   "pending": "Pendente",
   "@pending": {
     "description": "Pendente"
@@ -491,6 +532,23 @@
   "phone": "Telefone",
   "@phone": {
     "description": "Telefone"
+  },
+  "play": "Jogar",
+  "@play": {
+    "description": "Jogar"
+  },
+  "playing": "Jogando",
+  "@playing": {
+    "description": "Jogando"
+  },
+  "playItem": "Jogar {item}",
+  "@playItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser jogado",
+        "type": "String"
+      }
+    }
   },
   "previous": "Anterior",
   "@previous": {
@@ -679,5 +737,26 @@
   "yes": "Sim",
   "@yes": {
     "description": "Sim"
+  },
+  "you": "Você",
+  "@you": {
+    "description": "Você"
+  },
+  "library": "Biblioteca",
+  "@library": {
+    "description": "Biblioteca"
+  },
+  "libraries": "Bibliotecas",
+  "@libraries": {
+    "description": "Bibliotecas"
+  },
+  "itemLibrary": "Biblioteca de {item}",
+  "@itemLibrary": {
+    "placeholders": {
+      "item": {
+        "description": "O item da biblioteca",
+        "type": "String"
+      }
+    }
   }
 }

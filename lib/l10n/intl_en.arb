@@ -200,6 +200,18 @@
   "@empty": {
     "description": "Empty"
   },
+  "emulate": "Emulate",
+  "@emulate": {
+    "description": "Emulate"
+  },
+  "emulator": "Emulator",
+  "@emulator": {
+    "description": "Emulator"
+  },
+  "emulators": "Emulators",
+  "@emulators": {
+    "description": "Emulators"
+  },
   "error": "Error",
   "@error": {
     "description": "Error"
@@ -223,6 +235,10 @@
   "fileName": "File Name",
   "@fileName": {
     "description": "File Name"
+  },
+  "fileNotFound": "File not found",
+  "@fileNotFound": {
+    "description": "File not found"
   },
   "fileOwner": "File Owner",
   "@fileOwner": {
@@ -281,6 +297,14 @@
   "folderName": "Folder Name",
   "@folderName": {
     "description": "Folder Name"
+  },
+  "game": "Game",
+  "@game": {
+    "description": "Game"
+  },
+  "games": "Games",
+  "@games": {
+    "description": "Games"
   },
   "grid": "Grid",
   "@grid": {
@@ -484,6 +508,23 @@
   "@password": {
     "description": "Password"
   },
+  "pause": "Pause",
+  "@pause": {
+    "description": "Pause"
+  },
+  "paused": "Paused",
+  "@paused": {
+    "description": "Paused"
+  },
+  "pauseItem": "Pause {item}",
+  "@pauseItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be paused",
+        "type": "String"
+      }
+    }
+  },
   "pending": "Pending",
   "@pending": {
     "description": "Pending"
@@ -491,6 +532,23 @@
   "phone": "Phone",
   "@phone": {
     "description": "Phone"
+  },
+  "play": "Play",
+  "@play": {
+    "description": "Play"
+  },
+  "playing": "Playing",
+  "@playing": {
+    "description": "Playing"
+  },
+  "playItem": "Play {item}",
+  "@playItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be played",
+        "type": "String"
+      }
+    }
   },
   "previous": "Previous",
   "@previous": {
@@ -679,5 +737,26 @@
   "yes": "Yes",
   "@yes": {
     "description": "Yes"
+  },
+  "you": "You",
+  "@you": {
+    "description": "You"
+  },
+  "library": "Library",
+  "@library": {
+    "description": "Library"
+  },
+  "libraries": "Libraries",
+  "@libraries": {
+    "description": "Libraries"
+  },
+  "itemLibrary": "{item} Library",
+  "@itemLibrary": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be in the library",
+        "type": "String"
+      }
+    }
   }
 }
