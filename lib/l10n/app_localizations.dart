@@ -982,6 +982,60 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'{item} Library'**
   String itemLibrary(String item);
+
+  /// No description provided for @newItemToItem.
+  ///
+  /// In en, this message translates to:
+  /// **'New {item1} to {item2}'**
+  String newItemToItem(String item1, String item2);
+
+  /// No description provided for @toItem.
+  ///
+  /// In en, this message translates to:
+  /// **'To {item}'**
+  String toItem(String item);
+
+  /// Favorite
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite'**
+  String get favorite;
+
+  /// Favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// No description provided for @favoriteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite {item}'**
+  String favoriteItem(String item);
+
+  /// Unfavorite
+  ///
+  /// In en, this message translates to:
+  /// **'Unfavorite'**
+  String get unfavorite;
+
+  /// No description provided for @unfavoriteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfavorite {item}'**
+  String unfavoriteItem(String item);
+
+  /// No description provided for @addTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to {item}'**
+  String addTo(String item);
+
+  /// No description provided for @removeFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from {item}'**
+  String removeFrom(String item);
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

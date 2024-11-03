@@ -1085,13 +1085,19 @@ extension FilterFunctions on GetInterface {
     bool splitCamelCase = true,
     bool useWildcards = false,
     bool allIfEmpty = true,
+    int maxResults = 0,
+    int minChars = 0,
     CharMatch<T> keyCharSearches = const {},
   }) {
     if (items.isEmpty) return <T>[].orderBy((e) => true);
 
-    var searches = forceList(searchTerms);
+    var searches = forceList(searchTerms).whereNotBlank;
 
-    if (searches.whereValid.isEmpty) {
+    if (minChars > 0) {
+      searches = searches.where((e) => e.length >= minChars);
+    }
+
+    if (searches.isEmpty) {
       if (allIfEmpty) {
         return items.orderBy((e) => true);
       } else {
@@ -1119,6 +1125,10 @@ extension FilterFunctions on GetInterface {
       }
       return false;
     });
+
+    if (maxResults > 0) {
+      l = l.take(maxResults);
+    }
 
     if (l.isNotEmpty) return l;
 

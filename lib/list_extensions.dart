@@ -225,6 +225,8 @@ extension IterablesExtension<T> on Iterable<T> {
     bool splitCamelCase = true,
     bool useWildcards = false,
     bool allIfEmpty = true,
+    int minChars = 0,
+    int maxResults = 0,
     CharMatch<T> keyCharSearches = const {},
   }) =>
       Get.search(
@@ -239,6 +241,8 @@ extension IterablesExtension<T> on Iterable<T> {
         useWildcards: useWildcards,
         allIfEmpty: allIfEmpty,
         keyCharSearches: keyCharSearches,
+        minChars: minChars,
+        maxResults: maxResults,
       );
 
   /// Splits the list into multiple sublists of the specified [count].

@@ -758,5 +758,75 @@
         "type": "String"
       }
     }
+  },
+  "newItemToItem": "New {item1} to {item2}",
+  "@newItemToItem": {
+    "placeholders": {
+      "item1": {
+        "description": "The first item to be new",
+        "type": "String"
+      },
+      "item2": {
+        "description": "The second item to be new",
+        "type": "String"
+      }
+    }
+  },
+  "toItem": "To {item}",
+  "@toItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be to",
+        "type": "String"
+      }
+    }
+  },
+  "favorite": "Favorite",
+  "@favorite": {
+    "description": "Favorite"
+  },
+  "favorites": "Favorites",
+  "@favorites": {
+    "description": "Favorites"
+  },
+  "favoriteItem": "Favorite {item}",
+  "@favoriteItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be favorited",
+        "type": "String"
+      }
+    }
+  },
+  "unfavorite": "Unfavorite",
+  "@unfavorite": {
+    "description": "Unfavorite"
+  },
+  "unfavoriteItem": "Unfavorite {item}",
+  "@unfavoriteItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be unfavorited",
+        "type": "String"
+      }
+    }
+  },
+  "addTo": "Add to {item}",
+  "@addTo": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be added to",
+        "type": "String"
+      }
+    }
+  },
+  "removeFrom": "Remove from {item}",
+  "@removeFrom": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be removed from",
+        "type": "String"
+      }
+    }
   }
 }

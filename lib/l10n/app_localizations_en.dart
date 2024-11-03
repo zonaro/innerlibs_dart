@@ -519,4 +519,43 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String itemLibrary(String item) {
     return '$item Library';
   }
+
+  @override
+  String newItemToItem(String item1, String item2) {
+    return 'New $item1 to $item2';
+  }
+
+  @override
+  String toItem(String item) {
+    return 'To $item';
+  }
+
+  @override
+  String get favorite => 'Favorite';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String favoriteItem(String item) {
+    return 'Favorite $item';
+  }
+
+  @override
+  String get unfavorite => 'Unfavorite';
+
+  @override
+  String unfavoriteItem(String item) {
+    return 'Unfavorite $item';
+  }
+
+  @override
+  String addTo(String item) {
+    return 'Add to $item';
+  }
+
+  @override
+  String removeFrom(String item) {
+    return 'Remove from $item';
+  }
 }
