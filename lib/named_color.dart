@@ -3055,136 +3055,394 @@ enum NamedColor implements Color {
   /// A color named "UA Red" with hexadecimal value #D9004C<br><img src="https://www.colorhexa.com/D9004C.png" width="50" height='50' />
   volt("#CEFF00", "Volt"),
 
+  /// A color named "Warm Black" with hexadecimal value #004242<br><img src="https://www.colorhexa.com/004242.png" width="50" height='50' />
   warmBlack("#004242", "Warm black"),
+
+  /// A color named "Waterspout" with hexadecimal value #A4F4F9<br><img src="https://www.colorhexa.com/A4F4F9.png" width="50" height='50' />
   waterspout("#A4F4F9", "Waterspout"),
+
+  /// A color named "Wenge" with hexadecimal value #645452<br><img src="https://www.colorhexa.com/645452.png" width="50" height='50' />
   wenge("#645452", "Wenge"),
+
+  /// A color named "Wheat" with hexadecimal value #F5DEB3<br><img src="https://www.colorhexa.com/F5DEB3.png" width="50" height='50' />
   wheat('#F5DEB3', 'Wheat'),
+
+  /// A color named "White" with hexadecimal value #FFFFFF<br><img src="https://www.colorhexa.com/FFFFFF.png" width="50" height='50' />
   white("#FFFFFF", "White"),
+
+  /// A color named "White Smoke" with hexadecimal value #F5F5F5<br><img src="https://www.colorhexa.com/F5F5F5.png" width="50" height='50' />
   whiteSmoke("#F5F5F5", "White smoke"),
+
+  /// A color named "Wild Blue Yonder" with hexadecimal value #A2ADD0<br><img src="https://www.colorhexa.com/A2ADD0.png" width="50" height='50' />
   wildBlueYonder("#A2ADD0", "Wild blue yonder"),
+
+  /// A color named "Wild Orchid" with hexadecimal value #D470A2<br><img src="https://www.colorhexa.com/D470A2.png" width="50" height='50' />
   wildOrchid("#D470A2", "Wild orchid"),
+
+  /// A color named "Wild Strawberry" with hexadecimal value #FF43A4<br><img src="https://www.colorhexa.com/FF43A4.png" width="50" height='50' />
   wildStrawberry("#FF43A4", "Wild strawberry"),
+
+  /// A color named "Wild Watermelon" with hexadecimal value #FC6C85<br><img src="https://www.colorhexa.com/FC6C85.png" width="50" height='50' />
   wildWatermelon("#FC6C85", "Wild watermelon"),
+
+  /// A color named "Willpower Orange" with hexadecimal value #FD5800<br><img src="https://www.colorhexa.com/FD5800.png" width="50" height='50' />
   willpowerOrange("#FD5800", "Willpower orange"),
+
+  /// A color named "Windsor Tan" with hexadecimal value #A75502<br><img src="https://www.colorhexa.com/A75502.png" width="50" height='50' />
   windsorTan("#A75502", "Windsor tan"),
+
+  /// A color named "Wine" with hexadecimal value #722F37<br><img src="https://www.colorhexa.com/722F37.png" width="50" height='50' />
   wine("#722F37", "Wine"),
+
+  /// A color named "Wine Dregs" with hexadecimal value #673147<br><img src="https://www.colorhexa.com/673147.png" width="50" height='50' />
   wineDregs("#673147", "Wine dregs"),
+
+  /// A color named "Wintergreen Dream" with hexadecimal value #56887D<br><img src="https://www.colorhexa.com/56887D.png" width="50" height='50' />
   wintergreenDream("#56887D", "Wintergreen dream"),
+
+  /// A color named "Winter Sky" with hexadecimal value #FF007C<br><img src="https://www.colorhexa.com/FF007C.png" width="50" height='50' />
   winterSky("#FF007C", "Winter sky"),
+
+  /// A color named "Winter Wizard" with hexadecimal value #A0E6FF<br><img src="https://www.colorhexa.com/A0E6FF.png" width="50" height='50' />
   winterWizard("#A0E6FF", "Winter wizard"),
+
+  /// A color named "Wisteria" with hexadecimal value #C9A0DC<br><img src="https://www.colorhexa.com/C9A0DC.png" width="50" height='50' />
   wisteria("#C9A0DC", "Wisteria"),
+
+  /// A color named "Wood Brown" with hexadecimal value #C19A6B<br><img src="https://www.colorhexa.com/C19A6B.png" width="50" height='50' />
   woodBrown("#C19A6B", "Wood brown"),
+
+  /// A color named "Xanadu" with hexadecimal value #738678<br><img src="https://www.colorhexa.com/738678.png" width="50" height='50' />
   xanadu("#738678", "Xanadu"),
+
+  /// A color named "Yale Blue" with hexadecimal value #0F4D92<br><img src="https://www.colorhexa.com/0F4D92.png" width="50" height='50' />
   yaleBlue("#0F4D92", "Yale blue"),
+
+  /// A color named "Yellow" with hexadecimal value #FFFF00<br><img src="https://www.colorhexa.com/FFFF00.png" width="50" height='50' />
   yellow("#FFFF00", "Yellow"),
+
+  /// A color named "Yellow Green" with hexadecimal value #9ACD32<br><img src="https://www.colorhexa.com/9ACD32.png" width="50" height='50' />
   yellowGreen('#9ACD32', 'Yellow Green'),
+
+  /// A color named "Yellow Orange" with hexadecimal value #FFAE42<br><img src="https://www.colorhexa.com/FFAE42.png" width="50" height='50' />
   yellowOrange("#FFAE42", "Yellow orange"),
+
+  /// A color named "Yellow Rose" with hexadecimal value #FFF000<br><img src="https://www.colorhexa.com/FFF000.png" width="50" height='50' />
   yellowRose("#FFF000", "Yellow rose"),
+
+  /// A color named "Zaffre" with hexadecimal value #0014A8<br><img src="https://www.colorhexa.com/0014A8.png" width="50" height='50' />
   zaffre("#0014A8", "Zaffre"),
+
+  /// A color named "Zinnwaldite Brown" with hexadecimal value #2C1608<br><img src="https://www.colorhexa.com/2C1608.png" width="50" height='50' />
   zinnwalditeBrown("#2C1608", "Zinnwaldite brown"),
+
+  /// A color named "Zomp" with hexadecimal value #39A78E<br><img src="https://www.colorhexa.com/39A78E.png" width="50" height='50' />
   zomp("#39A78E", "Zomp"),
+
+  /// A color named "Air Force Blue" with hexadecimal value #5D8AA8<br><img src="https://www.colorhexa.com/5D8AA8.png" width="50" height='50' />
   airForceBlue("#5d8aa8", "Air Force blue"),
+
+  /// A color named "Alizarin Crimson" with hexadecimal value #E32636<br><img src="https://www.colorhexa.com/E32636.png" width="50" height='50' />
   alizarinCrimson("#e32636", "Alizarin crimson"),
+
+  /// A color named "American Rose" with hexadecimal value #FF033E<br><img src="https://www.colorhexa.com/FF033E.png" width="50" height='50' />
   americanRose("#ff033e", "American rose"),
+
+  /// A color named "Anti Flash White" with hexadecimal value #F2F3F4<br><img src="https://www.colorhexa.com/F2F3F4.png" width="50" height='50' />
   antiFlashWhite("#f2f3f4", "Anti-flash white"),
+
+  /// A color named "Ash Grey" with hexadecimal value #B2BEB5<br><img src="https://www.colorhexa.com/B2BEB5.png" width="50" height='50' />
   ashGrey("#b2beb5", "Ash grey"),
+
+  /// A color named "Aurometalsaurus" with hexadecimal value #6E7F80<br><img src="https://www.colorhexa.com/6E7F80.png" width="50" height='50' />
   aurometalsaurus("#6e7f80", "AuroMetalSaurus"),
+
+  /// A color named "Awesome" with hexadecimal value #FF2052<br><img src="https://www.colorhexa.com/FF2052.png" width="50" height='50' />
   awesome("#ff2052", "Awesome"),
+
+  /// A color named "Azure Mist/Web" with hexadecimal value #F0FFFF<br><img src="https://www.colorhexa.com/F0FFFF.png" width="50" height='50' />
   azureMistWeb("#f0ffff", "Azure mist/web"),
+
+  /// A color named "Ball Blue" with hexadecimal value #21ABCD<br><img src="https://www.colorhexa.com/21ABCD.png" width="50" height='50' />
   ballBlue("#21abcd", "Ball Blue"),
+
+  /// A color named "Banana Yellow" with hexadecimal value #FFE135<br><img src="https://www.colorhexa.com/FFE135.png" width="50" height='50' />
   bananaYellow("#ffe135", "Banana yellow"),
+
+  /// A color named "Bazaar" with hexadecimal value #98777B<br><img src="https://www.colorhexa.com/98777B.png" width="50" height='50' />
   bazaar("#98777b", "Bazaar"),
+
+  /// A color named "Blue Purple" with hexadecimal value #8A2BE2<br><img src="https://www.colorhexa.com/8A2BE2.png" width="50" height='50' />
   bluePurple("#8a2be2", "Blue purple"),
+
+  /// A color named "Bondi Blue" with hexadecimal value #0095B6<br><img src="https://www.colorhexa.com/0095B6.png" width="50" height='50' />
   bondiBlue("#0095b6", "Bondi blue"),
+
+  /// A color named "Boston University Red" with hexadecimal value #CC0000<br><img src="https://www.colorhexa.com/CC0000.png" width="50" height='50' />
   bostonUniversityRed("#cc0000", "Boston University Red"),
+
+  /// A color named "Boysenberry" with hexadecimal value #873260<br><img src="https://www.colorhexa.com/873260.png" width="50" height='50' />
   boysenberry("#873260", "Boysenberry"),
+
+  /// A color named "Brandeis Blue" with hexadecimal value #0070FF<br><img src="https://www.colorhexa.com/0070FF.png" width="50" height='50' />
   brandeisBlue("#0070ff", "Brandeis blue"),
+
+  /// A color named "Brass" with hexadecimal value #B5A642<br><img src="https://www.colorhexa.com/B5A642.png" width="50" height='50' />
   brass("#b5a642", "Brass"),
+
+  /// A color named "Bright Cerulean" with hexadecimal value #1DACD6<br><img src="https://www.colorhexa.com/1DACD6.png" width="50" height='50' />
   brightCerulean("#1dacd6", "Bright cerulean"),
+
+  /// A color named "Bright Lavender" with hexadecimal value #BF94E4<br><img src="https://www.colorhexa.com/BF94E4.png" width="50" height='50' />
   brightLavender("#bf94e4", "Bright lavender"),
+
+  /// A color named "Bright Pink" with hexadecimal value #FF007F<br><img src="https://www.colorhexa.com/FF007F.png" width="50" height='50' />
   brightPink("#ff007f", "Bright pink"),
+
+  /// A color named "Bright Turquoise" with hexadecimal value #08E8DE<br><img src="https://www.colorhexa.com/08E8DE.png" width="50" height='50' />
   brightTurquoise("#08e8de", "Bright turquoise"),
+
+  /// A color named "Bright Ube" with hexadecimal value #D19FE8<br><img src="https://www.colorhexa.com/D19FE8.png" width="50" height='50' />
   brightUbe("#d19fe8", "Bright ube"),
+
+  /// A color named "Brilliant Lavender" with hexadecimal value #F4BBFF<br><img src="https://www.colorhexa.com/F4BBFF.png" width="50" height='50' />
   brilliantLavender("#f4bbff", "Brilliant lavender"),
+
+  /// A color named "Bubbles" with hexadecimal value #E7FEFF<br><img src="https://www.colorhexa.com/E7FEFF.png" width="50" height='50' />
   bubbles("#e7feff", "Bubbles"),
+
+  /// A color named "Bulgarian Rose" with hexadecimal value #480607<br><img src="https://www.colorhexa.com/480607.png" width="50" height='50' />
   bulgarianRose("#480607", "Bulgarian rose"),
+
+  /// A color named "Café Au Lait" with hexadecimal value #A67B5B<br><img src="https://www.colorhexa.com/A67B5B.png" width="50" height='50' />
   cafAuLait("#a67b5b", "Café au lait"),
+
+  /// A color named "Café Noir" with hexadecimal value #4B3621<br><img src="https://www.colorhexa.com/4B3621.png" width="50" height='50' />
   cafNoir("#4b3621", "Café noir"),
+
+  /// A color named "Cal Poly Pomona Green" with hexadecimal value #1E4D2B<br><img src="https://www.colorhexa.com/1E4D2B.png" width="50" height='50' />
   calPolyPomonaGreen("#1e4d2b", "Cal Poly Pomona green"),
+
+  /// A color named "Camouflage Green" with hexadecimal value #78866B<br><img src="https://www.colorhexa.com/78866B.png" width="50" height='50' />
   camouflageGreen("#78866b", "Camouflage green"),
+
+  /// A color named "Carmine Pink" with hexadecimal value #EB4C42<br><img src="https://www.colorhexa.com/EB4C42.png" width="50" height='50' />
   carminePink("#eb4c42", "Carmine pink"),
+
+  /// A color named "Carmine Red" with hexadecimal value #FF0038<br><img src="https://www.colorhexa.com/FF0038.png" width="50" height='50' />
   carmineRed("#ff0038", "Carmine red"),
+
+  /// A color named "Celestial Blue" with hexadecimal value #4997D0<br><img src="https://www.colorhexa.com/4997D0.png" width="50" height='50' />
   celestialBlue("#4997d0", "Celestial blue"),
+
+  /// A color named "Cerise Pink" with hexadecimal value #EC3B83<br><img src="https://www.colorhexa.com/EC3B83.png" width="50" height='50' />
   cerisePink("#ec3b83", "Cerise pink"),
+
+  /// A color named "Chamoisee" with hexadecimal value #A0785A<br><img src="https://www.colorhexa.com/A0785A.png" width="50" height='50' />
   chamoisee("#a0785a", "Chamoisee"),
+
+  /// A color named "Cherry" with hexadecimal value #DE3163<br><img src="https://www.colorhexa.com/DE3163.png" width="50" height='50' />
   cherry("#de3163", "Cherry"),
+
+  /// A color named "Cinnamon" with hexadecimal value #D2691E<br><img src="https://www.colorhexa.com/D2691E.png" width="50" height='50' />
   cinnamon("#d2691e", "Cinnamon"),
+
+  /// A color named "Classic Rose" with hexadecimal value #FBCCE7<br><img src="https://www.colorhexa.com/FBCCE7.png" width="50" height='50' />
   classicRose("#fbcce7", "Classic rose"),
+
+  /// A color named "Cobalt" with hexadecimal value #0047AB<br><img src="https://www.colorhexa.com/0047AB.png" width="50" height='50' />
   cobalt("#0047ab", "Cobalt"),
+
+  /// A color named "Cool Black" with hexadecimal value #002E63<br><img src="https://www.colorhexa.com/002E63.png" width="50" height='50' />
   coolBlack("#002e63", "Cool black"),
+
+  /// A color named "Coral Red" with hexadecimal value #FF4040<br><img src="https://www.colorhexa.com/FF4040.png" width="50" height='50' />
   coralRed("#ff4040", "Coral red"),
+
+  /// A color named "Cornflower" with hexadecimal value #9ACEEB<br><img src="https://www.colorhexa.com/9ACEEB.png" width="50" height='50' />
   cornflower("#9aceeb", "Cornflower"),
+
+  /// A color named "Crimson Red" with hexadecimal value #990000<br><img src="https://www.colorhexa.com/990000.png" width="50" height='50' />
   crimsonRed("#990000", "Crimson Red"),
+
+  /// A color named "Crimson Glory" with hexadecimal value #BE0032<br><img src="https://www.colorhexa.com/BE0032.png" width="50" height='50' />
   crimsonGlory("#be0032", "Crimson glory"),
+
+  /// A color named "Daffodil" with hexadecimal value #FFFF31<br><img src="https://www.colorhexa.com/FFFF31.png" width="50" height='50' />
   daffodil("#ffff31", "Daffodil"),
+
+  /// A color named "Dandelion" with hexadecimal value #F0E130<br><img src="https://www.colorhexa.com/F0E130.png" width="50" height='50' />
   dandelion("#f0e130", "Dandelion"),
+
+  /// A color named "Dark Candy Apple Red" with hexadecimal value #A40000<br><img src="https://www.colorhexa.com/A40000.png" width="50" height='50' />
   darkCandyAppleRed("#a40000", "Dark candy apple red"),
+
+  /// A color named "Dark Cerulean" with hexadecimal value #08457E<br><img src="https://www.colorhexa.com/08457E.png" width="50" height='50' />
   darkCerulean("#08457e", "Dark cerulean"),
+
+  /// A color named "Dark Chestnut" with hexadecimal value #986960<br><img src="https://www.colorhexa.com/986960.png" width="50" height='50' />
   darkChestnut("#986960", "Dark chestnut"),
+
+  /// A color named "Dark Coral" with hexadecimal value #CD5B45<br><img src="https://www.colorhexa.com/CD5B45.png" width="50" height='50' />
   darkCoral("#cd5b45", "Dark coral"),
+
+  /// A color named "Dark Lavender" with hexadecimal value #734F96<br><img src="https://www.colorhexa.com/734F96.png" width="50" height='50' />
   darkLavender("#734f96", "Dark lavender"),
+
+  /// A color named "Dark Midnight Blue" with hexadecimal value #003366<br><img src="https://www.colorhexa.com/003366.png" width="50" height='50' />
   darkMidnightBlue("#003366", "Dark midnight blue"),
+
+  /// A color named "Dark Pastel Blue" with hexadecimal value #779ECB<br><img src="https://www.colorhexa.com/779ECB.png" width="50" height='50' />
   darkPastelBlue("#779ecb", "Dark pastel blue"),
+
+  /// A color named "Dark Pastel Purple" with hexadecimal value #966FD6<br><img src="https://www.colorhexa.com/966FD6.png" width="50" height='50' />
   darkPastelPurple("#966fd6", "Dark pastel purple"),
+
+  /// A color named "Dark Pastel Red" with hexadecimal value #C23B22<br><img src="https://www.colorhexa.com/C23B22.png" width="50" height='50' />
   darkPastelRed("#c23b22", "Dark pastel red"),
+
+  /// A color named "Dark Pink" with hexadecimal value #E75480<br><img src="https://www.colorhexa.com/E75480.png" width="50" height='50' />
   darkPink("#e75480", "Dark pink"),
+
+  /// A color named "Dark Powder Blue" with hexadecimal value #003399<br><img src="https://www.colorhexa.com/003399.png" width="50" height='50' />
   darkPowderBlue("#003399", "Dark powder blue"),
+
+  /// A color named "Dark Raspberry" with hexadecimal value #872657<br><img src="https://www.colorhexa.com/872657.png" width="50" height='50' />
   darkRaspberry("#872657", "Dark raspberry"),
+
+  /// A color named "Dark Scarlet" with hexadecimal value #560319<br><img src="https://www.colorhexa.com/560319.png" width="50" height='50' />
   darkScarlet("#560319", "Dark scarlet"),
+
+  /// A color named "Dark Tan" with hexadecimal value #918151<br><img src="https://www.colorhexa.com/918151.png" width="50" height='50' />
   darkTan("#918151", "Dark tan"),
+
+  /// A color named "Dark Tangerine" with hexadecimal value #FFA812<br><img src="https://www.colorhexa.com/FFA812.png" width="50" height='50' />
   darkTangerine("#ffa812", "Dark tangerine"),
+
+  /// A color named "Dark Taupe" with hexadecimal value #483C32<br><img src="https://www.colorhexa.com/483C32.png" width="50" height='50' />
   darkTaupe("#483c32", "Dark taupe"),
+
+  /// A color named "Dark Terra Cotta" with hexadecimal value #CC4E5C<br><img src="https://www.colorhexa.com/CC4E5C.png" width="50" height='50' />
   darkTerraCotta("#cc4e5c", "Dark terra cotta"),
+
+  /// A color named "Davy Grey" with hexadecimal value #555555<br><img src="https://www.colorhexa.com/555555.png" width="50" height='50' />
   davyGrey("#555555", "Davy grey"),
+
+  /// A color named "Debian Red" with hexadecimal value #D70A53<br><img src="https://www.colorhexa.com/D70A53.png" width="50" height='50' />
   debianRed("#d70a53", "Debian red"),
+
+  /// A color named "Deep Carmine" with hexadecimal value #A9203E<br><img src="https://www.colorhexa.com/A9203E.png" width="50" height='50' />
   deepCarmine("#a9203e", "Deep carmine"),
+
+  /// A color named "Deep Carmine Pink" with hexadecimal value #EF3038<br><img src="https://www.colorhexa.com/EF3038.png" width="50" height='50' />
   deepCarminePink("#ef3038", "Deep carmine pink"),
+
+  /// A color named "Deep Carrot Orange" with hexadecimal value #E9692C<br><img src="https://www.colorhexa.com/E9692C.png" width="50" height='50' />
   deepCarrotOrange("#e9692c", "Deep carrot orange"),
+
+  /// A color named "Deep Coffee" with hexadecimal value #704241<br><img src="https://www.colorhexa.com/704241.png" width="50" height='50' />
   deepCoffee("#704241", "Deep coffee"),
+
+  /// A color named "Deep Fuchsia" with hexadecimal value #C154C1<br><img src="https://www.colorhexa.com/C154C1.png" width="50" height='50' />
   deepFuchsia("#c154c1", "Deep fuchsia"),
+
+  /// A color named "Deep Lilac" with hexadecimal value #9955BB<br><img src="https://www.colorhexa.com/9955BB.png" width="50" height='50' />
   deepLilac("#9955bb", "Deep lilac"),
+
+  /// A color named "Deep Magenta" with hexadecimal value #CC00CC<br><img src="https://www.colorhexa.com/CC00CC.png" width="50" height='50' />
   deepMagenta("#cc00cc", "Deep magenta"),
+
+  /// A color named "Deep Peach" with hexadecimal value #FFCBA4<br><img src="https://www.colorhexa.com/FFCBA4.png" width="50" height='50' />
   deepPeach("#ffcba4", "Deep peach"),
+
+  /// A color named "Dollar Bill" with hexadecimal value #85BB65<br><img src="https://www.colorhexa.com/85BB65.png" width="50" height='50' />
   dollarBill("#85bb65", "Dollar bill"),
+
+  /// A color named "Electric Crimson" with hexadecimal value #FF003F<br><img src="https://www.colorhexa.com/FF003F.png" width="50" height='50' />
   electricCrimson("#ff003f", "Electric crimson"),
+
+  /// A color named "Electric Cyan" with hexadecimal value #00FFFF<br><img src="https://www.colorhexa.com/00FFFF.png" width="50" height='50' />
   electricCyan("#00ffff", "Electric cyan"),
+
+  /// A color named "Electric Lavender" with hexadecimal value #F4BBFF<br><img src="https://www.colorhexa.com/F4BBFF.png" width="50" height='50' />
   electricLavender("#f4bbff", "Electric lavender"),
+
+  /// A color named "Electric Ultramarine" with hexadecimal value #3F00FF<br><img src="https://www.colorhexa.com/3F00FF.png" width="50" height='50' />
   electricUltramarine("#3f00ff", "Electric ultramarine"),
+
+  /// A color named "Electric Yellow" with hexadecimal value #FFFF00<br><img src="https://www.colorhexa.com/FFFF00.png" width="50" height='50' />
   electricYellow("#ffff00", "Electric yellow"),
+
+  /// A color named "Famous" with hexadecimal value #FF00FF<br><img src="https://www.colorhexa.com/FF00FF.png" width="50" height='50' />
   famous("#ff00ff", "Famous"),
+
+  /// A color named "Fern" with hexadecimal value #71BC78<br><img src="https://www.colorhexa.com/71BC78.png" width="50" height='50' />
   fern("#71bc78", "Fern"),
+
+  /// A color named "Fuchsia Pink" with hexadecimal value #FF77FF<br><img src="https://www.colorhexa.com/FF77FF.png" width="50" height='50' />
   fuchsiaPink("#ff77ff", "Fuchsia pink"),
+
+  /// A color named "Ginger" with hexadecimal value #B06500<br><img src="https://www.colorhexa.com/B06500.png" width="50" height='50' />
   ginger("#b06500", "Ginger"),
+
+  /// A color named "Halayà úbe" with hexadecimal value #663854<br><img src="https://www.colorhexa.com/663854.png" width="50" height='50' />
   halayBe("#663854", "Halayà úbe"),
+
+  /// A color named "International Orange" with hexadecimal value #FF4F00<br><img src="https://www.colorhexa.com/FF4F00.png" width="50" height='50' />
   internationalOrange("#ff4f00", "International orange"),
+
+  /// A color named "Macaroni And Cheese" with hexadecimal value #FFBD88<br><img src="https://www.colorhexa.com/FFBD88.png" width="50" height='50' />
   macaroniAndCheese("#ffbd88", "Macaroni and Cheese"),
+
+  /// A color named "Meat Brown" with hexadecimal value #E5B73B<br><img src="https://www.colorhexa.com/E5B73B.png" width="50" height='50' />
   meatBrown("#e5b73b", "Meat brown"),
+
+  /// A color named "Medium Teal Blue" with hexadecimal value #0054B4<br><img src="https://www.colorhexa.com/0054B4.png" width="50" height='50' />
   mediumTealBlue("#0054b4", "Medium teal blue"),
+
+  /// A color named "Moonstone Blue" with hexadecimal value #73A9C2<br><img src="https://www.colorhexa.com/73A9C2.png" width="50" height='50' />
   moonstoneBlue("#73a9c2", "Moonstone blue"),
+
+  /// A color named "Mordant Red 19" with hexadecimal value #AE0C00<br><img src="https://www.colorhexa.com/AE0C00.png" width="50" height='50' />
   mordantRed19("#ae0c00", "Mordant red 19"),
+
+  /// A color named "Munsell" with hexadecimal value #F2F3F4<br><img src="https://www.colorhexa.com/F2F3F4.png" width="50" height='50' />
   munsell("#f2f3f4", "Munsell"),
+
+  /// A color named "Myrtle" with hexadecimal value #21421E<br><img src="https://www.colorhexa.com/21421E.png" width="50" height='50' />
   myrtle("#21421e", "Myrtle"),
+
+  /// A color named "Navy Blue" with hexadecimal value #000080<br><img src="https://www.colorhexa.com/000080.png" width="50" height='50' />
   navyBlue("#000080", "Navy blue"),
+
+  /// A color named "Ocean Boat Blue" with hexadecimal value #0077BE<br><img src="https://www.colorhexa.com/0077BE.png" width="50" height='50' />
   oceanBoatBlue("#0077be", "Ocean Boat Blue"),
+
+  /// A color named "Payne Grey" with hexadecimal value #536878<br><img src="https://www.colorhexa.com/536878.png" width="50" height='50' />
   payneGrey("#536878", "Payne grey"),
+
+  /// A color named "Purple Mountain's Majesty" with hexadecimal value #9D81BA<br><img src="https://www.colorhexa.com/9D81BA.png" width="50" height='50' />
   purpleMountainSMajesty("#9d81ba", "Purple Mountain's Majesty"),
+
+  /// A color named "Robin's Egg Blue" with hexadecimal value #1FCECB<br><img src="https://www.colorhexa.com/1FCECB.png" width="50" height='50' />
   robinSEggBlue("#1fcecb", "Robin's Egg Blue"),
+
+  /// A color named "Saint Patrick Blue" with hexadecimal value #23297A<br><img src="https://www.colorhexa.com/23297A.png" width="50" height='50' />
   saintPatrickBlue("#23297a", "Saint Patrick Blue"),
+
+  /// A color named "Shamrock" with hexadecimal value #45CEA2<br><img src="https://www.colorhexa.com/45CEA2.png" width="50" height='50' />
   shamrock("#45cea2", "Shamrock"),
+
+  /// A color named "Smokey Topaz" with hexadecimal value #933D41<br><img src="https://www.colorhexa.com/933D41.png" width="50" height='50' />
   smokeyTopaz("#933d41", "Smokey topaz"),
+
+  /// A color named "Sunglow" with hexadecimal value #FFCC33<br><img src="https://www.colorhexa.com/FFCC33.png" width="50" height='50' />
   sunglow("#ffcc33", "Sunglow"),
+
+  /// A color named "Tawny" with hexadecimal value #CD5700<br><img src="https://www.colorhexa.com/CD5700.png" width="50" height='50' />
   tawny("#cd5700", "Tawny");
 
+  /// AA random color from the list of named colors.
   static NamedColor get random => values.orderByRandom.first;
 
   final String hexadecimal;
