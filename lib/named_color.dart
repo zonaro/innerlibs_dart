@@ -3499,7 +3499,7 @@ enum NamedColor implements Color {
   double computeLuminance() => color.computeLuminance();
 
   @override
-  toString() => "${name.toTitleCase()} - $hexadecimal";
+  string toString() => "${name.toTitleCase()} - $hexadecimal";
 
   @override
   Color withAlpha(int a) => color.withAlpha(a);
@@ -3512,6 +3512,7 @@ enum NamedColor implements Color {
 
   @override
   Color withOpacity(double opacity) => color.withOpacity(opacity);
+
   @override
   Color withRed(int r) => color.withRed(r);
 }
