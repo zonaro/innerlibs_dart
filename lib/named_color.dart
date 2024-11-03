@@ -196,7 +196,6 @@ enum NamedColor implements Color {
   bittersweetShimmer("#BF4F51", "Bittersweet shimmer"),
 
   /// A color named "Black" with hexadecimal value #000000<br><img src="https://www.colorhexa.com/000000.png" width="50" height='50' />
-
   black('#000000', 'Black'),
 
   /// A color named "Black Bean" with hexadecimal value #3D0C02<br><img src="https://www.colorhexa.com/3D0C02.png" width="50" height='50' />
