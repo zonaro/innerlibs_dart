@@ -293,7 +293,7 @@ class PageTabScaffold<T> extends StatefulWidget {
 
   final PageTabController<T> indexController;
 
-  final bool automaticallyImplyLeading = true;
+  final bool automaticallyImplyLeading;
 
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
@@ -341,6 +341,7 @@ class PageTabScaffold<T> extends StatefulWidget {
     this.errorChild,
     this.afterLoad,
     this.beforeLoad,
+    this.automaticallyImplyLeading = true,
   });
 
   @override
@@ -423,8 +424,7 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
 
   Widget? get floatingActionButton => indexController.tabEntry?.floatingActionButton ?? indexController.pageEntry?.floatingActionButton ?? widget.floatingActionButton;
 
-  FloatingActionButtonLocation? get floatingActionButtonLocation =>
-      indexController.tabEntry?.floatingActionButtonLocation ?? indexController.pageEntry?.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
+  FloatingActionButtonLocation? get floatingActionButtonLocation => indexController.tabEntry?.floatingActionButtonLocation ?? indexController.pageEntry?.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
 
   bool get isSearchEnabled => onSearch != null;
 
