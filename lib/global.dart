@@ -1095,6 +1095,7 @@ extension FilterFunctions on GetInterface {
 
     if (minChars > 0) {
       searches = searches.where((e) => e.length >= minChars);
+      allIfEmpty = false;
     }
 
     if (searches.isEmpty) {

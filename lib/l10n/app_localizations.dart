@@ -101,11 +101,41 @@ abstract class InnerLibsLocalizations {
   /// **'Add'**
   String get add;
 
+  /// No description provided for @addTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to {item}'**
+  String addTo(String item);
+
   /// App
   ///
   /// In en, this message translates to:
   /// **'App'**
   String get app;
+
+  /// Apply
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @applyItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply {item}'**
+  String applyItem(String item);
+
+  /// No description provided for @applyItemIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply {item} in {location}'**
+  String applyItemIn(String item, String location);
+
+  /// No description provided for @applyItemToItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply {item1} to {item2}'**
+  String applyItemToItem(String item1, String item2);
 
   /// App Name
   ///
@@ -154,6 +184,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
+
+  /// No description provided for @cancelItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel {item}'**
+  String cancelItem(String item);
 
   /// Categories
   ///
@@ -269,6 +305,12 @@ abstract class InnerLibsLocalizations {
   /// **'Country'**
   String get country;
 
+  /// Dark Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
   /// Date
   ///
   /// In en, this message translates to:
@@ -280,6 +322,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Date out of range'**
   String get dateOutOfRange;
+
+  /// Day
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// Day Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Day Mode'**
+  String get dayMode;
 
   /// Days
   ///
@@ -310,6 +364,36 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Device'**
   String get device;
+
+  /// Disable
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get disable;
+
+  /// Disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// No description provided for @disabledItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled {item}'**
+  String disabledItem(String item);
+
+  /// No description provided for @disabledItemIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled {item} in {location}'**
+  String disabledItemIn(String item, String location);
+
+  /// No description provided for @disableItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable {item}'**
+  String disableItem(String item);
 
   /// Dock
   ///
@@ -353,6 +437,36 @@ abstract class InnerLibsLocalizations {
   /// **'Emulators'**
   String get emulators;
 
+  /// Enable
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get enable;
+
+  /// Enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabled;
+
+  /// No description provided for @enabledItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled {item}'**
+  String enabledItem(String item);
+
+  /// No description provided for @enabledItemIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled {item} in {location}'**
+  String enabledItemIn(String item, String location);
+
+  /// No description provided for @enableItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable {item}'**
+  String enableItem(String item);
+
   /// Error
   ///
   /// In en, this message translates to:
@@ -370,6 +484,24 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Failed'**
   String get failed;
+
+  /// Favorite
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite'**
+  String get favorite;
+
+  /// No description provided for @favoriteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite {item}'**
+  String favoriteItem(String item);
+
+  /// Favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
 
   /// File
   ///
@@ -467,6 +599,18 @@ abstract class InnerLibsLocalizations {
   /// **'Folder Name'**
   String get folderName;
 
+  /// Follow
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get follow;
+
+  /// No description provided for @followItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow {item}'**
+  String followItem(String item);
+
   /// Game
   ///
   /// In en, this message translates to:
@@ -539,6 +683,12 @@ abstract class InnerLibsLocalizations {
   /// **'Invalid {item}.'**
   String invalidItem(String item);
 
+  /// No description provided for @itemLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} Library'**
+  String itemLibrary(String item);
+
   /// No description provided for @itemNotFound.
   ///
   /// In en, this message translates to:
@@ -550,6 +700,24 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'{item} not found in {location}'**
   String itemNotFoundIn(String item, String location);
+
+  /// Libraries
+  ///
+  /// In en, this message translates to:
+  /// **'Libraries'**
+  String get libraries;
+
+  /// Library
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get library;
+
+  /// Light Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Light Mode'**
+  String get lightMode;
 
   /// List
   ///
@@ -635,11 +803,29 @@ abstract class InnerLibsLocalizations {
   /// **'New {item}'**
   String newItem(String item);
 
+  /// No description provided for @newItemToItem.
+  ///
+  /// In en, this message translates to:
+  /// **'New {item1} to {item2}'**
+  String newItemToItem(String item1, String item2);
+
   /// Next
   ///
   /// In en, this message translates to:
   /// **'Next'**
   String get next;
+
+  /// Night
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get night;
+
+  /// Night Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Night Mode'**
+  String get nightMode;
 
   /// No
   ///
@@ -761,6 +947,18 @@ abstract class InnerLibsLocalizations {
   /// **'Register'**
   String get register;
 
+  /// No description provided for @removeFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from {item}'**
+  String removeFrom(String item);
+
+  /// Remove from favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favorites'**
+  String get removeFromfavorites;
+
   /// Results
   ///
   /// In en, this message translates to:
@@ -863,11 +1061,35 @@ abstract class InnerLibsLocalizations {
   /// **'Table View'**
   String get tableView;
 
+  /// Theme
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// Theme Color
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Color'**
+  String get themeColor;
+
+  /// Theme Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Mode'**
+  String get themeMode;
+
   /// To
   ///
   /// In en, this message translates to:
   /// **'To'**
   String get to;
+
+  /// No description provided for @toItem.
+  ///
+  /// In en, this message translates to:
+  /// **'To {item}'**
+  String toItem(String item);
 
   /// Undock
   ///
@@ -880,6 +1102,30 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Undock {item}'**
   String undockItem(String item);
+
+  /// Unfavorite
+  ///
+  /// In en, this message translates to:
+  /// **'Unfavorite'**
+  String get unfavorite;
+
+  /// No description provided for @unfavoriteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfavorite {item}'**
+  String unfavoriteItem(String item);
+
+  /// Unfollow
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get unfollow;
+
+  /// No description provided for @unfollowItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow {item}'**
+  String unfollowItem(String item);
 
   /// Uninstall
   ///
@@ -965,77 +1211,41 @@ abstract class InnerLibsLocalizations {
   /// **'You'**
   String get you;
 
-  /// Library
+  /// Your
   ///
   /// In en, this message translates to:
-  /// **'Library'**
-  String get library;
+  /// **'Your'**
+  String get your;
 
-  /// Libraries
+  /// No description provided for @yourItem.
   ///
   /// In en, this message translates to:
-  /// **'Libraries'**
-  String get libraries;
+  /// **'Your {item}'**
+  String yourItem(String item);
 
-  /// No description provided for @itemLibrary.
+  /// Directory
   ///
   /// In en, this message translates to:
-  /// **'{item} Library'**
-  String itemLibrary(String item);
+  /// **'Directory'**
+  String get directory;
 
-  /// No description provided for @newItemToItem.
+  /// Directories
   ///
   /// In en, this message translates to:
-  /// **'New {item1} to {item2}'**
-  String newItemToItem(String item1, String item2);
+  /// **'Directories'**
+  String get directories;
 
-  /// No description provided for @toItem.
+  /// Unknown
   ///
   /// In en, this message translates to:
-  /// **'To {item}'**
-  String toItem(String item);
+  /// **'Unknown'**
+  String get unknown;
 
-  /// Favorite
+  /// No description provided for @unknownItem.
   ///
   /// In en, this message translates to:
-  /// **'Favorite'**
-  String get favorite;
-
-  /// Favorites
-  ///
-  /// In en, this message translates to:
-  /// **'Favorites'**
-  String get favorites;
-
-  /// No description provided for @favoriteItem.
-  ///
-  /// In en, this message translates to:
-  /// **'Favorite {item}'**
-  String favoriteItem(String item);
-
-  /// Unfavorite
-  ///
-  /// In en, this message translates to:
-  /// **'Unfavorite'**
-  String get unfavorite;
-
-  /// No description provided for @unfavoriteItem.
-  ///
-  /// In en, this message translates to:
-  /// **'Unfavorite {item}'**
-  String unfavoriteItem(String item);
-
-  /// No description provided for @addTo.
-  ///
-  /// In en, this message translates to:
-  /// **'Add to {item}'**
-  String addTo(String item);
-
-  /// No description provided for @removeFrom.
-  ///
-  /// In en, this message translates to:
-  /// **'Remove from {item}'**
-  String removeFrom(String item);
+  /// **'Unknown {item}'**
+  String unknownItem(String item);
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

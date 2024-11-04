@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:innerlibs/innerlibs.dart';
 
+/// A Enum containing all the named colors.
+
 typedef NamedColors = NamedColor;
 
 /// A Enum containing all the named colors. Also implements the [Color] interface, so it can be used as a [Color].

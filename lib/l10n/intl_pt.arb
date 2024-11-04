@@ -5,9 +5,57 @@
   "@add": {
     "description": "Adicionar"
   },
+  "addTo": "Adicionar a {item}",
+  "@addTo": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser adicionado",
+        "type": "String"
+      }
+    }
+  },
   "app": "Aplicativo",
   "@app": {
     "description": "Aplicativo"
+  },
+  "apply": "Aplicar",
+  "@apply": {
+    "description": "Aplicar"
+  },
+  "applyItem": "Aplicar {item}",
+  "@applyItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser aplicado",
+        "type": "String"
+      }
+    }
+  },
+  "applyItemIn": "Aplicar {item} em {location}",
+  "@applyItemIn": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser aplicado",
+        "type": "String"
+      },
+      "location": {
+        "description": "O local onde o item será aplicado",
+        "type": "String"
+      }
+    }
+  },
+  "applyItemToItem": "Aplicar {item1} a {item2}",
+  "@applyItemToItem": {
+    "placeholders": {
+      "item1": {
+        "description": "O item a ser aplicado",
+        "type": "String"
+      },
+      "item2": {
+        "description": "O item de destino",
+        "type": "String"
+      }
+    }
   },
   "appName": "Nome do Aplicativo",
   "@appName": {
@@ -45,6 +93,15 @@
   "cancel": "Cancelar",
   "@cancel": {
     "description": "Cancelar"
+  },
+  "cancelItem": "Cancelar {item}",
+  "@cancelItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser cancelado",
+        "type": "String"
+      }
+    }
   },
   "categories": "Categorias",
   "@categories": {
@@ -151,6 +208,10 @@
   "@country": {
     "description": "País"
   },
+  "darkMode": "Modo Escuro",
+  "@darkMode": {
+    "description": "Modo Escuro"
+  },
   "date": "Data",
   "@date": {
     "description": "Data"
@@ -158,6 +219,14 @@
   "dateOutOfRange": "Data fora do intervalo",
   "@dateOutOfRange": {
     "description": "Data fora do intervalo"
+  },
+  "day": "Dia",
+  "@day": {
+    "description": "Dia"
+  },
+  "dayMode": "Modo Diurno",
+  "@dayMode": {
+    "description": "Modo Diurno"
   },
   "days": "Dias",
   "@days": {
@@ -178,6 +247,45 @@
   "device": "Dispositivo",
   "@device": {
     "description": "Dispositivo"
+  },
+  "disable": "Desabilitar",
+  "@disable": {
+    "description": "Desabilitar"
+  },
+  "disabled": "Desabilitado",
+  "@disabled": {
+    "description": "Desabilitado"
+  },
+  "disabledItem": "{item} Desabilitado",
+  "@disabledItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item desabilitado",
+        "type": "String"
+      }
+    }
+  },
+  "disabledItemIn": "{item} Desabilitado em {location}",
+  "@disabledItemIn": {
+    "placeholders": {
+      "item": {
+        "description": "O item desabilitado",
+        "type": "String"
+      },
+      "location": {
+        "description": "O local onde o item está desabilitado",
+        "type": "String"
+      }
+    }
+  },
+  "disableItem": "Desabilitar {item}",
+  "@disableItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser desabilitado",
+        "type": "String"
+      }
+    }
   },
   "dock": "Acoplar",
   "@dock": {
@@ -212,6 +320,45 @@
   "@emulators": {
     "description": "Emuladores"
   },
+  "enable": "Habilitar",
+  "@enable": {
+    "description": "Habilitar"
+  },
+  "enabled": "Habilitado",
+  "@enabled": {
+    "description": "Habilitado"
+  },
+  "enabledItem": "{item} Habilitado",
+  "@enabledItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item habilitado",
+        "type": "String"
+      }
+    }
+  },
+  "enabledItemIn": "{item} Habilitado em {location}",
+  "@enabledItemIn": {
+    "placeholders": {
+      "item": {
+        "description": "O item habilitado",
+        "type": "String"
+      },
+      "location": {
+        "description": "O local onde o item está habilitado",
+        "type": "String"
+      }
+    }
+  },
+  "enableItem": "Habilitar {item}",
+  "@enableItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser habilitado",
+        "type": "String"
+      }
+    }
+  },
   "error": "Erro",
   "@error": {
     "description": "Erro"
@@ -223,6 +370,23 @@
   "failed": "Falhou",
   "@failed": {
     "description": "Falhou"
+  },
+  "favorite": "Favorito",
+  "@favorite": {
+    "description": "Favorito"
+  },
+  "favoriteItem": "{item} Favorito",
+  "@favoriteItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item favorito",
+        "type": "String"
+      }
+    }
+  },
+  "favorites": "Favoritos",
+  "@favorites": {
+    "description": "Favoritos"
   },
   "file": "Arquivo",
   "@file": {
@@ -298,6 +462,19 @@
   "@folderName": {
     "description": "Nome da Pasta"
   },
+  "follow": "Seguir",
+  "@follow": {
+    "description": "Seguir"
+  },
+  "followItem": "Seguir {item}",
+  "@followItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser seguido",
+        "type": "String"
+      }
+    }
+  },
   "game": "Jogo",
   "@game": {
     "description": "Jogo"
@@ -356,6 +533,15 @@
       }
     }
   },
+  "itemLibrary": "Biblioteca de {item}",
+  "@itemLibrary": {
+    "placeholders": {
+      "item": {
+        "description": "O item da biblioteca",
+        "type": "String"
+      }
+    }
+  },
   "itemNotFound": "{item} não encontrado",
   "@itemNotFound": {
     "placeholders": {
@@ -377,6 +563,18 @@
         "type": "String"
       }
     }
+  },
+  "libraries": "Bibliotecas",
+  "@libraries": {
+    "description": "Bibliotecas"
+  },
+  "library": "Biblioteca",
+  "@library": {
+    "description": "Biblioteca"
+  },
+  "lightMode": "Modo Claro",
+  "@lightMode": {
+    "description": "Modo Claro"
   },
   "list": "Lista",
   "@list": {
@@ -445,9 +643,30 @@
       }
     }
   },
+  "newItemToItem": "Novo {item1} para {item2}",
+  "@newItemToItem": {
+    "placeholders": {
+      "item1": {
+        "description": "O primeiro novo item",
+        "type": "String"
+      },
+      "item2": {
+        "description": "O segundo novo item",
+        "type": "String"
+      }
+    }
+  },
   "next": "Próximo",
   "@next": {
     "description": "Próximo"
+  },
+  "night": "Noite",
+  "@night": {
+    "description": "Noite"
+  },
+  "nightMode": "Modo Noturno",
+  "@nightMode": {
+    "description": "Modo Noturno"
   },
   "no": "Não",
   "@no": {
@@ -558,6 +777,19 @@
   "@register": {
     "description": "Registrar"
   },
+  "removeFrom": "Remover de {item}",
+  "@removeFrom": {
+    "placeholders": {
+      "item": {
+        "description": "O item de onde será removido",
+        "type": "String"
+      }
+    }
+  },
+  "removeFromfavorites": "Remover dos favoritos",
+  "@removeFromfavorites": {
+    "description": "Remover dos favoritos"
+  },
   "results": "Resultados",
   "@results": {
     "description": "Resultados"
@@ -659,9 +891,30 @@
   "@tableView": {
     "description": "Visualização em Tabela"
   },
+  "theme": "Tema",
+  "@theme": {
+    "description": "Tema"
+  },
+  "themeColor": "Cor do Tema",
+  "@themeColor": {
+    "description": "Cor do Tema"
+  },
+  "themeMode": "Modo do Tema",
+  "@themeMode": {
+    "description": "Modo do Tema"
+  },
   "to": "Para",
   "@to": {
     "description": "Para"
+  },
+  "toItem": "Para {item}",
+  "@toItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item de destino",
+        "type": "String"
+      }
+    }
   },
   "undock": "Desacoplar",
   "@undock": {
@@ -672,6 +925,32 @@
     "placeholders": {
       "item": {
         "description": "O item a ser desacoplado",
+        "type": "String"
+      }
+    }
+  },
+  "unfavorite": "Desfavoritar",
+  "@unfavorite": {
+    "description": "Desfavoritar"
+  },
+  "unfavoriteItem": "Desfavoritar {item}",
+  "@unfavoriteItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser desfavoritado",
+        "type": "String"
+      }
+    }
+  },
+  "unfollow": "Deixar de Seguir",
+  "@unfollow": {
+    "description": "Deixar de Seguir"
+  },
+  "unfollowItem": "Deixar de Seguir {item}",
+  "@unfollowItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a deixar de seguir",
         "type": "String"
       }
     }
@@ -742,89 +1021,36 @@
   "@you": {
     "description": "Você"
   },
-  "library": "Biblioteca",
-  "@library": {
-    "description": "Biblioteca"
+  "your": "Seu",
+  "@your": {
+    "description": "Seu"
   },
-  "libraries": "Bibliotecas",
-  "@libraries": {
-    "description": "Bibliotecas"
-  },
-  "itemLibrary": "Biblioteca de {item}",
-  "@itemLibrary": {
+  "yourItem": "Seu {item}",
+  "@yourItem": {
     "placeholders": {
       "item": {
-        "description": "O item da biblioteca",
+        "description": "O seu item",
         "type": "String"
       }
     }
   },
-  "newItemToItem": "Novo {item1} para {item2}",
-  "@newItemToItem": {
-    "placeholders": {
-      "item1": {
-        "description": "O primeiro novo item",
-        "type": "String"
-      },
-      "item2": {
-        "description": "O segundo novo item",
-        "type": "String"
-      }
-    }
+  "directory": "Diretório",
+  "@directory": {
+    "description": "Diretório"
   },
-  "toItem": "Para {item}",
-  "@toItem": {
-    "placeholders": {
-      "item": {
-        "description": "O item de destino",
-        "type": "String"
-      }
-    }
+  "directories": "Diretórios",
+  "@directories": {
+    "description": "Diretórios"
   },
-  "favorite": "Favorito",
-  "@favorite": {
-    "description": "Favorito"
+  "unknown": "Desconhecido",
+  "@unknown": {
+    "description": "Desconhecido"
   },
-  "favorites": "Favoritos",
-  "@favorites": {
-    "description": "Favoritos"
-  },
-  "favoriteItem": "{item} Favorito",
-  "@favoriteItem": {
+  "unknownItem": "{item} Desconhecido",
+  "@unknownItem": {
     "placeholders": {
       "item": {
-        "description": "O item favorito",
-        "type": "String"
-      }
-    }
-  },
-  "addTo": "Adicionar a {item}",
-  "@addTo": {
-    "placeholders": {
-      "item": {
-        "description": "O item a ser adicionado",
-        "type": "String"
-      }
-    }
-  },
-  "unfavorite": "Desfavoritar",
-  "@unfavorite": {
-    "description": "Desfavoritar"
-  },
-  "unfavoriteItem": "Desfavoritar {item}",
-  "@unfavoriteItem": {
-    "placeholders": {
-      "item": {
-        "description": "O item a ser desfavoritado",
-        "type": "String"
-      }
-    }
-  },
-  "removeFrom": "Remover de {item}",
-  "@removeFrom": {
-    "placeholders": {
-      "item": {
-        "description": "O item de onde será removido",
+        "description": "O item desconhecido",
         "type": "String"
       }
     }

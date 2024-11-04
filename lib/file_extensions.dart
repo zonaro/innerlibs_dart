@@ -72,7 +72,10 @@ extension DirectoryExtensionPlus on Directory {
   /// Returns:
   ///   A list of [FileSystemEntity] objects representing the files and
   ///   directories found within the current directory and its subdirectories.
-  List<FileSystemEntity> get listAllRecursiveSync => listSync(recursive: true);
+  List<FileSystemEntity> get listAllRecursiveSync {
+    if (!existsSync()) return <FileSystemEntity>[];
+    return listSync(recursive: true);
+  }
 
   /// Returns a list of all file system entities in the current directory.
   ///
@@ -83,7 +86,10 @@ extension DirectoryExtensionPlus on Directory {
   ///   A list of [FileSystemEntity] objects representing the files and
   ///   directories in the current directory.
 
-  List<FileSystemEntity> get listAllSync => listSync(recursive: false);
+  List<FileSystemEntity> get listAllSync {
+    if (!existsSync()) return <FileSystemEntity>[];
+    return listSync(recursive: false);
+  }
 
   /// Asynchronously lists all directories within the current directory.
   ///
@@ -97,7 +103,10 @@ extension DirectoryExtensionPlus on Directory {
   ///   print(directory.path);
   /// }
   /// ```
-  Future<Iterable<Directory>> get listDirectories async => (await listAll).whereType<Directory>();
+  Future<Iterable<Directory>> get listDirectories async {
+    if (await exists()) return <Directory>[];
+    return (await listAll).whereType<Directory>();
+  }
 
   /// Asynchronously retrieves a list of directories recursively.
   ///
@@ -111,7 +120,10 @@ extension DirectoryExtensionPlus on Directory {
   /// ```
   ///
   /// Returns a [Future] that completes with an [Iterable] of [Directory] objects.
-  Future<Iterable<Directory>> get listDirectoriesRecursive async => (await listAllRecursive).whereType<Directory>();
+  Future<Iterable<Directory>> get listDirectoriesRecursive async {
+    if (await exists()) return <Directory>[];
+    return (await listAllRecursive).whereType<Directory>();
+  }
 
   /// An extension property that recursively lists all directories in the current directory.
   ///
@@ -419,12 +431,24 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
   /// Get the type description of the file or directory
   string get typeDescription {
     if (this is File) {
-      return "File";
+      return Get.context?.innerLibsLocalizations.file ?? "File";
     }
     if (this is Directory) {
-      return "Directory";
+      return Get.context?.innerLibsLocalizations.directory ?? "Directory";
     }
-    return "Unknown";
+    return Get.context?.innerLibsLocalizations.unknown ?? "Unknown";
+  }
+
+  Future<Directory> copyTo(Directory destination, [bool skipTopDirectory = false]) async {
+    if (this is Directory) {
+      return (this as Directory).copy(destination, skipTopDirectory);
+    }
+    if (this is File) {
+      await destination.create(recursive: true);
+      var p = path.join(destination.path, name).fixPath;
+      await (this as File).copy(p);
+    }
+    return destination;
   }
 
   /// Get relative path from root path

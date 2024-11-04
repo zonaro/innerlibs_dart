@@ -5,9 +5,57 @@
   "@add": {
     "description": "Add"
   },
+  "addTo": "Add to {item}",
+  "@addTo": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be added to",
+        "type": "String"
+      }
+    }
+  },
   "app": "App",
   "@app": {
     "description": "App"
+  },
+  "apply": "Apply",
+  "@apply": {
+    "description": "Apply"
+  },
+  "applyItem": "Apply {item}",
+  "@applyItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be applied",
+        "type": "String"
+      }
+    }
+  },
+  "applyItemIn": "Apply {item} in {location}",
+  "@applyItemIn": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be applied",
+        "type": "String"
+      },
+      "location": {
+        "description": "The location to be applied",
+        "type": "String"
+      }
+    }
+  },
+  "applyItemToItem": "Apply {item1} to {item2}",
+  "@applyItemToItem": {
+    "placeholders": {
+      "item1": {
+        "description": "The first item to be applied",
+        "type": "String"
+      },
+      "item2": {
+        "description": "The second item to be applied",
+        "type": "String"
+      }
+    }
   },
   "appName": "App Name",
   "@appName": {
@@ -45,6 +93,15 @@
   "cancel": "Cancel",
   "@cancel": {
     "description": "Cancel"
+  },
+  "cancelItem": "Cancel {item}",
+  "@cancelItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be canceled",
+        "type": "String"
+      }
+    }
   },
   "categories": "Categories",
   "@categories": {
@@ -151,6 +208,10 @@
   "@country": {
     "description": "Country"
   },
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Dark Mode"
+  },
   "date": "Date",
   "@date": {
     "description": "Date"
@@ -158,6 +219,14 @@
   "dateOutOfRange": "Date out of range",
   "@dateOutOfRange": {
     "description": "Date out of range"
+  },
+  "day": "Day",
+  "@day": {
+    "description": "Day"
+  },
+  "dayMode": "Day Mode",
+  "@dayMode": {
+    "description": "Day Mode"
   },
   "days": "Days",
   "@days": {
@@ -178,6 +247,45 @@
   "device": "Device",
   "@device": {
     "description": "Device"
+  },
+  "disable": "Disable",
+  "@disable": {
+    "description": "Disable"
+  },
+  "disabled": "Disabled",
+  "@disabled": {
+    "description": "Disabled"
+  },
+  "disabledItem": "Disabled {item}",
+  "@disabledItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be disabled",
+        "type": "String"
+      }
+    }
+  },
+  "disabledItemIn": "Disabled {item} in {location}",
+  "@disabledItemIn": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be disabled",
+        "type": "String"
+      },
+      "location": {
+        "description": "The location to be disabled",
+        "type": "String"
+      }
+    }
+  },
+  "disableItem": "Disable {item}",
+  "@disableItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be disabled",
+        "type": "String"
+      }
+    }
   },
   "dock": "Dock",
   "@dock": {
@@ -212,6 +320,45 @@
   "@emulators": {
     "description": "Emulators"
   },
+  "enable": "Enable",
+  "@enable": {
+    "description": "Enable"
+  },
+  "enabled": "Enabled",
+  "@enabled": {
+    "description": "Enabled"
+  },
+  "enabledItem": "Enabled {item}",
+  "@enabledItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be enabled",
+        "type": "String"
+      }
+    }
+  },
+  "enabledItemIn": "Enabled {item} in {location}",
+  "@enabledItemIn": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be enabled",
+        "type": "String"
+      },
+      "location": {
+        "description": "The location to be enabled",
+        "type": "String"
+      }
+    }
+  },
+  "enableItem": "Enable {item}",
+  "@enableItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be enabled",
+        "type": "String"
+      }
+    }
+  },
   "error": "Error",
   "@error": {
     "description": "Error"
@@ -223,6 +370,23 @@
   "failed": "Failed",
   "@failed": {
     "description": "Failed"
+  },
+  "favorite": "Favorite",
+  "@favorite": {
+    "description": "Favorite"
+  },
+  "favoriteItem": "Favorite {item}",
+  "@favoriteItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be favorited",
+        "type": "String"
+      }
+    }
+  },
+  "favorites": "Favorites",
+  "@favorites": {
+    "description": "Favorites"
   },
   "file": "File",
   "@file": {
@@ -298,6 +462,19 @@
   "@folderName": {
     "description": "Folder Name"
   },
+  "follow": "Follow",
+  "@follow": {
+    "description": "Follow"
+  },
+  "followItem": "Follow {item}",
+  "@followItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be followed",
+        "type": "String"
+      }
+    }
+  },
   "game": "Game",
   "@game": {
     "description": "Game"
@@ -356,6 +533,15 @@
       }
     }
   },
+  "itemLibrary": "{item} Library",
+  "@itemLibrary": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be in the library",
+        "type": "String"
+      }
+    }
+  },
   "itemNotFound": "{item} not found",
   "@itemNotFound": {
     "placeholders": {
@@ -377,6 +563,18 @@
         "type": "String"
       }
     }
+  },
+  "libraries": "Libraries",
+  "@libraries": {
+    "description": "Libraries"
+  },
+  "library": "Library",
+  "@library": {
+    "description": "Library"
+  },
+  "lightMode": "Light Mode",
+  "@lightMode": {
+    "description": "Light Mode"
   },
   "list": "List",
   "@list": {
@@ -445,9 +643,30 @@
       }
     }
   },
+  "newItemToItem": "New {item1} to {item2}",
+  "@newItemToItem": {
+    "placeholders": {
+      "item1": {
+        "description": "The first item to be new",
+        "type": "String"
+      },
+      "item2": {
+        "description": "The second item to be new",
+        "type": "String"
+      }
+    }
+  },
   "next": "Next",
   "@next": {
     "description": "Next"
+  },
+  "night": "Night",
+  "@night": {
+    "description": "Night"
+  },
+  "nightMode": "Night Mode",
+  "@nightMode": {
+    "description": "Night Mode"
   },
   "no": "No",
   "@no": {
@@ -558,6 +777,19 @@
   "@register": {
     "description": "Register"
   },
+  "removeFrom": "Remove from {item}",
+  "@removeFrom": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be removed from",
+        "type": "String"
+      }
+    }
+  },
+  "removeFromfavorites": "Remove from favorites",
+  "@removeFromfavorites": {
+    "description": "Remove from favorites"
+  },
   "results": "Results",
   "@results": {
     "description": "Results"
@@ -659,9 +891,30 @@
   "@tableView": {
     "description": "Table View"
   },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme"
+  },
+  "themeColor": "Theme Color",
+  "@themeColor": {
+    "description": "Theme Color"
+  },
+  "themeMode": "Theme Mode",
+  "@themeMode": {
+    "description": "Theme Mode"
+  },
   "to": "To",
   "@to": {
     "description": "To"
+  },
+  "toItem": "To {item}",
+  "@toItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be to",
+        "type": "String"
+      }
+    }
   },
   "undock": "Undock",
   "@undock": {
@@ -672,6 +925,32 @@
     "placeholders": {
       "item": {
         "description": "The item to be undocked",
+        "type": "String"
+      }
+    }
+  },
+  "unfavorite": "Unfavorite",
+  "@unfavorite": {
+    "description": "Unfavorite"
+  },
+  "unfavoriteItem": "Unfavorite {item}",
+  "@unfavoriteItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be unfavorited",
+        "type": "String"
+      }
+    }
+  },
+  "unfollow": "Unfollow",
+  "@unfollow": {
+    "description": "Unfollow"
+  },
+  "unfollowItem": "Unfollow {item}",
+  "@unfollowItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be unfollowed",
         "type": "String"
       }
     }
@@ -742,89 +1021,36 @@
   "@you": {
     "description": "You"
   },
-  "library": "Library",
-  "@library": {
-    "description": "Library"
+  "your": "Your",
+  "@your": {
+    "description": "Your"
   },
-  "libraries": "Libraries",
-  "@libraries": {
-    "description": "Libraries"
-  },
-  "itemLibrary": "{item} Library",
-  "@itemLibrary": {
+  "yourItem": "Your {item}",
+  "@yourItem": {
     "placeholders": {
       "item": {
-        "description": "The item to be in the library",
+        "description": "Your item",
         "type": "String"
       }
     }
   },
-  "newItemToItem": "New {item1} to {item2}",
-  "@newItemToItem": {
-    "placeholders": {
-      "item1": {
-        "description": "The first item to be new",
-        "type": "String"
-      },
-      "item2": {
-        "description": "The second item to be new",
-        "type": "String"
-      }
-    }
+  "directory": "Directory",
+  "@directory": {
+    "description": "Directory"
   },
-  "toItem": "To {item}",
-  "@toItem": {
-    "placeholders": {
-      "item": {
-        "description": "The item to be to",
-        "type": "String"
-      }
-    }
+  "directories": "Directories",
+  "@directories": {
+    "description": "Directories"
   },
-  "favorite": "Favorite",
-  "@favorite": {
-    "description": "Favorite"
+  "unknown": "Unknown",
+  "@unknown": {
+    "description": "Unknown"
   },
-  "favorites": "Favorites",
-  "@favorites": {
-    "description": "Favorites"
-  },
-  "favoriteItem": "Favorite {item}",
-  "@favoriteItem": {
+  "unknownItem": "Unknown {item}",
+  "@unknownItem": {
     "placeholders": {
       "item": {
-        "description": "The item to be favorited",
-        "type": "String"
-      }
-    }
-  },
-  "unfavorite": "Unfavorite",
-  "@unfavorite": {
-    "description": "Unfavorite"
-  },
-  "unfavoriteItem": "Unfavorite {item}",
-  "@unfavoriteItem": {
-    "placeholders": {
-      "item": {
-        "description": "The item to be unfavorited",
-        "type": "String"
-      }
-    }
-  },
-  "addTo": "Add to {item}",
-  "@addTo": {
-    "placeholders": {
-      "item": {
-        "description": "The item to be added to",
-        "type": "String"
-      }
-    }
-  },
-  "removeFrom": "Remove from {item}",
-  "@removeFrom": {
-    "placeholders": {
-      "item": {
-        "description": "The item to be removed from",
+        "description": "The unknown item",
         "type": "String"
       }
     }
