@@ -1270,7 +1270,7 @@ extension StringExtensions on String {
   /// List<String> lines = text.splitLines();
   /// print(lines); // prints ['hello', 'world']
   /// ```
-  List<String> get splitLines => split(RegExp(r'\r?\n'));
+  List<String> get splitLines => splitAny(Get.breakLineChars);
 
   /// Strips all HTML code from `String`.
   ///

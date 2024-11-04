@@ -101,11 +101,41 @@ abstract class InnerLibsLocalizations {
   /// **'Add'**
   String get add;
 
+  /// No description provided for @addTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to {item}'**
+  String addTo(String item);
+
   /// App
   ///
   /// In en, this message translates to:
   /// **'App'**
   String get app;
+
+  /// Apply
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @applyItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply {item}'**
+  String applyItem(String item);
+
+  /// No description provided for @applyItemIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply {item} in {location}'**
+  String applyItemIn(String item, String location);
+
+  /// No description provided for @applyItemToItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply {item1} to {item2}'**
+  String applyItemToItem(String item1, String item2);
 
   /// App Name
   ///
@@ -154,6 +184,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
+
+  /// No description provided for @cancelItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel {item}'**
+  String cancelItem(String item);
 
   /// Categories
   ///
@@ -269,6 +305,12 @@ abstract class InnerLibsLocalizations {
   /// **'Country'**
   String get country;
 
+  /// Dark Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
   /// Date
   ///
   /// In en, this message translates to:
@@ -280,6 +322,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Date out of range'**
   String get dateOutOfRange;
+
+  /// Day
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// Day Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Day Mode'**
+  String get dayMode;
 
   /// Days
   ///
@@ -311,6 +365,36 @@ abstract class InnerLibsLocalizations {
   /// **'Device'**
   String get device;
 
+  /// Disable
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get disable;
+
+  /// Disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// No description provided for @disabledItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled {item}'**
+  String disabledItem(String item);
+
+  /// No description provided for @disabledItemIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled {item} in {location}'**
+  String disabledItemIn(String item, String location);
+
+  /// No description provided for @disableItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable {item}'**
+  String disableItem(String item);
+
   /// Dock
   ///
   /// In en, this message translates to:
@@ -335,6 +419,54 @@ abstract class InnerLibsLocalizations {
   /// **'Empty'**
   String get empty;
 
+  /// Emulate
+  ///
+  /// In en, this message translates to:
+  /// **'Emulate'**
+  String get emulate;
+
+  /// Emulator
+  ///
+  /// In en, this message translates to:
+  /// **'Emulator'**
+  String get emulator;
+
+  /// Emulators
+  ///
+  /// In en, this message translates to:
+  /// **'Emulators'**
+  String get emulators;
+
+  /// Enable
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get enable;
+
+  /// Enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabled;
+
+  /// No description provided for @enabledItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled {item}'**
+  String enabledItem(String item);
+
+  /// No description provided for @enabledItemIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled {item} in {location}'**
+  String enabledItemIn(String item, String location);
+
+  /// No description provided for @enableItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable {item}'**
+  String enableItem(String item);
+
   /// Error
   ///
   /// In en, this message translates to:
@@ -353,6 +485,24 @@ abstract class InnerLibsLocalizations {
   /// **'Failed'**
   String get failed;
 
+  /// Favorite
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite'**
+  String get favorite;
+
+  /// No description provided for @favoriteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite {item}'**
+  String favoriteItem(String item);
+
+  /// Favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
   /// File
   ///
   /// In en, this message translates to:
@@ -370,6 +520,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'File Name'**
   String get fileName;
+
+  /// File not found
+  ///
+  /// In en, this message translates to:
+  /// **'File not found'**
+  String get fileNotFound;
 
   /// File Owner
   ///
@@ -443,6 +599,30 @@ abstract class InnerLibsLocalizations {
   /// **'Folder Name'**
   String get folderName;
 
+  /// Follow
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get follow;
+
+  /// No description provided for @followItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow {item}'**
+  String followItem(String item);
+
+  /// Game
+  ///
+  /// In en, this message translates to:
+  /// **'Game'**
+  String get game;
+
+  /// Games
+  ///
+  /// In en, this message translates to:
+  /// **'Games'**
+  String get games;
+
   /// Grid
   ///
   /// In en, this message translates to:
@@ -503,6 +683,12 @@ abstract class InnerLibsLocalizations {
   /// **'Invalid {item}.'**
   String invalidItem(String item);
 
+  /// No description provided for @itemLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} Library'**
+  String itemLibrary(String item);
+
   /// No description provided for @itemNotFound.
   ///
   /// In en, this message translates to:
@@ -514,6 +700,24 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'{item} not found in {location}'**
   String itemNotFoundIn(String item, String location);
+
+  /// Libraries
+  ///
+  /// In en, this message translates to:
+  /// **'Libraries'**
+  String get libraries;
+
+  /// Library
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get library;
+
+  /// Light Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Light Mode'**
+  String get lightMode;
 
   /// List
   ///
@@ -599,11 +803,29 @@ abstract class InnerLibsLocalizations {
   /// **'New {item}'**
   String newItem(String item);
 
+  /// No description provided for @newItemToItem.
+  ///
+  /// In en, this message translates to:
+  /// **'New {item1} to {item2}'**
+  String newItemToItem(String item1, String item2);
+
   /// Next
   ///
   /// In en, this message translates to:
   /// **'Next'**
   String get next;
+
+  /// Night
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get night;
+
+  /// Night Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Night Mode'**
+  String get nightMode;
 
   /// No
   ///
@@ -665,6 +887,24 @@ abstract class InnerLibsLocalizations {
   /// **'Password'**
   String get password;
 
+  /// Pause
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// Paused
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// No description provided for @pauseItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause {item}'**
+  String pauseItem(String item);
+
   /// Pending
   ///
   /// In en, this message translates to:
@@ -677,6 +917,24 @@ abstract class InnerLibsLocalizations {
   /// **'Phone'**
   String get phone;
 
+  /// Play
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// Playing
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get playing;
+
+  /// No description provided for @playItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Play {item}'**
+  String playItem(String item);
+
   /// Previous
   ///
   /// In en, this message translates to:
@@ -688,6 +946,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Register'**
   String get register;
+
+  /// No description provided for @removeFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from {item}'**
+  String removeFrom(String item);
+
+  /// Remove from favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favorites'**
+  String get removeFromfavorites;
 
   /// Results
   ///
@@ -791,11 +1061,35 @@ abstract class InnerLibsLocalizations {
   /// **'Table View'**
   String get tableView;
 
+  /// Theme
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// Theme Color
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Color'**
+  String get themeColor;
+
+  /// Theme Mode
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Mode'**
+  String get themeMode;
+
   /// To
   ///
   /// In en, this message translates to:
   /// **'To'**
   String get to;
+
+  /// No description provided for @toItem.
+  ///
+  /// In en, this message translates to:
+  /// **'To {item}'**
+  String toItem(String item);
 
   /// Undock
   ///
@@ -808,6 +1102,30 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Undock {item}'**
   String undockItem(String item);
+
+  /// Unfavorite
+  ///
+  /// In en, this message translates to:
+  /// **'Unfavorite'**
+  String get unfavorite;
+
+  /// No description provided for @unfavoriteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfavorite {item}'**
+  String unfavoriteItem(String item);
+
+  /// Unfollow
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get unfollow;
+
+  /// No description provided for @unfollowItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow {item}'**
+  String unfollowItem(String item);
 
   /// Uninstall
   ///
@@ -886,6 +1204,162 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Yes'**
   String get yes;
+
+  /// You
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get you;
+
+  /// Your
+  ///
+  /// In en, this message translates to:
+  /// **'Your'**
+  String get your;
+
+  /// No description provided for @yourItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {item}'**
+  String yourItem(String item);
+
+  /// Directory
+  ///
+  /// In en, this message translates to:
+  /// **'Directory'**
+  String get directory;
+
+  /// Directories
+  ///
+  /// In en, this message translates to:
+  /// **'Directories'**
+  String get directories;
+
+  /// Unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// No description provided for @unknownItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown {item}'**
+  String unknownItem(String item);
+
+  /// Wallpaper Interval
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper Interval'**
+  String get wallpaperInterval;
+
+  /// Wallpaper Fade Time
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper Fade Time'**
+  String get wallpaperFadeTime;
+
+  /// Millisecond
+  ///
+  /// In en, this message translates to:
+  /// **'Millisecond'**
+  String get millisecond;
+
+  /// Milliseconds
+  ///
+  /// In en, this message translates to:
+  /// **'Milliseconds'**
+  String get milliseconds;
+
+  /// Second
+  ///
+  /// In en, this message translates to:
+  /// **'Second'**
+  String get second;
+
+  /// Minute
+  ///
+  /// In en, this message translates to:
+  /// **'Minute'**
+  String get minute;
+
+  /// Hour
+  ///
+  /// In en, this message translates to:
+  /// **'Hour'**
+  String get hour;
+
+  /// Week
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get week;
+
+  /// Month
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// Year
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// Decade
+  ///
+  /// In en, this message translates to:
+  /// **'Decade'**
+  String get decade;
+
+  /// Century
+  ///
+  /// In en, this message translates to:
+  /// **'Century'**
+  String get century;
+
+  /// Millennium
+  ///
+  /// In en, this message translates to:
+  /// **'Millennium'**
+  String get millennium;
+
+  /// Millenniuns
+  ///
+  /// In en, this message translates to:
+  /// **'Millenniuns'**
+  String get millenniums;
+
+  /// Overlays
+  ///
+  /// In en, this message translates to:
+  /// **'Overlays'**
+  String get overlays;
+
+  /// Overlay
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay'**
+  String get overlay;
+
+  /// Overlay Color
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay Color'**
+  String get overlayColor;
+
+  /// Overlay Opacity
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay Opacity'**
+  String get overlayOpacity;
+
+  /// Date Time Format
+  ///
+  /// In en, this message translates to:
+  /// **'Date Time Format'**
+  String get dateTimeFormat;
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

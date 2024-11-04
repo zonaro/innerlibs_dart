@@ -12,7 +12,30 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get add => 'Add';
 
   @override
+  String addTo(String item) {
+    return 'Add to $item';
+  }
+
+  @override
   String get app => 'App';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String applyItem(String item) {
+    return 'Apply $item';
+  }
+
+  @override
+  String applyItemIn(String item, String location) {
+    return 'Apply $item in $location';
+  }
+
+  @override
+  String applyItemToItem(String item1, String item2) {
+    return 'Apply $item1 to $item2';
+  }
 
   @override
   String get appName => 'App Name';
@@ -39,6 +62,11 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get cancel => 'Cancel';
+
+  @override
+  String cancelItem(String item) {
+    return 'Cancel $item';
+  }
 
   @override
   String get categories => 'Categories';
@@ -118,10 +146,19 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get country => 'Country';
 
   @override
+  String get darkMode => 'Dark Mode';
+
+  @override
   String get date => 'Date';
 
   @override
   String get dateOutOfRange => 'Date out of range';
+
+  @override
+  String get day => 'Day';
+
+  @override
+  String get dayMode => 'Day Mode';
 
   @override
   String get days => 'Days';
@@ -139,6 +176,27 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get device => 'Device';
 
   @override
+  String get disable => 'Disable';
+
+  @override
+  String get disabled => 'Disabled';
+
+  @override
+  String disabledItem(String item) {
+    return 'Disabled $item';
+  }
+
+  @override
+  String disabledItemIn(String item, String location) {
+    return 'Disabled $item in $location';
+  }
+
+  @override
+  String disableItem(String item) {
+    return 'Disable $item';
+  }
+
+  @override
   String get dock => 'Dock';
 
   @override
@@ -153,6 +211,36 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get empty => 'Empty';
 
   @override
+  String get emulate => 'Emulate';
+
+  @override
+  String get emulator => 'Emulator';
+
+  @override
+  String get emulators => 'Emulators';
+
+  @override
+  String get enable => 'Enable';
+
+  @override
+  String get enabled => 'Enabled';
+
+  @override
+  String enabledItem(String item) {
+    return 'Enabled $item';
+  }
+
+  @override
+  String enabledItemIn(String item, String location) {
+    return 'Enabled $item in $location';
+  }
+
+  @override
+  String enableItem(String item) {
+    return 'Enable $item';
+  }
+
+  @override
   String get error => 'Error';
 
   @override
@@ -162,6 +250,17 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get failed => 'Failed';
 
   @override
+  String get favorite => 'Favorite';
+
+  @override
+  String favoriteItem(String item) {
+    return 'Favorite $item';
+  }
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
   String get file => 'File';
 
   @override
@@ -169,6 +268,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get fileName => 'File Name';
+
+  @override
+  String get fileNotFound => 'File not found';
 
   @override
   String get fileOwner => 'File Owner';
@@ -211,6 +313,20 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get folderName => 'Folder Name';
 
   @override
+  String get follow => 'Follow';
+
+  @override
+  String followItem(String item) {
+    return 'Follow $item';
+  }
+
+  @override
+  String get game => 'Game';
+
+  @override
+  String get games => 'Games';
+
+  @override
   String get grid => 'Grid';
 
   @override
@@ -245,6 +361,11 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
+  String itemLibrary(String item) {
+    return '$item Library';
+  }
+
+  @override
   String itemNotFound(String item) {
     return '$item not found';
   }
@@ -253,6 +374,15 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String itemNotFoundIn(String item, String location) {
     return '$item not found in $location';
   }
+
+  @override
+  String get libraries => 'Libraries';
+
+  @override
+  String get library => 'Library';
+
+  @override
+  String get lightMode => 'Light Mode';
 
   @override
   String get list => 'List';
@@ -301,7 +431,18 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
+  String newItemToItem(String item1, String item2) {
+    return 'New $item1 to $item2';
+  }
+
+  @override
   String get next => 'Next';
+
+  @override
+  String get night => 'Night';
+
+  @override
+  String get nightMode => 'Night Mode';
 
   @override
   String get no => 'No';
@@ -340,16 +481,46 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get password => 'Password';
 
   @override
+  String get pause => 'Pause';
+
+  @override
+  String get paused => 'Paused';
+
+  @override
+  String pauseItem(String item) {
+    return 'Pause $item';
+  }
+
+  @override
   String get pending => 'Pending';
 
   @override
   String get phone => 'Phone';
 
   @override
+  String get play => 'Play';
+
+  @override
+  String get playing => 'Playing';
+
+  @override
+  String playItem(String item) {
+    return 'Play $item';
+  }
+
+  @override
   String get previous => 'Previous';
 
   @override
   String get register => 'Register';
+
+  @override
+  String removeFrom(String item) {
+    return 'Remove from $item';
+  }
+
+  @override
+  String get removeFromfavorites => 'Remove from favorites';
 
   @override
   String get results => 'Results';
@@ -413,7 +584,21 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get tableView => 'Table View';
 
   @override
+  String get theme => 'Theme';
+
+  @override
+  String get themeColor => 'Theme Color';
+
+  @override
+  String get themeMode => 'Theme Mode';
+
+  @override
   String get to => 'To';
+
+  @override
+  String toItem(String item) {
+    return 'To $item';
+  }
 
   @override
   String get undock => 'Undock';
@@ -421,6 +606,22 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   @override
   String undockItem(String item) {
     return 'Undock $item';
+  }
+
+  @override
+  String get unfavorite => 'Unfavorite';
+
+  @override
+  String unfavoriteItem(String item) {
+    return 'Unfavorite $item';
+  }
+
+  @override
+  String get unfollow => 'Unfollow';
+
+  @override
+  String unfollowItem(String item) {
+    return 'Unfollow $item';
   }
 
   @override
@@ -465,4 +666,86 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get yes => 'Yes';
+
+  @override
+  String get you => 'You';
+
+  @override
+  String get your => 'Your';
+
+  @override
+  String yourItem(String item) {
+    return 'Your $item';
+  }
+
+  @override
+  String get directory => 'Directory';
+
+  @override
+  String get directories => 'Directories';
+
+  @override
+  String get unknown => 'Unknown';
+
+  @override
+  String unknownItem(String item) {
+    return 'Unknown $item';
+  }
+
+  @override
+  String get wallpaperInterval => 'Wallpaper Interval';
+
+  @override
+  String get wallpaperFadeTime => 'Wallpaper Fade Time';
+
+  @override
+  String get millisecond => 'Millisecond';
+
+  @override
+  String get milliseconds => 'Milliseconds';
+
+  @override
+  String get second => 'Second';
+
+  @override
+  String get minute => 'Minute';
+
+  @override
+  String get hour => 'Hour';
+
+  @override
+  String get week => 'Week';
+
+  @override
+  String get month => 'Month';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get decade => 'Decade';
+
+  @override
+  String get century => 'Century';
+
+  @override
+  String get millennium => 'Millennium';
+
+  @override
+  String get millenniums => 'Millenniuns';
+
+  @override
+  String get overlays => 'Overlays';
+
+  @override
+  String get overlay => 'Overlay';
+
+  @override
+  String get overlayColor => 'Overlay Color';
+
+  @override
+  String get overlayOpacity => 'Overlay Opacity';
+
+  @override
+  String get dateTimeFormat => 'Date Time Format';
 }
