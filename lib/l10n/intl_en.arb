@@ -1054,5 +1054,81 @@
         "type": "String"
       }
     }
+  },
+  "wallpaperInterval": "Wallpaper Interval",
+  "@wallpaperInterval": {
+    "description": "Wallpaper Interval"
+  },
+  "wallpaperFadeTime": "Wallpaper Fade Time",
+  "@wallpaperFadeTime": {
+    "description": "Wallpaper Fade Time"
+  },
+  "millisecond": "Millisecond",
+  "@millisecond": {
+    "description": "Millisecond"
+  },
+  "milliseconds": "Milliseconds",
+  "@milliseconds": {
+    "description": "Milliseconds"
+  },
+  "second": "Second",
+  "@second": {
+    "description": "Second"
+  },
+  "minute": "Minute",
+  "@minute": {
+    "description": "Minute"
+  },
+  "hour": "Hour",
+  "@hour": {
+    "description": "Hour"
+  },
+  "week": "Week",
+  "@week": {
+    "description": "Week"
+  },
+  "month": "Month",
+  "@month": {
+    "description": "Month"
+  },
+  "year": "Year",
+  "@year": {
+    "description": "Year"
+  },
+  "decade": "Decade",
+  "@decade": {
+    "description": "Decade"
+  },
+  "century": "Century",
+  "@century": {
+    "description": "Century"
+  },
+  "millennium": "Millennium",
+  "@millennium": {
+    "description": "Millennium"
+  },
+  "millenniums": "Millenniuns",
+  "@millenniums": {
+    "description": "Millenniuns"
+  },
+  "overlays": "Overlays",
+  "@overlays": {
+    "description": "Overlays"
+  },
+  "overlay": "Overlay",
+  "@overlay": {
+    "description": "Overlay"
+  },
+  "overlayColor": "Overlay Color",
+  "@overlayColor": {
+    "description": "Overlay Color"
+  },
+  "overlayOpacity": "Overlay Opacity",
+  "@overlayOpacity": {
+    "description": "Overlay Opacity"
+  },
+  "dateTimeFormat": "Date Time Format",
+  "@dateTimeFormat": {
+    "description": "Date Time Format"
   }
 }

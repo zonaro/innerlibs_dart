@@ -691,4 +691,61 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String unknownItem(String item) {
     return '$item Desconhecido';
   }
+
+  @override
+  String get wallpaperInterval => 'Intervalo do papel de parede';
+
+  @override
+  String get wallpaperFadeTime => 'Tempo de desvanecimento do papel de parede';
+
+  @override
+  String get millisecond => 'Milissegundo';
+
+  @override
+  String get milliseconds => 'Milissegundos';
+
+  @override
+  String get second => 'Segundo';
+
+  @override
+  String get minute => 'Minuto';
+
+  @override
+  String get hour => 'Hora';
+
+  @override
+  String get week => 'Semana';
+
+  @override
+  String get month => 'Mês';
+
+  @override
+  String get year => 'Ano';
+
+  @override
+  String get decade => 'Década';
+
+  @override
+  String get century => 'Século';
+
+  @override
+  String get millennium => 'Milênio';
+
+  @override
+  String get millenniums => 'Milênios';
+
+  @override
+  String get overlays => 'Sobreposições';
+
+  @override
+  String get overlay => 'Sobreposição';
+
+  @override
+  String get overlayColor => 'Cor da Sobreposição';
+
+  @override
+  String get overlayOpacity => 'Opacidade da Sobreposição';
+
+  @override
+  String get dateTimeFormat => 'Formato de data e hora';
 }

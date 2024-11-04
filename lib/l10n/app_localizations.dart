@@ -1246,6 +1246,120 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Unknown {item}'**
   String unknownItem(String item);
+
+  /// Wallpaper Interval
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper Interval'**
+  String get wallpaperInterval;
+
+  /// Wallpaper Fade Time
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper Fade Time'**
+  String get wallpaperFadeTime;
+
+  /// Millisecond
+  ///
+  /// In en, this message translates to:
+  /// **'Millisecond'**
+  String get millisecond;
+
+  /// Milliseconds
+  ///
+  /// In en, this message translates to:
+  /// **'Milliseconds'**
+  String get milliseconds;
+
+  /// Second
+  ///
+  /// In en, this message translates to:
+  /// **'Second'**
+  String get second;
+
+  /// Minute
+  ///
+  /// In en, this message translates to:
+  /// **'Minute'**
+  String get minute;
+
+  /// Hour
+  ///
+  /// In en, this message translates to:
+  /// **'Hour'**
+  String get hour;
+
+  /// Week
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get week;
+
+  /// Month
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// Year
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// Decade
+  ///
+  /// In en, this message translates to:
+  /// **'Decade'**
+  String get decade;
+
+  /// Century
+  ///
+  /// In en, this message translates to:
+  /// **'Century'**
+  String get century;
+
+  /// Millennium
+  ///
+  /// In en, this message translates to:
+  /// **'Millennium'**
+  String get millennium;
+
+  /// Millenniuns
+  ///
+  /// In en, this message translates to:
+  /// **'Millenniuns'**
+  String get millenniums;
+
+  /// Overlays
+  ///
+  /// In en, this message translates to:
+  /// **'Overlays'**
+  String get overlays;
+
+  /// Overlay
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay'**
+  String get overlay;
+
+  /// Overlay Color
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay Color'**
+  String get overlayColor;
+
+  /// Overlay Opacity
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay Opacity'**
+  String get overlayOpacity;
+
+  /// Date Time Format
+  ///
+  /// In en, this message translates to:
+  /// **'Date Time Format'**
+  String get dateTimeFormat;
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

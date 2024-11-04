@@ -691,4 +691,61 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String unknownItem(String item) {
     return 'Unknown $item';
   }
+
+  @override
+  String get wallpaperInterval => 'Wallpaper Interval';
+
+  @override
+  String get wallpaperFadeTime => 'Wallpaper Fade Time';
+
+  @override
+  String get millisecond => 'Millisecond';
+
+  @override
+  String get milliseconds => 'Milliseconds';
+
+  @override
+  String get second => 'Second';
+
+  @override
+  String get minute => 'Minute';
+
+  @override
+  String get hour => 'Hour';
+
+  @override
+  String get week => 'Week';
+
+  @override
+  String get month => 'Month';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get decade => 'Decade';
+
+  @override
+  String get century => 'Century';
+
+  @override
+  String get millennium => 'Millennium';
+
+  @override
+  String get millenniums => 'Millenniuns';
+
+  @override
+  String get overlays => 'Overlays';
+
+  @override
+  String get overlay => 'Overlay';
+
+  @override
+  String get overlayColor => 'Overlay Color';
+
+  @override
+  String get overlayOpacity => 'Overlay Opacity';
+
+  @override
+  String get dateTimeFormat => 'Date Time Format';
 }

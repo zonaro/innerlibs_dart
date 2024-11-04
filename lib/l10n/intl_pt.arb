@@ -1054,5 +1054,81 @@
         "type": "String"
       }
     }
+  },
+  "wallpaperInterval": "Intervalo do papel de parede",
+  "@wallpaperInterval": {
+    "description": "Intervalo do papel de parede"
+  },
+  "wallpaperFadeTime": "Tempo de desvanecimento do papel de parede",
+  "@wallpaperFadeTime": {
+    "description": "Tempo de desvanecimento do papel de parede"
+  },
+  "millisecond": "Milissegundo",
+  "@millisecond": {
+    "description": "Milissegundo"
+  },
+  "milliseconds": "Milissegundos",
+  "@milliseconds": {
+    "description": "Milissegundos"
+  },
+  "second": "Segundo",
+  "@second": {
+    "description": "Segundo"
+  },
+  "minute": "Minuto",
+  "@minute": {
+    "description": "Minuto"
+  },
+  "hour": "Hora",
+  "@hour": {
+    "description": "Hora"
+  },
+  "week": "Semana",
+  "@week": {
+    "description": "Semana"
+  },
+  "month": "Mês",
+  "@month": {
+    "description": "Mês"
+  },
+  "year": "Ano",
+  "@year": {
+    "description": "Ano"
+  },
+  "decade": "Década",
+  "@decade": {
+    "description": "Década"
+  },
+  "century": "Século",
+  "@century": {
+    "description": "Século"
+  },
+  "millennium": "Milênio",
+  "@millennium": {
+    "description": "Milênio"
+  },
+  "millenniums": "Milênios",
+  "@millenniums": {
+    "description": "Milênios"
+  },
+  "overlays": "Sobreposições",
+  "@overlays": {
+    "description": "Sobreposições"
+  },
+  "overlay": "Sobreposição",
+  "@overlay": {
+    "description": "Sobreposição"
+  },
+  "overlayColor": "Cor da Sobreposição",
+  "@overlayColor": {
+    "description": "Cor da Sobreposição"
+  },
+  "overlayOpacity": "Opacidade da Sobreposição",
+  "@overlayOpacity": {
+    "description": "Opacidade da Sobreposição"
+  },
+  "dateTimeFormat": "Formato de data e hora",
+  "@dateTimeFormat": {
+    "description": "Formato de data e hora"
   }
 }
