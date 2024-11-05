@@ -1360,6 +1360,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Date Time Format'**
   String get dateTimeFormat;
+
+  /// History
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

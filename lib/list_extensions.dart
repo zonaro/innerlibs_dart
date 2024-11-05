@@ -403,6 +403,25 @@ extension ListExtension2<T> on List<T> {
     return i;
   }
 
+  /// Remove items from the list where the previous or next item are equal to it.
+  /// Returns the removed items.
+  Iterable<T> removeEqualSiblings({
+    bool before = true,
+    bool after = true,
+    bool Function(T item, T other)? compareFunction,
+  }) {
+    compareFunction ??= (a, b) => a == b;
+    var r = <T>[];
+    for (var i = length - 1; i >= 0; i--) {
+      if (i > 0 && before && compareFunction(this[i], this[i - 1])) {
+        r.add(removeAt(i));
+      } else if (i < length - 1 && after && compareFunction(this[i], this[i + 1])) {
+        r.add(removeAt(i));
+      }
+    }
+    return r;
+  }
+
   /// Remove the first [count] items of a list thats satisfy the [predicate]
   List<T> removeFirstWhere(bool Function(T) predicate, [int count = 1]) {
     if (count > 0) {

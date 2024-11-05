@@ -748,4 +748,7 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get dateTimeFormat => 'Formato de data e hora';
+
+  @override
+  String get history => 'Histórico';
 }

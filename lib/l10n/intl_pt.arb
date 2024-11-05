@@ -1130,5 +1130,9 @@
   "dateTimeFormat": "Formato de data e hora",
   "@dateTimeFormat": {
     "description": "Formato de data e hora"
+  },
+  "history": "Histórico",
+  "@history": {
+    "description": "Histórico"
   }
 }

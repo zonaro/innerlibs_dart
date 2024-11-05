@@ -426,7 +426,7 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
 
   /// Get the title of the file or directory
   /// The title is the name of the file or directory without the extension. If the name is camelCase or snake_case, it will be converted into Title Case
-  string get title => nameWithoutExtension.friendlyName;
+  string get title => nameWithoutExtension.friendlyTitle;
 
   /// Get the type description of the file or directory
   string get typeDescription {

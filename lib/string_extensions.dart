@@ -492,7 +492,7 @@ extension StringExtensions on String {
   }
 
   /// return a string in a firendly format
-  string get friendlyName => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(Get.endOfSentenceChars).toTitleCase();
+  string get friendlyTitle => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(Get.endOfSentenceChars).toTitleCase();
 
   /// Return a checksum digit for a barcode
   String get generateBarcodeCheckSum {
@@ -1051,18 +1051,14 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'([^α-ωΑ-ΩίϊΐόάέύϋΰήώΊΪΌΆΈΎΫΉΏa-zA-Z\s]+)');
-    return replaceAll(regex, '');
+    return only(Get.alphaChars);
   }
 
   String get onlyLettersOrNumbers {
     if (isBlank) {
       return blankIfNull;
     }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'([^a-zA-Z0-9\s]+)');
-    return replaceAll(regex, '');
+    return only(Get.alphaNumericChars);
   }
 
   /// Returns only the numbers from the `String`.
@@ -1075,18 +1071,14 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'([^0-9]+)');
-    return replaceAll(regex, '');
+    return only(Get.numberChars);
   }
 
   String get onlyNumbersDotsAndCommas {
     if (isBlank) {
       return blankIfNull;
     }
-    // ignore: unnecessary_raw_strings
-    var regex = RegExp(r'([^0-9.,]+)');
-    return replaceAll(regex, '');
+    return only([...Get.numberChars, '.', ","]);
   }
 
   double get onlyNumbersDouble => onlyNumbersDotsAndCommas.toDouble ?? 0;
@@ -1605,6 +1597,14 @@ extension StringExtensions on String {
   /// ```
   String get urlEncode => Uri.encodeQueryComponent(this);
 
+  /// Returns a string ready for use in url paths.
+  string get urlFriendly => replaceAll(" ", "-").toLowerCase().only([
+        ...Get.alphaChars,
+        ...Get.numberChars,
+        "-",
+        "_",
+      ]);
+
   /// Removes a text from the `String`.
   String operator -(String? s) {
     if (isBlank) {
@@ -1844,8 +1844,8 @@ extension StringExtensions on String {
   /// String result = text.between('[', ']'); // returns 'world'
   /// ```
   String between(String before, String after) => this.before(before).after(after);
-  String blankIf(bool Function(String? s) fn) => asIf(fn, "", this) ?? "";
 
+  String blankIf(bool Function(String? s) fn) => asIf(fn, "", this) ?? "";
   String? blankIfEqual(String? comparisonString) => blankIf((s) => s == comparisonString);
 
   /// change a date string from a format to another format
@@ -2661,6 +2661,15 @@ extension StringExtensions on String {
   /// String f = 'NO'.nullIf("YES"); // returns "NO";
   /// ```
   String? nullIfEqual(String? comparisonString) => nullIf((s) => s == comparisonString);
+
+  /// Removes from string all chars thats not in [chars]
+  string only(Iterable<string> chars) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    chars = chars.expand((x) => x.split('')).toSet();
+    return split('').where((x) => chars.contains(x)).join('');
+  }
 
   /// Prepends a [prefix] to the `String`.
   ///

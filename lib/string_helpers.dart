@@ -18,8 +18,6 @@ extension StringHelpers on GetInterface {
 
   Iterable<string> get alphaNumericSpecialChars => [...alphaNumericChars, ...specialChars]..sort();
 
-  Iterable<string> get emailChars => [...Get.alphaNumericChars, '@', '.', '_', '-'];
-
   /// Chars from A to Z
   Iterable<string> get alphaUpperChars => alphaLowerChars.map((e) => e.toUpperCase()).toList();
 
@@ -32,8 +30,12 @@ extension StringHelpers on GetInterface {
   /// Upper and lower case consonants
   Iterable<string> get consonants => [...upperConsonants, ...lowerConsonants]..sort();
 
+  Iterable<string> get emailChars => [...Get.alphaNumericChars, '@', '.', '_', '-'];
+
   /// Dot, Question mark and Exclamation Mark
   Iterable<string> get endOfSentenceChars => [".", "?", "!"];
+
+  Iterable<string> get greekChars => greekToLatin.keys;
 
   Map<String, String> get greekToLatin => {
         'ά': 'a',
@@ -221,51 +223,7 @@ extension StringHelpers on GetInterface {
   /// Upper vowels
   Iterable<string> get upperVowels => lowerVowels.map((e) => e.toUpperCase()).toList();
 
-  Iterable<string> get validLetters => [
-        // GREEK VARIATION
-        "Α",
-        "A",
-        // GREEK VARIATION
-        "Β",
-        "B",
-        // GREEK VARIATION
-        "Ε",
-        "E",
-        // GREEK VARIATION
-        "Ζ",
-        "Z",
-        // GREEK VARIATION
-        "Η",
-        "H",
-        // GREEK VARIATION
-        "Ι",
-        "I",
-        // GREEK VARIATION
-        "Κ",
-        "K",
-        // GREEK VARIATION
-        "Μ",
-        "M",
-        // GREEK VARIATION
-        "Ν",
-        "N",
-        // GREEK VARIATION
-        "Ο",
-        "O",
-        // GREEK VARIATION
-        "Ρ",
-        "P",
-        // GREEK VARIATION
-        "Τ",
-        "T",
-        // GREEK VARIATION
-        "Υ",
-        "Y",
-        // GREEK VARIATION
-        "Χ",
-        "X"
-      ];
-
+  
   /// Upper and lower vowels
   Iterable<string> get vowels => [...upperVowels, ...lowerVowels]..sort();
 

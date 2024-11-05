@@ -57,100 +57,134 @@ class PageEntry<T> {
     this.onSearch,
   });
 
+  string get currentFullRoute => "$pageRoute/$currentTabRoute".trimAny(["/"]);
+
+  TabEntry<T> get currentTab => hasTabs ? tabs[tabIndex] : tabs.first;
+
+  string get currentTabRoute => tabRoute(tabIndex);
+  bool get hasTabs => tabs.length > 1;
+  bool get isSingleTab => tabs.length == 1;
+
+  string get pageRoute => route ?? "/${titleString.urlFriendly}";
+
   string get subtitleString => subtitleWidget?.text | "";
+
   // string get subtitleString => subtitle is Text ? (subtitle as Text).text : "$subtitle" | "";
 
   Widget? get subtitleWidget => forceWidget(tabs.singleOrNull?.subtitle) ?? forceWidget(subtitle);
 
+  int get tabIndex => hasTabs ? tabController?.index ?? 0 : 0;
+
   string get titleString => titleWidget?.text | "";
+
   // string get titleString => title is Text ? (title as Text).text : "$title" | "";
 
   Widget? get titleWidget => forceWidget(tabs.singleOrNull?.title) ?? forceWidget(title);
+
+  string routeTitle([int tabIndex = 0]) => hasTabs ? "$titleString / ${tabs[tabIndex].titleString}" : titleString;
+
+  string tabFullRoute([int tabIndex = 0]) => hasTabs ? "$pageRoute/${tabRoute(tabIndex)}" : pageRoute;
+
+  string tabRoute([int tabIndex = 0]) => hasTabs ? tabs[tabIndex].tabRoute : "";
+  string tabRouteTitle(int tabIndex) => "$titleString / ${tabRoute(tabIndex)}".trimAny(["/"]);
+
+  @override
+  string toString() => titleString;
 }
 
 /// A controller class for managing the state of a scaffold builder.
 ///
 /// This class extends [ValueNotifier] and provides methods for navigating
 /// between different pages and tabs within the scaffold builder.
-class PageTabController<T> with ChangeNotifier {
-  final int defaultPageIndex;
-
-  final int defaultTabIndex;
+// ignore: must_be_immutable
+class PageTabController<T> extends GlobalKey<_PageTabScaffoldState<T>> with ChangeNotifier {
   int value = 0;
 
-  /// Data to store the data returned by [future] function. If not specified, a new instance of [AwaiterData] is created.
+  /// Data to store the data returned by future function. If not specified, a new instance of [AwaiterData] is created.
   AwaiterData<T>? data;
-
   final TextEditingController searchController = TextEditingController();
 
   /// A list of previous page and tab indices.
-  List<(int, int)> history = [];
-
-  PageEntry<T>? _pageEntry;
-
-  int _pageCount = 0;
+  List<(int, int, DateTime)> _history = [];
 
   bool isSearching = false;
+
+  late Key key;
 
   /// Creates a new instance of [PageTabController].
   ///
   /// The [pageIndex] and [tabIndex] parameters specify the initial page and tab
   /// indices respectively. By default, both indices are set to 0.
   PageTabController({
-    this.defaultPageIndex = 0,
-    this.defaultTabIndex = 0,
+    Key? key,
+    int defaultPageIndex = 0,
+    int defaultTabIndex = 0,
     this.data,
-  });
+  }) : super.constructor() {
+    _history = [(defaultPageIndex, defaultTabIndex, now)];
+    value = defaultPageIndex;
+    this.key = key ?? this;
+  }
 
   /// Returns a boolean value indicating whether there is a previous index in the
   /// history list.
-  bool get canGoBack => history.isNotEmpty;
+  bool get canGoBack => history.length > 1;
 
-  int get firstTabIndex => pageEntry?.tabController?.index ?? 0;
+  PageEntry<T> get currentPage => pages[pageIndex];
+
+  string get currentRoute => currentPage.currentFullRoute;
+
+  TabEntry<T> get currentTab => currentPage.tabs[tabIndex];
+
+  (int, int, date) get defaultIndex => history.last;
+
+  int get defaultPageIndex => defaultIndex.$1;
+
+  int get defaultTabIndex => defaultIndex.$2;
+
+  List<(int, int, date)> get history {
+    _history = _history.orderByDescending((x) => x.$3).toList();
+    return _history;
+  }
+
+  Iterable<PageEntry<T>> get historyPages => history.map((x) => pages[x.$1]);
+
   bool get isEmpty => pageCount == 0;
-
-  bool get isMultiTab => tabCount > 1;
 
   bool get isNotEmpty => !isEmpty;
 
   bool get isSinglePage => pageCount == 1;
-  bool get isSingleTab => tabCount == 1;
-  bool get isTabEmpty => tabCount == 0;
 
-  bool get isTabNotEmpty => !isTabEmpty;
-
-  int get lastTabIndex => ((pageEntry?.tabs.length ?? 0) - 1).clampMin(0);
-
-  /// Returns the previous page and tab indices as a tuple.
-  ///
-  /// If there is no previous index, null is returned.
-  (int, int)? get oldIndex => history.firstOrNull;
-
-  /// Returns the previous page index.
-  ///
-  /// If there is no previous index, -1 is returned.
-  int get oldPageIndex => oldIndex?.$1 ?? -1;
-
-  /// Returns the previous tab index.
-  ///
-  /// If there is no previous index, -1 is returned.
-  int get oldTabIndex => oldIndex?.$2 ?? -1;
-
-  int get pageCount => _pageCount;
-
-  PageEntry<T>? get pageEntry => _pageEntry;
+  int get pageCount => pages.length;
 
   /// Returns the current page index.
   int get pageIndex => value;
 
   set pageIndex(int i) => navigate(pageIndex: i);
 
-  int get tabCount => pageEntry?.tabs.length ?? 0;
+  List<PageEntry<T>> get pages => currentState!.pages;
 
-  TabEntry? get tabEntry => pageEntry?.tabs[tabIndex];
+  /// Returns the previous page and tab indices as a tuple.
+  ///
+  /// If there is no previous index, null is returned.
+  (int, int, date) get previousIndex => history.first;
+
+  /// Returns the previous page index.
+  ///
+  /// If there is no previous index, -1 is returned.
+  int get previousPageIndex => previousIndex.$1;
+
+  /// Returns the previous tab index.
+  ///
+  /// If there is no previous index, -1 is returned.
+  int get previousTabIndex => previousIndex.$2;
+
+  string get search => searchController.text;
+
+  set search(string text) => searchController.text = text;
 
   /// Returns the current tab index.
-  int get tabIndex => pageEntry?.tabController?.index ?? defaultTabIndex.clamp(0, (tabCount - 1).clampMin(0));
+  int get tabIndex => currentPage.tabIndex;
 
   set tabIndex(int i) => navigate(tabIndex: i);
 
@@ -159,12 +193,29 @@ class PageTabController<T> with ChangeNotifier {
   /// If there is a previous index in the history list, the current indices are
   /// updated to the previous indices, and the previous indices are removed from
   /// the history list.
-  void back([int count = 1]) => navigate(pageIndex: count.forceNegative);
+  void back([int count = 1]) {
+    for (var i = 0; i < count; i++) {
+      if (canGoBack) {
+        _history.removeAt(0);
+      }
+    }
+    navigate(pageIndex: previousPageIndex, tabIndex: previousTabIndex);
+  }
 
-  void insertHistory(int pageIndex, int tabIndex) {
-    if (history.isEmpty && pageIndex == defaultPageIndex && tabIndex == defaultTabIndex) return;
-    if (history.firstOrNull == (pageIndex, tabIndex)) return;
-    history.insert(0, (pageIndex, tabIndex));
+  void backTo(int pageIndex, int tabIndex) {
+    if (_history.any((x) => x.$1 == pageIndex && x.$2 == tabIndex)) {
+      while (this.pageIndex != pageIndex || this.tabIndex != tabIndex) {
+        back();
+      }
+    }
+  }
+
+  (int, int, DateTime) insertHistory(int pageIndex, int tabIndex, [date? timestamp]) {
+    timestamp ??= now;
+    var historyEntry = (pageIndex, tabIndex, timestamp);
+    _history = [historyEntry, ..._history].orderBy((x) => x.$3).toList();
+    _history.removeEqualSiblings(compareFunction: (a, b) => a.$1 == b.$1 && a.$2 == b.$2);
+    return historyEntry;
   }
 
   /// Navigates to the specified page and tab indices.
@@ -180,31 +231,7 @@ class PageTabController<T> with ChangeNotifier {
   /// indicating the navigation change.
   void navigate({int? pageIndex, int? tabIndex}) {
     if (pageCount == 0) return;
-    int back = 0;
-
     pageIndex ??= this.pageIndex;
-
-    if (pageIndex < 0) {
-      back = pageIndex.forcePositive;
-    } else if (tabIndex != null && tabIndex < 0) {
-      back = tabIndex.forcePositive;
-    }
-
-    if (back > 0) {
-      if (back > history.length) {
-        Get.back();
-        return;
-      }
-
-      if (history.isNotEmpty) {
-        for (var i = 0; i < back; i++) {
-          pageIndex = oldPageIndex;
-          tabIndex = oldTabIndex;
-          history.removeAt(0);
-        }
-      }
-    }
-
     if (pageIndex != this.pageIndex && tabIndex == null) {
       tabIndex = 0;
     } else {
@@ -212,25 +239,61 @@ class PageTabController<T> with ChangeNotifier {
     }
 
     if (pageIndex != this.pageIndex || tabIndex != this.tabIndex) {
-      if (back <= 0) {
-        insertHistory(pageIndex!, tabIndex);
+      consoleLog("From $previousPageIndex:$previousTabIndex to $pageIndex:$tabIndex");
+      insertHistory(pageIndex, tabIndex);
+      value = pageIndex;
+      if (currentPage.hasTabs) {
+        tabIndex = tabIndex.clamp(0, (currentPage.tabs.length - 1).clampMin(0));
+        currentPage.tabController?.animateTo(tabIndex);
       }
-
-      value = pageIndex!;
-      tabIndex = tabIndex.clamp(0, lastTabIndex);
-      pageEntry?.tabController?.animateTo(tabIndex);
-      consoleLog("From $oldPageIndex:$oldTabIndex to $pageIndex:$tabIndex");
       notifyListeners();
     }
   }
 
-  /// Resets the controller to its initial state.
-  ///
-  /// The current indices are set to 0, and the history list is cleared.
+  /// Resets the indexes and history list to their default values.
   void reset() {
     pageIndex = defaultPageIndex;
     tabIndex = defaultTabIndex;
-    history.clear();
+    _history = [(defaultPageIndex, defaultTabIndex, now)];
+  }
+
+  string route(int pageIndex, [int tabIndex = 0]) {
+    var page = pages[pageIndex];
+    return page.tabFullRoute(tabIndex);
+  }
+
+  string routeTitle(int pageIndex, [int tabIndex = 0]) {
+    var page = pages[pageIndex];
+    return page.routeTitle(tabIndex);
+  }
+
+  void showHistoryMenu(BuildContext context, Offset position, [string? format, string? locale]) async {
+    // show a contextmenu with the history.
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+          position & const Size(40, 40), // smaller rect, the touch area
+          Offset.zero & overlay.size // Bigger rect, the entire screen
+          ),
+      items: [
+        for (var i in history)
+          PopupMenuItem(
+            enabled: history.indexOf(i) > 0,
+            value: i,
+            onTap: () {
+              back(history.indexOf(i));
+            },
+            child: ListTile(
+              leading: const Icon(Icons.history),
+              title: Text(routeTitle(i.$1, i.$2)),
+              subtitle: Text(i.$3.format(format, locale)),
+            ),
+          ),
+      ],
+      elevation: 8.0,
+    );
   }
 }
 
@@ -298,7 +361,6 @@ class PageTabScaffold<T> extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
   const PageTabScaffold({
-    super.key,
     required this.indexController,
     required this.items,
     this.drawer,
@@ -342,19 +404,18 @@ class PageTabScaffold<T> extends StatefulWidget {
     this.afterLoad,
     this.beforeLoad,
     this.automaticallyImplyLeading = true,
-  });
+  }) : super(key: indexController);
 
   @override
   State<PageTabScaffold<T>> createState() => _PageTabScaffoldState<T>();
 }
-
-class Shortcuts {}
 
 class TabEntry<T> {
   final dynamic title;
   final dynamic subtitle;
   final IconData? icon;
   final Widget? floatingActionButton;
+  final string? route;
   final Widget Function(T) builder;
 
   final void Function(string value)? onSearch;
@@ -369,15 +430,21 @@ class TabEntry<T> {
     this.onSearch,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
+    this.route,
   });
 
   string get subtitleString => subtitleWidget?.text | "";
 
   Widget? get subtitleWidget => forceWidget(subtitle);
 
+  string get tabRoute => route ?? "/${titleString.urlFriendly}";
+
   string get titleString => titleWidget?.text | "";
 
   Widget? get titleWidget => forceWidget(title);
+
+  @override
+  string toString() => titleString;
 }
 
 class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProviderStateMixin {
@@ -422,9 +489,9 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
         ]
       ];
 
-  Widget? get floatingActionButton => indexController.tabEntry?.floatingActionButton ?? indexController.pageEntry?.floatingActionButton ?? widget.floatingActionButton;
+  Widget? get floatingActionButton => tabEntry.floatingActionButton ?? pageEntry.floatingActionButton ?? widget.floatingActionButton;
 
-  FloatingActionButtonLocation? get floatingActionButtonLocation => indexController.tabEntry?.floatingActionButtonLocation ?? indexController.pageEntry?.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
+  FloatingActionButtonLocation? get floatingActionButtonLocation => tabEntry.floatingActionButtonLocation ?? pageEntry.floatingActionButtonLocation ?? widget.floatingActionButtonLocation;
 
   bool get isSearchEnabled => onSearch != null;
 
@@ -448,17 +515,18 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
     }
   }
 
-  void Function(string value)? get onSearch => tabEntry?.onSearch ?? pageEntry?.onSearch;
+  void Function(string value)? get onSearch => tabEntry.onSearch ?? pageEntry.onSearch;
 
-  PageEntry<T>? get pageEntry => indexController.pageEntry;
+  PageEntry<T> get pageEntry => pages[indexController.pageIndex];
   PageEntries<T> get pages => widget.items;
 
   ScaffoldState get scaffoldState => scaffoldKey.currentState ?? Scaffold.of(context);
 
-  Widget? get subtitle => indexController.tabEntry?.subtitleWidget ?? indexController.pageEntry?.subtitleWidget ?? forceWidget(widget.subtitle);
+  Widget? get subtitle => tabEntry.subtitleWidget ?? pageEntry.subtitleWidget ?? forceWidget(widget.subtitle);
 
-  TabEntry? get tabEntry => indexController.tabEntry;
-  Widget get title => (indexController.pageEntry?.titleWidget ?? forceWidget(widget.title) ?? forceWidget(indexController.pageIndex.toString()))!;
+  TabEntry<T> get tabEntry => pageEntry.tabs[indexController.tabIndex];
+
+  Widget get title => (pageEntry.titleWidget ?? forceWidget(widget.title) ?? forceWidget(indexController.pageIndex.toString()))!;
 
   Widget get titleAndSubtitle => (subtitle != null)
       ? Column(
@@ -474,10 +542,134 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
 
   bool get useDrawerInsteadOfBottomNavigationBar => widget.useDrawerInstedOfBottomNavigationBar && (widget.drawer == null || widget.drawer is! Drawer);
 
-  Scaffold baseScaff(List<Widget>? actionItems) {
+  @override
+  Widget build(BuildContext context) {
+    for (var i in widget.items) {
+      if (i.hasTabs) {
+        var initial = isThisPage(i) ? indexController.tabIndex : 0;
+        if (i.tabController == null) {
+          i.tabController = TabController(vsync: this, length: i.tabs.length, initialIndex: initial);
+          i.tabController!.addListener(() {
+            indexController.insertHistory(indexController.pageIndex, i.tabController!.index);
+            if (mounted) indexController.notifyListeners();
+          });
+        }
+      }
+    }
+
+    List<Widget>? actionItems;
+    if (pageEntry.showAllToolbarActions) {
+      if (pageEntry.toolbarItems != null) {
+        actionItems ??= [];
+        actionItems.addAll(pageEntry.toolbarItems ?? []);
+      }
+      if (pageEntry.toolbarItems != null && widget.actions != null && widget.actions!.isNotEmpty && pageEntry.toolbarItems!.isNotEmpty) {
+        actionItems ??= [];
+        actionItems.add(const SizedBox(width: 8));
+      }
+      if (widget.actions != null) {
+        actionItems ??= [];
+        actionItems.addAll(widget.actions!);
+      }
+    } else {
+      actionItems = pageEntry.toolbarItems ?? widget.actions;
+    }
+
+    if (isSearchEnabled) {
+      actionItems ??= [];
+      actionItems.insert(0, _searchButton());
+    }
+    if (widget.future != null) {
+      return FutureAwaiter(
+        future: widget.future!,
+        data: indexController.data,
+        emptyChild: emptyWidget(),
+        loading: loadingWidget(),
+        errorChild: errorWidget,
+        supressError: widget.supressError,
+        afterLoad: widget.afterLoad,
+        beforeLoad: widget.beforeLoad,
+        builder: (x) => _baseScaff(actionItems),
+      );
+    } else {
+      return _baseScaff(actionItems);
+    }
+  }
+
+  Widget emptyWidget() => Scaffold(
+      key: scaffoldKey,
+      appBar: pageEntry.showAppBar
+          ? AppBar(
+              title: const TitleLoading(),
+              leading: widget.leading,
+              automaticallyImplyLeading: widget.automaticallyImplyLeading,
+              backgroundColor: widget.appBarBackgroundColor,
+              foregroundColor: widget.titleColor,
+              actions: widget.actions,
+            )
+          : null,
+      body: widget.emptyChild ?? const SizedBox.shrink());
+
+  Widget errorWidget(Object error) => Scaffold(
+      key: scaffoldKey,
+      appBar: pageEntry.showAppBar
+          ? AppBar(
+              title: titleAndSubtitle,
+              leading: widget.leading,
+              automaticallyImplyLeading: widget.automaticallyImplyLeading,
+              backgroundColor: widget.appBarBackgroundColor,
+              foregroundColor: widget.titleColor,
+              actions: widget.actions,
+            )
+          : null,
+      body: widget.errorChild != null ? widget.errorChild!(error) : ErrorWidget(error));
+
+  @override
+  initState() {
+    super.initState();
+    scaffoldKey = widget.scaffoldKey ?? GlobalKey<ScaffoldState>();
+    indexController = widget.indexController;
+    indexController.data ??= AwaiterData<T>(validateData: false);
+    indexController.addListener(() {
+      isSearching = false;
+      if (mounted) setState(() {});
+    });
+  }
+
+  bool isThisPage(PageEntry<T> page) => indexController.pageIndex == widget.items.indexOf(page);
+
+  bool isThisTab(PageEntry<T> page, TabEntry<T> tab) => isThisPage(page) && indexController.tabIndex == page.tabs.indexOf(tab);
+
+  Widget loadingWidget() => Scaffold(
+      key: scaffoldKey,
+      appBar: pageEntry.showAppBar
+          ? AppBar(
+              title: const TitleLoading(),
+              leading: widget.leading,
+              automaticallyImplyLeading: widget.automaticallyImplyLeading,
+              backgroundColor: widget.appBarBackgroundColor,
+              foregroundColor: widget.titleColor,
+              actions: widget.actions,
+            )
+          : null,
+      body: widget.loading ?? const Center(child: CircularProgressIndicator()));
+
+  bool toggleSearch() {
+    if (isSearching && indexController.searchController.text.isNotBlank) {
+      indexController.searchController.clear();
+      if (onSearch != null) {
+        onSearch!("");
+      }
+    } else {
+      isSearching = !isSearching;
+    }
+    return isSearching;
+  }
+
+  Scaffold _baseScaff(List<Widget>? actionItems) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: (pageEntry != null && (pageEntry!.showAppBar || pageEntry!.tabs.length > 1)) || useDrawerInsteadOfBottomNavigationBar
+      appBar: ((pageEntry.showAppBar || pageEntry.tabs.length > 1)) || useDrawerInsteadOfBottomNavigationBar
           ? AppBar(
               title: isSearching && onSearch != null
                   ? TextField(
@@ -499,39 +691,44 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
                         setState(() {});
                       },
                     )
-                  : titleAndSubtitle,
+                  : GestureDetector(
+                      child: titleAndSubtitle,
+                      onDoubleTapDown: (d) {
+                        indexController.showHistoryMenu(context, d.globalPosition);
+                      },
+                    ),
               leading: widget.leading,
               automaticallyImplyLeading: widget.automaticallyImplyLeading,
               backgroundColor: widget.appBarBackgroundColor,
               foregroundColor: widget.titleColor,
               actions: actionItems,
-              bottom: indexController.isSingleTab == false
+              bottom: pageEntry.isSingleTab == false
                   ? TabBar(
-                      controller: pageEntry!.tabController!,
+                      controller: pageEntry.tabController!,
                       labelColor: widget.labelColor,
                       isScrollable: widget.scrollableTabs ?? false,
-                      tabs: pageEntry!.tabs
+                      tabs: pageEntry.tabs
                           .map(
                             (x) => Tab(
                               height: widget.tabHeight,
                               icon: Icon(x.icon),
-                              child: forceWidget(x.title) ?? Text("#${pageEntry!.tabs.indexOf(x) + 1}"),
+                              child: forceWidget(x.title) ?? Text("#${pageEntry.tabs.indexOf(x) + 1}"),
                             ),
                           )
                           .toList())
                   : null,
             )
           : null,
-      body: (indexController.isSingleTab == false && indexController.isTabNotEmpty
+      body: (pageEntry.hasTabs
               ? TabBarView(
-                  controller: pageEntry!.tabController!,
-                  children: pageEntry!.tabs.map((x) => x.builder(indexController.data!.value as T)).toList(),
+                  controller: pageEntry.tabController!,
+                  children: pageEntry.tabs.map((x) => x.builder(indexController.data!.value as T)).toList(),
                 )
-              : pageEntry?.tabs.firstOrNull?.builder(indexController.data!.value as T) ?? Container())
+              : pageEntry.tabs.firstOrNull?.builder(indexController.data!.value as T) ?? Container())
           .wrapIf(widget.wrapper != null, widget.wrapper ?? (x) => x),
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
-      persistentFooterButtons: pageEntry?.persistentFooterButtons,
+      persistentFooterButtons: pageEntry.persistentFooterButtons,
       drawer: mainDrawer,
       endDrawer: widget.endDrawer,
       bottomNavigationBar: bottomNavigationBarItems.length > 1
@@ -540,7 +737,7 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
               selectedItemColor: widget.activeIconColor,
               onTap: (index) {
                 if (indexController.pageIndex == index) {
-                  var funcs = pageEntry?.action;
+                  var funcs = pageEntry.action;
                   if (funcs != null) {
                     (funcs)();
                   }
@@ -570,129 +767,6 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    for (var i in widget.items) {
-      if (i.tabs.length > 1) {
-        var initial = isThisPage(i) ? indexController.tabIndex.clamp(0, i.tabs.length - 1) : 0;
-        if (i.tabController == null) {
-          i.tabController = TabController(vsync: this, length: i.tabs.length, initialIndex: initial);
-          i.tabController!.addListener(() {
-            indexController.insertHistory(indexController.pageIndex, i.tabController!.index);
-            if (mounted) indexController.notifyListeners();
-          });
-        }
-      }
-    }
-    indexController._pageCount = widget.items.length;
-    indexController._pageEntry = widget.items[indexController.pageIndex];
-
-    List<Widget>? actionItems;
-    if (pageEntry?.showAllToolbarActions ?? false) {
-      if (pageEntry?.toolbarItems != null) {
-        actionItems ??= [];
-        actionItems.addAll(pageEntry!.toolbarItems ?? []);
-      }
-      if (pageEntry != null && pageEntry?.toolbarItems != null && widget.actions != null && widget.actions!.isNotEmpty && pageEntry!.toolbarItems!.isNotEmpty) {
-        actionItems ??= [];
-        actionItems.add(const SizedBox(width: 8));
-      }
-      if (widget.actions != null) {
-        actionItems ??= [];
-        actionItems.addAll(widget.actions!);
-      }
-    } else {
-      actionItems = pageEntry?.toolbarItems ?? widget.actions;
-    }
-
-    if (isSearchEnabled) {
-      actionItems ??= [];
-      actionItems.insert(0, _searchButton());
-    }
-    if (widget.future != null) {
-      return FutureAwaiter(
-        future: widget.future!,
-        data: indexController.data,
-        emptyChild: emptyWidget(),
-        loading: loadingWidget(),
-        errorChild: errorWidget,
-        supressError: widget.supressError,
-        afterLoad: widget.afterLoad,
-        beforeLoad: widget.beforeLoad,
-        builder: (x) => baseScaff(actionItems),
-      );
-    } else {
-      return baseScaff(actionItems);
-    }
-  }
-
-  Widget emptyWidget() => Scaffold(
-      appBar: indexController.pageEntry?.showAppBar ?? true
-          ? AppBar(
-              title: const TitleLoading(),
-              leading: widget.leading,
-              automaticallyImplyLeading: widget.automaticallyImplyLeading,
-              backgroundColor: widget.appBarBackgroundColor,
-              foregroundColor: widget.titleColor,
-              actions: widget.actions,
-            )
-          : null,
-      body: widget.emptyChild ?? const SizedBox.shrink());
-
-  Widget errorWidget(Object error) => Scaffold(
-      appBar: indexController.pageEntry?.showAppBar ?? true
-          ? AppBar(
-              title: titleAndSubtitle,
-              leading: widget.leading,
-              automaticallyImplyLeading: widget.automaticallyImplyLeading,
-              backgroundColor: widget.appBarBackgroundColor,
-              foregroundColor: widget.titleColor,
-              actions: widget.actions,
-            )
-          : null,
-      body: widget.errorChild != null ? widget.errorChild!(error) : ErrorWidget(error));
-
-  @override
-  initState() {
-    super.initState();
-    scaffoldKey = widget.scaffoldKey ?? GlobalKey<ScaffoldState>();
-    indexController = widget.indexController;
-    indexController.data ??= AwaiterData<T>(validateData: false);
-    indexController.addListener(() {
-      isSearching = false;
-      if (mounted) setState(() {});
-    });
-  }
-
-  bool isThisPage(PageEntry<T> page) => indexController.pageIndex == widget.items.indexOf(page);
-
-  bool isThisTab(PageEntry<T> page, TabEntry<T> tab) => isThisPage(page) && indexController.tabIndex == page.tabs.indexOf(tab);
-
-  Widget loadingWidget() => Scaffold(
-      appBar: indexController.pageEntry?.showAppBar ?? true
-          ? AppBar(
-              title: const TitleLoading(),
-              leading: widget.leading,
-              automaticallyImplyLeading: widget.automaticallyImplyLeading,
-              backgroundColor: widget.appBarBackgroundColor,
-              foregroundColor: widget.titleColor,
-              actions: widget.actions,
-            )
-          : null,
-      body: widget.loading ?? const Center(child: CircularProgressIndicator()));
-
-  bool toggleSearch() {
-    if (isSearching && indexController.searchController.text.isNotBlank) {
-      indexController.searchController.clear();
-      if (onSearch != null) {
-        onSearch!("");
-      }
-    } else {
-      isSearching = !isSearching;
-    }
-    return isSearching;
-  }
-
   Widget _getDrawerItem(PageEntry<T> page, TabEntry<T> tab, [bool isSubmenu = false]) {
     IconData? icon = (isSubmenu ? tab.icon : page.icon);
     if (isThisTab(page, tab) && page.action != null) {
@@ -715,7 +789,7 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
       selectedColor: page.backgroundColor,
       onTap: () {
         if (isThisTab(page, tab)) {
-          var funcs = pageEntry?.action;
+          var funcs = pageEntry.action;
           if (funcs != null) {
             (funcs)();
           }
