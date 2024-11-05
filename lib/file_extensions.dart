@@ -454,13 +454,17 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
   Future<void> cleanEmpty() async {
     if (await exists()) {
       if (this is File) {
-        if (isEmpty) await delete();
+        if (isEmpty) {
+          consoleLog("Deleting empty directory: $this");
+          await delete();
+        }
         await parent.cleanEmpty();
       } else if (this is Directory) {
         for (var e in (this as Directory).listSync()) {
           await e.cleanEmpty();
         }
         if (isEmpty) {
+          consoleLog("Deleting empty directory: $this");
           await delete();
         }
       }
