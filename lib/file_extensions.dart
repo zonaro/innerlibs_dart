@@ -377,6 +377,15 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
   /// Get the index of the file or directory in the parent directory
   int get index => parent.listFilesSync.map((x) => x.id).toList().indexOf(id);
 
+  bool get isEmpty {
+    if (this is Directory) {
+      return (this as Directory).listSync().isEmpty;
+    } else if (this is File) {
+      return (this as File).lengthSync() == 0;
+    }
+    return size == 0;
+  }
+
   date get lastAccessed {
     if (this is File) {
       return (this as File).lastAccessedSync();
@@ -437,6 +446,25 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
       return Get.context?.innerLibsLocalizations.directory ?? "Directory";
     }
     return Get.context?.innerLibsLocalizations.unknown ?? "Unknown";
+  }
+
+  /// Delete empty directories and files.
+  /// An empty file is a file that has a length of 0 bytes.
+  /// An empty directory is a directory that contains no files or directories
+  Future<void> cleanEmpty() async {
+    if (await exists()) {
+      if (this is File) {
+        if (isEmpty) await delete();
+        await parent.cleanEmpty();
+      } else if (this is Directory) {
+        for (var e in (this as Directory).listSync()) {
+          await e.cleanEmpty();
+        }
+        if (isEmpty) {
+          await delete();
+        }
+      }
+    }
   }
 
   Future<Directory> copyTo(Directory destination, [bool skipTopDirectory = false]) async {
