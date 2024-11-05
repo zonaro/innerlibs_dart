@@ -21,7 +21,7 @@ abstract interface class Brasil {
   static Future<List<Cidade>> get cidades async => await Cidade.pegarCidades;
 
   /// Retorna uma lista com todos os Estados do Brasil. Não inclui códigos especiais.
-  static List<Estado> get estados => Estado.pegarEstados;
+  static List<Estado> get estados => Estado.pegarEstados ;
   static List<Estado> get estadosECodigosEspeciais => Estado.pegarEstadosECodigosEspeciais;
 
   /// Retorna uma lista com todos os nomes comuns do Brasil
@@ -132,57 +132,7 @@ abstract interface class Brasil {
   static List<Regiao> get regioes => Regiao.pegarRegioes;
 
   /// Lista contendo os sobrenomes mais comuns no Brasil
-  static List<String> get sobrenomesComuns => [
-        "Silva",
-        "Santos",
-        "Souza",
-        "Oliveira",
-        "Pereira",
-        "Ferreira",
-        "Alves",
-        "Pinto",
-        "Ribeiro",
-        "Rodrigues",
-        "Costa",
-        "Carvalho",
-        "Gomes",
-        "Martins",
-        "Araújo",
-        "Melo",
-        "Barbosa",
-        "Cardoso",
-        "Nascimento",
-        "Lima",
-        "Moura",
-        "Cavalcanti",
-        "Monteiro",
-        "Moreira",
-        "Nunes",
-        "Sales",
-        "Ramos",
-        "Montenegro",
-        "Siqueira",
-        "Borges",
-        "Teixeira",
-        "Amaral",
-        "Sampaio",
-        "Correa",
-        "Fernandes",
-        "Batista",
-        "Miranda",
-        "Leal",
-        "Xavier",
-        "Marques",
-        "Andrade",
-        "Freitas",
-        "Paiva",
-        "Vieira",
-        "Aguiar",
-        "Macedo",
-        "Garcia",
-        "Lacerda",
-        "Lopes"
-      ];
+  static List<String> get sobrenomesComuns => ["Silva", "Santos", "Souza", "Oliveira", "Pereira", "Ferreira", "Alves", "Pinto", "Ribeiro", "Rodrigues", "Costa", "Carvalho", "Gomes", "Martins", "Araújo", "Melo", "Barbosa", "Cardoso", "Nascimento", "Lima", "Moura", "Cavalcanti", "Monteiro", "Moreira", "Nunes", "Sales", "Ramos", "Montenegro", "Siqueira", "Borges", "Teixeira", "Amaral", "Sampaio", "Correa", "Fernandes", "Batista", "Miranda", "Leal", "Xavier", "Marques", "Andrade", "Freitas", "Paiva", "Vieira", "Aguiar", "Macedo", "Garcia", "Lacerda", "Lopes"];
 
   /// Formata um número de CEP.
   ///
@@ -560,8 +510,7 @@ abstract interface class Brasil {
     ];
   }
 
-  static string gerarNomeAleatorioString({bool sobrenomeUnico = false, bool nomeComposto = false, bool masculino = true, bool feminino = true}) =>
-      gerarNomeAleatorio(sobrenomeUnico: sobrenomeUnico, nomeComposto: nomeComposto, masculino: masculino, feminino: feminino).join(" ");
+  static string gerarNomeAleatorioString({bool sobrenomeUnico = false, bool nomeComposto = false, bool masculino = true, bool feminino = true}) => gerarNomeAleatorio(sobrenomeUnico: sobrenomeUnico, nomeComposto: nomeComposto, masculino: masculino, feminino: feminino).join(" ");
 
   static Future<InfoUsuario> gerarPessoaAleatoria({bool sobrenomeUnico = false, bool nomeComposto = false, bool masculino = true, bool feminino = true}) async {
     if (masculino == feminino) {
@@ -1141,14 +1090,7 @@ abstract interface class Brasil {
     if (documento is num) return documento.floor();
     if (documento is Color) return documento.value;
 
-    if (validarCPF(documento) ||
-        validarCNPJ(documento) ||
-        validarCEP(documento) ||
-        validarEAN(documento) ||
-        validarPIS(documento) ||
-        validarCNH(documento) ||
-        validarTelefone(documento) ||
-        validarInscricaoEstadual(documento)) {
+    if (validarCPF(documento) || validarCNPJ(documento) || validarCEP(documento) || validarEAN(documento) || validarPIS(documento) || validarCNH(documento) || validarTelefone(documento) || validarInscricaoEstadual(documento)) {
       return int.tryParse("$documento".onlyNumbers).nullIfZero;
     }
 

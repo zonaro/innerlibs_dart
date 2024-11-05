@@ -113,46 +113,17 @@ enum Estado implements Comparable<Estado> {
   /// ```dart
   /// List<Estado> estados = await Estado.pegarEstados;
   /// ```
-  static List<Estado> get pegarEstados => [
-        Estado.ac,
-        Estado.al,
-        Estado.ap,
-        Estado.am,
-        Estado.ba,
-        Estado.ce,
-        Estado.df,
-        Estado.es,
-        Estado.go,
-        Estado.ma,
-        Estado.mt,
-        Estado.ms,
-        Estado.mg,
-        Estado.pa,
-        Estado.pb,
-        Estado.pr,
-        Estado.pe,
-        Estado.pi,
-        Estado.rj,
-        Estado.rn,
-        Estado.rs,
-        Estado.ro,
-        Estado.rr,
-        Estado.sc,
-        Estado.sp,
-        Estado.se,
-        Estado.to,
-      ];
+  static List<Estado> get pegarEstados => values.whereNot((e) => [
+        Estado.naoDefinido,
+        Estado.suframa,
+        Estado.an,
+        Estado.svcrs,
+        Estado.svcsp,
+        Estado.ex,
+        Estado.sincChavesRSparaSVSP,
+      ].contains(e)).toList();
 
-  static List<Estado> get pegarEstadosECodigosEspeciais => [
-        naoDefinido,
-        ...pegarEstados,
-        suframa,
-        an,
-        svcrs,
-        svcsp,
-        sincChavesRSparaSVSP,
-        ex,
-      ];
+  static List<Estado> get pegarEstadosECodigosEspeciais => values;
 
   final int ibge;
 

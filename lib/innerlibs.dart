@@ -74,6 +74,7 @@ export 'widgets/brazil_plate.dart';
 export 'widgets/custom_calendar.dart';
 export 'widgets/custom_date_range_picker.dart';
 export 'widgets/date_picker_form_field.dart';
+export 'widgets/digital_clock.dart';
 export 'widgets/empty_widget.dart';
 export 'widgets/expandable.dart';
 export 'widgets/floating_area.dart';
