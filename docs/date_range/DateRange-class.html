@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the DateRange class from the date_range library, for the Dart programming language.">
+  <title>DateRange class - date_range library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../date_range/date_range-library.html">date_range.dart</a></li>
+    <li class="self-crumb">DateRange class</li>
+  </ol>
+  <div class="self-name">DateRange</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="date_range&#47;date_range-library-sidebar.html"
+    data-below-sidebar="date_range&#47;DateRange-class-sidebar.html">
+    <div>
+<h1><span class="kind-class">DateRange</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>Represents a range of dates.</p>
+</section>
+
+
+    <section>
+      <dl class="dl-horizontal">
+        
+
+        
+  <dt>Implemented types</dt>
+  <dd>
+    <ul class="comma-separated clazz-relationships">
+        <li><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></li>
+    </ul>
+  </dd>
+        
+
+
+          <dt>Available Extensions</dt>
+          <dd><ul class="comma-separated clazz-relationships">
+              <li><a href="../general_extensions/CompareAndSwap.html">CompareAndSwap</a></li>
+              <li><a href="../num_extensions/DurationExtensions.html">DurationExtensions</a></li>
+              <li><a href="https://pub.dev/documentation/get/4.6.6/get/GetDurationUtils.html">GetDurationUtils</a></li>
+          </ul></dd>
+
+        
+
+
+      </dl>
+    </section>
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+
+    <dl class="constructor-summary-list">
+        <dt id="DateRange" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.html">DateRange</a></span><span class="signature">(<span class="parameter" id="-param-startDate"><span class="type-annotation"><a href="../innerlibs/date.html">date</a></span> <span class="parameter-name">startDate</span>, [</span><span class="parameter" id="-param-endDate"><span class="type-annotation"><a href="../innerlibs/date.html">date</a>?</span> <span class="parameter-name">endDate</span></span>])</span>
+        </dt>
+        <dd>
+          Creates a new instance of the <a href="../date_range/DateRange-class.html">DateRange</a> class with the specified start and end dates.
+        </dd>
+        <dt id="DateRange.daysAfter" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.daysAfter.html">DateRange.daysAfter</a></span><span class="signature">(<span class="parameter" id="daysAfter-param-date"><span class="type-annotation"><a href="../innerlibs/date.html">date</a></span> <span class="parameter-name">date</span>, </span><span class="parameter" id="daysAfter-param-days"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">days</span></span>)</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the specified number of days after the specified date.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.daysAgo" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.daysAgo.html">DateRange.daysAgo</a></span><span class="signature">(<span class="parameter" id="daysAgo-param-days"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">days</span></span>)</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the specified number of days before today.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.daysBefore" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.daysBefore.html">DateRange.daysBefore</a></span><span class="signature">(<span class="parameter" id="daysBefore-param-date"><span class="type-annotation"><a href="../innerlibs/date.html">date</a></span> <span class="parameter-name">date</span>, </span><span class="parameter" id="daysBefore-param-days"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">days</span></span>)</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the specified number of days before the specified date.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.daysFromNow" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.daysFromNow.html">DateRange.daysFromNow</a></span><span class="signature">(<span class="parameter" id="daysFromNow-param-days"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">days</span></span>)</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the specified number of days after today.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.duration" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.duration.html">DateRange.duration</a></span><span class="signature">(<span class="parameter" id="duration-param-date"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span> <span class="parameter-name">date</span>, </span><span class="parameter" id="duration-param-duration"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span> <span class="parameter-name">duration</span></span>)</span>
+        </dt>
+        <dd>
+          
+        </dd>
+        <dt id="DateRange.lastBimester" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.lastBimester.html">DateRange.lastBimester</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the previous bimester.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.lastMonth" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.lastMonth.html">DateRange.lastMonth</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the previous month.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.lastQuarter" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.lastQuarter.html">DateRange.lastQuarter</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the previous quarter.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.lastSemester" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.lastSemester.html">DateRange.lastSemester</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the previous semester.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.lastWeek" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.lastWeek.html">DateRange.lastWeek</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the previous week.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.lastYear" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.lastYear.html">DateRange.lastYear</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the previous year.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.nextBimester" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.nextBimester.html">DateRange.nextBimester</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the next bimester.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.nextMonth" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.nextMonth.html">DateRange.nextMonth</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the next month.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.nextQuarter" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.nextQuarter.html">DateRange.nextQuarter</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the next quarter.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.nextSemester" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.nextSemester.html">DateRange.nextSemester</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the next semester.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.nextWeek" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.nextWeek.html">DateRange.nextWeek</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the next week.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.nextYear" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.nextYear.html">DateRange.nextYear</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the next year.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.thisBimester" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.thisBimester.html">DateRange.thisBimester</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the current bimester.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.thisMonth" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.thisMonth.html">DateRange.thisMonth</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the current month.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.thisQuarter" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.thisQuarter.html">DateRange.thisQuarter</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the current quarter.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.thisSemester" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.thisSemester.html">DateRange.thisSemester</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the current trimester.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.thisWeek" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.thisWeek.html">DateRange.thisWeek</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the current week.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.thisYear" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.thisYear.html">DateRange.thisYear</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing the current year.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.today" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.today.html">DateRange.today</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing today.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.tomorrow" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.tomorrow.html">DateRange.tomorrow</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing tomorrow.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.yesterday" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.yesterday.html">DateRange.yesterday</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing yesterday.
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="DateRange.yesterdayToToday" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.yesterdayToToday.html">DateRange.yesterdayToToday</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing yesterday and today.
+        </dd>
+        <dt id="DateRange.yesterdayToTomorrow" class="callable">
+          <span class="name"><a href="../date_range/DateRange/DateRange.yesterdayToTomorrow.html">DateRange.yesterdayToTomorrow</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Creates a <a href="../date_range/DateRange-class.html">DateRange</a> representing testerday, today and tomorrow.
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="duration" class="property">
+  <span class="name"><a href="../date_range/DateRange/duration.html">duration</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span>
+  
+
+</dt>
+<dd>
+  Gets the duration of the date range.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="endDate" class="property">
+  <span class="name"><a href="../date_range/DateRange/endDate.html">endDate</a></span>
+  <span class="signature">&#8596; <a href="../innerlibs/date.html">date</a></span>
+  
+
+</dt>
+<dd>
+  Gets the end date of the date range.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="hashCode" class="property">
+  <span class="name"><a href="../date_range/DateRange/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  Returns the hash code for this <a href="../date_range/DateRange-class.html">DateRange</a> object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="inDays" class="property">
+  <span class="name"><a href="../date_range/DateRange/inDays.html">inDays</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  The number of entire days spanned by this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="inHours" class="property">
+  <span class="name"><a href="../date_range/DateRange/inHours.html">inHours</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  The number of entire hours spanned by this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="inMicroseconds" class="property">
+  <span class="name"><a href="../date_range/DateRange/inMicroseconds.html">inMicroseconds</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  The number of whole microseconds spanned by this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="inMilliseconds" class="property">
+  <span class="name"><a href="../date_range/DateRange/inMilliseconds.html">inMilliseconds</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  The number of whole milliseconds spanned by this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="inMinutes" class="property">
+  <span class="name"><a href="../date_range/DateRange/inMinutes.html">inMinutes</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  The number of whole minutes spanned by this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="inSeconds" class="property">
+  <span class="name"><a href="../date_range/DateRange/inSeconds.html">inSeconds</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  The number of whole seconds spanned by this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="isFuture" class="property">
+  <span class="name"><a href="../date_range/DateRange/isFuture.html">isFuture</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Returns true if the date range is in the future.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="isNegative" class="property">
+  <span class="name"><a href="../date_range/DateRange/isNegative.html">isNegative</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a> is negative.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="isNow" class="property">
+  <span class="name"><a href="../date_range/DateRange/isNow.html">isNow</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Returns true if today is in the date range.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="isPast" class="property">
+  <span class="name"><a href="../date_range/DateRange/isPast.html">isPast</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Returns true if the date range is in the past.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="startDate" class="property">
+  <span class="name"><a href="../date_range/DateRange/startDate.html">startDate</a></span>
+  <span class="signature">&#8596; <a href="../innerlibs/date.html">date</a></span>
+  
+
+</dt>
+<dd>
+  Gets the start date of the date range.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="abs" class="callable">
+  <span class="name"><a href="../date_range/DateRange/abs.html">abs</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates a new <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a> representing the absolute length of this
+<a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="compareTo" class="callable">
+  <span class="name"><a href="../date_range/DateRange/compareTo.html">compareTo</a></span><span class="signature">(<wbr><span class="parameter" id="compareTo-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Compares this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a> to <code>other</code>, returning zero if the values are equal.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="contains" class="callable">
+  <span class="name"><a href="../date_range/DateRange/contains.html">contains</a></span><span class="signature">(<wbr><span class="parameter" id="contains-param-date"><span class="type-annotation"><a href="../innerlibs/date.html">date</a></span> <span class="parameter-name">date</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns true if yesterday is in the date range.
+  
+
+</dd>
+
+        <dt id="containsRange" class="callable">
+  <span class="name"><a href="../date_range/DateRange/containsRange.html">containsRange</a></span><span class="signature">(<wbr><span class="parameter" id="containsRange-param-range"><span class="type-annotation"><a href="../date_range/DateRange-class.html">DateRange</a></span> <span class="parameter-name">range</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Checks if the date range contains the specified date range.
+  
+
+</dd>
+
+        <dt id="days" class="callable">
+  <span class="name"><a href="../date_range/DateRange/days.html">days</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Generates an iterable of <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a> objects representing each day within the date range.
+  
+
+</dd>
+
+        <dt id="hours" class="callable">
+  <span class="name"><a href="../date_range/DateRange/hours.html">hours</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Generates an iterable of <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a> objects representing each hour within the date range.
+  
+
+</dd>
+
+        <dt id="intersects" class="callable">
+  <span class="name"><a href="../date_range/DateRange/intersects.html">intersects</a></span><span class="signature">(<wbr><span class="parameter" id="intersects-param-range"><span class="type-annotation"><a href="../date_range/DateRange-class.html">DateRange</a></span> <span class="parameter-name">range</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Checks if the date range intersects the specified date range.
+  
+
+</dd>
+
+        <dt id="minutes" class="callable">
+  <span class="name"><a href="../date_range/DateRange/minutes.html">minutes</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Generates an iterable of <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a> objects representing each minute within the date range.
+  
+
+</dd>
+
+        <dt id="months" class="callable">
+  <span class="name"><a href="../date_range/DateRange/months.html">months</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Generates an iterable of <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a> objects representing each month within the date range.
+  
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toJson" class="callable">
+  <span class="name"><a href="../date_range/DateRange/toJson.html">toJson</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a JSON-encodable representation of this <a href="../date_range/DateRange-class.html">DateRange</a> object.
+  
+
+</dd>
+
+        <dt id="toString" class="callable">
+  <span class="name"><a href="../date_range/DateRange/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a string representation of this <a href="../date_range/DateRange-class.html">DateRange</a> object.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="weeks" class="callable">
+  <span class="name"><a href="../date_range/DateRange/weeks.html">weeks</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Generates an iterable of <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a> objects representing each week within the date range.
+  
+
+</dd>
+
+        <dt id="years" class="callable">
+  <span class="name"><a href="../date_range/DateRange/years.html">years</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Generates an iterable of <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a> objects representing each year within the date range.
+  
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator *" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_multiply.html">operator *</a></span><span class="signature">(<wbr><span class="parameter" id="*-param-factor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">factor</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../date_range/DateRange-class.html">DateRange</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Multiplies this Duration by the given <code>factor</code> and returns the result
+as a new Duration object.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="operator +" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_plus.html">operator +</a></span><span class="signature">(<wbr><span class="parameter" id="+-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../date_range/DateRange-class.html">DateRange</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Adds this Duration and <code>other</code> and
+returns the sum as a new Duration object.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="operator -" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_minus.html">operator -</a></span><span class="signature">(<wbr><span class="parameter" id="--param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../date_range/DateRange-class.html">DateRange</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Subtracts <code>other</code> from this Duration and
+returns the difference as a new Duration object.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="operator &lt;" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_less.html">operator <</a></span><span class="signature">(<wbr><span class="parameter" id="<-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Whether this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a> is shorter than <code>other</code>.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="operator &lt;=" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_less_equal.html">operator <=</a></span><span class="signature">(<wbr><span class="parameter" id="<=-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Whether this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a> is shorter than or equal to <code>other</code>.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="operator ==" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Overrides the equality operator to compare the current <a href="../date_range/DateRange-class.html">DateRange</a> object with another object.
+Returns <code>true</code> if the objects are equal, <code>false</code> otherwise.
+Checks if the current <a href="../date_range/DateRange-class.html">DateRange</a> object is equal to the <code>other</code> object.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="operator &gt;" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_greater.html">operator ></a></span><span class="signature">(<wbr><span class="parameter" id=">-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Whether this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a> is longer than <code>other</code>.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="operator &gt;=" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_greater_equal.html">operator >=</a></span><span class="signature">(<wbr><span class="parameter" id=">=-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Whether this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a> is longer than or equal to <code>other</code>.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="operator unary-" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_unary_minus.html">operator unary-</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates a new <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a> with the opposite direction of this <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="operator ~&#47;" class="callable">
+  <span class="name"><a href="../date_range/DateRange/operator_truncate_divide.html">operator ~/</a></span><span class="signature">(<wbr><span class="parameter" id="~/-param-quotient"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">quotient</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Divides this Duration by the given <code>quotient</code> and returns the truncated
+result as a new Duration object.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+    
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../date_range/date_range-library.html">date_range</a></li>
+    <li class="self-crumb">DateRange class</li>
+</ol>
+
+
+    <h5>date_range library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

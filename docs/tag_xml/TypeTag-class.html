@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the TypeTag class from the tag_xml library, for the Dart programming language.">
+  <title>TypeTag class - tag_xml library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../tag_xml/tag_xml-library.html">tag_xml.dart</a></li>
+    <li class="self-crumb">TypeTag<span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>&gt;</span> class</li>
+  </ol>
+  <div class="self-name">TypeTag</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="tag_xml&#47;tag_xml-library-sidebar.html"
+    data-below-sidebar="tag_xml&#47;TypeTag-class-sidebar.html">
+    <div>
+<h1><span class="kind-class">TypeTag&lt;<wbr><span class="type-parameter">T extends TagXml</span>&gt;</span> class 
+ 
+</h1></div>
+
+    
+
+
+    <section>
+      <dl class="dl-horizontal">
+        
+  <dt>Inheritance</dt>
+  <dd>
+    <ul class="gt-separated dark clazz-relationships">
+      <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
+        <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode-class.html">XmlNode</a></li>
+        <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement-class.html">XmlElement</a></li>
+        <li><a href="../tag_xml/TagXml-class.html">TagXml</a></li>
+      <li>TypeTag</li>
+    </ul>
+  </dd>
+
+        
+        
+
+
+          <dt>Available Extensions</dt>
+          <dd><ul class="comma-separated clazz-relationships">
+              <li><a href="../general_extensions/CompareAndSwap.html">CompareAndSwap</a></li>
+              <li><a href="../validation_interface/ValidatorClassExtensions.html">ValidatorClassExtensions</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlAncestorsExtension.html">XmlAncestorsExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlComparisonExtension.html">XmlComparisonExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlDescendantsExtension.html">XmlDescendantsExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlFindExtension.html">XmlFindExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlFollowingExtension.html">XmlFollowingExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlMutatorExtension.html">XmlMutatorExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNodesExtension.html">XmlNodesExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNormalizerExtension.html">XmlNormalizerExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlParentExtension.html">XmlParentExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlPrecedingExtension.html">XmlPrecedingExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlSiblingExtension.html">XmlSiblingExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlStringExtension.html">XmlStringExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xpath/XPathExtension.html">XPathExtension</a></li>
+              <li><a href="https://pub.dev/documentation/xml/6.5.0/xpath/XPathGenerator.html">XPathGenerator</a></li>
+          </ul></dd>
+
+        
+
+
+      </dl>
+    </section>
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+
+    <dl class="constructor-summary-list">
+        <dt id="TypeTag" class="callable">
+          <span class="name"><a href="../tag_xml/TypeTag/TypeTag.html">TypeTag</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="attributes" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasAttributes/attributes.html">attributes</a></span>
+  <span class="signature">&#8594; XmlNodeList<span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlAttribute-class.html">XmlAttribute</a></span>&gt;</span></span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the attribute nodes of this node in document order.
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="childElements" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasChildren/childElements.html">childElements</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement-class.html">XmlElement</a></span>&gt;</span></span>
+  
+
+</dt>
+<dd class="inherited">
+  Return an <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a> over the <code>XmlElement</code> children of this node.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="children" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasChildren/children.html">children</a></span>
+  <span class="signature">&#8594; XmlNodeList<span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode-class.html">XmlNode</a></span>&gt;</span></span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the direct children of this node in document order.
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="deepArrow" class="property inherited">
+  <span class="name"><a href="../tag_xml/TagXml/deepArrow.html">deepArrow</a></span>
+  <span class="signature">&#8594; <a href="../innerlibs/string.html">string</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Return a string with a arrow with length equal to <a href="../tag_xml/TagXml/deepLevel.html">deepLevel</a>
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="deepLevel" class="property inherited">
+  <span class="name"><a href="../tag_xml/TagXml/deepLevel.html">deepLevel</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the deep level of the current node.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="firstChild" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasChildren/firstChild.html">firstChild</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode-class.html">XmlNode</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the first child of this node, or <code>null</code> if there are no children.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="firstElementChild" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasChildren/firstElementChild.html">firstElementChild</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement-class.html">XmlElement</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the first child <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement-class.html">XmlElement</a>, or <code>null</code> if there are none.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hasParent" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasParent/hasParent.html">hasParent</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Test whether the node has a parent or not.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="isSelfClosing" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement/isSelfClosing.html">isSelfClosing</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Defines whether the element should be self-closing when empty.
+  <div class="features"><span class="feature">getter/setter pair</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="lastChild" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasChildren/lastChild.html">lastChild</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode-class.html">XmlNode</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the last child of this node, or <code>null</code> if there are no children.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="lastElementChild" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasChildren/lastElementChild.html">lastElementChild</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement-class.html">XmlElement</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the last child <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement-class.html">XmlElement</a>, or <code>null</code> if there are none.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="localName" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasName/localName.html">localName</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the local name, excluding the namespace prefix.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="name" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement/name.html">name</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlName-class.html">XmlName</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the name of the node.
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="namespacePrefix" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasName/namespacePrefix.html">namespacePrefix</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the namespace prefix, or <code>null</code>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="namespaceUri" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasName/namespaceUri.html">namespaceUri</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the namespace URI, or <code>null</code>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="nodeType" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement/nodeType.html">nodeType</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNodeType.html">XmlNodeType</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the node type of this node.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="parent" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasParent/parent.html">parent</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode-class.html">XmlNode</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the parent node of this node, or <code>null</code> if there is none.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="path" class="property inherited">
+  <span class="name"><a href="../tag_xml/TagXml/path.html">path</a></span>
+  <span class="signature">&#8594; <a href="../innerlibs/string.html">string</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the path of the current node.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="qualifiedName" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasName/qualifiedName.html">qualifiedName</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the fully qualified name, including the namespace prefix.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="tagName" class="property inherited">
+  <span class="name"><a href="../tag_xml/TagXml/tagName.html">tagName</a></span>
+  <span class="signature">&#8596; <a href="../innerlibs/string.html">string</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Gets or sets the tag name.
+  <div class="features"><span class="feature">getter/setter pair</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="text" class="property inherited">
+  <span class="name"><a class="deprecated" href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode/text.html">text</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the concatenated text of this node or its descendants, for
+text, CDATA, and comment nodes return the textual value of the node.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="value" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode/value.html">value</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the value of the node, or <code>null</code>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="accept" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement/accept.html">accept</a></span><span class="signature">(<wbr><span class="parameter" id="accept-param-visitor"><span class="type-annotation"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlVisitor-mixin.html">XmlVisitor</a></span> <span class="parameter-name">visitor</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Dispatch the invocation depending on this type to the <code>visitor</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="attachParent" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasParent/attachParent.html">attachParent</a></span><span class="signature">(<wbr><span class="parameter" id="attachParent-param-parent"><span>covariant</span> <span class="type-annotation"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode-class.html">XmlNode</a></span> <span class="parameter-name">parent</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Internal helper to attach a child to this parent, do not call directly.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="compareTo" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/compareTo.html">compareTo</a></span><span class="signature">(<wbr><span class="parameter" id="compareTo-param-other"><span class="type-annotation">dynamic</span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  compare this tag with another tag
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="compute" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/compute.html">compute</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  compute this tag
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="computeAndValidate" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/computeAndValidate.html">computeAndValidate</a></span><span class="signature">(<wbr>[<span class="parameter" id="computeAndValidate-param-throwException"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">throwException</span> = <span class="default-value">false</span></span>])
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Compute and validate this tag.
+If <code>throwException</code> is <code>true</code>, it throws an <a href="../validation_interface/InvalidException-class.html">InvalidException</a> if the tag is not valid.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="copy" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement/copy.html">copy</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement-class.html">XmlElement</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Return a copy of this node and all its children.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="detachParent" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasParent/detachParent.html">detachParent</a></span><span class="signature">(<wbr><span class="parameter" id="detachParent-param-parent"><span>covariant</span> <span class="type-annotation"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode-class.html">XmlNode</a></span> <span class="parameter-name">parent</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Internal helper to detach a child from its parent, do not call directly.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getAttribute" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasAttributes/getAttribute.html">getAttribute</a></span><span class="signature">(<wbr><span class="parameter" id="getAttribute-param-name"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">name</span>, {</span><span class="parameter" id="getAttribute-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">namespace</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the attribute value with the given <code>name</code>, or <code>null</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getAttributeNode" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasAttributes/getAttributeNode.html">getAttributeNode</a></span><span class="signature">(<wbr><span class="parameter" id="getAttributeNode-param-name"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">name</span>, {</span><span class="parameter" id="getAttributeNode-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">namespace</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlAttribute-class.html">XmlAttribute</a>?</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the attribute node with the given <code>name</code>, or <code>null</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getElement" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasChildren/getElement.html">getElement</a></span><span class="signature">(<wbr><span class="parameter" id="getElement-param-name"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">name</span>, {</span><span class="parameter" id="getElement-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">namespace</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement-class.html">XmlElement</a>?</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the first child element with the given <code>name</code>, or <code>null</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getFirstChild" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/getFirstChild.html">getFirstChild</a></span><span class="signature">(<wbr><span class="parameter" id="getFirstChild-param-tagName"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">tagName</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlElement-class.html">XmlElement</a>?</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a child node with the given <code>tagName</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getTagAs" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/getTagAs.html">getTagAs</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="getTagAs-param-tag"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">tag</span>, </span><span class="parameter" id="getTagAs-param-constructor"><span class="type-annotation">T</span> <span class="parameter-name">constructor</span>()</span>)
+    <span class="returntype parameter">&#8594; T?</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a child node with the given <code>tag</code> as an instance of <code>T</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getTagsFrom" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/getTagsFrom.html">getTagsFrom</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="getTagsFrom-param-tagName"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">tagName</span>, </span><span class="parameter" id="getTagsFrom-param-itemConstructor"><span class="type-annotation">T</span> <span class="parameter-name">itemConstructor</span>()</span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns an iterable of child nodes with the given <code>tagName</code> as instances of <code>T</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getTagsFromNodeList" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/getTagsFromNodeList.html">getTagsFromNodeList</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="getTagsFromNodeList-param-listName"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">listName</span>, </span><span class="parameter" id="getTagsFromNodeList-param-itemName"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">itemName</span>, </span><span class="parameter" id="getTagsFromNodeList-param-constructor"><span class="type-annotation">T</span> <span class="parameter-name">constructor</span>()</span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getValueFromNode" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/getValueFromNode.html">getValueFromNode</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="getValueFromNode-param-tag"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">tag</span>, [</span><span class="parameter" id="getValueFromNode-param-parser"><span class="type-annotation">T</span> <span class="parameter-name">parser</span>(<span class="parameter" id="param-i"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">i</span></span>)?</span>])
+    <span class="returntype parameter">&#8594; T?</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the text value from a specific child node with the given <code>tag</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hasChildren" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/hasChildren.html">hasChildren</a></span><span class="signature">(<wbr><span class="parameter" id="hasChildren-param-tagName"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">tagName</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  check if children with <code>tagName</code> exists
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="isIn" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/isIn.html">isIn</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="isIn-param-tag"><span class="type-annotation">T</span> <span class="parameter-name">tag</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Checks if this node is a descendant of the given <code>tag</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="isInDocument" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/isInDocument.html">isInDocument</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="isInDocument-param-tag"><span class="type-annotation">T</span> <span class="parameter-name">tag</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Checks if this node is a descendant of the document thats <code>tag</code> is.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="pathJoin" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/pathJoin.html">pathJoin</a></span><span class="signature">(<wbr>[<span class="parameter" id="pathJoin-param-joiner"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">joiner</span> = <span class="default-value">&quot;.&quot;</span></span>])
+    <span class="returntype parameter">&#8594; <a href="../innerlibs/string.html">string</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the path of the current node.
+The <code>joiner</code> is used to join the path segments.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="removeAttribute" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode/removeAttribute.html">removeAttribute</a></span><span class="signature">(<wbr><span class="parameter" id="removeAttribute-param-name"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">name</span>, {</span><span class="parameter" id="removeAttribute-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">namespace</span></span>})
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Removes the attribute value with the given fully qualified <code>name</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="removeChildren" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/removeChildren.html">removeChildren</a></span><span class="signature">(<wbr><span class="parameter" id="removeChildren-param-tagName"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">tagName</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Remove all child nodes with the given <code>tagName</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="renameChildren" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/renameChildren.html">renameChildren</a></span><span class="signature">(<wbr><span class="parameter" id="renameChildren-param-oldTagName"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">oldTagName</span>, </span><span class="parameter" id="renameChildren-param-newTagName"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">newTagName</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="setAttribute" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasAttributes/setAttribute.html">setAttribute</a></span><span class="signature">(<wbr><span class="parameter" id="setAttribute-param-name"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">name</span>, </span><span class="parameter" id="setAttribute-param-value"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="setAttribute-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">namespace</span></span>})
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Set the attribute value with the given fully qualified <code>name</code> to <code>value</code>.
+If an attribute with the name already exist, its value is updated.
+If the value is <code>null</code>, the attribute is removed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="setNodeList" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/setNodeList.html">setNodeList</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>, <span class="type-parameter">V extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="setNodeList-param-listRootTag"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">listRootTag</span>, </span><span class="parameter" id="setNodeList-param-values"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">V</span>&gt;</span></span> <span class="parameter-name">values</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Add a node thats wrap a list of child nodes
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="setTagFrom" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/setTagFrom.html">setTagFrom</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="setTagFrom-param-childName"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">childName</span>, </span><span class="parameter" id="setTagFrom-param-value"><span class="type-annotation">T?</span> <span class="parameter-name">value</span></span>)
+    <span class="returntype parameter">&#8594; T?</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Sets a child node with the given <code>childName</code> to the provided <code>value</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="setValueForNode" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/setValueForNode.html">setValueForNode</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">V</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="setValueForNode-param-tag"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">tag</span>, </span><span class="parameter" id="setValueForNode-param-value"><span class="type-annotation">V?</span> <span class="parameter-name">value</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Sets the text value for a specific child node with the given <code>tag</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Return the XML string representation of the node.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toXmlString" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlHasWriter/toXmlString.html">toXmlString</a></span><span class="signature">(<wbr>{<span class="parameter" id="toXmlString-param-pretty"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">pretty</span> = <span class="default-value">false</span>, </span><span class="parameter" id="toXmlString-param-entityMapping"><span class="type-annotation"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlEntityMapping-class.html">XmlEntityMapping</a>?</span> <span class="parameter-name">entityMapping</span>, </span><span class="parameter" id="toXmlString-param-level"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">level</span>, </span><span class="parameter" id="toXmlString-param-indent"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">indent</span>, </span><span class="parameter" id="toXmlString-param-newLine"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">newLine</span>, </span><span class="parameter" id="toXmlString-param-preserveWhitespace"><span class="type-annotation">Predicate<span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode-class.html">XmlNode</a></span>&gt;</span>?</span> <span class="parameter-name">preserveWhitespace</span>, </span><span class="parameter" id="toXmlString-param-indentAttribute"><span class="type-annotation">Predicate<span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlAttribute-class.html">XmlAttribute</a></span>&gt;</span>?</span> <span class="parameter-name">indentAttribute</span>, </span><span class="parameter" id="toXmlString-param-sortAttributes"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Comparator.html">Comparator</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlAttribute-class.html">XmlAttribute</a></span>&gt;</span>?</span> <span class="parameter-name">sortAttributes</span>, </span><span class="parameter" id="toXmlString-param-spaceBeforeSelfClose"><span class="type-annotation">Predicate<span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/xml/6.5.0/xml/XmlNode-class.html">XmlNode</a></span>&gt;</span>?</span> <span class="parameter-name">spaceBeforeSelfClose</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Return an XML string of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="validate" class="callable inherited">
+  <span class="name"><a href="../tag_xml/TagXml/validate.html">validate</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Validates the current instance and returns a list of error messages if the instance is invalid.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+    
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../tag_xml/tag_xml-library.html">tag_xml</a></li>
+    <li class="self-crumb">TypeTag<span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../tag_xml/TagXml-class.html">TagXml</a></span>&gt;</span> class</li>
+</ol>
+
+
+    <h5>tag_xml library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

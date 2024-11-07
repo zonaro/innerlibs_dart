@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the countSearch method from the FilterFunctions extension, for the Dart programming language.">
+  <title>countSearch method - FilterFunctions extension - global library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../global/global-library.html">global.dart</a></li>
+    <li><a href="../../global/FilterFunctions.html">FilterFunctions</a></li>
+    <li class="self-crumb">countSearch method</li>
+  </ol>
+  <div class="self-name">countSearch</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="global&#47;FilterFunctions-extension-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">countSearch</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+<span class="name ">countSearch</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="countSearch-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
+<li><span class="parameter" id="countSearch-param-searchOn"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>, </span></li>
+<li><span class="parameter" id="countSearch-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="countSearch-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="countSearch-param-ignoreWordSplitters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreWordSplitters</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="countSearch-param-splitCamelCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">splitCamelCase</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="countSearch-param-useWildcards"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useWildcards</span> = <span class="default-value">false</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Counts the number of occurrences of search terms in a given item.</p>
+<p>The <a href="../../global/FilterFunctions/countSearch.html">countSearch</a> function takes the following parameters:</p>
+<ul>
+<li><code>searchTerms</code>: The search terms to count in the item. Can be a string or a list of strings.</li>
+<li><code>searchOn</code>: A function that takes an item and returns a list of dynamic values to search on.</li>
+<li><code>ignoreCase</code>: A boolean indicating whether to ignore case sensitivity (default is true).</li>
+<li><code>ignoreDiacritics</code>: A boolean indicating whether to ignore diacritics (default is true).</li>
+<li><code>ignoreWordSplitters</code>: A boolean indicating whether to ignore word splitters (default is true).</li>
+<li><code>splitCamelCase</code>: A boolean indicating whether to split camel case words (default is true).</li>
+<li><code>useWildcards</code>: A boolean indicating whether to use wildcards (*) for matching (true) or a standard <code>string.contains()</code> (false) (default is false).</li>
+</ul>
+<p>The function returns the count of occurrences of the search terms in the item.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">int countSearch({
+  required dynamic searchTerms,
+  required Iterable&lt;dynamic&gt; searchOn,
+  bool ignoreCase = true,
+  bool ignoreDiacritics = true,
+  bool ignoreWordSplitters = true,
+  bool splitCamelCase = true,
+  bool useWildcards = false,
+}) {
+  return [
+    for (var searchTerm in forceList(searchTerms))
+      ...searchOn.where((v) {
+        if (v == null) return false;
+        var searchword = generateKeyword(
+          searchTerm,
+          forceLowerCase: ignoreCase,
+          removeDiacritics: ignoreDiacritics,
+          removeWordSplitters: ignoreWordSplitters,
+          splitCamelCase: splitCamelCase,
+        );
+        dynamic keyword = v;
+        if (keyword is num) {
+          if (useWildcards) {
+            keyword = keyword.toString();
+          } else {
+            return keyword.asFlat.startsWith(searchword);
+          }
+        }
+
+        keyword = generateKeyword(
+          keyword,
+          forceLowerCase: ignoreCase,
+          removeDiacritics: ignoreDiacritics,
+          removeWordSplitters: ignoreWordSplitters,
+          splitCamelCase: splitCamelCase,
+        );
+        if (useWildcards) return keyword.toString().isLike(searchword, !ignoreCase);
+        return keyword.toString().contains(searchword);
+      })
+  ].length;
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../global/global-library.html">global</a></li>
+    <li><a href="../../global/FilterFunctions.html">FilterFunctions</a></li>
+    <li class="self-crumb">countSearch method</li>
+</ol>
+
+
+    <h5>FilterFunctions extension on <a href="https://pub.dev/documentation/get/4.6.6/get/GetInterface-class.html">GetInterface</a></h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

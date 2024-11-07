@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the fromUri method from the OEmbed class, for the Dart programming language.">
+  <title>fromUri method - OEmbed class - oembed library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../oembed/oembed-library.html">oembed.dart</a></li>
+    <li><a href="../../oembed/OEmbed-class.html">OEmbed</a></li>
+    <li class="self-crumb">fromUri static method</li>
+  </ol>
+  <div class="self-name">fromUri</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="oembed&#47;OEmbed-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">fromUri</span> static method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../oembed/OEmbedData-class.html">OEmbedData</a></span>&gt;</span></span>
+<span class="name ">fromUri</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="fromUri-param-url"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Uri-class.html">Uri</a></span> <span class="parameter-name">url</span>, [</span></li>
+<li><span class="parameter" id="fromUri-param-providers"><span class="type-annotation"><a href="../../oembed/OEmbedProviders.html">OEmbedProviders</a></span> <span class="parameter-name">providers</span> = <span class="default-value">const []</span>, </span></li>
+<li><span class="parameter" id="fromUri-param-updateProviders"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">updateProviders</span> = <span class="default-value">true</span></span></li>
+</ol>])
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Retrieves oEmbed data from the given URL.</p>
+<p>Returns a <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a> that completes with an <a href="../../oembed/OEmbedData-class.html">OEmbedData</a> object if successful,
+or with a default <a href="../../oembed/OEmbedData-class.html">OEmbedData</a> object if oEmbed data is not found.
+The <code>url</code> parameter specifies the URL for which to retrieve the oEmbed data.
+The <code>providers</code> parameter specifies the list of oEmbed providers to search.
+If no providers are specified, the list of providers is retrieved from the oEmbed website.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">static Future&lt;OEmbedData&gt; fromUri(Uri url, [OEmbedProviders providers = const [], bool updateProviders = true]) async {
+  try {
+    if (providers.isEmpty) {
+      providers = await getProviders(updateProviders);
+    }
+
+    &#47;&#47; Find the provider that matches the given URL
+    final OEmbed? provider = providers.firstWhereOrNull((p) {
+      return url.host.flatEqual(p.providerUrl) ||
+          p.endpoints.any((ep) {
+            return ep.schemes.any((x) =&gt; url.toString().isLike(x));
+          });
+    });
+
+    if (provider != null) {
+      &#47;&#47; Find the endpoint that supports oEmbed
+      final OEmbedEndpoint? oEmbedEndpoint = provider.endpoints.firstWhereOrNull((e) =&gt; e.schemes.any((x) =&gt; url.toString().isLike(x)));
+      if (oEmbedEndpoint != null) {
+        var r = await oEmbedEndpoint.getOEmbedData(url);
+        if (r != null) {
+          return r;
+        }
+      }
+    }
+  } catch (e) {
+    consoleLog(&#39;Error: $e&#39;);
+  }
+
+&#47;&#47; Default oEmbed data is an HTML link to the URL with the site title as the link text
+  try {
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final String html = response.body;
+      final String title = RegExp(r&#39;&lt;title&gt;([^&lt;]+)&lt;&#47;title&gt;&#39;).firstMatch(html)?.group(1) ?? url.host;
+      final String favicon = RegExp(r&#39;&lt;link rel=&quot;icon&quot; href=&quot;([^&quot;]+)&quot;&#39;).firstMatch(html)?.group(1) ?? &#39;&#39;;
+      final String author = RegExp(r&#39;&lt;meta name=&quot;author&quot; content=&quot;([^&quot;]+)&quot;&#39;).firstMatch(html)?.group(1) ?? &#39;&#39;;
+      return OEmbedData(
+        title: title,
+        authorName: author,
+        providerName: url.host,
+        providerUrl: url.host,
+        authorUrl: url.host,
+        thumbnailUrl: favicon,
+        thumbnailHeight: 16,
+        thumbnailWidth: 16,
+        html: &#39;&lt;a target=&quot;_blank&quot; href=&quot;$url&quot;&gt;&lt;img src=&quot;$favicon&quot; alt=&quot;$title&quot; style=&quot;width: 16px; height: 16px;&quot;&gt; $title&lt;&#47;a&gt;&#39;,
+      );
+    }
+  } catch (e) {
+    consoleLog(&#39;Error: $e&#39;);
+  } finally {}
+  return OEmbedData(
+    title: &quot;oEmbed not found&quot;,
+    html: &#39;&lt;a target=&quot;_blank&quot; href=&quot;$url&quot;&gt;${url.host}&lt;&#47;a&gt;&#39;,
+    providerUrl: url.host,
+    providerName: url.host,
+  );
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../oembed/oembed-library.html">oembed</a></li>
+    <li><a href="../../oembed/OEmbed-class.html">OEmbed</a></li>
+    <li class="self-crumb">fromUri static method</li>
+</ol>
+
+
+    <h5>OEmbed class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

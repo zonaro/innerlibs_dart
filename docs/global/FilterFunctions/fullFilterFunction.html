@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the fullFilterFunction method from the FilterFunctions extension, for the Dart programming language.">
+  <title>fullFilterFunction method - FilterFunctions extension - global library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../global/global-library.html">global.dart</a></li>
+    <li><a href="../../global/FilterFunctions.html">FilterFunctions</a></li>
+    <li class="self-crumb">fullFilterFunction method</li>
+  </ol>
+  <div class="self-name">fullFilterFunction</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="global&#47;FilterFunctions-extension-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">fullFilterFunction</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+<span class="name ">fullFilterFunction</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="fullFilterFunction-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
+<li><span class="parameter" id="fullFilterFunction-param-searchOn"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>, </span></li>
+<li><span class="parameter" id="fullFilterFunction-param-levenshteinDistance"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span> = <span class="default-value">0</span>, </span></li>
+<li><span class="parameter" id="fullFilterFunction-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="fullFilterFunction-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="fullFilterFunction-param-ignoreWordSplitters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreWordSplitters</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="fullFilterFunction-param-splitCamelCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">splitCamelCase</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="fullFilterFunction-param-useWildcards"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useWildcards</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="fullFilterFunction-param-keyCharSearches"><span class="type-annotation"><a href="../../global/CharMatch.html">CharMatch</a></span> <span class="parameter-name">keyCharSearches</span> = <span class="default-value">const {}</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>A function that performs a full filter on an item based on search terms.</p>
+<p>The <a href="../../global/FilterFunctions/fullFilterFunction.html">fullFilterFunction</a> takes in various parameters including the item to be filtered,
+the search terms to filter on, the function to extract search terms from the item,
+and several optional parameters to customize the filtering behavior.</p>
+<ul>
+<li>The <code>searchTerms</code> parameter contains search terms to filter on. If <code>searchTerms</code> is a Iterable, the function will return <code>true</code> if any of the search terms match the item.</li>
+<li>The <code>searchOn</code> parameter is a function that takes in an item and returns an iterable of search terms extracted from the item.</li>
+<li>The <code>levenshteinDistance</code> parameter is an optional parameter that specifies the maximum Levenshtein distance allowed for a match.</li>
+<li>The <code>ignoreCase</code> parameter is an optional parameter that specifies whether to ignore case when performing the filter.</li>
+<li>The <code>ignoreDiacritics</code> parameter is an optional parameter that specifies whether to ignore diacritics when performing the filter.</li>
+<li>The <code>ignoreWordSplitters</code> parameter is an optional parameter that specifies whether to ignore word splitters when performing the filter.</li>
+<li>The <code>splitCamelCase</code> parameter is an optional parameter that specifies whether to split camel case words when performing the filter.</li>
+<li>The <code>useWildcards</code> parameter is an optional parameter that specifies whether to use wildcards when performing the filter.</li>
+</ul>
+<p>The function returns <code>true</code> if the item passes the filter, and <code>false</code> otherwise.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">bool fullFilterFunction({
+  required dynamic searchTerms,
+  required Iterable&lt;dynamic&gt; searchOn,
+  int levenshteinDistance = 0,
+  bool ignoreCase = true,
+  bool ignoreDiacritics = true,
+  bool ignoreWordSplitters = true,
+  bool splitCamelCase = true,
+  bool useWildcards = false,
+  CharMatch keyCharSearches = const {},
+}) =&gt;
+    searchFunction(
+      searchTerms: searchTerms,
+      searchOn: searchOn,
+      ignoreCase: ignoreCase,
+      ignoreDiacritics: ignoreDiacritics,
+      ignoreWordSplitters: ignoreWordSplitters,
+      splitCamelCase: splitCamelCase,
+      useWildcards: useWildcards,
+    ) ||
+    levenshteinFunction(
+      searchTerms: searchTerms,
+      searchOn: searchOn,
+      levenshteinDistance: levenshteinDistance,
+      ignoreCase: ignoreCase,
+    );</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../global/global-library.html">global</a></li>
+    <li><a href="../../global/FilterFunctions.html">FilterFunctions</a></li>
+    <li class="self-crumb">fullFilterFunction method</li>
+</ol>
+
+
+    <h5>FilterFunctions extension on <a href="https://pub.dev/documentation/get/4.6.6/get/GetInterface-class.html">GetInterface</a></h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+
