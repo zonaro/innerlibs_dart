@@ -2,6 +2,8 @@ import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 
 /// Represents an XML tag that can behave like a POCO class and implement validations and computations
+/// Just extend this class and point your gettes and setters to the XML nodes using `getValueFromNode` and `setValueForNode`
+
 class TagXml extends XmlElement implements Validator, Comparable {
   /// Constructs a [TagXml] instance with the given [name].
   TagXml.fromTagName(String name) : super((XmlName(name)));
@@ -134,7 +136,7 @@ class TagXml extends XmlElement implements Validator, Comparable {
       n.remove();
     }
     if (value != null) {
-      if(value.hasParent) value.remove();
+      if (value.hasParent) value.remove();
       children.add(value);
       value.tagName = childName;
     }
@@ -235,6 +237,7 @@ class TagXml extends XmlElement implements Validator, Comparable {
   }
 }
 
+/// Represents a tag that uses his type as tagName.
 class TypeTag<T extends TagXml> extends TagXml {
   TypeTag() : super.fromTagName("$T".camelCase!);
 }
