@@ -1122,7 +1122,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return removeAny(Get.breakLineChars);
+    return removeAny(Get.breaklineChars);
   }
 
   /// Removes diacritics from the string.
@@ -1262,7 +1262,7 @@ extension StringExtensions on String {
   /// List<String> lines = text.splitLines();
   /// print(lines); // prints ['hello', 'world']
   /// ```
-  List<String> get splitLines => splitAny(Get.breakLineChars);
+  List<String> get splitLines => splitAny(Get.breaklineChars);
 
   /// Strips all HTML code from `String`.
   ///

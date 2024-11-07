@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:innerlibs/innerlibs.dart';
 
 /// Break Line char
-string get breakLine => Get.breakLineChars.first;
+string get breakLine => Get.breaklineChars.first;
 
 /// `String` helpers
 extension StringHelpers on GetInterface {
@@ -21,8 +21,10 @@ extension StringHelpers on GetInterface {
   /// Chars from A to Z
   Iterable<string> get alphaUpperChars => alphaLowerChars.map((e) => e.toUpperCase()).toList();
 
+  string get breakline => Platform.lineTerminator;
+
   /// Line feed and carriage retrun
-  Iterable<string> get breakLineChars => [Platform.lineTerminator, "\n", "\r", "\r\n"].distinct();
+  Iterable<string> get breaklineChars => [breakline, "\n", "\r", "\r\n"].distinct();
 
   /// Double-Quotes, Single-Quotes, Close Brackets etc
   Iterable<string> get closeWrappers => openCloseWrappers.map((x) => x.$2);
@@ -114,7 +116,7 @@ extension StringHelpers on GetInterface {
   Iterable<string> get identChars => ["\t"];
 
   /// Invisible char (white space, line feed, ident, carriage return)
-  Iterable<string> get invisibleChars => [...whiteSpaceChars, ...breakLineChars, ...identChars];
+  Iterable<string> get invisibleChars => [...whiteSpaceChars, ...breaklineChars, ...identChars];
 
   Map<String, StringList> get leetAlphabet => {
         "a": ['∆', '4', '/-\\', '/_\\', '@', '/\\', 'Д'],
@@ -223,7 +225,6 @@ extension StringHelpers on GetInterface {
   /// Upper vowels
   Iterable<string> get upperVowels => lowerVowels.map((e) => e.toUpperCase()).toList();
 
-  
   /// Upper and lower vowels
   Iterable<string> get vowels => [...upperVowels, ...lowerVowels]..sort();
 
@@ -231,7 +232,7 @@ extension StringHelpers on GetInterface {
   Iterable<string> get whiteSpaceChars => [" "];
 
   StringList get wordSplitters => [
-        ...breakLineChars,
+        ...breaklineChars,
         ...whiteSpaceChars,
         ...identChars,
         ...endOfSentenceChars,
