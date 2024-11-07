@@ -1530,6 +1530,8 @@ extension StringExtensions on String {
     return snakeWord;
   }
 
+  int get totalLines => splitLines.length;
+
   /// Trims leading and trailing spaces from the `String`, so as extra spaces in between words.
   ///
   /// ### Example

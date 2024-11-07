@@ -529,11 +529,15 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
   Widget get title => (pageEntry.titleWidget ?? forceWidget(widget.title) ?? forceWidget(indexController.pageIndex.toString()))!;
 
   Widget get titleAndSubtitle => ListTile(
+        titleAlignment: ListTileTitleAlignment.titleHeight,
+        contentPadding: 0.allAround,
+        visualDensity: VisualDensity.compact,
         dense: true,
         leading: Icon(pageEntry.icon),
         title: title,
         subtitle: subtitle,
         minVerticalPadding: 0,
+        
       );
 
   string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
