@@ -1264,6 +1264,8 @@ extension StringExtensions on String {
   /// ```
   List<String> get splitLines => splitAny(Get.breaklineChars);
 
+ 
+
   /// Strips all HTML code from `String`.
   ///
   /// ### Example

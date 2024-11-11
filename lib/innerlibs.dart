@@ -63,6 +63,7 @@ export 'string_extensions.dart';
 export 'string_helpers.dart';
 export 'tag_xml.dart';
 export 'telefone.dart';
+export 'text_editing_controller_extensions.dart';
 export 'text_extension.dart';
 export 'text_style_extension.dart';
 export 'theme_extension.dart';
