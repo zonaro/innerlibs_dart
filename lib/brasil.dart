@@ -21,7 +21,7 @@ abstract interface class Brasil {
   static Future<List<Cidade>> get cidades async => await Cidade.pegarCidades;
 
   /// Retorna uma lista com todos os Estados do Brasil. Não inclui códigos especiais.
-  static List<Estado> get estados => Estado.pegarEstados ;
+  static List<Estado> get estados => Estado.pegarEstados;
   static List<Estado> get estadosECodigosEspeciais => Estado.pegarEstadosECodigosEspeciais;
 
   /// Retorna uma lista com todos os nomes comuns do Brasil
@@ -728,8 +728,6 @@ abstract interface class Brasil {
         return [nomeCidadeOuIBGE];
       }
 
-      var cids = (await cidades).toList(growable: true);
-
       if (nomeEstadoOuUFOuIBGEouRegiao is Cidade) {
         nomeEstadoOuUFOuIBGEouRegiao = nomeEstadoOuUFOuIBGEouRegiao.estado;
       }
@@ -742,6 +740,7 @@ abstract interface class Brasil {
         }
       }
 
+      var cids = (await cidades).toList(growable: true);
       if (nomeEstadoOuUFOuIBGEouRegiao is Regiao) {
         nomeEstadoOuUFOuIBGEouRegiao = null;
         cids = (await (nomeCidadeOuIBGE as Regiao).cidades).toList();
@@ -751,6 +750,10 @@ abstract interface class Brasil {
         nomeEstadoOuUFOuIBGEouRegiao = nomeEstadoOuUFOuIBGEouRegiao.toString().first(2);
       }
 
+      if (nomeCidadeOuIBGE is num) {
+        nomeCidadeOuIBGE = nomeCidadeOuIBGE.toString().first(2);
+      }
+
       nomeCidadeOuIBGE = flatString(nomeCidadeOuIBGE);
 
       Estado est = pegarEstado(nomeCidadeOuIBGE);
@@ -758,7 +761,7 @@ abstract interface class Brasil {
         est = pegarEstado(nomeEstadoOuUFOuIBGEouRegiao);
         cids.removeWhere((c) => c.estado.ibge != est.ibge);
       }
-      return cids.search(searchTerms: nomeCidadeOuIBGE, searchOn: (x) => [x.nome, x.ibge]);
+      return cids.search(searchTerms: nomeCidadeOuIBGE, searchOn: (x) => [x.nome, x.ibge], minChars: 2);
     } catch (e) {
       return [];
     }
