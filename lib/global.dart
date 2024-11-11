@@ -167,6 +167,14 @@ R changeTo<R>(dynamic value, [String? locale]) {
       } else {
         return (nf?.tryParse(changeTo(value, locale)) ?? num.parse(changeTo<string>(value, locale).ifBlank("0").removeLetters)) as R;
       }
+    } else if (isSameType<R, Color>()) {
+      if (value is num) {
+        return Color(value.round()) as R;
+      }
+      if (value is NamedColor) {
+        return value as R;
+      }
+      return changeTo<string>(value).asColor as R;
     } else if (isSameType<R, String>()) {
       if (value is DateTime) {
         return value.format() as R;
@@ -174,6 +182,8 @@ R changeTo<R>(dynamic value, [String? locale]) {
         return value.formatted as R;
       } else if (value is num) {
         return (nf?.format(value) ?? "$value") as R;
+      } else if (value is Color) {
+        return value.hexadecimal as R;
       } else if (value is Uri) {
         return value.toString() as R;
       } else if (value is Widget) {
@@ -217,6 +227,10 @@ R changeTo<R>(dynamic value, [String? locale]) {
       return const Text("") as R;
     } else if (isSameType<R, Widget>()) {
       return nil as R;
+    } else if (isSameType<R, Color>()) {
+      return Colors.transparent as R;
+    } else if (isSameType<R, Uri>()) {
+      return Uri.parse("http://localhost:80") as R;
     }
   }
   throw Exception("Incompatible conversion");

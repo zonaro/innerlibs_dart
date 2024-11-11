@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:innerlibs/innerlibs.dart';
 import 'package:xml/xml.dart';
 
@@ -70,6 +72,7 @@ class TagXml extends XmlElement implements Validator, Comparable {
     var x = findElements(tag).singleOrNull?.innerText;
     if (x == null) return null;
     try {
+      if (parser == null && (T is Iterable<string> || T is Iterable<int> || T is Iterable<double> || T is Iterable<bool>)) parser = (x) => changeTo(jsonDecode(x));
       if (parser == null) return changeTo(x);
       return parser(x);
     } catch (e) {
@@ -171,7 +174,7 @@ class TagXml extends XmlElement implements Validator, Comparable {
     }
   }
 
-  /// Return the XML string representation of the node.
+  /// Compute and return the preety XML string representation of the node.
   @override
   String toString() {
     compute();
