@@ -62,6 +62,9 @@ class PageEntry<T> {
   TabEntry<T> get currentTab => hasTabs ? tabs[tabIndex] : tabs.first;
 
   string get currentTabRoute => tabRoute(tabIndex);
+
+  @override
+  int get hashCode => currentFullRoute.hashCode;
   bool get hasTabs => tabs.length > 1;
   bool get isSingleTab => tabs.length == 1;
 
@@ -81,11 +84,19 @@ class PageEntry<T> {
 
   Widget? get titleWidget => forceWidget(tabs.singleOrNull?.title) ?? forceWidget(title);
 
+  @override
+  bool operator ==(Object other) {
+    if (other is PageEntry) {
+      return currentFullRoute == other.currentFullRoute;
+    }
+    return false;
+  }
+
   string routeTitle([int tabIndex = 0]) => hasTabs ? "$titleString / ${tabs[tabIndex].titleString}" : titleString;
 
   string tabFullRoute([int tabIndex = 0]) => hasTabs ? "$pageRoute/${tabRoute(tabIndex)}" : pageRoute;
-
   string tabRoute([int tabIndex = 0]) => hasTabs ? tabs[tabIndex].tabRoute : "";
+
   string tabRouteTitle(int tabIndex) => "$titleString / ${tabRoute(tabIndex)}".trimAny(["/"]);
 
   @override
@@ -98,32 +109,27 @@ class PageEntry<T> {
 /// between different pages and tabs within the scaffold builder.
 // ignore: must_be_immutable
 class PageTabController<T> extends GlobalKey<_PageTabScaffoldState<T>> with ChangeNotifier {
-  int value = 0;
-
-  /// Data to store the data returned by future function. If not specified, a new instance of [AwaiterData] is created.
-  AwaiterData<T>? data;
   final TextEditingController searchController = TextEditingController();
+
+  int _pageIndex = 0;
+  int _tabIndex = 0;
 
   /// A list of previous page and tab indices.
   List<(int, int, DateTime)> _history = [];
 
   bool isSearching = false;
 
-  late Key key;
-
   /// Creates a new instance of [PageTabController].
   ///
   /// The [pageIndex] and [tabIndex] parameters specify the initial page and tab
   /// indices respectively. By default, both indices are set to 0.
   PageTabController({
-    Key? key,
     int defaultPageIndex = 0,
     int defaultTabIndex = 0,
-    this.data,
   }) : super.constructor() {
     _history = [(defaultPageIndex, defaultTabIndex, now)];
-    value = defaultPageIndex;
-    this.key = key ?? this;
+    _pageIndex = defaultPageIndex;
+    _tabIndex = defaultTabIndex;
   }
 
   /// Returns a boolean value indicating whether there is a previous index in the
@@ -158,7 +164,7 @@ class PageTabController<T> extends GlobalKey<_PageTabScaffoldState<T>> with Chan
   int get pageCount => pages.length;
 
   /// Returns the current page index.
-  int get pageIndex => value;
+  int get pageIndex => _pageIndex;
 
   set pageIndex(int i) => navigate(pageIndex: i);
 
@@ -184,7 +190,7 @@ class PageTabController<T> extends GlobalKey<_PageTabScaffoldState<T>> with Chan
   set search(string text) => searchController.text = text;
 
   /// Returns the current tab index.
-  int get tabIndex => currentPage.tabIndex;
+  int get tabIndex => _tabIndex;
 
   set tabIndex(int i) => navigate(tabIndex: i);
 
@@ -240,20 +246,22 @@ class PageTabController<T> extends GlobalKey<_PageTabScaffoldState<T>> with Chan
 
     if (pageIndex != this.pageIndex || tabIndex != this.tabIndex) {
       consoleLog("From $previousPageIndex:$previousTabIndex to $pageIndex:$tabIndex");
-      insertHistory(pageIndex, tabIndex);
-      value = pageIndex;
+      _pageIndex = pageIndex;
       if (currentPage.hasTabs) {
         tabIndex = tabIndex.clamp(0, (currentPage.tabs.length - 1).clampMin(0));
+        _tabIndex = tabIndex;
         currentPage.tabController?.animateTo(tabIndex);
       }
+
+      insertHistory(pageIndex, tabIndex);
       notifyListeners();
     }
   }
 
   /// Resets the indexes and history list to their default values.
   void reset() {
-    pageIndex = defaultPageIndex;
-    tabIndex = defaultTabIndex;
+    _pageIndex = defaultPageIndex;
+    _tabIndex = defaultTabIndex;
     _history = [(defaultPageIndex, defaultTabIndex, now)];
   }
 
@@ -332,9 +340,6 @@ class PageTabScaffold<T> extends StatefulWidget {
   final PageEntries<T> items;
   final Widget Function(Widget)? wrapper;
 
-  /// The asynchronous computation to which this builder is currently connected, possibly null.
-  final Future<T> Function()? future;
-
   /// When true, return [emptyChild] instead of [ErrorWidget]. If [errorChild] is not null, this property do nothing.
   /// The default value is [kReleaseMode]
   final bool supressError;
@@ -396,7 +401,6 @@ class PageTabScaffold<T> extends StatefulWidget {
     this.useDrawerInstedOfBottomNavigationBar = false,
     this.bottomBarBackgroundColor,
     this.scaffoldKey,
-    this.future,
     this.supressError = kReleaseMode,
     this.emptyChild,
     this.loading,
@@ -416,7 +420,7 @@ class TabEntry<T> {
   final IconData? icon;
   final Widget? floatingActionButton;
   final string? route;
-  final Widget Function(T) builder;
+  final Widget child;
 
   final void Function(string value)? onSearch;
 
@@ -426,7 +430,7 @@ class TabEntry<T> {
     this.title,
     this.subtitle,
     this.icon,
-    required this.builder,
+    required this.child,
     this.onSearch,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
@@ -537,7 +541,6 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
         title: title,
         subtitle: subtitle,
         minVerticalPadding: 0,
-        
       );
 
   string get titleString => (title is Text ? (title as Text).data : title.toString()) | "";
@@ -548,11 +551,12 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
   Widget build(BuildContext context) {
     for (var i in widget.items) {
       if (i.hasTabs) {
-        var initial = isThisPage(i) ? indexController.tabIndex : 0;
         if (i.tabController == null) {
+          var initial = isThisPage(i) ? indexController.tabIndex : 0;
           i.tabController = TabController(vsync: this, length: i.tabs.length, initialIndex: initial);
           i.tabController!.addListener(() {
             indexController.insertHistory(indexController.pageIndex, i.tabController!.index);
+            indexController._tabIndex = i.tabController!.index;
             if (mounted) indexController.notifyListeners();
           });
         }
@@ -581,21 +585,8 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
       actionItems ??= [];
       actionItems.insert(0, _searchButton());
     }
-    if (widget.future != null) {
-      return FutureAwaiter(
-        future: widget.future!,
-        data: indexController.data,
-        emptyChild: emptyWidget(),
-        loading: loadingWidget(),
-        errorChild: errorWidget,
-        supressError: widget.supressError,
-        afterLoad: widget.afterLoad,
-        beforeLoad: widget.beforeLoad,
-        builder: (x) => _baseScaff(actionItems),
-      );
-    } else {
-      return _baseScaff(actionItems);
-    }
+
+    return _baseScaff(actionItems);
   }
 
   Widget emptyWidget() => Scaffold(
@@ -631,7 +622,6 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
     super.initState();
     scaffoldKey = widget.scaffoldKey ?? GlobalKey<ScaffoldState>();
     indexController = widget.indexController;
-    indexController.data ??= AwaiterData<T>(validateData: false);
     indexController.addListener(() {
       isSearching = false;
       if (mounted) setState(() {});
@@ -641,20 +631,6 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
   bool isThisPage(PageEntry<T> page) => indexController.pageIndex == widget.items.indexOf(page);
 
   bool isThisTab(PageEntry<T> page, TabEntry<T> tab) => isThisPage(page) && indexController.tabIndex == page.tabs.indexOf(tab);
-
-  Widget loadingWidget() => Scaffold(
-      key: scaffoldKey,
-      appBar: pageEntry.showAppBar
-          ? AppBar(
-              title: const TitleLoading(),
-              leading: widget.leading,
-              automaticallyImplyLeading: widget.automaticallyImplyLeading,
-              backgroundColor: widget.appBarBackgroundColor,
-              foregroundColor: widget.titleColor,
-              actions: widget.actions,
-            )
-          : null,
-      body: widget.loading ?? const Center(child: CircularProgressIndicator()));
 
   bool toggleSearch() {
     if (isSearching && indexController.searchController.text.isNotBlank) {
@@ -724,9 +700,9 @@ class _PageTabScaffoldState<T> extends State<PageTabScaffold<T>> with TickerProv
       body: (pageEntry.hasTabs
               ? TabBarView(
                   controller: pageEntry.tabController!,
-                  children: pageEntry.tabs.map((x) => x.builder(indexController.data!.value as T)).toList(),
+                  children: pageEntry.tabs.map((x) => x.child).toList(),
                 )
-              : pageEntry.tabs.firstOrNull?.builder(indexController.data!.value as T) ?? Container())
+              : pageEntry.tabs.firstOrNull?.child ?? Container())
           .wrapIf(widget.wrapper != null, widget.wrapper ?? (x) => x),
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
