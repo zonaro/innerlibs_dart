@@ -36,9 +36,16 @@ bool get isPlatformLightMode => platformBrightness == Brightness.light;
 bool get isWeb => GetPlatform.isWeb;
 bool get isWindows => GetPlatform.isWindows;
 
+/// Returns a date representing the last week.
 date get lastWeek => now.lastDayOfWeek - 7.days;
+
+/// Returns the maximum date value.
 date get maxDate => DateTime.utc(9999, 12, 31, 23, 59, 59);
+
+/// Returns the minimum date value.
 date get minDate => DateTime.fromMicrosecondsSinceEpoch(0);
+
+/// Returns the current date and time.
 date get now => DateTime.now();
 
 /// Returns the platform brightness of the device.
@@ -59,10 +66,13 @@ Iterable<Locale> get platformLocales => platformDispatcher.locales;
 /// Returns the current year
 int get thisYear => now.year;
 
+/// Returns the date representing today.
 date get today => now.beginOfDay;
 
+/// Returns the date representing tomorrow.
 date get tomorrow => today.add(1.days);
 
+/// Returns the date representing yesterday.
 date get yesterday => today.subtract(1.days);
 
 /// Returns the [IconData] associated with the given app [category].
@@ -298,15 +308,6 @@ List forceList(dynamic item) {
   ];
 }
 
- 
-List forceRecursiveList(dynamic item) {
-  if (item == null) return [];
-  if (item is Iterable) {
-    return item.expand((e) => forceRecursiveList(e)).toList();
-  }
-  return [item];
-}
-
 /// Ensure the given [item] is a List of type [T].
 ///
 /// If [item] is `null`, an empty list is returned.
@@ -314,8 +315,30 @@ List forceRecursiveList(dynamic item) {
 /// Otherwise, return [item] converted into [T] and wrapped in a list.
 List<T> forceListOf<T>(dynamic item) => forceList(item).map((e) => changeTo<T>(e)).toList();
 
+/// Ensure the given [item] is a List.
+///
+/// If [item] is `null`, an empty list is returned.
+/// If [item] is already a Iterable, a copy of items is returned in list.
+/// If any item in the [item] is an Iterable, it is expanded into the list recursively.
+/// Otherwise, [item] is wrapped in a list and returned.
+List forceRecursiveList(dynamic item) {
+  if (item == null) return [];
+  if (item is Iterable) {
+    return item.expand((e) => forceRecursiveList(e)).toList();
+  } else {}
+  return [item];
+}
+
+List<T> forceRecursiveListOf<T>(dynamic item) => forceRecursiveList(item).map((e) => changeTo<T>(e)).toList();
+
+Set forceRecursiveSet(dynamic item) => forceRecursiveList(item).toSet();
+
+Set<T> forceRecursiveSetOf<T>(dynamic item) => forceRecursiveListOf<T>(item).toSet();
+
+/// Converts a dynamic value to a [Set].
 Set forceSet(dynamic item) => forceList(item).toSet();
 
+/// Converts a dynamic value to a [Set] of type [T].
 Set<T> forceSetOf<T>(dynamic item) => forceListOf<T>(item).toSet();
 
 /// A utility extension method that allows forcing a widget to be returned,
@@ -406,27 +429,20 @@ Set<T> forceSetOf<T>(dynamic item) => forceListOf<T>(item).toSet();
 ///   defaultText: 'No object provided',
 /// );
 /// ```
-Widget? forceWidget(
-  dynamic item, {
-  TextStyle? style,
-  StrutStyle? strutStyle,
-  TextAlign? textAlign,
-  TextDirection? textDirection,
-  Locale? locale,
-  bool? softWrap,
-  TextOverflow? overflow,
-  TextScaler? textScaler,
-  int? maxLines,
-  String? semanticsLabel,
-  TextWidthBasis? textWidthBasis,
-  bool validate = true,
-  String? defaultText,
-  BoxFit? fit,
-  AlignmentGeometry? alignment,
-}) {
+Widget? forceWidget(dynamic item, {TextStyle? style, StrutStyle? strutStyle, TextAlign? textAlign, TextDirection? textDirection, Locale? locale, bool? softWrap, TextOverflow? overflow, TextScaler? textScaler, int? maxLines, String? semanticsLabel, TextWidthBasis? textWidthBasis, bool validate = true, String? defaultText, BoxFit? fit, AlignmentGeometry? alignment, ResponsiveColumn? columnSizes}) {
   if (item == null) return null;
   if (item is Widget) return item;
   if (item is ResponsiveColumn) return item.child;
+
+  if (item is Iterable) {
+    return ResponsiveRow.withAutoColumns(
+      children: item.map((e) {
+        dynamic w = forceWidget(e, style: style, strutStyle: strutStyle, textAlign: textAlign, textDirection: textDirection, locale: locale, softWrap: softWrap, overflow: overflow, textScaler: textScaler, maxLines: maxLines, semanticsLabel: semanticsLabel, textWidthBasis: textWidthBasis, validate: validate, defaultText: defaultText, fit: fit, alignment: alignment);
+        if (columnSizes != null) w = ResponsiveColumn.copy(columnSizes, child: w);
+        return w;
+      }).toList(),
+    );
+  }
 
   if (item is IconData) {
     return (item).asIcon(
@@ -765,6 +781,8 @@ int randomInt([int min = 0, int max = 999999]) {
 /// Generates a random double between the specified [min] and [max] percent values.
 double randomPercent([int min = 0, int max = 100]) => randomInt(min.clamp(0, 100), max.clamp(0, 100)) / 100;
 
+/// Generates a random string of the specified [length].
+/// The generated string consists of random alphanumeric and special characters.
 String randomString([int length = 10]) {
   var chars = [...Get.alphaNumericChars, Get.specialChars];
   return List.generate(length, (index) => [randomInt(0, chars.length - 1)]).join();
@@ -772,8 +790,7 @@ String randomString([int length = 10]) {
 
 /// Generates a random string of the specified [length].
 /// If the [length] is not provided, a random length between 2 and 15 is used.
-/// The generated string consists of random consonants and vowels in a pronuciable order.
-/// Returns the generated random string.
+/// The generated string consists of random consonants and vowels in a pronounceable order.
 String randomWord([int length = 0]) {
   length = length < 1 ? randomInt(2, 15) : length;
   String word = '';
@@ -842,6 +859,7 @@ Size sizeFromAspect({required String aspectRatio, double? width, double? height}
   }
 }
 
+/// Returns the type of [T].
 Type typeOf<T>() => T;
 
 /// Validates a value of type [T] using a list of validation functions.
@@ -1114,7 +1132,7 @@ extension FilterFunctions on GetInterface {
   }) {
     if (items.isEmpty) return <T>[].orderBy((e) => true);
 
-    var searches = forceList(searchTerms).whereNotBlank;
+    var searches = forceRecursiveList(searchTerms).whereNotBlank;
 
     if (minChars > 0) {
       searches = searches.where((e) => e.length >= minChars);

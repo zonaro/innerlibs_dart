@@ -84,6 +84,25 @@ class ResponsiveColumn {
     this.margin,
   });
 
+  factory ResponsiveColumn.copy(ResponsiveColumn columnSizes, {Widget? child}) {
+    return ResponsiveColumn(
+      xxs: columnSizes.xxs,
+      xs: columnSizes.xs,
+      sm: columnSizes.sm,
+      md: columnSizes.md,
+      lg: columnSizes.lg,
+      xl: columnSizes.xl,
+      xxl: columnSizes.xxl,
+      height: columnSizes.height,
+      child: child ?? columnSizes.child,
+      decoration: columnSizes.decoration,
+      foregroundDecoration: columnSizes.foregroundDecoration,
+      alignment: columnSizes.alignment,
+      padding: columnSizes.padding,
+      margin: columnSizes.margin,
+    );
+  }
+
   factory ResponsiveColumn.full({
     double? height,
     Widget child = nil,
@@ -331,7 +350,7 @@ class ResponsiveRow extends StatelessWidget {
     WrapAlignment runAlignment = WrapAlignment.start,
   }) {
     List<ResponsiveColumn> newChildren = [];
-   
+
     children = forceList(children);
 
     for (var i = 0; i < children.length; i++) {
