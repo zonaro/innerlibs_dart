@@ -1,88 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-/// Represents a Screen size tier (from double extra small to double extra large).
-/// The tier is computed by comparing the current screen width to a set of pre-defined screen sizes using the function [responsiveValueBy].
-enum ScreenTier {
-  /// Double-Extra small screen.
-  xxs(0),
-
-  /// Extra small screen.
-  xs(1),
-
-  /// Small screen.
-  sm(2),
-
-  /// Medium screen.
-  md(3),
-
-  /// Large screen.
-  lg(4),
-
-  /// Extra Large screen.
-  xl(5),
-
-  /// Double Extra Large screen.
-  xxl(6);
-
-  final int value;
-
-  const ScreenTier(this.value);
-
-  operator <(ScreenTier tier) => value < tier.value;
-  operator <=(ScreenTier tier) => value <= tier.value;
-  operator >(ScreenTier tier) => value > tier.value;
-  operator >=(ScreenTier tier) => value >= tier.value;
-
-  /// The breakpoints for different screen sizes defined by user.
-  /// if empty, the [defaultBreakpoints] will be used.
-  static ScreenTierMap<double> get breakpoints {
-    if (_bp.isEmpty) {
-      _bp = defaultBreakpoints;
-    }
-    return _bp;
-  }
-
-  static set breakpoints(ScreenTierMap<double> value) {
-    _bp = value;
-  }
-
-  static ScreenTierMap<double> _bp = {};
-
-  /// The default breakpoints for different screen sizes.
-  /// The default breakpoints are as follows:
-  /// - xxs: 360
-  /// - xs: 576
-  /// - sm: 768
-  /// - md: 992
-  /// - lg: 1200
-  /// - xl: 1600
-  /// - xxl: double.infinity
-  static ScreenTierMap<double> get defaultBreakpoints => <double, ScreenTier>{
-        360: ScreenTier.xxs,
-        576: ScreenTier.xs,
-        768: ScreenTier.sm,
-        992: ScreenTier.md,
-        1200: ScreenTier.lg,
-        1600: ScreenTier.xl,
-        double.infinity: ScreenTier.xxl,
-      };
-
-  double get maxWidth => breakpoints.entries.firstWhere((e) => e.value == this).key;
-
-  /// Creates a [ScreenTier] object based on the given [width] and [customBreakPoints].
-  ///
-  /// The [width] parameter represents the width of the screen.
-  /// The [customBreakPoints] parameter is an optional map of custom breakpoints.
-  /// If no custom breakpoints are provided, the [breakpoints] will be used.
-  ///
-  /// Returns a [ScreenTier] object based on the given [width] and [customBreakPoints].
-  factory ScreenTier.fromWidth(double width, [ScreenTierMap<double> customBreakPoints = const {}]) {
-    if (customBreakPoints.isEmpty) customBreakPoints = breakpoints;
-    return getBreakpointValue(width, customBreakPoints);
-  }
-}
-
 class ResponsiveColumn {
   final double? xxs;
   final double? xs;
@@ -121,6 +39,34 @@ class ResponsiveColumn {
   });
 
   /// Responsive Column thats have breakpoints for each [ScreenTier]. Each tier has a default value
+  factory ResponsiveColumn.all({
+    required double value,
+    double? height,
+    Widget child = nil,
+    Decoration? decoration,
+    Decoration? foregroundDecoration,
+    Alignment? alignment,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+  }) =>
+      ResponsiveColumn(
+        xxs: value,
+        xs: value,
+        sm: value,
+        md: value,
+        lg: value,
+        xl: value,
+        xxl: value,
+        height: height,
+        child: child,
+        decoration: decoration,
+        foregroundDecoration: foregroundDecoration,
+        alignment: alignment,
+        padding: padding,
+        margin: margin,
+      );
+
+  /// Responsive Column thats have breakpoints for each [ScreenTier]. Each tier has a default value
   const ResponsiveColumn.auto({
     this.xxs = 12,
     this.xs = 6,
@@ -149,34 +95,6 @@ class ResponsiveColumn {
   }) =>
       ResponsiveColumn.all(
         value: 12,
-        height: height,
-        child: child,
-        decoration: decoration,
-        foregroundDecoration: foregroundDecoration,
-        alignment: alignment,
-        padding: padding,
-        margin: margin,
-      );
-
-  /// Responsive Column thats have breakpoints for each [ScreenTier]. Each tier has a default value
-  factory ResponsiveColumn.all({
-    required double value,
-    double? height,
-    Widget child = nil,
-    Decoration? decoration,
-    Decoration? foregroundDecoration,
-    Alignment? alignment,
-    EdgeInsets? padding,
-    EdgeInsets? margin,
-  }) =>
-      ResponsiveColumn(
-        xxs: value,
-        xs: value,
-        sm: value,
-        md: value,
-        lg: value,
-        xl: value,
-        xxl: value,
         height: height,
         child: child,
         decoration: decoration,
@@ -282,45 +200,6 @@ class ResponsiveList extends StatelessWidget {
           }
         },
       );
-}
-
-class _ResponsiveListItem extends StatelessWidget {
-  final double? spacing, itemWidth, itemHeight;
-  final List<Widget>? children;
-  final bool? squareCells;
-  final MainAxisAlignment mainAxisAlignment;
-
-  const _ResponsiveListItem({this.itemWidth, this.spacing, this.squareCells, double? itemHeight, this.children, this.mainAxisAlignment = MainAxisAlignment.start}) : itemHeight = itemHeight ?? itemWidth;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: mainAxisAlignment,
-      children: _buildChildren(),
-    );
-  }
-
-  List<Widget> _buildChildren() {
-    var list = List<Widget>.empty(growable: true);
-
-    list.add(SizedBox(
-      width: spacing,
-    ));
-
-    for (var child in children!) {
-      list.add(SizedBox(
-        width: itemWidth,
-        height: squareCells! ? itemWidth : itemHeight,
-        child: child,
-      ));
-      list.add(SizedBox(
-        width: spacing,
-      ));
-    }
-
-    return list;
-  }
 }
 
 class ResponsiveRow extends StatelessWidget {
@@ -505,14 +384,6 @@ class ResponsiveRow extends StatelessWidget {
     );
   }
 
-  static double getColumnSizeBySegments(double totalSegments, List<double?> sizes) {
-    double size = (sizes.whereNotNull().firstOrNull ?? 1);
-    if (size > 0) {
-      size = (totalSegments / size);
-    }
-    return size;
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -553,5 +424,135 @@ class ResponsiveRow extends StatelessWidget {
         );
       },
     );
+  }
+
+  static double getColumnSizeBySegments(double totalSegments, List<double?> sizes) {
+    double size = (sizes.whereNotNull().firstOrNull ?? 1);
+    if (size > 0) {
+      size = (totalSegments / size);
+    }
+    return size;
+  }
+}
+
+/// Represents a Screen size tier (from double extra small to double extra large).
+/// The tier is computed by comparing the current screen width to a set of pre-defined screen sizes using the function [responsiveValueBy].
+enum ScreenTier {
+  /// Double-Extra small screen.
+  xxs(0),
+
+  /// Extra small screen.
+  xs(1),
+
+  /// Small screen.
+  sm(2),
+
+  /// Medium screen.
+  md(3),
+
+  /// Large screen.
+  lg(4),
+
+  /// Extra Large screen.
+  xl(5),
+
+  /// Double Extra Large screen.
+  xxl(6);
+
+  static ScreenTierMap<double> _bp = {};
+
+  /// The breakpoints for different screen sizes defined by user.
+  /// if empty, the [defaultBreakpoints] will be used.
+  static ScreenTierMap<double> get breakpoints {
+    if (_bp.isEmpty) {
+      _bp = defaultBreakpoints;
+    }
+    return _bp;
+  }
+
+  static set breakpoints(ScreenTierMap<double> value) {
+    _bp = value;
+  }
+
+  /// The default breakpoints for different screen sizes.
+  /// The default breakpoints are as follows:
+  /// - xxs: 360
+  /// - xs: 576
+  /// - sm: 768
+  /// - md: 992
+  /// - lg: 1200
+  /// - xl: 1600
+  /// - xxl: double.infinity
+  static ScreenTierMap<double> get defaultBreakpoints => <double, ScreenTier>{
+        360: ScreenTier.xxs,
+        576: ScreenTier.xs,
+        768: ScreenTier.sm,
+        992: ScreenTier.md,
+        1200: ScreenTier.lg,
+        1600: ScreenTier.xl,
+        double.infinity: ScreenTier.xxl,
+      };
+  final int value;
+  const ScreenTier(this.value);
+
+  /// Creates a [ScreenTier] object based on the given [width] and [customBreakPoints].
+  ///
+  /// The [width] parameter represents the width of the screen.
+  /// The [customBreakPoints] parameter is an optional map of custom breakpoints.
+  /// If no custom breakpoints are provided, the [breakpoints] will be used.
+  ///
+  /// Returns a [ScreenTier] object based on the given [width] and [customBreakPoints].
+  factory ScreenTier.fromWidth(double width, [ScreenTierMap<double> customBreakPoints = const {}]) {
+    if (customBreakPoints.isEmpty) customBreakPoints = breakpoints;
+    return getBreakpointValue(width, customBreakPoints);
+  }
+
+  double get maxWidth => breakpoints.entries.firstWhere((e) => e.value == this).key;
+
+  operator <(ScreenTier tier) => value < tier.value;
+
+  operator <=(ScreenTier tier) => value <= tier.value;
+
+  operator >(ScreenTier tier) => value > tier.value;
+
+  operator >=(ScreenTier tier) => value >= tier.value;
+}
+
+class _ResponsiveListItem extends StatelessWidget {
+  final double? spacing, itemWidth, itemHeight;
+  final List<Widget>? children;
+  final bool? squareCells;
+  final MainAxisAlignment mainAxisAlignment;
+
+  const _ResponsiveListItem({this.itemWidth, this.spacing, this.squareCells, double? itemHeight, this.children, this.mainAxisAlignment = MainAxisAlignment.start}) : itemHeight = itemHeight ?? itemWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: mainAxisAlignment,
+      children: _buildChildren(),
+    );
+  }
+
+  List<Widget> _buildChildren() {
+    var list = List<Widget>.empty(growable: true);
+
+    list.add(SizedBox(
+      width: spacing,
+    ));
+
+    for (var child in children!) {
+      list.add(SizedBox(
+        width: itemWidth,
+        height: squareCells! ? itemWidth : itemHeight,
+        child: child,
+      ));
+      list.add(SizedBox(
+        width: spacing,
+      ));
+    }
+
+    return list;
   }
 }
