@@ -331,10 +331,8 @@ class ResponsiveRow extends StatelessWidget {
     WrapAlignment runAlignment = WrapAlignment.start,
   }) {
     List<ResponsiveColumn> newChildren = [];
-
-    if (children is! List) {
-      children = [children];
-    }
+   
+    children = forceList(children);
 
     for (var i = 0; i < children.length; i++) {
       if (children[i] is ResponsiveColumn) {

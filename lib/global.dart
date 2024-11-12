@@ -298,6 +298,15 @@ List forceList(dynamic item) {
   ];
 }
 
+ 
+List forceRecursiveList(dynamic item) {
+  if (item == null) return [];
+  if (item is Iterable) {
+    return item.expand((e) => forceRecursiveList(e)).toList();
+  }
+  return [item];
+}
+
 /// Ensure the given [item] is a List of type [T].
 ///
 /// If [item] is `null`, an empty list is returned.
