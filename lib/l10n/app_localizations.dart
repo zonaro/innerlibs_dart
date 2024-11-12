@@ -203,6 +203,12 @@ abstract class InnerLibsLocalizations {
   /// **'Category'**
   String get category;
 
+  /// Century
+  ///
+  /// In en, this message translates to:
+  /// **'Century'**
+  String get century;
+
   /// City
   ///
   /// In en, this message translates to:
@@ -323,6 +329,12 @@ abstract class InnerLibsLocalizations {
   /// **'Date out of range'**
   String get dateOutOfRange;
 
+  /// Date Time Format
+  ///
+  /// In en, this message translates to:
+  /// **'Date Time Format'**
+  String get dateTimeFormat;
+
   /// Day
   ///
   /// In en, this message translates to:
@@ -340,6 +352,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Days'**
   String get days;
+
+  /// Decade
+  ///
+  /// In en, this message translates to:
+  /// **'Decade'**
+  String get decade;
 
   /// Decades
   ///
@@ -364,6 +382,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Device'**
   String get device;
+
+  /// Directories
+  ///
+  /// In en, this message translates to:
+  /// **'Directories'**
+  String get directories;
+
+  /// Directory
+  ///
+  /// In en, this message translates to:
+  /// **'Directory'**
+  String get directory;
 
   /// Disable
   ///
@@ -406,6 +436,30 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Dock {item}'**
   String dockItem(String item);
+
+  /// Download
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get download;
+
+  /// Downloaded
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded'**
+  String get downloaded;
+
+  /// Downloading
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading'**
+  String get downloading;
+
+  /// No description provided for @downloadItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Download {item}'**
+  String downloadItem(String item);
 
   /// Edit
   ///
@@ -653,6 +707,18 @@ abstract class InnerLibsLocalizations {
   /// **'Hide'**
   String get hide;
 
+  /// History
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// Hour
+  ///
+  /// In en, this message translates to:
+  /// **'Hour'**
+  String get hour;
+
   /// Hours
   ///
   /// In en, this message translates to:
@@ -779,11 +845,47 @@ abstract class InnerLibsLocalizations {
   /// **'Map View'**
   String get mapView;
 
+  /// Millennium
+  ///
+  /// In en, this message translates to:
+  /// **'Millennium'**
+  String get millennium;
+
+  /// Millenniuns
+  ///
+  /// In en, this message translates to:
+  /// **'Millenniuns'**
+  String get millenniums;
+
+  /// Millisecond
+  ///
+  /// In en, this message translates to:
+  /// **'Millisecond'**
+  String get millisecond;
+
+  /// Milliseconds
+  ///
+  /// In en, this message translates to:
+  /// **'Milliseconds'**
+  String get milliseconds;
+
+  /// Minute
+  ///
+  /// In en, this message translates to:
+  /// **'Minute'**
+  String get minute;
+
   /// Minutes
   ///
   /// In en, this message translates to:
   /// **'Minutes'**
   String get minutes;
+
+  /// Month
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
 
   /// Months
   ///
@@ -874,6 +976,30 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Open {item} in {location}'**
   String openItemIn(String item, String location);
+
+  /// Overlay
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay'**
+  String get overlay;
+
+  /// Overlay Color
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay Color'**
+  String get overlayColor;
+
+  /// Overlay Opacity
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay Opacity'**
+  String get overlayOpacity;
+
+  /// Overlays
+  ///
+  /// In en, this message translates to:
+  /// **'Overlays'**
+  String get overlays;
 
   /// Owner
   ///
@@ -988,6 +1114,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Search for {item} in {location}'**
   String searchForIn(String item, String location);
+
+  /// Second
+  ///
+  /// In en, this message translates to:
+  /// **'Second'**
+  String get second;
 
   /// Seconds
   ///
@@ -1139,6 +1271,18 @@ abstract class InnerLibsLocalizations {
   /// **'Uninstall {item}'**
   String uninstallItem(String item);
 
+  /// Unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// No description provided for @unknownItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown {item}'**
+  String unknownItem(String item);
+
   /// No description provided for @updateItem.
   ///
   /// In en, this message translates to:
@@ -1175,11 +1319,29 @@ abstract class InnerLibsLocalizations {
   /// **'Wallpaper'**
   String get wallpaper;
 
+  /// Wallpaper Fade Time
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper Fade Time'**
+  String get wallpaperFadeTime;
+
+  /// Wallpaper Interval
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper Interval'**
+  String get wallpaperInterval;
+
   /// Warning
   ///
   /// In en, this message translates to:
   /// **'Warning'**
   String get warning;
+
+  /// Week
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get week;
 
   /// Weeks
   ///
@@ -1192,6 +1354,12 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Width'**
   String get width;
+
+  /// Year
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
 
   /// Years
   ///
@@ -1222,150 +1390,6 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Your {item}'**
   String yourItem(String item);
-
-  /// Directory
-  ///
-  /// In en, this message translates to:
-  /// **'Directory'**
-  String get directory;
-
-  /// Directories
-  ///
-  /// In en, this message translates to:
-  /// **'Directories'**
-  String get directories;
-
-  /// Unknown
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown'**
-  String get unknown;
-
-  /// No description provided for @unknownItem.
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown {item}'**
-  String unknownItem(String item);
-
-  /// Wallpaper Interval
-  ///
-  /// In en, this message translates to:
-  /// **'Wallpaper Interval'**
-  String get wallpaperInterval;
-
-  /// Wallpaper Fade Time
-  ///
-  /// In en, this message translates to:
-  /// **'Wallpaper Fade Time'**
-  String get wallpaperFadeTime;
-
-  /// Millisecond
-  ///
-  /// In en, this message translates to:
-  /// **'Millisecond'**
-  String get millisecond;
-
-  /// Milliseconds
-  ///
-  /// In en, this message translates to:
-  /// **'Milliseconds'**
-  String get milliseconds;
-
-  /// Second
-  ///
-  /// In en, this message translates to:
-  /// **'Second'**
-  String get second;
-
-  /// Minute
-  ///
-  /// In en, this message translates to:
-  /// **'Minute'**
-  String get minute;
-
-  /// Hour
-  ///
-  /// In en, this message translates to:
-  /// **'Hour'**
-  String get hour;
-
-  /// Week
-  ///
-  /// In en, this message translates to:
-  /// **'Week'**
-  String get week;
-
-  /// Month
-  ///
-  /// In en, this message translates to:
-  /// **'Month'**
-  String get month;
-
-  /// Year
-  ///
-  /// In en, this message translates to:
-  /// **'Year'**
-  String get year;
-
-  /// Decade
-  ///
-  /// In en, this message translates to:
-  /// **'Decade'**
-  String get decade;
-
-  /// Century
-  ///
-  /// In en, this message translates to:
-  /// **'Century'**
-  String get century;
-
-  /// Millennium
-  ///
-  /// In en, this message translates to:
-  /// **'Millennium'**
-  String get millennium;
-
-  /// Millenniuns
-  ///
-  /// In en, this message translates to:
-  /// **'Millenniuns'**
-  String get millenniums;
-
-  /// Overlays
-  ///
-  /// In en, this message translates to:
-  /// **'Overlays'**
-  String get overlays;
-
-  /// Overlay
-  ///
-  /// In en, this message translates to:
-  /// **'Overlay'**
-  String get overlay;
-
-  /// Overlay Color
-  ///
-  /// In en, this message translates to:
-  /// **'Overlay Color'**
-  String get overlayColor;
-
-  /// Overlay Opacity
-  ///
-  /// In en, this message translates to:
-  /// **'Overlay Opacity'**
-  String get overlayOpacity;
-
-  /// Date Time Format
-  ///
-  /// In en, this message translates to:
-  /// **'Date Time Format'**
-  String get dateTimeFormat;
-
-  /// History
-  ///
-  /// In en, this message translates to:
-  /// **'History'**
-  String get history;
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

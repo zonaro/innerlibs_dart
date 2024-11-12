@@ -75,6 +75,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get category => 'Category';
 
   @override
+  String get century => 'Century';
+
+  @override
   String get city => 'City';
 
   @override
@@ -155,6 +158,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get dateOutOfRange => 'Date out of range';
 
   @override
+  String get dateTimeFormat => 'Date Time Format';
+
+  @override
   String get day => 'Day';
 
   @override
@@ -162,6 +168,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get days => 'Days';
+
+  @override
+  String get decade => 'Decade';
 
   @override
   String get decades => 'Decades';
@@ -174,6 +183,12 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
 
   @override
   String get device => 'Device';
+
+  @override
+  String get directories => 'Directories';
+
+  @override
+  String get directory => 'Directory';
 
   @override
   String get disable => 'Disable';
@@ -202,6 +217,20 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   @override
   String dockItem(String item) {
     return 'Dock $item';
+  }
+
+  @override
+  String get download => 'Download';
+
+  @override
+  String get downloaded => 'Downloaded';
+
+  @override
+  String get downloading => 'Downloading';
+
+  @override
+  String downloadItem(String item) {
+    return 'Download $item';
   }
 
   @override
@@ -342,6 +371,12 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get hide => 'Hide';
 
   @override
+  String get history => 'History';
+
+  @override
+  String get hour => 'Hour';
+
+  @override
   String get hours => 'Hours';
 
   @override
@@ -417,7 +452,25 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get mapView => 'Map View';
 
   @override
+  String get millennium => 'Millennium';
+
+  @override
+  String get millenniums => 'Millenniuns';
+
+  @override
+  String get millisecond => 'Millisecond';
+
+  @override
+  String get milliseconds => 'Milliseconds';
+
+  @override
+  String get minute => 'Minute';
+
+  @override
   String get minutes => 'Minutes';
+
+  @override
+  String get month => 'Month';
 
   @override
   String get months => 'Months';
@@ -473,6 +526,18 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String openItemIn(String item, String location) {
     return 'Open $item in $location';
   }
+
+  @override
+  String get overlay => 'Overlay';
+
+  @override
+  String get overlayColor => 'Overlay Color';
+
+  @override
+  String get overlayOpacity => 'Overlay Opacity';
+
+  @override
+  String get overlays => 'Overlays';
 
   @override
   String get owner => 'Owner';
@@ -540,6 +605,9 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String searchForIn(String item, String location) {
     return 'Search for $item in $location';
   }
+
+  @override
+  String get second => 'Second';
 
   @override
   String get seconds => 'Seconds';
@@ -633,6 +701,14 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   }
 
   @override
+  String get unknown => 'Unknown';
+
+  @override
+  String unknownItem(String item) {
+    return 'Unknown $item';
+  }
+
+  @override
   String updateItem(String item) {
     return 'Update $item';
   }
@@ -653,13 +729,25 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String get wallpaper => 'Wallpaper';
 
   @override
+  String get wallpaperFadeTime => 'Wallpaper Fade Time';
+
+  @override
+  String get wallpaperInterval => 'Wallpaper Interval';
+
+  @override
   String get warning => 'Warning';
+
+  @override
+  String get week => 'Week';
 
   @override
   String get weeks => 'Weeks';
 
   @override
   String get width => 'Width';
+
+  @override
+  String get year => 'Year';
 
   @override
   String get years => 'Years';
@@ -677,78 +765,4 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String yourItem(String item) {
     return 'Your $item';
   }
-
-  @override
-  String get directory => 'Directory';
-
-  @override
-  String get directories => 'Directories';
-
-  @override
-  String get unknown => 'Unknown';
-
-  @override
-  String unknownItem(String item) {
-    return 'Unknown $item';
-  }
-
-  @override
-  String get wallpaperInterval => 'Wallpaper Interval';
-
-  @override
-  String get wallpaperFadeTime => 'Wallpaper Fade Time';
-
-  @override
-  String get millisecond => 'Millisecond';
-
-  @override
-  String get milliseconds => 'Milliseconds';
-
-  @override
-  String get second => 'Second';
-
-  @override
-  String get minute => 'Minute';
-
-  @override
-  String get hour => 'Hour';
-
-  @override
-  String get week => 'Week';
-
-  @override
-  String get month => 'Month';
-
-  @override
-  String get year => 'Year';
-
-  @override
-  String get decade => 'Decade';
-
-  @override
-  String get century => 'Century';
-
-  @override
-  String get millennium => 'Millennium';
-
-  @override
-  String get millenniums => 'Millenniuns';
-
-  @override
-  String get overlays => 'Overlays';
-
-  @override
-  String get overlay => 'Overlay';
-
-  @override
-  String get overlayColor => 'Overlay Color';
-
-  @override
-  String get overlayOpacity => 'Overlay Opacity';
-
-  @override
-  String get dateTimeFormat => 'Date Time Format';
-
-  @override
-  String get history => 'History';
 }

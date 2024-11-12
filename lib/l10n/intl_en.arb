@@ -111,6 +111,10 @@
   "@category": {
     "description": "Category"
   },
+  "century": "Century",
+  "@century": {
+    "description": "Century"
+  },
   "city": "City",
   "@city": {
     "description": "City"
@@ -220,6 +224,10 @@
   "@dateOutOfRange": {
     "description": "Date out of range"
   },
+  "dateTimeFormat": "Date Time Format",
+  "@dateTimeFormat": {
+    "description": "Date Time Format"
+  },
   "day": "Day",
   "@day": {
     "description": "Day"
@@ -231,6 +239,10 @@
   "days": "Days",
   "@days": {
     "description": "Days"
+  },
+  "decade": "Decade",
+  "@decade": {
+    "description": "Decade"
   },
   "decades": "Decades",
   "@decades": {
@@ -247,6 +259,14 @@
   "device": "Device",
   "@device": {
     "description": "Device"
+  },
+  "directories": "Directories",
+  "@directories": {
+    "description": "Directories"
+  },
+  "directory": "Directory",
+  "@directory": {
+    "description": "Directory"
   },
   "disable": "Disable",
   "@disable": {
@@ -296,6 +316,27 @@
     "placeholders": {
       "item": {
         "description": "The item to be docked",
+        "type": "String"
+      }
+    }
+  },
+  "download": "Download",
+  "@download": {
+    "description": "Download"
+  },
+  "downloaded": "Downloaded",
+  "@downloaded": {
+    "description": "Downloaded"
+  },
+  "downloading": "Downloading",
+  "@downloading": {
+    "description": "Downloading"
+  },
+  "downloadItem": "Download {item}",
+  "@downloadItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be downloaded",
         "type": "String"
       }
     }
@@ -503,6 +544,14 @@
   "@hide": {
     "description": "Hide"
   },
+  "history": "History",
+  "@history": {
+    "description": "History"
+  },
+  "hour": "Hour",
+  "@hour": {
+    "description": "Hour"
+  },
   "hours": "Hours",
   "@hours": {
     "description": "Hours"
@@ -622,9 +671,33 @@
   "@mapView": {
     "description": "Map View"
   },
+  "millennium": "Millennium",
+  "@millennium": {
+    "description": "Millennium"
+  },
+  "millenniums": "Millenniuns",
+  "@millenniums": {
+    "description": "Millenniuns"
+  },
+  "millisecond": "Millisecond",
+  "@millisecond": {
+    "description": "Millisecond"
+  },
+  "milliseconds": "Milliseconds",
+  "@milliseconds": {
+    "description": "Milliseconds"
+  },
+  "minute": "Minute",
+  "@minute": {
+    "description": "Minute"
+  },
   "minutes": "Minutes",
   "@minutes": {
     "description": "Minutes"
+  },
+  "month": "Month",
+  "@month": {
+    "description": "Month"
   },
   "months": "Months",
   "@months": {
@@ -718,6 +791,22 @@
         "type": "String"
       }
     }
+  },
+  "overlay": "Overlay",
+  "@overlay": {
+    "description": "Overlay"
+  },
+  "overlayColor": "Overlay Color",
+  "@overlayColor": {
+    "description": "Overlay Color"
+  },
+  "overlayOpacity": "Overlay Opacity",
+  "@overlayOpacity": {
+    "description": "Overlay Opacity"
+  },
+  "overlays": "Overlays",
+  "@overlays": {
+    "description": "Overlays"
   },
   "owner": "Owner",
   "@owner": {
@@ -823,6 +912,10 @@
         "type": "String"
       }
     }
+  },
+  "second": "Second",
+  "@second": {
+    "description": "Second"
   },
   "seconds": "Seconds",
   "@seconds": {
@@ -968,6 +1061,19 @@
       }
     }
   },
+  "unknown": "Unknown",
+  "@unknown": {
+    "description": "Unknown"
+  },
+  "unknownItem": "Unknown {item}",
+  "@unknownItem": {
+    "placeholders": {
+      "item": {
+        "description": "The unknown item",
+        "type": "String"
+      }
+    }
+  },
   "updateItem": "Update {item}",
   "@updateItem": {
     "placeholders": {
@@ -997,9 +1103,21 @@
   "@wallpaper": {
     "description": "Wallpaper"
   },
+  "wallpaperFadeTime": "Wallpaper Fade Time",
+  "@wallpaperFadeTime": {
+    "description": "Wallpaper Fade Time"
+  },
+  "wallpaperInterval": "Wallpaper Interval",
+  "@wallpaperInterval": {
+    "description": "Wallpaper Interval"
+  },
   "warning": "Warning",
   "@warning": {
     "description": "Warning"
+  },
+  "week": "Week",
+  "@week": {
+    "description": "Week"
   },
   "weeks": "Weeks",
   "@weeks": {
@@ -1008,6 +1126,10 @@
   "width": "Width",
   "@width": {
     "description": "Width"
+  },
+  "year": "Year",
+  "@year": {
+    "description": "Year"
   },
   "years": "Years",
   "@years": {
@@ -1033,106 +1155,5 @@
         "type": "String"
       }
     }
-  },
-  "directory": "Directory",
-  "@directory": {
-    "description": "Directory"
-  },
-  "directories": "Directories",
-  "@directories": {
-    "description": "Directories"
-  },
-  "unknown": "Unknown",
-  "@unknown": {
-    "description": "Unknown"
-  },
-  "unknownItem": "Unknown {item}",
-  "@unknownItem": {
-    "placeholders": {
-      "item": {
-        "description": "The unknown item",
-        "type": "String"
-      }
-    }
-  },
-  "wallpaperInterval": "Wallpaper Interval",
-  "@wallpaperInterval": {
-    "description": "Wallpaper Interval"
-  },
-  "wallpaperFadeTime": "Wallpaper Fade Time",
-  "@wallpaperFadeTime": {
-    "description": "Wallpaper Fade Time"
-  },
-  "millisecond": "Millisecond",
-  "@millisecond": {
-    "description": "Millisecond"
-  },
-  "milliseconds": "Milliseconds",
-  "@milliseconds": {
-    "description": "Milliseconds"
-  },
-  "second": "Second",
-  "@second": {
-    "description": "Second"
-  },
-  "minute": "Minute",
-  "@minute": {
-    "description": "Minute"
-  },
-  "hour": "Hour",
-  "@hour": {
-    "description": "Hour"
-  },
-  "week": "Week",
-  "@week": {
-    "description": "Week"
-  },
-  "month": "Month",
-  "@month": {
-    "description": "Month"
-  },
-  "year": "Year",
-  "@year": {
-    "description": "Year"
-  },
-  "decade": "Decade",
-  "@decade": {
-    "description": "Decade"
-  },
-  "century": "Century",
-  "@century": {
-    "description": "Century"
-  },
-  "millennium": "Millennium",
-  "@millennium": {
-    "description": "Millennium"
-  },
-  "millenniums": "Millenniuns",
-  "@millenniums": {
-    "description": "Millenniuns"
-  },
-  "overlays": "Overlays",
-  "@overlays": {
-    "description": "Overlays"
-  },
-  "overlay": "Overlay",
-  "@overlay": {
-    "description": "Overlay"
-  },
-  "overlayColor": "Overlay Color",
-  "@overlayColor": {
-    "description": "Overlay Color"
-  },
-  "overlayOpacity": "Overlay Opacity",
-  "@overlayOpacity": {
-    "description": "Overlay Opacity"
-  },
-  "dateTimeFormat": "Date Time Format",
-  "@dateTimeFormat": {
-    "description": "Date Time Format"
-  },
-  "history": "History",
-  "@history": {
-    "description": "History"
   }
 }

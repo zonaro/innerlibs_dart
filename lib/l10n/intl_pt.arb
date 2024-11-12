@@ -111,6 +111,10 @@
   "@category": {
     "description": "Categoria"
   },
+  "century": "Século",
+  "@century": {
+    "description": "Século"
+  },
   "city": "Cidade",
   "@city": {
     "description": "Cidade"
@@ -220,6 +224,10 @@
   "@dateOutOfRange": {
     "description": "Data fora do intervalo"
   },
+  "dateTimeFormat": "Formato de data e hora",
+  "@dateTimeFormat": {
+    "description": "Formato de data e hora"
+  },
   "day": "Dia",
   "@day": {
     "description": "Dia"
@@ -231,6 +239,10 @@
   "days": "Dias",
   "@days": {
     "description": "Dias"
+  },
+  "decade": "Década",
+  "@decade": {
+    "description": "Década"
   },
   "decades": "Décadas",
   "@decades": {
@@ -247,6 +259,14 @@
   "device": "Dispositivo",
   "@device": {
     "description": "Dispositivo"
+  },
+  "directories": "Diretórios",
+  "@directories": {
+    "description": "Diretórios"
+  },
+  "directory": "Diretório",
+  "@directory": {
+    "description": "Diretório"
   },
   "disable": "Desabilitar",
   "@disable": {
@@ -296,6 +316,27 @@
     "placeholders": {
       "item": {
         "description": "O item a ser acoplado",
+        "type": "String"
+      }
+    }
+  },
+  "download": "Baixar",
+  "@download": {
+    "description": "Baixar"
+  },
+  "downloaded": "Baixado",
+  "@downloaded": {
+    "description": "Baixado"
+  },
+  "downloading": "Baixando",
+  "@downloading": {
+    "description": "Baixando"
+  },
+  "downloadItem": "Baixar {item}",
+  "@downloadItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item a ser baixado",
         "type": "String"
       }
     }
@@ -503,6 +544,14 @@
   "@hide": {
     "description": "Ocultar"
   },
+  "history": "Histórico",
+  "@history": {
+    "description": "Histórico"
+  },
+  "hour": "Hora",
+  "@hour": {
+    "description": "Hora"
+  },
   "hours": "Horas",
   "@hours": {
     "description": "Horas"
@@ -622,9 +671,33 @@
   "@mapView": {
     "description": "Visualização do Mapa"
   },
+  "millennium": "Milênio",
+  "@millennium": {
+    "description": "Milênio"
+  },
+  "millenniums": "Milênios",
+  "@millenniums": {
+    "description": "Milênios"
+  },
+  "millisecond": "Milissegundo",
+  "@millisecond": {
+    "description": "Milissegundo"
+  },
+  "milliseconds": "Milissegundos",
+  "@milliseconds": {
+    "description": "Milissegundos"
+  },
+  "minute": "Minuto",
+  "@minute": {
+    "description": "Minuto"
+  },
   "minutes": "Minutos",
   "@minutes": {
     "description": "Minutos"
+  },
+  "month": "Mês",
+  "@month": {
+    "description": "Mês"
   },
   "months": "Meses",
   "@months": {
@@ -718,6 +791,22 @@
         "type": "String"
       }
     }
+  },
+  "overlay": "Sobreposição",
+  "@overlay": {
+    "description": "Sobreposição"
+  },
+  "overlayColor": "Cor da Sobreposição",
+  "@overlayColor": {
+    "description": "Cor da Sobreposição"
+  },
+  "overlayOpacity": "Opacidade da Sobreposição",
+  "@overlayOpacity": {
+    "description": "Opacidade da Sobreposição"
+  },
+  "overlays": "Sobreposições",
+  "@overlays": {
+    "description": "Sobreposições"
   },
   "owner": "Proprietário",
   "@owner": {
@@ -823,6 +912,10 @@
         "type": "String"
       }
     }
+  },
+  "second": "Segundo",
+  "@second": {
+    "description": "Segundo"
   },
   "seconds": "Segundos",
   "@seconds": {
@@ -968,6 +1061,19 @@
       }
     }
   },
+  "unknown": "Desconhecido",
+  "@unknown": {
+    "description": "Desconhecido"
+  },
+  "unknownItem": "{item} Desconhecido",
+  "@unknownItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item desconhecido",
+        "type": "String"
+      }
+    }
+  },
   "updateItem": "Atualizar {item}",
   "@updateItem": {
     "placeholders": {
@@ -997,9 +1103,21 @@
   "@wallpaper": {
     "description": "Papel de Parede"
   },
+  "wallpaperFadeTime": "Tempo de desvanecimento do papel de parede",
+  "@wallpaperFadeTime": {
+    "description": "Tempo de desvanecimento do papel de parede"
+  },
+  "wallpaperInterval": "Intervalo do papel de parede",
+  "@wallpaperInterval": {
+    "description": "Intervalo do papel de parede"
+  },
   "warning": "Aviso",
   "@warning": {
     "description": "Aviso"
+  },
+  "week": "Semana",
+  "@week": {
+    "description": "Semana"
   },
   "weeks": "Semanas",
   "@weeks": {
@@ -1008,6 +1126,10 @@
   "width": "Largura",
   "@width": {
     "description": "Largura"
+  },
+  "year": "Ano",
+  "@year": {
+    "description": "Ano"
   },
   "years": "Anos",
   "@years": {
@@ -1033,106 +1155,5 @@
         "type": "String"
       }
     }
-  },
-  "directory": "Diretório",
-  "@directory": {
-    "description": "Diretório"
-  },
-  "directories": "Diretórios",
-  "@directories": {
-    "description": "Diretórios"
-  },
-  "unknown": "Desconhecido",
-  "@unknown": {
-    "description": "Desconhecido"
-  },
-  "unknownItem": "{item} Desconhecido",
-  "@unknownItem": {
-    "placeholders": {
-      "item": {
-        "description": "O item desconhecido",
-        "type": "String"
-      }
-    }
-  },
-  "wallpaperInterval": "Intervalo do papel de parede",
-  "@wallpaperInterval": {
-    "description": "Intervalo do papel de parede"
-  },
-  "wallpaperFadeTime": "Tempo de desvanecimento do papel de parede",
-  "@wallpaperFadeTime": {
-    "description": "Tempo de desvanecimento do papel de parede"
-  },
-  "millisecond": "Milissegundo",
-  "@millisecond": {
-    "description": "Milissegundo"
-  },
-  "milliseconds": "Milissegundos",
-  "@milliseconds": {
-    "description": "Milissegundos"
-  },
-  "second": "Segundo",
-  "@second": {
-    "description": "Segundo"
-  },
-  "minute": "Minuto",
-  "@minute": {
-    "description": "Minuto"
-  },
-  "hour": "Hora",
-  "@hour": {
-    "description": "Hora"
-  },
-  "week": "Semana",
-  "@week": {
-    "description": "Semana"
-  },
-  "month": "Mês",
-  "@month": {
-    "description": "Mês"
-  },
-  "year": "Ano",
-  "@year": {
-    "description": "Ano"
-  },
-  "decade": "Década",
-  "@decade": {
-    "description": "Década"
-  },
-  "century": "Século",
-  "@century": {
-    "description": "Século"
-  },
-  "millennium": "Milênio",
-  "@millennium": {
-    "description": "Milênio"
-  },
-  "millenniums": "Milênios",
-  "@millenniums": {
-    "description": "Milênios"
-  },
-  "overlays": "Sobreposições",
-  "@overlays": {
-    "description": "Sobreposições"
-  },
-  "overlay": "Sobreposição",
-  "@overlay": {
-    "description": "Sobreposição"
-  },
-  "overlayColor": "Cor da Sobreposição",
-  "@overlayColor": {
-    "description": "Cor da Sobreposição"
-  },
-  "overlayOpacity": "Opacidade da Sobreposição",
-  "@overlayOpacity": {
-    "description": "Opacidade da Sobreposição"
-  },
-  "dateTimeFormat": "Formato de data e hora",
-  "@dateTimeFormat": {
-    "description": "Formato de data e hora"
-  },
-  "history": "Histórico",
-  "@history": {
-    "description": "Histórico"
   }
 }
