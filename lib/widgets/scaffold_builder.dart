@@ -249,9 +249,10 @@ class PageTabController<T> extends GlobalKey<_PageTabScaffoldState<T>> with Chan
       _pageIndex = pageIndex;
       if (currentPage.hasTabs) {
         tabIndex = tabIndex.clamp(0, (currentPage.tabs.length - 1).clampMin(0));
-        _tabIndex = tabIndex;
         currentPage.tabController?.animateTo(tabIndex);
       }
+
+      _tabIndex = tabIndex;
 
       insertHistory(pageIndex, tabIndex);
       notifyListeners();
