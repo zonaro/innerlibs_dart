@@ -519,6 +519,24 @@ class FabSave<T> extends StatelessWidget {
   }
 }
 
+class FabSearch extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const FabSearch({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FabTextBase(
+      onPressed: onPressed,
+      icon: Icons.search,
+      label: context.translations.search,
+    );
+  }
+}
+
 class FabTextBase extends StatelessWidget {
   final String? label;
   final IconData? icon;
