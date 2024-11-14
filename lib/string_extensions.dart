@@ -588,7 +588,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return [];
     }
-    return splitAny(Get.wordSplitters);
+    return splitAny(Get.wordSplitters, true);
   }
 
   /// Checks if string contains at least one Capital Letter
@@ -1264,8 +1264,6 @@ extension StringExtensions on String {
   /// ```
   List<String> get splitLines => splitAny(Get.breaklineChars);
 
- 
-
   /// Strips all HTML code from `String`.
   ///
   /// ### Example
@@ -1328,7 +1326,7 @@ extension StringExtensions on String {
   /// String result = input.toCamelCaseJoin;
   /// print(result); // Output: "helloWorld"
   /// ```
-  string get toCamelCaseJoin => toCamelCase.splitAny(Get.wordSplitters).join('');
+  string get toCamelCaseJoin => toCamelCase.splitAny(Get.wordSplitters, true).join('');
 
   /// Converts a `String` to`double` if possible.
   ///
@@ -2005,22 +2003,18 @@ extension StringExtensions on String {
   ///
   /// Returns the number of times [subString] appears in [String].
   int count([String subString = ""]) {
-    if (subString.isBlank) {
+    if (subString.isEmpty) {
       return length;
     }
-    int count = 0;
-    int startIndex = 0;
+    return subString.allMatches(this).length;
+  }
 
-    // Use indexOf to find the substring in the string
-    // Loop until the substring is not found
-    while ((startIndex = indexOf(subString, startIndex)) != -1) {
-      // Increment the count for each occurrence
-      count++;
-      // Move past the last found substring
-      startIndex += subString.length;
+  int countAny(Iterable<String> patterns) {
+    int c = 0;
+    for (String pattern in patterns) {
+      c += count(pattern);
     }
-
-    return count;
+    return c;
   }
 
   /// Return a empty `String` if [this] equals [comparisonString]. Otherwise return [this].
@@ -2220,10 +2214,10 @@ extension StringExtensions on String {
     bool hasLastSlash = path.endsWith('/') || path.endsWith('\\');
     backSlash ??= count('\\') > count('/');
     if (backSlash) {
-      path = (hasFirstSlash ? "\\" : "") + splitAny(['/', '\\']).join('\\');
+      path = (hasFirstSlash ? "\\" : "") + splitAny(['/', '\\'], true).join('\\');
       path = (hasLastSlash ? "$path\\" : path);
     } else {
-      path = (hasFirstSlash ? "/" : "") + splitAny(['/', '\\']).join('/');
+      path = (hasFirstSlash ? "/" : "") + splitAny(['/', '\\'], true).join('/');
       path = (hasLastSlash ? "$path/" : path);
     }
     return path;
@@ -3083,14 +3077,17 @@ extension StringExtensions on String {
   /// The `delimiters` parameter is a list of strings that represent the delimiters to use for splitting the string.
   ///
   /// Returns a list of strings that are the result of splitting the original string using the specified delimiters.
-  List<String> splitAny(Iterable<String> delimiters) {
+  List<String> splitAny(Iterable<String> delimiters, [bool removeEmpty = false]) {
     List<String> result = [this];
     for (String delimiter in delimiters) {
       List<String> temp = [];
       for (String str in result) {
-        temp.addAll(str.split(delimiter).where((x) => x.isNotEmpty));
+        temp.addAll(str.split(delimiter));
       }
       result = temp;
+    }
+    if (removeEmpty) {
+      result = result.where((element) => element.isNotEmpty).toList();
     }
     return result;
   }
