@@ -466,25 +466,37 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
           clipBehavior: widget.clipBehavior,
           scribbleEnabled: widget.scribbleEnabled,
           canRequestFocus: widget.canRequestFocus,
-          onChanged: widget.onChanged,
+          onChanged: (s) {
+            if (widget.onChanged != null) {
+              widget.onChanged!(s);
+            }
+            setState(() {});
+          },
         );
       },
       optionsViewBuilder: (BuildContext context, _, Iterable<T> options) {
-        return Material(
-          elevation: 4.0,
-          child: Container(
-            constraints: const BoxConstraints(maxHeight: 200),
-            child: Wrap(
-              children: [
-                for (var option in options)
-                  InkWell(
+        var sugs = options.toList();
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) => Material(
+            elevation: 4.0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4.0)),
+            ),
+            child: SizedBox(
+              height: 52.0 * options.length,
+              width: context.width, // <-- Right here !
+              child: ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemCount: sugs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final T option = sugs[index];
+                  return ListTile(
+                    title: Text(displayStringForOption(option)),
                     onTap: () => _onSelected(option),
-                    child: Chip(
-                      avatar: _controller.text.contains(displayStringForOption(option)) ? const Icon(Icons.check) : null,
-                      label: displayStringForOption(option).asText(),
-                    ),
-                  ),
-              ],
+                  );
+                },
+              ),
             ),
           ),
         );
@@ -515,8 +527,13 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     setState(() {});
     _focusNode.requestFocus();
     _controller.currentLineIndex = index + (widget.appendNewLine ? 2 : 1);
+
     if (widget.onSuggestionSelected != null) {
       widget.onSuggestionSelected!(displayStringForOption(selection), selection);
     }
+    if (widget.onChanged != null) {
+      widget.onChanged!(_controller.text);
+    }
+    setState(() {});
   }
 }

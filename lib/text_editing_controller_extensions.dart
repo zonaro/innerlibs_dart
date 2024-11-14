@@ -40,8 +40,8 @@ extension TextEditingValueExtensions on TextEditingValue {
   int get currentLineIndex {
     var cursorPos = selection.base.offset;
     String txt = text.replaceMany(Get.breaklineChars, Get.breakline);
-    var textpart = txt.first(cursorPos + 1);
-    var curIndex = textpart.count(Get.breakline) - 1;
+    var textpart = txt.first(cursorPos);
+    var curIndex = textpart.count(Get.breakline);
     curIndex = curIndex.clamp(0, countLines - 1);
     return curIndex;
   }
