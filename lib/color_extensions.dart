@@ -22,11 +22,12 @@ extension ColorExtensions<T extends Color> on T {
   double get black => 1 - hsv.value;
   double get brightness => hsv.value;
 
+  /// Return the closest [NamedColor] to this color.
   NamedColor? get closestColor {
     var min = double.infinity;
     NamedColor? color;
     for (var color in NamedColor.values) {
-      var d = color.color.distanceTo(this);
+      var d = color.distanceTo(this);
       if (d < min) {
         min = d;
         color = color;

@@ -73,6 +73,9 @@
     </section>
 
     
+<section class="desc markdown">
+  <p>Return the closest <a href="../../named_color/NamedColor.html">NamedColor</a> to this color.</p>
+</section>
 
     
 <section class="summary source-code" id="source">
@@ -81,7 +84,7 @@
   var min = double.infinity;
   NamedColor? color;
   for (var color in NamedColor.values) {
-    var d = color.color.distanceTo(this);
+    var d = color.distanceTo(this);
     if (d &lt; min) {
       min = d;
       color = color;

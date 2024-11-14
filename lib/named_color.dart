@@ -3443,7 +3443,7 @@ enum NamedColor implements Color {
   /// A color named "Tawny" with hexadecimal value <a href='https://www.colorhexa.com/CD5700' />#CD5700</a> <br><img src="https://www.colorhexa.com/CD5700.png" width="50" height='50' />
   tawny("#cd5700", "Tawny");
 
-  /// AA random color from the list of named colors.
+  /// A random color from the list of named colors.
   static NamedColor get random => values.orderByRandom.first;
 
   final String hexadecimal;
@@ -3451,6 +3451,11 @@ enum NamedColor implements Color {
 
   const NamedColor(this.hexadecimal, this._name);
 
+  /// Returns a named color from a value.
+  /// If the value is a [NamedColor], it will return as is.
+  ///  If the value is a [Color], it will return the named color that matches the color [hexadecimal] value.
+  /// If the value is a [num], it will convert it to [int] and return the named color that matches the color [hexadecimal] value.
+  /// If the value is a [String], it will return the named color that matches the color [hexadecimal] value, [name] or the [keyword].
   factory NamedColor.fromValue(dynamic value) {
     if (value is NamedColor) {
       return value;
@@ -3473,48 +3478,49 @@ enum NamedColor implements Color {
   }
 
   @override
-  int get alpha => color.alpha;
+  int get alpha => _color.alpha;
 
   @override
-  int get blue => color.blue;
-
-  /// Returns the color of the named color.
-  Color get color => hexadecimal.asColor;
+  int get blue => _color.blue;
 
   @override
-  int get green => color.green;
+  int get green => _color.green;
 
+  /// A unique keyword for the named color. Basically is the name of the color in lowercase, without spaces and special characters.
   string get keyword => generateKeyword(_name);
 
+  /// The name of the color.
   string get name => _name.toTitleCase();
 
   @override
-  double get opacity => color.opacity;
+  double get opacity => _color.opacity;
 
   @override
-  int get red => color.red;
+  int get red => _color.red;
 
   @override
-  int get value => color.value;
+  int get value => _color.value;
+
+  Color get _color => hexadecimal.asColor;
 
   @override
-  double computeLuminance() => color.computeLuminance();
+  double computeLuminance() => _color.computeLuminance();
 
   @override
   string toString() => "${name.toTitleCase()} - $hexadecimal";
 
   @override
-  Color withAlpha(int a) => color.withAlpha(a);
+  Color withAlpha(int a) => _color.withAlpha(a);
 
   @override
-  Color withBlue(int b) => color.withBlue(b);
+  Color withBlue(int b) => _color.withBlue(b);
 
   @override
-  Color withGreen(int g) => color.withGreen(g);
+  Color withGreen(int g) => _color.withGreen(g);
 
   @override
-  Color withOpacity(double opacity) => color.withOpacity(opacity);
+  Color withOpacity(double opacity) => _color.withOpacity(opacity);
 
   @override
-  Color withRed(int r) => color.withRed(r);
+  Color withRed(int r) => _color.withRed(r);
 }
