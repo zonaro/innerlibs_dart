@@ -11,7 +11,9 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   final InputDecoration? decoration;
 
   /// A function that returns a list of suggestions.
-  final Future<Iterable<T>> Function()? suggestions;
+  final Iterable<T> suggestions;
+
+  final Future<Iterable<T>> Function(string search)? asyncSuggestions;
 
   /// The maximum Levenshtein distance for suggestions.
   final int levenshteinDistance;
@@ -270,7 +272,7 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.keyCharSearches = const {},
     this.levenshteinDistance = 0,
     this.searchOn,
-    this.suggestions,
+    this.suggestions = const [],
     this.ignoreCase = true,
     this.ignoreDiacritics = true,
     this.ignoreWordSplitters = true,
@@ -352,6 +354,7 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.validator,
     this.restorationId,
     this.onSuggestionSelected,
+    this.asyncSuggestions,
   });
 
   @override
@@ -374,11 +377,9 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
       textEditingController: _controller,
       focusNode: _focusNode,
       optionsViewOpenDirection: widget.optionsViewOpenDirection,
-      optionsBuilder: (_) async {
-        if (widget.suggestions == null) {
-          return [];
-        }
-        var sugs = await widget.suggestions!();
+      optionsBuilder: (s) async {
+        var sugs = [...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))];
+
         var v = sugs.search(
           searchTerms: _controller.currentLineText,
           searchOn: searchOn,
