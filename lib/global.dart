@@ -1028,8 +1028,8 @@ extension FilterFunctions on GetInterface {
             removeWordSplitters: ignoreWordSplitters,
             splitCamelCase: splitCamelCase,
           );
-          if (useWildcards) return keyword.toString().isLike(searchword, !ignoreCase);
-          return keyword.toString().contains(searchword);
+          consoleLog("SearchWord: $searchword, Keyword: $keyword");
+          return useWildcards ? keyword.toString().isLike(searchword, !ignoreCase) : keyword.toString().contains(searchword);
         })
     ].length;
   }
@@ -1141,9 +1141,9 @@ extension FilterFunctions on GetInterface {
 
     if (searches.isEmpty) {
       if (allIfEmpty) {
-        return items.orderBy((e) => true);
+        return items;
       } else {
-        return <T>[].orderBy((e) => true);
+        return <T>[];
       }
     }
 
@@ -1168,11 +1168,10 @@ extension FilterFunctions on GetInterface {
       return false;
     });
 
-    if (maxResults > 0) {
-      l = l.take(maxResults);
+    if (l.isNotEmpty) {
+      if (maxResults > 0) l = l.take(maxResults);
+      return l;
     }
-
-    if (l.isNotEmpty) return l;
 
     l = items
         .where(
@@ -1199,7 +1198,8 @@ extension FilterFunctions on GetInterface {
           )
           .toList();
     }
-    return l.orderByDescending((item) => countJaro(
+
+    l = l.orderByDescending((item) => countJaro(
           searchTerms: searches,
           searchOn: searchOn(item),
           ignoreCase: ignoreCase,
@@ -1207,6 +1207,9 @@ extension FilterFunctions on GetInterface {
           ignoreWordSplitters: ignoreWordSplitters,
           splitCamelCase: splitCamelCase,
         ));
+
+    if (maxResults > 0) l = l.take(maxResults);
+    return l;
   }
 
   /// Searches for a specific item in an iterable based on given search terms and criteria.
@@ -1251,19 +1254,42 @@ extension FilterFunctions on GetInterface {
   /// The [allIfEmpty] parameter determines whether to return all [JsonRow] objects if the search term is empty.
   ///
   /// Returns an iterable of [JsonRow] objects that match the search criteria.
-  Iterable<Map<K, V>> searchMap<K, V>({required Iterable<Map<K, V>> items, required dynamic searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
+  Iterable<Map<K, V>> searchMap<K, V>({
+    required Iterable<Map<K, V>> items,
+    required dynamic searchTerms,
+    Iterable<K> keys = const [],
+    int levenshteinDistance = 0,
+    bool allIfEmpty = true,
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
+    bool useWildcards = false,
+    int maxResults = 0,
+    int minChars = 0,
+    CharMatch<Map<K, V>> keyCharSearches = const {},
+  }) {
     if (keys.isEmpty) {
       keys = items.expand((e) => e.keys).distinct().toList();
     }
 
     return search(
-        items: items,
-        searchTerms: searchTerms,
-        searchOn: (row) => [
-              for (var k in keys)
-                if (row[k] != null) row[k]!
-            ],
-        levenshteinDistance: levenshteinDistance,
-        allIfEmpty: allIfEmpty);
+      items: items,
+      searchTerms: searchTerms,
+      searchOn: (row) => [
+        for (var k in keys)
+          if (row[k] != null) row[k]!
+      ],
+      levenshteinDistance: levenshteinDistance,
+      allIfEmpty: allIfEmpty,
+      ignoreCase: ignoreCase,
+      ignoreDiacritics: ignoreDiacritics,
+      ignoreWordSplitters: ignoreWordSplitters,
+      maxResults: maxResults,
+      keyCharSearches: keyCharSearches,
+      minChars: minChars,
+      splitCamelCase: splitCamelCase,
+      useWildcards: useWildcards,
+    );
   }
 }

@@ -259,7 +259,7 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   /// The restoration ID for the text field.
   final String? restorationId;
 
-  final void Function(T selection)? onSelected;
+  final void Function(string suggestionText, T selection)? onSuggestionSelected;
 
   /// A map to fire custom search functions for specific characters
   final CharMatch<T> keyCharSearches;
@@ -351,7 +351,7 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.onSaved,
     this.validator,
     this.restorationId,
-    this.onSelected,
+    this.onSuggestionSelected,
   });
 
   @override
@@ -474,18 +474,17 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
           elevation: 4.0,
           child: Container(
             constraints: const BoxConstraints(maxHeight: 200),
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              itemCount: options.length,
-              itemBuilder: (BuildContext context, int index) {
-                final selection = options.elementAt(index);
-                return ListTile(
-                  tileColor: context.theme.listTileTheme.tileColor,
-                  title: Text(displayStringForOption(selection)),
-                  onTap: () => _onSelected(selection),
-                );
-              },
+            child: Wrap(
+              children: [
+                for (var option in options)
+                  InkWell(
+                    onTap: () => _onSelected(option),
+                    child: Chip(
+                      avatar: _controller.text.contains(displayStringForOption(option)) ? const Icon(Icons.check) : null,
+                      label: displayStringForOption(option).asText(),
+                    ),
+                  ),
+              ],
             ),
           ),
         );
@@ -516,8 +515,8 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     setState(() {});
     _focusNode.requestFocus();
     _controller.currentLineIndex = index + (widget.appendNewLine ? 2 : 1);
-    if (widget.onSelected != null) {
-      widget.onSelected!(selection);
+    if (widget.onSuggestionSelected != null) {
+      widget.onSuggestionSelected!(displayStringForOption(selection), selection);
     }
   }
 }

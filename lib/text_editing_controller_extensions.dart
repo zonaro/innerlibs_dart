@@ -41,7 +41,9 @@ extension TextEditingValueExtensions on TextEditingValue {
     var cursorPos = selection.base.offset;
     String txt = text.replaceMany(Get.breaklineChars, Get.breakline);
     var textpart = txt.first(cursorPos + 1);
-    return textpart.count(Get.breakline).clamp(0, countLines - 1);
+    var curIndex = textpart.count(Get.breakline) - 1;
+    curIndex = curIndex.clamp(0, countLines - 1);
+    return curIndex;
   }
 
   /// Gets or sets the current line where the cursor is located.
