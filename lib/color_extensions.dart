@@ -73,6 +73,7 @@ extension ColorExtensions<T extends Color> on T {
   /// The Split-Complementary colors of this color.
   Iterable<Color> get splitComplementaryColors => modColors([150, 210]);
 
+  Iterable<Color> get tetradicColors => modColors([60, 180, 240]);
   Iterable<Color> get triadicColors => modColors([120, 240]);
 
   double get yellow => 1 - (blue / 255);
