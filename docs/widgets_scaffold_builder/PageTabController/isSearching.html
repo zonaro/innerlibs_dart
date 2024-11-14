@@ -30,7 +30,7 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">widgets\scaffold_builder.dart</a></li>
-    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
     <li class="self-crumb">isSearching property</li>
   </ol>
   <div class="self-name">isSearching</div>
@@ -60,21 +60,52 @@
 <h1><span class="kind-property">isSearching</span> property 
 </h1></div>
 
-      <section class="multi-line-signature">
+
         
-        <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>
-        <span class="name ">isSearching</span>
-        <div class="features"><span class="feature">getter/setter pair</span></div>
+  <section id="getter">
 
-      </section>
+    <section class="multi-line-signature">
+      
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+      <span class="name ">isSearching</span>
       
 
-      
+    </section>
+
+    
+
+    
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">bool isSearching = false;</code></pre>
+  <pre class="language-dart"><code class="language-dart">bool get isSearching =&gt; onSearch != null &amp;&amp; (search.isNotBlank || _isSearching);</code></pre>
 </section>
 
+  </section>
+
+
+        
+  <section id="setter">
+
+    <section class="multi-line-signature">
+      
+      <span class="returntype">void</span>
+      <span class="name ">isSearching=</span><span class="signature">(<wbr><span class="parameter" id="isSearching=-param-value"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">value</span></span>)</span>
+      
+
+    </section>
+
+    
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">set isSearching(bool value) {
+  _isSearching = value;
+  if (!value) search = &quot;&quot;;
+}</code></pre>
+</section>
+
+  </section>
 
 </div> <!-- /.main-content -->
 
@@ -89,7 +120,7 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">scaffold_builder</a></li>
-    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
     <li class="self-crumb">isSearching property</li>
 </ol>
 

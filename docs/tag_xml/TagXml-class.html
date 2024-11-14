@@ -62,7 +62,8 @@
 
     
 <section class="desc markdown">
-  <p>Represents an XML tag that can behave like a POCO class and implement validations and computations</p>
+  <p>Represents an XML tag that can behave like a POCO class and implement validations and computations
+Just extend this class and point your gettes and setters to the XML nodes using <code>getValueFromNode</code> and <code>setValueForNode</code></p>
 </section>
 
 
@@ -799,7 +800,7 @@ If the value is <code>null</code>, the attribute is removed.
 
 </dt>
 <dd>
-  Return the XML string representation of the node.
+  Compute and return the preety XML string representation of the node.
   <div class="features"><span class="feature">override</span></div>
 
 </dd>

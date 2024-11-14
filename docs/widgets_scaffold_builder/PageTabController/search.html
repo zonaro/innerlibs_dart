@@ -30,7 +30,7 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">widgets\scaffold_builder.dart</a></li>
-    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
     <li class="self-crumb">search property</li>
   </ol>
   <div class="self-name">search</div>
@@ -77,7 +77,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">string get search =&gt; searchController.text;</code></pre>
+  <pre class="language-dart"><code class="language-dart">string get search =&gt; _searchController.text;</code></pre>
 </section>
 
   </section>
@@ -99,7 +99,14 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">set search(string text) =&gt; searchController.text = text;</code></pre>
+  <pre class="language-dart"><code class="language-dart">set search(string text) {
+  if (onSearch != null) {
+    if (text.isNotBlank) {
+      isSearching = true;
+    }
+    _searchController.text = text;
+  }
+}</code></pre>
 </section>
 
   </section>
@@ -117,7 +124,7 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">scaffold_builder</a></li>
-    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
     <li class="self-crumb">search property</li>
 </ol>
 

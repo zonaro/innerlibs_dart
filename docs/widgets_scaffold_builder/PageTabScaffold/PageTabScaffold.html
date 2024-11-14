@@ -62,8 +62,8 @@
 
     <section class="multi-line-signature">
       const
-      <span class="name ">PageTabScaffold&lt;<wbr><span class="type-parameter">T</span>&gt;</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="-param-indexController"><span>required</span> <span class="type-annotation"><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">indexController</span>, </span></li>
-<li><span class="parameter" id="-param-items"><span>required</span> <span class="type-annotation"><a href="../../widgets_scaffold_builder/PageEntries.html">PageEntries</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">items</span>, </span></li>
+      <span class="name ">PageTabScaffold&lt;<wbr><span class="type-parameter">T</span>&gt;</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="-param-pageTabController"><span>required</span> <span class="type-annotation"><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></span> <span class="parameter-name">pageTabController</span>, </span></li>
+<li><span class="parameter" id="-param-items"><span>required</span> <span class="type-annotation"><a href="../../widgets_scaffold_builder/PageEntries.html">PageEntries</a></span> <span class="parameter-name">items</span>, </span></li>
 <li><span class="parameter" id="-param-drawer"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a>?</span> <span class="parameter-name">drawer</span>, </span></li>
 <li><span class="parameter" id="-param-endDrawer"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a>?</span> <span class="parameter-name">endDrawer</span>, </span></li>
 <li><span class="parameter" id="-param-bottomSheet"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a>?</span> <span class="parameter-name">bottomSheet</span>, </span></li>
@@ -98,16 +98,12 @@
 <li><span class="parameter" id="-param-useDrawerInstedOfBottomNavigationBar"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useDrawerInstedOfBottomNavigationBar</span> = <span class="default-value">false</span>, </span></li>
 <li><span class="parameter" id="-param-bottomBarBackgroundColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Color-class.html">Color</a>?</span> <span class="parameter-name">bottomBarBackgroundColor</span>, </span></li>
 <li><span class="parameter" id="-param-scaffoldKey"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/GlobalKey-class.html">GlobalKey</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/material/ScaffoldState-class.html">ScaffoldState</a></span>&gt;</span>?</span> <span class="parameter-name">scaffoldKey</span>, </span></li>
-<li><span class="parameter" id="-param-future"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">future</span>()?, </span></li>
-<li><span class="parameter" id="-param-supressError"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">supressError</span> = <span class="default-value">kReleaseMode</span>, </span></li>
-<li><span class="parameter" id="-param-emptyChild"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a>?</span> <span class="parameter-name">emptyChild</span>, </span></li>
-<li><span class="parameter" id="-param-loading"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a>?</span> <span class="parameter-name">loading</span>, </span></li>
-<li><span class="parameter" id="-param-errorChild"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span> <span class="parameter-name">errorChild</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">error</span></span></li>
-</ol>)?, </span></li>
-<li><span class="parameter" id="-param-afterLoad"><span class="type-annotation">void</span> <span class="parameter-name">afterLoad</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-"><span class="type-annotation">T?</span></span></li>
-</ol>)?, </span></li>
-<li><span class="parameter" id="-param-beforeLoad"><span class="type-annotation">void</span> <span class="parameter-name">beforeLoad</span>()?, </span></li>
 <li><span class="parameter" id="-param-automaticallyImplyLeading"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">automaticallyImplyLeading</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="-param-onNavigate"><span class="type-annotation">void</span> <span class="parameter-name">onNavigate</span>(<ol class="parameter-list"> <li><span class="parameter" id="param-oldPageIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">oldPageIndex</span>, </span></li>
+<li><span class="parameter" id="param-oldTabIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">oldTabIndex</span>, </span></li>
+<li><span class="parameter" id="param-newPageIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">newPageIndex</span>, </span></li>
+<li><span class="parameter" id="param-newTabIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">newTabIndex</span>, </span></li>
+</ol>)?, </span></li>
 </ol>})
     </section>
 
@@ -118,7 +114,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">const PageTabScaffold({
-  required this.indexController,
+  required this.pageTabController,
   required this.items,
   this.drawer,
   this.endDrawer,
@@ -153,15 +149,9 @@
   this.useDrawerInstedOfBottomNavigationBar = false,
   this.bottomBarBackgroundColor,
   this.scaffoldKey,
-  this.future,
-  this.supressError = kReleaseMode,
-  this.emptyChild,
-  this.loading,
-  this.errorChild,
-  this.afterLoad,
-  this.beforeLoad,
   this.automaticallyImplyLeading = true,
-}) : super(key: indexController);</code></pre>
+  this.onNavigate,
+}) : super(key: pageTabController);</code></pre>
 </section>
 
 

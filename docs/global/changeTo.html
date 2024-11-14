@@ -128,6 +128,14 @@
       } else {
         return (nf?.tryParse(changeTo(value, locale)) ?? num.parse(changeTo&lt;string&gt;(value, locale).ifBlank(&quot;0&quot;).removeLetters)) as R;
       }
+    } else if (isSameType&lt;R, Color&gt;()) {
+      if (value is num) {
+        return Color(value.round()) as R;
+      }
+      if (value is NamedColor) {
+        return value as R;
+      }
+      return changeTo&lt;string&gt;(value).asColor as R;
     } else if (isSameType&lt;R, String&gt;()) {
       if (value is DateTime) {
         return value.format() as R;
@@ -135,6 +143,8 @@
         return value.formatted as R;
       } else if (value is num) {
         return (nf?.format(value) ?? &quot;$value&quot;) as R;
+      } else if (value is Color) {
+        return value.hexadecimal as R;
       } else if (value is Uri) {
         return value.toString() as R;
       } else if (value is Widget) {
@@ -178,6 +188,10 @@
       return const Text(&quot;&quot;) as R;
     } else if (isSameType&lt;R, Widget&gt;()) {
       return nil as R;
+    } else if (isSameType&lt;R, Color&gt;()) {
+      return Colors.transparent as R;
+    } else if (isSameType&lt;R, Uri&gt;()) {
+      return Uri.parse(&quot;http:&#47;&#47;localhost:80&quot;) as R;
     }
   }
   throw Exception(&quot;Incompatible conversion&quot;);

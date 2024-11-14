@@ -65,7 +65,8 @@
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../cidade/Cidade-class.html">Cidade</a></span>&gt;</span></span>&gt;</span></span>
 <span class="name ">pesquisarCidade</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="pesquisarCidade-param-nomeCidadeOuIBGE"><span class="type-annotation">dynamic</span> <span class="parameter-name">nomeCidadeOuIBGE</span>, [</span></li>
-<li><span class="parameter" id="pesquisarCidade-param-nomeEstadoOuUFOuIBGEouRegiao"><span class="type-annotation">dynamic</span> <span class="parameter-name">nomeEstadoOuUFOuIBGEouRegiao</span></span></li>
+<li><span class="parameter" id="pesquisarCidade-param-nomeEstadoOuUFOuIBGEouRegiao"><span class="type-annotation">dynamic</span> <span class="parameter-name">nomeEstadoOuUFOuIBGEouRegiao</span>, </span></li>
+<li><span class="parameter" id="pesquisarCidade-param-minChars"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">minChars</span> = <span class="default-value">0</span></span></li>
 </ol>])
 
       
@@ -87,13 +88,11 @@ utilizado para especificar o nome do estado, a UF, o código IBGE da UF ou a reg
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">static Future&lt;Iterable&lt;Cidade&gt;&gt; pesquisarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeEstadoOuUFOuIBGEouRegiao]) async {
+  <pre class="language-dart"><code class="language-dart">static Future&lt;Iterable&lt;Cidade&gt;&gt; pesquisarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeEstadoOuUFOuIBGEouRegiao, int minChars=0]) async {
   try {
     if (nomeCidadeOuIBGE is Cidade) {
       return [nomeCidadeOuIBGE];
     }
-
-    var cids = (await cidades).toList(growable: true);
 
     if (nomeEstadoOuUFOuIBGEouRegiao is Cidade) {
       nomeEstadoOuUFOuIBGEouRegiao = nomeEstadoOuUFOuIBGEouRegiao.estado;
@@ -107,6 +106,7 @@ utilizado para especificar o nome do estado, a UF, o código IBGE da UF ou a reg
       }
     }
 
+    var cids = (await cidades).toList(growable: true);
     if (nomeEstadoOuUFOuIBGEouRegiao is Regiao) {
       nomeEstadoOuUFOuIBGEouRegiao = null;
       cids = (await (nomeCidadeOuIBGE as Regiao).cidades).toList();
@@ -116,6 +116,10 @@ utilizado para especificar o nome do estado, a UF, o código IBGE da UF ou a reg
       nomeEstadoOuUFOuIBGEouRegiao = nomeEstadoOuUFOuIBGEouRegiao.toString().first(2);
     }
 
+    if (nomeCidadeOuIBGE is num) {
+      nomeCidadeOuIBGE = nomeCidadeOuIBGE.toString().first(2);
+    }
+
     nomeCidadeOuIBGE = flatString(nomeCidadeOuIBGE);
 
     Estado est = pegarEstado(nomeCidadeOuIBGE);
@@ -123,7 +127,7 @@ utilizado para especificar o nome do estado, a UF, o código IBGE da UF ou a reg
       est = pegarEstado(nomeEstadoOuUFOuIBGEouRegiao);
       cids.removeWhere((c) =&gt; c.estado.ibge != est.ibge);
     }
-    return cids.search(searchTerms: nomeCidadeOuIBGE, searchOn: (x) =&gt; [x.nome, x.ibge]);
+    return cids.search(searchTerms: nomeCidadeOuIBGE, searchOn: (x) =&gt; [x.nome, x.ibge], minChars: minChars);
   } catch (e) {
     return [];
   }

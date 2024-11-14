@@ -141,9 +141,7 @@ screens (xl), and 2 columns on extra-extra-extra-large screens (xxl).</p>
 }) {
   List&lt;ResponsiveColumn&gt; newChildren = [];
 
-  if (children is! List) {
-    children = [children];
-  }
+  children = forceList(children);
 
   for (var i = 0; i &lt; children.length; i++) {
     if (children[i] is ResponsiveColumn) {

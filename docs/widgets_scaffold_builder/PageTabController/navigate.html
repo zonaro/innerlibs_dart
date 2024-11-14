@@ -30,7 +30,7 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">widgets\scaffold_builder.dart</a></li>
-    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
     <li class="self-crumb">navigate method</li>
   </ol>
   <div class="self-name">navigate</div>
@@ -91,6 +91,12 @@ indicating the navigation change.</p>
   <pre class="language-dart"><code class="language-dart">void navigate({int? pageIndex, int? tabIndex}) {
   if (pageCount == 0) return;
   pageIndex ??= this.pageIndex;
+
+  &#47;&#47; if page index is highter than the page count, round navigate to index 0 + the difference
+  if (pageIndex &gt;= pageCount) {
+    pageIndex = 0 + (pageIndex - pageCount);
+  }
+
   if (pageIndex != this.pageIndex &amp;&amp; tabIndex == null) {
     tabIndex = 0;
   } else {
@@ -99,12 +105,18 @@ indicating the navigation change.</p>
 
   if (pageIndex != this.pageIndex || tabIndex != this.tabIndex) {
     consoleLog(&quot;From $previousPageIndex:$previousTabIndex to $pageIndex:$tabIndex&quot;);
-    insertHistory(pageIndex, tabIndex);
-    value = pageIndex;
+    _pageIndex = pageIndex;
     if (currentPage.hasTabs) {
-      tabIndex = tabIndex.clamp(0, (currentPage.tabs.length - 1).clampMin(0));
-      currentPage.tabController?.animateTo(tabIndex);
+      &#47;&#47; if page index is highter than the tab count, round navigate to index 0 + the difference
+      if (tabIndex &gt;= currentPage.tabs.length) {
+        tabIndex = 0 + (tabIndex - currentPage.tabs.length);
+        currentPage.tabController?.animateTo(tabIndex);
+      }
+    } else {
+      tabIndex = 0;
     }
+    _tabIndex = tabIndex;
+    insertHistory(pageIndex, tabIndex);
     notifyListeners();
   }
 }</code></pre>
@@ -124,7 +136,7 @@ indicating the navigation change.</p>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">scaffold_builder</a></li>
-    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
     <li class="self-crumb">navigate method</li>
 </ol>
 

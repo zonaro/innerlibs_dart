@@ -87,6 +87,7 @@ it returns <code>null</code>.</p>
   var x = findElements(tag).singleOrNull?.innerText;
   if (x == null) return null;
   try {
+    if (parser == null &amp;&amp; (T is Iterable&lt;string&gt; || T is Iterable&lt;int&gt; || T is Iterable&lt;double&gt; || T is Iterable&lt;bool&gt;)) parser = (x) =&gt; changeTo(jsonDecode(x));
     if (parser == null) return changeTo(x);
     return parser(x);
   } catch (e) {

@@ -88,7 +88,7 @@ If the <code>value</code> is <code>null</code>, it removes the child node if it 
     n.remove();
   }
   if (value != null) {
-    if(value.hasParent) value.remove();
+    if (value.hasParent) value.remove();
     children.add(value);
     value.tagName = childName;
   }

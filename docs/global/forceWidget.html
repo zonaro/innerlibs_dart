@@ -80,6 +80,7 @@
 <li><span class="parameter" id="forceWidget-param-defaultText"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">defaultText</span>, </span></li>
 <li><span class="parameter" id="forceWidget-param-fit"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/BoxFit.html">BoxFit</a>?</span> <span class="parameter-name">fit</span>, </span></li>
 <li><span class="parameter" id="forceWidget-param-alignment"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a>?</span> <span class="parameter-name">alignment</span>, </span></li>
+<li><span class="parameter" id="forceWidget-param-columnSizes"><span class="type-annotation"><a href="../widgets_responsive_grid/ResponsiveColumn-class.html">ResponsiveColumn</a>?</span> <span class="parameter-name">columnSizes</span>, </span></li>
 </ol>})
 
         
@@ -168,27 +169,20 @@ Widget myObjectWidget = myObject.forceWidget(
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Widget? forceWidget(
-  dynamic item, {
-  TextStyle? style,
-  StrutStyle? strutStyle,
-  TextAlign? textAlign,
-  TextDirection? textDirection,
-  Locale? locale,
-  bool? softWrap,
-  TextOverflow? overflow,
-  TextScaler? textScaler,
-  int? maxLines,
-  String? semanticsLabel,
-  TextWidthBasis? textWidthBasis,
-  bool validate = true,
-  String? defaultText,
-  BoxFit? fit,
-  AlignmentGeometry? alignment,
-}) {
+  <pre class="language-dart"><code class="language-dart">Widget? forceWidget(dynamic item, {TextStyle? style, StrutStyle? strutStyle, TextAlign? textAlign, TextDirection? textDirection, Locale? locale, bool? softWrap, TextOverflow? overflow, TextScaler? textScaler, int? maxLines, String? semanticsLabel, TextWidthBasis? textWidthBasis, bool validate = true, String? defaultText, BoxFit? fit, AlignmentGeometry? alignment, ResponsiveColumn? columnSizes}) {
   if (item == null) return null;
   if (item is Widget) return item;
   if (item is ResponsiveColumn) return item.child;
+
+  if (item is Iterable) {
+    return ResponsiveRow.withAutoColumns(
+      children: item.map((e) {
+        dynamic w = forceWidget(e, style: style, strutStyle: strutStyle, textAlign: textAlign, textDirection: textDirection, locale: locale, softWrap: softWrap, overflow: overflow, textScaler: textScaler, maxLines: maxLines, semanticsLabel: semanticsLabel, textWidthBasis: textWidthBasis, validate: validate, defaultText: defaultText, fit: fit, alignment: alignment);
+        if (columnSizes != null) w = ResponsiveColumn.copy(columnSizes, child: w);
+        return w;
+      }).toList(),
+    );
+  }
 
   if (item is IconData) {
     return (item).asIcon(

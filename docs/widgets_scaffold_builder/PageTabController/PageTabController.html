@@ -30,7 +30,7 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">widgets\scaffold_builder.dart</a></li>
-    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
     <li class="self-crumb">PageTabController constructor</li>
   </ol>
   <div class="self-name">PageTabController</div>
@@ -57,15 +57,13 @@
       data-above-sidebar="widgets_scaffold_builder&#47;PageTabController-class-sidebar.html"
       data-below-sidebar="">
       <div>
-<h1><span class="kind-constructor">PageTabController&lt;<wbr><span class="type-parameter">T</span>&gt;</span> constructor 
+<h1><span class="kind-constructor">PageTabController</span> constructor 
 </h1></div>
 
     <section class="multi-line-signature">
       
-      <span class="name ">PageTabController&lt;<wbr><span class="type-parameter">T</span>&gt;</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span> <span class="parameter-name">key</span>, </span></li>
-<li><span class="parameter" id="-param-defaultPageIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">defaultPageIndex</span> = <span class="default-value">0</span>, </span></li>
+      <span class="name ">PageTabController</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="-param-defaultPageIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">defaultPageIndex</span> = <span class="default-value">0</span>, </span></li>
 <li><span class="parameter" id="-param-defaultTabIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">defaultTabIndex</span> = <span class="default-value">0</span>, </span></li>
-<li><span class="parameter" id="-param-data"><span class="type-annotation"><a href="../../widgets_future_awaiter/AwaiterData-class.html">AwaiterData</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span>?</span> <span class="parameter-name">data</span>, </span></li>
 </ol>})
     </section>
 
@@ -81,14 +79,12 @@ indices respectively. By default, both indices are set to 0.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">PageTabController({
-  Key? key,
   int defaultPageIndex = 0,
   int defaultTabIndex = 0,
-  this.data,
 }) : super.constructor() {
   _history = [(defaultPageIndex, defaultTabIndex, now)];
-  value = defaultPageIndex;
-  this.key = key ?? this;
+  _pageIndex = defaultPageIndex;
+  _tabIndex = defaultTabIndex;
 }</code></pre>
 </section>
 
@@ -106,7 +102,7 @@ indices respectively. By default, both indices are set to 0.</p>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">scaffold_builder</a></li>
-    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
     <li class="self-crumb">PageTabController constructor</li>
 </ol>
 

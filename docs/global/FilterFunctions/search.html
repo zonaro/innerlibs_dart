@@ -117,7 +117,7 @@ The relevance is determined by the number of matches and the Levenshtein distanc
 }) {
   if (items.isEmpty) return &lt;T&gt;[].orderBy((e) =&gt; true);
 
-  var searches = forceList(searchTerms).whereNotBlank;
+  var searches = forceRecursiveList(searchTerms).whereNotBlank;
 
   if (minChars &gt; 0) {
     searches = searches.where((e) =&gt; e.length &gt;= minChars);
