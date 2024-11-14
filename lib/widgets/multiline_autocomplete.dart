@@ -5,100 +5,268 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-class MultilineAutocompleteTextFormField<T extends Object> extends StatefulWidget {
+/// A widget that provides a multiline autocomplete text form field.
+class SuggestionTextFormField<T extends Object> extends StatefulWidget {
+  /// The decoration to show around the text field.
   final InputDecoration? decoration;
 
-  final Future<Iterable<T>> Function() suggestions;
+  /// A function that returns a list of suggestions.
+  final Future<Iterable<T>> Function()? suggestions;
 
+  /// The maximum Levenshtein distance for suggestions.
   final int levenshteinDistance;
 
+  /// Whether to ignore case when searching for suggestions.
   final bool ignoreCase;
+
+  /// Whether to ignore diacritics when searching for suggestions.
   final bool ignoreDiacritics;
+
+  /// Whether to ignore word splitters when searching for suggestions.
   final bool ignoreWordSplitters;
+
+  /// Whether to split camel case when searching for suggestions.
   final bool splitCamelCase;
+
+  /// Whether to use wildcards when searching for suggestions.
   final bool useWildcards;
+
+  /// Whether to show all suggestions if the input is empty.
   final bool allIfEmpty;
+
+  /// The minimum number of characters required to show suggestions.
   final int minChars;
+
+  /// The maximum number of suggestions to show.
   final int maxResults;
+
+  /// A function that returns the fields to search on for a suggestion.
   final Iterable<dynamic> Function(T)? searchOn;
+
+  /// The maximum number of lines for the text field.
   final int? maxLines;
 
+  /// A function that returns the display string for a suggestion.
   final string Function(T)? displayStringForOption;
 
+  /// The controller for the text field.
   final TextEditingController? controller;
 
+  /// The direction in which the options view should open.
   final OptionsViewOpenDirection optionsViewOpenDirection;
 
+  /// The focus node for the text field.
   final FocusNode? focusNode;
+
+  /// When true, append the suggestion into current line, otherwise replace the current line with the suggestion.
   final bool appendSuggestions;
+
+  /// Whether to append a new line after a suggestion is selected.
   final bool appendNewLine;
 
+  /// The type of keyboard to use for the text field.
   final TextInputType? keyboardType;
+
+  /// The capitalization behavior for the text field.
   final TextCapitalization textCapitalization;
+
+  /// The action button to use for the text field.
   final TextInputAction? textInputAction;
+
+  /// The style to use for the text field.
   final TextStyle? style;
+
+  /// The strut style to use for the text field.
   final StrutStyle? strutStyle;
+
+  /// The text direction for the text field.
   final TextDirection? textDirection;
+
+  /// The alignment for the text field.
   final TextAlign textAlign;
+
+  /// The vertical alignment for the text field.
   final TextAlignVertical? textAlignVertical;
+
+  /// Whether to autofocus the text field.
   final bool autofocus;
+
+  /// Whether the text field is read-only.
   final bool readOnly;
+
+  /// Whether to show the cursor in the text field.
   final bool? showCursor;
+
+  /// The character to use for obscuring text.
   final String obscuringCharacter;
+
+  /// Whether to obscure text in the text field.
   final bool obscureText;
+
+  /// Whether to enable autocorrect in the text field.
   final bool autocorrect;
+
+  /// The smart dashes type for the text field.
   final SmartDashesType? smartDashesType;
+
+  /// The smart quotes type for the text field.
   final SmartQuotesType? smartQuotesType;
+
+  /// Whether to enable suggestions in the text field.
   final bool enableSuggestions;
+
+  /// The max length enforcement for the text field.
   final MaxLengthEnforcement? maxLengthEnforcement;
+
+  /// Whether the text field should expand to fill its parent.
   final bool expands;
+
+  /// The maximum length for the text field.
   final int? maxLength;
+
+  /// The callback to call when the text field is tapped.
   final GestureTapCallback? onTap;
+
+  /// Whether the onTap callback should always be called.
   final bool onTapAlwaysCalled;
+
+  /// The callback to call when the text field is tapped outside.
   final TapRegionCallback? onTapOutside;
+
+  /// The callback to call when editing is complete.
   final VoidCallback? onEditingComplete;
+
+  /// The callback to call when the field is submitted.
   final ValueChanged<String>? onFieldSubmitted;
+
+  /// The input formatters to use for the text field.
   final List<TextInputFormatter>? inputFormatters;
+
+  /// Whether the text field is enabled.
   final bool? enabled;
+
+  /// Whether to ignore pointers for the text field.
   final bool? ignorePointers;
+
+  /// The width of the cursor in the text field.
   final double cursorWidth;
+
+  /// The height of the cursor in the text field.
   final double? cursorHeight;
+
+  /// The radius of the cursor in the text field.
   final Radius? cursorRadius;
+
+  /// The color of the cursor in the text field.
   final Color? cursorColor;
+
+  /// The error color of the cursor in the text field.
   final Color? cursorErrorColor;
+
+  /// The keyboard appearance for the text field.
   final Brightness? keyboardAppearance;
+
+  /// The padding to use when scrolling the text field.
   final EdgeInsets scrollPadding;
+
+  /// Whether to enable interactive selection in the text field.
   final bool? enableInteractiveSelection;
+
+  /// The selection controls to use for the text field.
   final TextSelectionControls? selectionControls;
+
+  /// The builder for the input counter widget.
   final InputCounterWidgetBuilder? buildCounter;
+
+  /// The scroll physics to use for the text field.
   final ScrollPhysics? scrollPhysics;
+
+  /// The autofill hints to use for the text field.
   final Iterable<String>? autofillHints;
+
+  /// The autovalidate mode for the text field.
   final AutovalidateMode? autovalidateMode;
+
+  /// The scroll controller for the text field.
   final ScrollController? scrollController;
+
+  /// Whether to enable personalized learning for the IME.
   final bool enableIMEPersonalizedLearning;
+
+  /// The mouse cursor to use for the text field.
   final MouseCursor? mouseCursor;
+
+  /// The builder for the context menu.
   final EditableTextContextMenuBuilder? contextMenuBuilder;
+
+  /// The spell check configuration for the text field.
   final SpellCheckConfiguration? spellCheckConfiguration;
+
+  /// The magnifier configuration for the text field.
   final TextMagnifierConfiguration? magnifierConfiguration;
+
+  /// The undo history controller for the text field.
   final UndoHistoryController? undoController;
+
+  /// The callback to call for private app commands.
   final AppPrivateCommandCallback? onAppPrivateCommand;
+
+  /// Whether the cursor opacity animates.
   final bool? cursorOpacityAnimates;
+
+  /// The height style for the selection.
   final BoxHeightStyle selectionHeightStyle;
+
+  /// The width style for the selection.
   final BoxWidthStyle selectionWidthStyle;
+
+  /// The drag start behavior for the text field.
   final DragStartBehavior dragStartBehavior;
+
+  /// The content insertion configuration for the text field.
   final ContentInsertionConfiguration? contentInsertionConfiguration;
+
+  /// The states controller for the text field.
   final WidgetStatesController? statesController;
+
+  /// The clip behavior for the text field.
   final Clip clipBehavior;
+
+  /// Whether scribble is enabled for the text field.
   final bool scribbleEnabled;
+
+  /// Whether the text field can request focus.
   final bool canRequestFocus;
+
+  /// The callback to call when the text changes.
   final void Function(String)? onChanged;
 
-  const MultilineAutocompleteTextFormField({
+  /// The minimum number of lines for the text field.
+  final int? minLines;
+
+  /// The error text to force display.
+  final String? forceErrorText;
+
+  /// The initial value for the text field.
+  final String? initialValue;
+
+  /// The callback to call when the text field is saved.
+  final FormFieldSetter<String>? onSaved;
+
+  /// The validator for the text field.
+  final FormFieldValidator<String>? validator;
+
+  /// The restoration ID for the text field.
+  final String? restorationId;
+
+  final void Function(T selection)? onSelected;
+
+  const SuggestionTextFormField({
     super.key,
     this.decoration,
     this.levenshteinDistance = 0,
     this.searchOn,
-    required this.suggestions,
+    this.suggestions,
     this.ignoreCase = true,
     this.ignoreDiacritics = true,
     this.ignoreWordSplitters = true,
@@ -173,18 +341,27 @@ class MultilineAutocompleteTextFormField<T extends Object> extends StatefulWidge
     this.scribbleEnabled = true,
     this.canRequestFocus = true,
     this.onChanged,
+    this.minLines,
+    this.forceErrorText,
+    this.initialValue,
+    this.onSaved,
+    this.validator,
+    this.restorationId,
+    this.onSelected,
   });
 
   @override
-  createState() => _MultilineAutocompleteTextFormFieldState();
+  createState() => _SuggestionTextFormFieldState();
 }
 
-class _MultilineAutocompleteTextFormFieldState<T extends Object> extends State<MultilineAutocompleteTextFormField<T>> {
+class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTextFormField<T>> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
 
+  /// Returns the display string for a suggestion.
   string Function(T) get displayStringForOption => widget.displayStringForOption ?? (T suggestion) => flatString(suggestion);
 
+  /// Returns the fields to search on for a suggestion.
   Iterable<dynamic> Function(T) get searchOn => widget.searchOn ?? (T suggestion) => [displayStringForOption(suggestion)];
 
   @override
@@ -194,7 +371,10 @@ class _MultilineAutocompleteTextFormFieldState<T extends Object> extends State<M
       focusNode: _focusNode,
       optionsViewOpenDirection: widget.optionsViewOpenDirection,
       optionsBuilder: (_) async {
-        var sugs = await widget.suggestions();
+        if (widget.suggestions == null) {
+          return [];
+        }
+        var sugs = await widget.suggestions!();
         var v = sugs.search(
           searchTerms: _controller.currentLineText,
           searchOn: searchOn,
@@ -216,6 +396,15 @@ class _MultilineAutocompleteTextFormFieldState<T extends Object> extends State<M
           controller: fieldTextEditingController,
           focusNode: fieldFocusNode,
           maxLines: widget.maxLines,
+          minLines: widget.minLines,
+          autovalidateMode: widget.autovalidateMode,
+          expands: widget.expands,
+          forceErrorText: widget.forceErrorText,
+          initialValue: widget.initialValue,
+          onSaved: widget.onSaved,
+          validator: widget.validator,
+          statesController: widget.statesController,
+          restorationId: widget.restorationId,
           decoration: widget.decoration,
           keyboardType: widget.keyboardType,
           textCapitalization: widget.textCapitalization,
@@ -275,7 +464,7 @@ class _MultilineAutocompleteTextFormFieldState<T extends Object> extends State<M
           onChanged: widget.onChanged,
         );
       },
-      optionsViewBuilder: (BuildContext context, void Function(T) onSelected, Iterable<T> options) {
+      optionsViewBuilder: (BuildContext context, _, Iterable<T> options) {
         return Material(
           elevation: 4.0,
           child: Container(
@@ -289,23 +478,7 @@ class _MultilineAutocompleteTextFormFieldState<T extends Object> extends State<M
                 return ListTile(
                   tileColor: context.theme.listTileTheme.tileColor,
                   title: Text(displayStringForOption(selection)),
-                  onTap: () {
-                    var sug = displayStringForOption(selection);
-                    var lineText = _controller.currentLineText;
-                    var index = _controller.currentLineIndex;
-                    if (widget.appendSuggestions) {
-                      lineText = lineText + sug;
-                    } else {
-                      lineText = displayStringForOption(selection);
-                    }
-                    _controller.currentLineText = lineText.trim();
-                    if (widget.appendNewLine) {
-                      _controller.lines = _controller.lines.toList()..insert(index + 1, "");
-                    }
-                    setState(() {});
-                    _focusNode.requestFocus();
-                    _controller.currentLineIndex = index + (widget.appendNewLine ? 2 : 1);
-                  },
+                  onTap: () => _onSelected(selection),
                 );
               },
             ),
@@ -320,5 +493,26 @@ class _MultilineAutocompleteTextFormFieldState<T extends Object> extends State<M
     super.initState();
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
+  }
+
+  void _onSelected(T selection) {
+    var sug = displayStringForOption(selection);
+    var lineText = _controller.currentLineText;
+    var index = _controller.currentLineIndex;
+    if (widget.appendSuggestions) {
+      lineText = lineText + sug;
+    } else {
+      lineText = displayStringForOption(selection);
+    }
+    _controller.currentLineText = lineText.trim();
+    if (widget.appendNewLine) {
+      _controller.lines = _controller.lines.toList()..insert(index + 1, "");
+    }
+    setState(() {});
+    _focusNode.requestFocus();
+    _controller.currentLineIndex = index + (widget.appendNewLine ? 2 : 1);
+    if (widget.onSelected != null) {
+      widget.onSelected!(selection);
+    }
   }
 }
