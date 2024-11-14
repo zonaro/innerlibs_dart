@@ -114,7 +114,7 @@ class MultilineAutocompleteTextFormField<T extends Object> extends StatefulWidge
     this.focusNode,
     this.appendSuggestions = false,
     this.appendNewLine = true,
-    this.keyboardType,
+    this.keyboardType = TextInputType.multiline,
     this.textCapitalization = TextCapitalization.none,
     this.textInputAction,
     this.style,
