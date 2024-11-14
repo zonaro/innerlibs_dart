@@ -373,135 +373,143 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
 
   @override
   Widget build(BuildContext context) {
-    return RawAutocomplete<T>(
-      textEditingController: _controller,
-      focusNode: _focusNode,
-      optionsViewOpenDirection: widget.optionsViewOpenDirection,
-      optionsBuilder: (s) async {
-        var sugs = [...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))];
+    var tileHeight = context.theme.listTileTheme.minTileHeight ?? 50;
+    return LayoutBuilder(
+      builder: (context, cs) => RawAutocomplete<T>(
+        textEditingController: _controller,
+        focusNode: _focusNode,
+        optionsViewOpenDirection: widget.optionsViewOpenDirection,
+        optionsBuilder: (s) async {
+          var sugs = [...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))];
 
-        var v = sugs.search(
-          searchTerms: _controller.currentLineText,
-          searchOn: searchOn,
-          levenshteinDistance: widget.levenshteinDistance,
-          allIfEmpty: widget.allIfEmpty,
-          ignoreCase: widget.ignoreCase,
-          ignoreDiacritics: widget.ignoreDiacritics,
-          ignoreWordSplitters: widget.ignoreWordSplitters,
-          splitCamelCase: widget.splitCamelCase,
-          useWildcards: widget.useWildcards,
-          minChars: widget.minChars,
-          maxResults: widget.maxResults,
-          keyCharSearches: widget.keyCharSearches,
-        );
-        return v;
-      },
-      displayStringForOption: displayStringForOption,
-      fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-        return TextFormField(
-          controller: fieldTextEditingController,
-          focusNode: fieldFocusNode,
-          maxLines: widget.maxLines,
-          minLines: widget.minLines,
-          autovalidateMode: widget.autovalidateMode,
-          expands: widget.expands,
-          forceErrorText: widget.forceErrorText,
-          initialValue: widget.initialValue,
-          onSaved: widget.onSaved,
-          validator: widget.validator,
-          statesController: widget.statesController,
-          restorationId: widget.restorationId,
-          decoration: widget.decoration,
-          keyboardType: widget.keyboardType,
-          textCapitalization: widget.textCapitalization,
-          textInputAction: widget.textInputAction,
-          style: widget.style,
-          strutStyle: widget.strutStyle,
-          textAlign: widget.textAlign,
-          textAlignVertical: widget.textAlignVertical,
-          textDirection: widget.textDirection,
-          autofocus: widget.autofocus,
-          readOnly: widget.readOnly,
-          showCursor: widget.showCursor,
-          obscuringCharacter: widget.obscuringCharacter,
-          obscureText: widget.obscureText,
-          autocorrect: widget.autocorrect,
-          smartDashesType: widget.smartDashesType,
-          smartQuotesType: widget.smartQuotesType,
-          enableSuggestions: widget.enableSuggestions,
-          maxLengthEnforcement: widget.maxLengthEnforcement,
-          maxLength: widget.maxLength,
-          onTap: widget.onTap,
-          onTapAlwaysCalled: widget.onTapAlwaysCalled,
-          onTapOutside: widget.onTapOutside,
-          onEditingComplete: widget.onEditingComplete,
-          onFieldSubmitted: widget.onFieldSubmitted,
-          inputFormatters: widget.inputFormatters,
-          enabled: widget.enabled,
-          ignorePointers: widget.ignorePointers,
-          cursorWidth: widget.cursorWidth,
-          cursorHeight: widget.cursorHeight,
-          cursorRadius: widget.cursorRadius,
-          cursorColor: widget.cursorColor,
-          cursorErrorColor: widget.cursorErrorColor,
-          scrollPadding: widget.scrollPadding,
-          scrollPhysics: widget.scrollPhysics,
-          keyboardAppearance: widget.keyboardAppearance,
-          enableInteractiveSelection: widget.enableInteractiveSelection,
-          selectionControls: widget.selectionControls,
-          buildCounter: widget.buildCounter,
-          autofillHints: widget.autofillHints,
-          scrollController: widget.scrollController,
-          enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
-          mouseCursor: widget.mouseCursor,
-          contextMenuBuilder: widget.contextMenuBuilder,
-          spellCheckConfiguration: widget.spellCheckConfiguration,
-          magnifierConfiguration: widget.magnifierConfiguration,
-          undoController: widget.undoController,
-          onAppPrivateCommand: widget.onAppPrivateCommand,
-          cursorOpacityAnimates: widget.cursorOpacityAnimates,
-          selectionHeightStyle: widget.selectionHeightStyle,
-          selectionWidthStyle: widget.selectionWidthStyle,
-          dragStartBehavior: widget.dragStartBehavior,
-          contentInsertionConfiguration: widget.contentInsertionConfiguration,
-          clipBehavior: widget.clipBehavior,
-          scribbleEnabled: widget.scribbleEnabled,
-          canRequestFocus: widget.canRequestFocus,
-          onChanged: (s) {
-            if (widget.onChanged != null) {
-              widget.onChanged!(s);
-            }
-            setState(() {});
-          },
-        );
-      },
-      optionsViewBuilder: (BuildContext context, _, Iterable<T> options) {
-        var sugs = options.toList();
-        return LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) => Material(
-            elevation: 4.0,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4.0)),
-            ),
-            child: SizedBox(
-              height: 52.0 * options.length,
-              width: context.width, // <-- Right here !
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                itemCount: sugs.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final T option = sugs[index];
-                  return ListTile(
-                    title: Text(displayStringForOption(option)),
-                    onTap: () => _onSelected(option),
-                  );
-                },
+          var v = sugs.search(
+            searchTerms: _controller.currentLineText,
+            searchOn: searchOn,
+            levenshteinDistance: widget.levenshteinDistance,
+            allIfEmpty: widget.allIfEmpty,
+            ignoreCase: widget.ignoreCase,
+            ignoreDiacritics: widget.ignoreDiacritics,
+            ignoreWordSplitters: widget.ignoreWordSplitters,
+            splitCamelCase: widget.splitCamelCase,
+            useWildcards: widget.useWildcards,
+            minChars: widget.minChars,
+            maxResults: widget.maxResults,
+            keyCharSearches: widget.keyCharSearches,
+          );
+          if (v.length == 1 && v.first == _controller.currentLineText) {
+            return [];
+          }
+          return v;
+        },
+        displayStringForOption: displayStringForOption,
+        fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+          return TextFormField(
+            controller: fieldTextEditingController,
+            focusNode: fieldFocusNode,
+            maxLines: widget.maxLines,
+            minLines: widget.minLines,
+            autovalidateMode: widget.autovalidateMode,
+            expands: widget.expands,
+            forceErrorText: widget.forceErrorText,
+            initialValue: widget.initialValue,
+            onSaved: widget.onSaved,
+            validator: widget.validator,
+            statesController: widget.statesController,
+            restorationId: widget.restorationId,
+            decoration: widget.decoration,
+            keyboardType: widget.keyboardType,
+            textCapitalization: widget.textCapitalization,
+            textInputAction: widget.textInputAction,
+            style: widget.style,
+            strutStyle: widget.strutStyle,
+            textAlign: widget.textAlign,
+            textAlignVertical: widget.textAlignVertical,
+            textDirection: widget.textDirection,
+            autofocus: widget.autofocus,
+            readOnly: widget.readOnly,
+            showCursor: widget.showCursor,
+            obscuringCharacter: widget.obscuringCharacter,
+            obscureText: widget.obscureText,
+            autocorrect: widget.autocorrect,
+            smartDashesType: widget.smartDashesType,
+            smartQuotesType: widget.smartQuotesType,
+            enableSuggestions: widget.enableSuggestions,
+            maxLengthEnforcement: widget.maxLengthEnforcement,
+            maxLength: widget.maxLength,
+            onTap: widget.onTap,
+            onTapAlwaysCalled: widget.onTapAlwaysCalled,
+            onTapOutside: widget.onTapOutside,
+            onEditingComplete: widget.onEditingComplete,
+            onFieldSubmitted: widget.onFieldSubmitted,
+            inputFormatters: widget.inputFormatters,
+            enabled: widget.enabled,
+            ignorePointers: widget.ignorePointers,
+            cursorWidth: widget.cursorWidth,
+            cursorHeight: widget.cursorHeight,
+            cursorRadius: widget.cursorRadius,
+            cursorColor: widget.cursorColor,
+            cursorErrorColor: widget.cursorErrorColor,
+            scrollPadding: widget.scrollPadding,
+            scrollPhysics: widget.scrollPhysics,
+            keyboardAppearance: widget.keyboardAppearance,
+            enableInteractiveSelection: widget.enableInteractiveSelection,
+            selectionControls: widget.selectionControls,
+            buildCounter: widget.buildCounter,
+            autofillHints: widget.autofillHints,
+            scrollController: widget.scrollController,
+            enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
+            mouseCursor: widget.mouseCursor,
+            contextMenuBuilder: widget.contextMenuBuilder,
+            spellCheckConfiguration: widget.spellCheckConfiguration,
+            magnifierConfiguration: widget.magnifierConfiguration,
+            undoController: widget.undoController,
+            onAppPrivateCommand: widget.onAppPrivateCommand,
+            cursorOpacityAnimates: widget.cursorOpacityAnimates,
+            selectionHeightStyle: widget.selectionHeightStyle,
+            selectionWidthStyle: widget.selectionWidthStyle,
+            dragStartBehavior: widget.dragStartBehavior,
+            contentInsertionConfiguration: widget.contentInsertionConfiguration,
+            clipBehavior: widget.clipBehavior,
+            scribbleEnabled: widget.scribbleEnabled,
+            canRequestFocus: widget.canRequestFocus,
+            onChanged: (s) {
+              if (widget.onChanged != null) {
+                widget.onChanged!(s);
+              }
+              setState(() {});
+            },
+          );
+        },
+        optionsViewBuilder: (BuildContext context, _, Iterable<T> options) {
+          var sugs = options.toList();
+          return Align(
+            alignment: Alignment.topLeft,
+            child: Material(
+              elevation: 4.0,
+              child: SizedBox(
+                height: (cs.minHeight.clampMin(tileHeight) * sugs.length),
+                width: cs.minWidth,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: sugs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final T option = sugs[index];
+                    return ListTile(
+                      title: Text(
+                        displayStringForOption(option),
+                        textDirection: widget.textDirection,
+                        textAlign: widget.textAlign,
+                        selectionColor: widget.cursorColor,
+                      ),
+                      onTap: () => _onSelected(option),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
