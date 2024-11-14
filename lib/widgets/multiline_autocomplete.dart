@@ -261,9 +261,13 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
 
   final void Function(T selection)? onSelected;
 
+  /// A map to fire custom search functions for specific characters
+  final CharMatch<T> keyCharSearches;
+
   const SuggestionTextFormField({
     super.key,
     this.decoration,
+    this.keyCharSearches = const {},
     this.levenshteinDistance = 0,
     this.searchOn,
     this.suggestions,
@@ -359,7 +363,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
   late FocusNode _focusNode;
 
   /// Returns the display string for a suggestion.
-  string Function(T) get displayStringForOption => widget.displayStringForOption ?? (T suggestion) => flatString(suggestion);
+  string Function(T) get displayStringForOption => widget.displayStringForOption ?? (T suggestion) => suggestion is string ? suggestion : flatString(suggestion);
 
   /// Returns the fields to search on for a suggestion.
   Iterable<dynamic> Function(T) get searchOn => widget.searchOn ?? (T suggestion) => [displayStringForOption(suggestion)];
@@ -387,6 +391,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
           useWildcards: widget.useWildcards,
           minChars: widget.minChars,
           maxResults: widget.maxResults,
+          keyCharSearches: widget.keyCharSearches,
         );
         return v;
       },
