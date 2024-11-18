@@ -5,6 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:innerlibs/innerlibs.dart';
 
+typedef SuggestionBuilder<T extends Object> = Widget Function(
+  BuildContext context,
+  TextEditingController controller,
+  AutocompleteOnSelected<T> onSelected,
+  BoxConstraints constraints,
+  Iterable<T> options,
+  string Function(T) displayStringForOption,
+  double? maxHeight,
+  TextDirection? textDirection,
+  TextAlign? textAlign,
+  Color? selectionColor,
+);
+
 /// A widget that provides a multiline autocomplete text form field.
 class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   /// The decoration to show around the text field.
@@ -272,6 +285,8 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
 
   final int Function(T item1, T item2)? itemComparator;
 
+  final SuggestionBuilder<T>? suggestionBuilder;
+
   const SuggestionTextFormField({
     super.key,
     this.decoration,
@@ -364,10 +379,104 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.maxHeight,
     this.itemEqualityComparator,
     this.itemComparator,
+    this.suggestionBuilder,
   });
 
   @override
   createState() => _SuggestionTextFormFieldState();
+
+  /// A builder for suggestion chips.
+  static SuggestionBuilder<T> suggestionChipsBuilder<T extends Object>() => (
+        BuildContext context,
+        TextEditingController controller,
+        AutocompleteOnSelected<T> onSelected,
+        BoxConstraints constraints,
+        Iterable<T> options,
+        string Function(T) displayStringForOption,
+        double? maxHeight,
+        TextDirection? textDirection,
+        TextAlign? textAlign,
+        Color? selectionColor,
+      ) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            child: SizedBox(
+              height: (constraints.minHeight.clampMin(context.theme.listTileTheme.minTileHeight ?? 45) * options.length).clampMax([maxHeight ?? constraints.maxHeight, constraints.maxHeight].min),
+              child: Wrap(
+                children: options.map((T option) {
+                  final optionText = displayStringForOption(option);
+                  return Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ChoiceChip(
+                      label: AutoSizeText(
+                        displayStringForOption(option),
+                        textDirection: textDirection,
+                        textAlign: textAlign,
+                        selectionColor: selectionColor,
+                        maxLines: 1,
+                      ),
+                      selected: controller.lines.any((x) => x.flatEqual(optionText)),
+                      onSelected: (_) => onSelected(option),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        );
+      };
+
+  /// A builder for suggestion list.
+  static SuggestionBuilder<T> suggestionListBuilder<T extends Object>() => (
+        BuildContext context,
+        TextEditingController controller,
+        AutocompleteOnSelected<T> onSelected,
+        BoxConstraints constraints,
+        Iterable<T> options,
+        string Function(T) displayStringForOption,
+        double? maxHeight,
+        TextDirection? textDirection,
+        TextAlign? textAlign,
+        Color? selectionColor,
+      ) {
+        var sugs = options.toList();
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            child: SizedBox(
+              height: (constraints.minHeight.clampMin(context.theme.listTileTheme.minTileHeight ?? 45) * sugs.length).clampMax([maxHeight ?? constraints.maxHeight, constraints.maxHeight].min),
+              width: constraints.minWidth,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: sugs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final T option = sugs[index];
+                  final string optionText = displayStringForOption(option);
+                  return ListTile(
+                    leading: controller.currentLineText.startsWith(optionText)
+                        ? Icon(
+                            Icons.check,
+                            color: selectionColor,
+                          )
+                        : null,
+                    title: AutoSizeText(
+                      optionText,
+                      textDirection: textDirection,
+                      textAlign: textAlign,
+                      selectionColor: selectionColor,
+                      maxLines: 1,
+                    ),
+                    onTap: () => onSelected(option),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      };
 }
 
 class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTextFormField<T>> {
@@ -380,9 +489,10 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
   /// Returns the fields to search on for a suggestion.
   Iterable<dynamic> Function(T) get searchOn => widget.searchOn ?? (T suggestion) => [displayStringForOption(suggestion)];
 
+  SuggestionBuilder<T> get suggestionBuilder => widget.suggestionBuilder ?? SuggestionTextFormField.suggestionListBuilder<T>();
+
   @override
   Widget build(BuildContext context) {
-    var tileHeight = context.theme.listTileTheme.minTileHeight ?? 45;
     return LayoutBuilder(
       builder: (context, cs) => RawAutocomplete<T>(
         textEditingController: _controller,
@@ -489,35 +599,18 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
             },
           );
         },
-        optionsViewBuilder: (BuildContext context, _, Iterable<T> options) {
-          var sugs = options.toList();
-          return Align(
-            alignment: Alignment.topLeft,
-            child: Material(
-              elevation: 4.0,
-              child: SizedBox(
-                height: (cs.minHeight.clampMin(tileHeight) * sugs.length).clampMax([widget.maxHeight ?? cs.maxHeight, cs.maxHeight].min),
-                width: cs.minWidth,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: sugs.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final T option = sugs[index];
-                    return ListTile(
-                      title: AutoSizeText(
-                        displayStringForOption(option),
-                        textDirection: widget.textDirection,
-                        textAlign: widget.textAlign,
-                        selectionColor: widget.cursorColor,
-                      ),
-                      onTap: () => _onSelected(option),
-                    );
-                  },
-                ),
-              ),
-            ),
-          );
-        },
+        optionsViewBuilder: (BuildContext context, _, Iterable<T> options) => suggestionBuilder(
+          context,
+          _controller,
+          _onSelected,
+          cs,
+          options,
+          displayStringForOption,
+          widget.maxHeight,
+          widget.textDirection ,
+          widget.textAlign,
+          widget.cursorColor,
+        ),
       ),
     );
   }
