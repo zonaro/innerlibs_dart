@@ -268,6 +268,10 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
 
   final double? maxHeight;
 
+  final bool Function(T item1, T item2)? itemEqualityComparator;
+
+  final int Function(T item1, T item2)? itemComparator;
+
   const SuggestionTextFormField({
     super.key,
     this.decoration,
@@ -358,6 +362,8 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.onSuggestionSelected,
     this.asyncSuggestions,
     this.maxHeight,
+    this.itemEqualityComparator,
+    this.itemComparator,
   });
 
   @override
@@ -383,7 +389,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
         focusNode: _focusNode,
         optionsViewOpenDirection: widget.optionsViewOpenDirection,
         optionsBuilder: (s) async {
-          var sugs = <T>{...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))};
+          var sugs = <T>[...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))].distinctByComparison(itemEqualityComparator);
 
           var v = sugs.search(
             searchTerms: _controller.currentLineText,
@@ -399,10 +405,10 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
             maxResults: widget.maxResults,
             keyCharSearches: widget.keyCharSearches,
           );
-          if (v.length == 1 && v.first == _controller.currentLineText) {
+          if (v.length == 1 && displayStringForOption(v.first) == _controller.currentLineText) {
             return [];
           }
-          return v;
+          return v.sortedByCompare((x) => x, itemComparator);
         },
         displayStringForOption: displayStringForOption,
         fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
@@ -521,6 +527,26 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     super.initState();
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
+  }
+
+  int itemComparator(T item1, T item2) {
+    if (widget.itemComparator != null) {
+      return widget.itemComparator!(item1, item2);
+    } else if (T is Comparable) {
+      return (item1 as Comparable).compareTo(item2);
+    } else {
+      return displayStringForOption(item1).compareTo(displayStringForOption(item2));
+    }
+  }
+
+  bool itemEqualityComparator(T item1, T item2) {
+    if (widget.itemEqualityComparator != null) {
+      return widget.itemEqualityComparator!(item1, item2);
+    } else if (T is Comparable) {
+      return itemComparator(item1, item2) == 0;
+    } else {
+      return displayStringForOption(item1) == displayStringForOption(item2);
+    }
   }
 
   void _onSelected(T selection) {

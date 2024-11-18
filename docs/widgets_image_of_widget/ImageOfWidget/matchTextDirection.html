@@ -62,17 +62,37 @@
 
       <section class="multi-line-signature">
         
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
         <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>
         <span class="name ">matchTextDirection</span>
         <div class="features"><span class="feature">final</span></div>
 
       </section>
       
+<section class="desc markdown">
+  <p>Whether to paint the image in the direction of the <a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection</a>.</p>
+<p>If this is true, then in <a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection.ltr</a> contexts, the image will be
+drawn with its origin in the top left (the "normal" painting direction for
+images); and in <a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection.rtl</a> contexts, the image will be drawn with
+a scaling factor of -1 in the horizontal direction so that the origin is
+in the top right.</p>
+<p>This is occasionally used with images in right-to-left environments, for
+images that were designed for left-to-right locales. Be careful, when
+using this, to not flip images with integral shadows, text, or other
+effects that will look incorrect when flipped.</p>
+<p>If this is true, there must be an ambient <a href="https://api.flutter.dev/flutter/widgets/Directionality-class.html">Directionality</a> widget in
+scope.</p>
+</section>
 
       
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">final bool matchTextDirection;</code></pre>
+  <pre class="language-dart"><code class="language-dart">@override
+final bool matchTextDirection;</code></pre>
 </section>
 
 

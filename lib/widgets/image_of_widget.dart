@@ -1,31 +1,55 @@
-import 'dart:typed_data';
-import 'dart:ui' as ui;
+import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:innerlibs/innerlibs.dart';
 
-class ImageOfWidget extends StatefulWidget {
+// ignore: must_be_immutable
+class ImageOfWidget extends StatefulWidget implements Image {
   final Widget child;
   final double scale;
+  @override
   final ImageFrameBuilder? frameBuilder;
+  @override
   final ImageErrorWidgetBuilder? errorBuilder;
+  @override
   final String? semanticLabel;
+  @override
   final bool excludeFromSemantics;
+  @override
   final double? width;
+  @override
   final double? height;
+  @override
   final Color? color;
+  @override
   final Animation<double>? opacity;
+  @override
   final BlendMode? colorBlendMode;
+  @override
   final BoxFit? fit;
+  @override
   final AlignmentGeometry alignment;
+  @override
   final ImageRepeat repeat;
+  @override
   final Rect? centerSlice;
+  @override
   final bool matchTextDirection;
+  @override
   final bool gaplessPlayback;
+  @override
   final bool isAntiAlias;
+  @override
   final FilterQuality filterQuality;
 
-  const ImageOfWidget({
+  @override
+  ImageProvider<Object> image;
+
+  @override
+  final ImageLoadingBuilder? loadingBuilder;
+
+  ImageOfWidget({
     super.key,
     required this.child,
     this.scale = 1.0,
@@ -45,8 +69,9 @@ class ImageOfWidget extends StatefulWidget {
     this.matchTextDirection = false,
     this.gaplessPlayback = false,
     this.isAntiAlias = false,
-    this.filterQuality = FilterQuality.medium,
-  });
+    this.filterQuality = FilterQuality.high,
+    this.loadingBuilder,
+  }) : image = MemoryImage(Uint8List(0), scale: scale);
 
   @override
   createState() => _ImageOfWidgetState();
@@ -64,9 +89,8 @@ class _ImageOfWidgetState extends State<ImageOfWidget> {
               key: _globalKey,
               child: widget.child,
             )
-          : Image.memory(
-              _imageBytes!,
-              scale: widget.scale,
+          : Image(
+              image: widget.image,
               frameBuilder: widget.frameBuilder,
               errorBuilder: widget.errorBuilder,
               semanticLabel: widget.semanticLabel,
@@ -84,6 +108,7 @@ class _ImageOfWidgetState extends State<ImageOfWidget> {
               gaplessPlayback: widget.gaplessPlayback,
               isAntiAlias: widget.isAntiAlias,
               filterQuality: widget.filterQuality,
+              loadingBuilder: widget.loadingBuilder,
             ),
     );
   }
@@ -96,13 +121,9 @@ class _ImageOfWidgetState extends State<ImageOfWidget> {
 
   Future<void> _capturePng() async {
     try {
-      RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage();
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-      setState(() {
-        _imageBytes = pngBytes;
-      });
+      _imageBytes = await _globalKey.renderImageAsBytes();
+      widget.image = MemoryImage(_imageBytes!, scale: widget.scale);
+      setState(() {});
     } catch (e) {
       Future.delayed(const Duration(milliseconds: 500), () => _capturePng());
     }

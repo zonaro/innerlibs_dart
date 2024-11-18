@@ -157,6 +157,17 @@ extension IterablesExtension<T> on Iterable<T> {
     return uniqueElements;
   }
 
+  /// Removes duplicate elements from a list based on a provided comparison function.
+  Set<T> distinctByComparison(bool Function(T, T) comparison) {
+    Set<T> uniqueElements = {};
+    for (T element in this) {
+      if (!uniqueElements.any((e) => comparison(e, element))) {
+        uniqueElements.add(element);
+      }
+    }
+    return uniqueElements;
+  }
+
   /// Groups the items in the list by the item returned by the lambda function.
   ///
   /// The lambda function takes an item of type T and returns a item of type M used as key.

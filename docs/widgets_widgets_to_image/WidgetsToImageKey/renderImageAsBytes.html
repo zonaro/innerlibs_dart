@@ -65,6 +65,7 @@
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../innerlibs/bytes.html">bytes</a></span>&gt;</span></span>
 <span class="name ">renderImageAsBytes</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="renderImageAsBytes-param-pixelRatio"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">pixelRatio</span> = <span class="default-value">6</span>, </span></li>
+<li><span class="parameter" id="renderImageAsBytes-param-format"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/ImageByteFormat.html">ImageByteFormat</a></span> <span class="parameter-name">format</span> = <span class="default-value">ui.ImageByteFormat.png</span>, </span></li>
 </ol>})
 
       
@@ -82,10 +83,11 @@ Remember to surround your widget with <a href="../../widgets_widgets_to_image/Wi
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;bytes&gt; renderImageAsBytes({
   double pixelRatio = 6,
+  ui.ImageByteFormat format = ui.ImageByteFormat.png,
 }) async {
   try {
     final image = await renderImage(pixelRatio: pixelRatio);
-    final byteData = await image?.toByteData(format: ui.ImageByteFormat.png);
+    final byteData = await image?.toByteData(format: format);
     if (byteData != null) {
       return byteData.buffer.asUint8List();
     }

@@ -31,7 +31,7 @@
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_image_of_widget/widgets_image_of_widget-library.html">widgets\image_of_widget.dart</a></li>
     <li><a href="../../widgets_image_of_widget/ImageOfWidget-class.html">ImageOfWidget</a></li>
-    <li class="self-crumb">ImageOfWidget const constructor</li>
+    <li class="self-crumb">ImageOfWidget constructor</li>
   </ol>
   <div class="self-name">ImageOfWidget</div>
   <form class="search navbar-right" role="search">
@@ -61,7 +61,7 @@
 </h1></div>
 
     <section class="multi-line-signature">
-      const
+      
       <span class="name ">ImageOfWidget</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span> <span class="parameter-name">key</span>, </span></li>
 <li><span class="parameter" id="-param-child"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span> <span class="parameter-name">child</span>, </span></li>
 <li><span class="parameter" id="-param-scale"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">scale</span> = <span class="default-value">1.0</span>, </span></li>
@@ -81,7 +81,8 @@
 <li><span class="parameter" id="-param-matchTextDirection"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">matchTextDirection</span> = <span class="default-value">false</span>, </span></li>
 <li><span class="parameter" id="-param-gaplessPlayback"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">gaplessPlayback</span> = <span class="default-value">false</span>, </span></li>
 <li><span class="parameter" id="-param-isAntiAlias"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isAntiAlias</span> = <span class="default-value">false</span>, </span></li>
-<li><span class="parameter" id="-param-filterQuality"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/FilterQuality.html">FilterQuality</a></span> <span class="parameter-name">filterQuality</span> = <span class="default-value">FilterQuality.medium</span>, </span></li>
+<li><span class="parameter" id="-param-filterQuality"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/FilterQuality.html">FilterQuality</a></span> <span class="parameter-name">filterQuality</span> = <span class="default-value">FilterQuality.high</span>, </span></li>
+<li><span class="parameter" id="-param-loadingBuilder"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/ImageLoadingBuilder.html">ImageLoadingBuilder</a>?</span> <span class="parameter-name">loadingBuilder</span>, </span></li>
 </ol>})
     </section>
 
@@ -91,7 +92,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">const ImageOfWidget({
+  <pre class="language-dart"><code class="language-dart">ImageOfWidget({
   super.key,
   required this.child,
   this.scale = 1.0,
@@ -111,8 +112,9 @@
   this.matchTextDirection = false,
   this.gaplessPlayback = false,
   this.isAntiAlias = false,
-  this.filterQuality = FilterQuality.medium,
-});</code></pre>
+  this.filterQuality = FilterQuality.high,
+  this.loadingBuilder,
+}) : image = MemoryImage(Uint8List(0), scale: scale);</code></pre>
 </section>
 
 
@@ -130,7 +132,7 @@
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../widgets_image_of_widget/widgets_image_of_widget-library.html">image_of_widget</a></li>
     <li><a href="../../widgets_image_of_widget/ImageOfWidget-class.html">ImageOfWidget</a></li>
-    <li class="self-crumb">ImageOfWidget const constructor</li>
+    <li class="self-crumb">ImageOfWidget constructor</li>
 </ol>
 
 

@@ -66,7 +66,7 @@
 
     <section class="multi-line-signature">
       
-      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../innerlibs/string.html">string</a></span>&gt;</span></span>
       <span class="name ">lines</span>
       
 
@@ -80,11 +80,32 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Iterable&lt;String&gt; get lines =&gt; text.splitLines;</code></pre>
+  <pre class="language-dart"><code class="language-dart">Iterable&lt;string&gt; get lines =&gt; value.lines;</code></pre>
 </section>
 
   </section>
 
+
+        
+  <section id="setter">
+
+    <section class="multi-line-signature">
+      
+      <span class="returntype">void</span>
+      <span class="name ">lines=</span><span class="signature">(<wbr><span class="parameter" id="lines=-param-value"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">value</span></span>)</span>
+      
+
+    </section>
+
+    
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">set lines(Iterable&lt;String&gt; value) =&gt; text = value.join(Get.breakline);</code></pre>
+</section>
+
+  </section>
 
 </div> <!-- /.main-content -->
 

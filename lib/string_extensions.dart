@@ -1618,16 +1618,8 @@ extension StringExtensions on String {
     return replaceAll(s!, '');
   }
 
-  /// slice a string into chunks
-  StringList operator /(int chunkSize) {
-    List<String> chunks = [];
-    if (isNotBlank) {
-      for (int i = 0; i < length; i += chunkSize) {
-        chunks.add(substring(i, i + chunkSize));
-      }
-    }
-    return chunks;
-  }
+  /// slice a string into slices
+  StringList operator /(int sliceSize) => toArray.slices(sliceSize).map((x) => x.join()).toList();
 
   /// Checks if the [length!] of the `String` is less than the length of [s].
   ///
@@ -3069,7 +3061,7 @@ extension StringExtensions on String {
     return this;
   }
 
-  /// slice a string into chunks
+  /// slice a string into slices
   StringList slice(int chunkSize) => this / chunkSize;
 
   /// Splits the string into multiple substrings using any of the specified delimiters.

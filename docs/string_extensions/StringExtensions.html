@@ -1422,6 +1422,19 @@ Returns the modified string with diacritics removed.
 
 </dd>
 
+        <dt id="countAny" class="callable">
+  <span class="name"><a href="../string_extensions/StringExtensions/countAny.html">countAny</a></span><span class="signature">(<wbr><span class="parameter" id="countAny-param-patterns"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">patterns</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
         <dt id="emptyIf" class="callable">
   <span class="name"><a href="../string_extensions/StringExtensions/emptyIf.html">emptyIf</a></span><span class="signature">(<wbr><span class="parameter" id="emptyIf-param-comparisonString"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">comparisonString</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
@@ -2170,13 +2183,13 @@ The placeholders are Map keys surrounded by <code>openWrapChar</code> and <code>
 
 </dt>
 <dd>
-  slice a string into chunks
+  slice a string into slices
   
 
 </dd>
 
         <dt id="splitAny" class="callable">
-  <span class="name"><a href="../string_extensions/StringExtensions/splitAny.html">splitAny</a></span><span class="signature">(<wbr><span class="parameter" id="splitAny-param-delimiters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">delimiters</span></span>)
+  <span class="name"><a href="../string_extensions/StringExtensions/splitAny.html">splitAny</a></span><span class="signature">(<wbr><span class="parameter" id="splitAny-param-delimiters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">delimiters</span>, [</span><span class="parameter" id="splitAny-param-removeEmpty"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">removeEmpty</span> = <span class="default-value">false</span></span>])
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
   </span>
   
@@ -2395,14 +2408,14 @@ Returns <code>true</code> if the string starts with any of the provided strings,
 </dd>
 
         <dt id="operator &#47;" class="callable">
-  <span class="name"><a href="../string_extensions/StringExtensions/operator_divide.html">operator /</a></span><span class="signature">(<wbr><span class="parameter" id="/-param-chunkSize"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">chunkSize</span></span>)
+  <span class="name"><a href="../string_extensions/StringExtensions/operator_divide.html">operator /</a></span><span class="signature">(<wbr><span class="parameter" id="/-param-sliceSize"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">sliceSize</span></span>)
     <span class="returntype parameter">&#8594; <a href="../innerlibs/StringList.html">StringList</a></span>
   </span>
   
 
 </dt>
 <dd>
-  slice a string into chunks
+  slice a string into slices
   
 
 </dd>

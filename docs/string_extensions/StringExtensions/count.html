@@ -85,22 +85,10 @@ of the <code>subString</code> and returns the total number of occurrences found.
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">int count([String subString = &quot;&quot;]) {
-  if (subString.isBlank) {
+  if (subString.isEmpty) {
     return length;
   }
-  int count = 0;
-  int startIndex = 0;
-
-  &#47;&#47; Use indexOf to find the substring in the string
-  &#47;&#47; Loop until the substring is not found
-  while ((startIndex = indexOf(subString, startIndex)) != -1) {
-    &#47;&#47; Increment the count for each occurrence
-    count++;
-    &#47;&#47; Move past the last found substring
-    startIndex += subString.length;
-  }
-
-  return count;
+  return subString.allMatches(this).length;
 }</code></pre>
 </section>
 

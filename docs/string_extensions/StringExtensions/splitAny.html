@@ -64,8 +64,9 @@
       
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
-<span class="name ">splitAny</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="splitAny-param-delimiters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">delimiters</span></span></li>
-</ol>)
+<span class="name ">splitAny</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="splitAny-param-delimiters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">delimiters</span>, [</span></li>
+<li><span class="parameter" id="splitAny-param-removeEmpty"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">removeEmpty</span> = <span class="default-value">false</span></span></li>
+</ol>])
 
       
 
@@ -81,14 +82,17 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">List&lt;String&gt; splitAny(Iterable&lt;String&gt; delimiters) {
+  <pre class="language-dart"><code class="language-dart">List&lt;String&gt; splitAny(Iterable&lt;String&gt; delimiters, [bool removeEmpty = false]) {
   List&lt;String&gt; result = [this];
   for (String delimiter in delimiters) {
     List&lt;String&gt; temp = [];
     for (String str in result) {
-      temp.addAll(str.split(delimiter).where((x) =&gt; x.isNotEmpty));
+      temp.addAll(str.split(delimiter));
     }
     result = temp;
+  }
+  if (removeEmpty) {
+    result = result.where((element) =&gt; element.isNotEmpty).toList();
   }
   return result;
 }</code></pre>

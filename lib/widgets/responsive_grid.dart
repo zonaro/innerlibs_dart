@@ -13,11 +13,14 @@ class ResponsiveColumn {
   final double? height;
   final Decoration? decoration;
   final Decoration? foregroundDecoration;
-
+  
+  /// The alignment of the column.
   final Alignment? alignment;
-
+  
+  /// The padding inside the column.
   final EdgeInsets? padding;
-
+  
+  /// The margin outside the column.
   final EdgeInsets? margin;
 
   /// Responsive Column thats have breakpoints for each [ScreenTier]. If a tier is not specified, its fall down to the next smaller screen tier
@@ -84,6 +87,7 @@ class ResponsiveColumn {
     this.margin,
   });
 
+  /// Creates a copy of the given [ResponsiveColumn] with an optional new child.
   factory ResponsiveColumn.copy(ResponsiveColumn columnSizes, {Widget? child}) {
     return ResponsiveColumn(
       xxs: columnSizes.xxs,
@@ -103,6 +107,7 @@ class ResponsiveColumn {
     );
   }
 
+  /// Creates a [ResponsiveColumn] with full width for each screen tier.
   factory ResponsiveColumn.full({
     double? height,
     Widget child = nil,
@@ -131,6 +136,7 @@ class ResponsiveList extends StatelessWidget {
   final bool squareCells, scroll;
   final MainAxisAlignment rowMainAxisAlignment;
 
+  /// Creates a [ResponsiveList] with the given parameters.
   const ResponsiveList({super.key, this.desiredItemWidth, this.minSpacing = 0, this.squareCells = false, this.scroll = true, this.children, this.rowMainAxisAlignment = MainAxisAlignment.start});
 
   @override
@@ -236,6 +242,7 @@ class ResponsiveRow extends StatelessWidget {
   final WrapAlignment alignment;
   final WrapAlignment runAlignment;
 
+  /// Creates a [ResponsiveRow] with the given parameters.
   const ResponsiveRow({
     super.key,
     required this.children,
@@ -443,6 +450,8 @@ class ResponsiveRow extends StatelessWidget {
     );
   }
 
+
+  /// Calculates the column size based on the total segments and the provided sizes.
   static double getColumnSizeBySegments(double totalSegments, List<double?> sizes) {
     double size = (sizes.whereNotNull().firstOrNull ?? 1);
     if (size > 0) {
@@ -524,6 +533,7 @@ enum ScreenTier {
     return getBreakpointValue(width, customBreakPoints);
   }
 
+  /// Gets the maximum width for the current screen tier.
   double get maxWidth => breakpoints.entries.firstWhere((e) => e.value == this).key;
 
   operator <(ScreenTier tier) => value < tier.value;

@@ -62,17 +62,46 @@
 
       <section class="multi-line-signature">
         
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
         <a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a>
         <span class="name ">alignment</span>
         <div class="features"><span class="feature">final</span></div>
 
       </section>
       
+<section class="desc markdown">
+  <p>How to align the image within its bounds.</p>
+<p>The alignment aligns the given position in the image to the given position
+in the layout bounds. For example, an <a href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment</a> alignment of (-1.0,
+-1.0) aligns the image to the top-left corner of its layout bounds, while an
+<a href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment</a> alignment of (1.0, 1.0) aligns the bottom right of the
+image with the bottom right corner of its layout bounds. Similarly, an
+alignment of (0.0, 1.0) aligns the bottom middle of the image with the
+middle of the bottom edge of its layout bounds.</p>
+<p>To display a subpart of an image, consider using a <a href="https://api.flutter.dev/flutter/rendering/CustomPainter-class.html">CustomPainter</a> and
+<a href="https://api.flutter.dev/flutter/dart-ui/Canvas/drawImageRect.html">Canvas.drawImageRect</a>.</p>
+<p>If the <a href="../../widgets_image_of_widget/ImageOfWidget/alignment.html">alignment</a> is <a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection</a>-dependent (i.e. if it is a
+<a href="https://api.flutter.dev/flutter/painting/AlignmentDirectional-class.html">AlignmentDirectional</a>), then an ambient <a href="https://api.flutter.dev/flutter/widgets/Directionality-class.html">Directionality</a> widget
+must be in scope.</p>
+<p>Defaults to <a href="https://api.flutter.dev/flutter/painting/Alignment/center-constant.html">Alignment.center</a>.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment</a>, a class with convenient constants typically used to
+specify an <a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a>.</li>
+<li><a href="https://api.flutter.dev/flutter/painting/AlignmentDirectional-class.html">AlignmentDirectional</a>, like <a href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment</a> for specifying alignments
+relative to text direction.</li>
+</ul>
+</section>
 
       
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">final AlignmentGeometry alignment;</code></pre>
+  <pre class="language-dart"><code class="language-dart">@override
+final AlignmentGeometry alignment;</code></pre>
 </section>
 
 

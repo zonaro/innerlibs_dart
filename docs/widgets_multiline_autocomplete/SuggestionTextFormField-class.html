@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the SuggestionTextFormField class from the multiline_autocomplete library, for the Dart programming language.">
+  <title>SuggestionTextFormField class - multiline_autocomplete library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../widgets_multiline_autocomplete/widgets_multiline_autocomplete-library.html">widgets\multiline_autocomplete.dart</a></li>
+    <li class="self-crumb">SuggestionTextFormField<span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span>&gt;</span> class</li>
+  </ol>
+  <div class="self-name">SuggestionTextFormField</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="widgets_multiline_autocomplete&#47;widgets_multiline_autocomplete-library-sidebar.html"
+    data-below-sidebar="widgets_multiline_autocomplete&#47;SuggestionTextFormField-class-sidebar.html">
+    <div>
+<h1><span class="kind-class">SuggestionTextFormField&lt;<wbr><span class="type-parameter">T extends Object</span>&gt;</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>A widget that provides a multiline autocomplete text form field.</p>
+</section>
+
+
+    <section>
+      <dl class="dl-horizontal">
+        
+  <dt>Inheritance</dt>
+  <dd>
+    <ul class="gt-separated dark clazz-relationships">
+      <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
+        <li><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree-class.html">DiagnosticableTree</a></li>
+        <li><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></li>
+        <li><a href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html">StatefulWidget</a></li>
+      <li>SuggestionTextFormField</li>
+    </ul>
+  </dd>
+
+        
+        
+
+
+          <dt>Available Extensions</dt>
+          <dd><ul class="comma-separated clazz-relationships">
+              <li><a href="../align_extensions/AlignExtensions.html">AlignExtensions</a></li>
+              <li><a href="../center_extensions/CenterExtension.html">CenterExtension</a></li>
+              <li><a href="../expanded_extension/ExpandedExtension.html">ExpandedExtension</a></li>
+              <li><a href="../flexible_extension/FlexibleExtension.html">FlexibleExtension</a></li>
+              <li><a href="../gesture_detector_extension/GestureDetectorExtensions.html">GestureDetectorExtensions</a></li>
+              <li><a href="../opacity_extension/OpacityExtension.html">OpacityExtension</a></li>
+              <li><a href="../padding_extension/PaddingX.html">PaddingX</a></li>
+              <li><a href="../positioned_extensions/PositionedExtensions.html">PositionedExtensions</a></li>
+              <li><a href="../shimmer_extensions/ShimmerEffect.html">ShimmerEffect</a></li>
+              <li><a href="../widget_ext/WidgetExt.html">WidgetExt</a></li>
+              <li><a href="https://pub.dev/documentation/get/4.6.6/get/WidgetMarginX.html">WidgetMarginX</a></li>
+              <li><a href="https://pub.dev/documentation/get/4.6.6/get/WidgetPaddingX.html">WidgetPaddingX</a></li>
+              <li><a href="../tooltip_extension/WidgetsExtension.html">WidgetsExtension</a></li>
+              <li><a href="https://pub.dev/documentation/get/4.6.6/get/WidgetSliverBoxX.html">WidgetSliverBoxX</a></li>
+          </ul></dd>
+
+        
+
+
+      </dl>
+    </section>
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+
+    <dl class="constructor-summary-list">
+        <dt id="SuggestionTextFormField" class="callable">
+          <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/SuggestionTextFormField.html">SuggestionTextFormField</a></span><span class="signature">({<span class="parameter" id="-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span> <span class="parameter-name">key</span>, </span><span class="parameter" id="-param-decoration"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/material/InputDecoration-class.html">InputDecoration</a>?</span> <span class="parameter-name">decoration</span>, </span><span class="parameter" id="-param-keyCharSearches"><span class="type-annotation"><a href="../global/CharMatch.html">CharMatch</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">keyCharSearches</span> = <span class="default-value">const {}</span>, </span><span class="parameter" id="-param-levenshteinDistance"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span> = <span class="default-value">0</span>, </span><span class="parameter" id="-param-searchOn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>(<span class="parameter" id="param-"><span class="type-annotation">T</span></span>)?, </span><span class="parameter" id="-param-suggestions"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">suggestions</span> = <span class="default-value">const []</span>, </span><span class="parameter" id="-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-ignoreWordSplitters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreWordSplitters</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-splitCamelCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">splitCamelCase</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-useWildcards"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useWildcards</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-allIfEmpty"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">allIfEmpty</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-minChars"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">minChars</span> = <span class="default-value">1</span>, </span><span class="parameter" id="-param-maxResults"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxResults</span> = <span class="default-value">5</span>, </span><span class="parameter" id="-param-displayStringForOption"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">displayStringForOption</span>(<span class="parameter" id="param-"><span class="type-annotation">T</span></span>)?, </span><span class="parameter" id="-param-maxLines"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">maxLines</span>, </span><span class="parameter" id="-param-controller"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/TextEditingController-class.html">TextEditingController</a>?</span> <span class="parameter-name">controller</span>, </span><span class="parameter" id="-param-optionsViewOpenDirection"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/OptionsViewOpenDirection.html">OptionsViewOpenDirection</a></span> <span class="parameter-name">optionsViewOpenDirection</span> = <span class="default-value">OptionsViewOpenDirection.down</span>, </span><span class="parameter" id="-param-focusNode"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/FocusNode-class.html">FocusNode</a>?</span> <span class="parameter-name">focusNode</span>, </span><span class="parameter" id="-param-appendSuggestions"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">appendSuggestions</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-appendNewLine"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">appendNewLine</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-keyboardType"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/services/TextInputType-class.html">TextInputType</a>?</span> <span class="parameter-name">keyboardType</span> = <span class="default-value">TextInputType.multiline</span>, </span><span class="parameter" id="-param-textCapitalization"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/services/TextCapitalization.html">TextCapitalization</a></span> <span class="parameter-name">textCapitalization</span> = <span class="default-value">TextCapitalization.none</span>, </span><span class="parameter" id="-param-textInputAction"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/services/TextInputAction.html">TextInputAction</a>?</span> <span class="parameter-name">textInputAction</span>, </span><span class="parameter" id="-param-style"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/TextStyle-class.html">TextStyle</a>?</span> <span class="parameter-name">style</span>, </span><span class="parameter" id="-param-strutStyle"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/StrutStyle-class.html">StrutStyle</a>?</span> <span class="parameter-name">strutStyle</span>, </span><span class="parameter" id="-param-textDirection"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection</a>?</span> <span class="parameter-name">textDirection</span>, </span><span class="parameter" id="-param-textAlign"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/TextAlign.html">TextAlign</a></span> <span class="parameter-name">textAlign</span> = <span class="default-value">TextAlign.start</span>, </span><span class="parameter" id="-param-textAlignVertical"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/TextAlignVertical-class.html">TextAlignVertical</a>?</span> <span class="parameter-name">textAlignVertical</span>, </span><span class="parameter" id="-param-autofocus"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">autofocus</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-readOnly"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">readOnly</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-showCursor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">showCursor</span>, </span><span class="parameter" id="-param-obscuringCharacter"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">obscuringCharacter</span> = <span class="default-value">&#39;•&#39;</span>, </span><span class="parameter" id="-param-obscureText"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">obscureText</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-autocorrect"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">autocorrect</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-smartDashesType"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/services/SmartDashesType.html">SmartDashesType</a>?</span> <span class="parameter-name">smartDashesType</span>, </span><span class="parameter" id="-param-smartQuotesType"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/services/SmartQuotesType.html">SmartQuotesType</a>?</span> <span class="parameter-name">smartQuotesType</span>, </span><span class="parameter" id="-param-enableSuggestions"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">enableSuggestions</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-maxLengthEnforcement"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/services/MaxLengthEnforcement.html">MaxLengthEnforcement</a>?</span> <span class="parameter-name">maxLengthEnforcement</span>, </span><span class="parameter" id="-param-expands"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">expands</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-maxLength"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">maxLength</span>, </span><span class="parameter" id="-param-onTap"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/gestures/GestureTapCallback.html">GestureTapCallback</a>?</span> <span class="parameter-name">onTap</span>, </span><span class="parameter" id="-param-onTapAlwaysCalled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">onTapAlwaysCalled</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-onTapOutside"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/TapRegionCallback.html">TapRegionCallback</a>?</span> <span class="parameter-name">onTapOutside</span>, </span><span class="parameter" id="-param-onEditingComplete"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/VoidCallback.html">VoidCallback</a>?</span> <span class="parameter-name">onEditingComplete</span>, </span><span class="parameter" id="-param-onFieldSubmitted"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/ValueChanged.html">ValueChanged</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">onFieldSubmitted</span>, </span><span class="parameter" id="-param-inputFormatters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/services/TextInputFormatter-class.html">TextInputFormatter</a></span>&gt;</span>?</span> <span class="parameter-name">inputFormatters</span>, </span><span class="parameter" id="-param-enabled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">enabled</span>, </span><span class="parameter" id="-param-ignorePointers"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">ignorePointers</span>, </span><span class="parameter" id="-param-cursorWidth"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">cursorWidth</span> = <span class="default-value">2.0</span>, </span><span class="parameter" id="-param-cursorHeight"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span> <span class="parameter-name">cursorHeight</span>, </span><span class="parameter" id="-param-cursorRadius"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Radius-class.html">Radius</a>?</span> <span class="parameter-name">cursorRadius</span>, </span><span class="parameter" id="-param-cursorColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Color-class.html">Color</a>?</span> <span class="parameter-name">cursorColor</span>, </span><span class="parameter" id="-param-cursorErrorColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Color-class.html">Color</a>?</span> <span class="parameter-name">cursorErrorColor</span>, </span><span class="parameter" id="-param-keyboardAppearance"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Brightness.html">Brightness</a>?</span> <span class="parameter-name">keyboardAppearance</span>, </span><span class="parameter" id="-param-scrollPadding"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/EdgeInsets-class.html">EdgeInsets</a></span> <span class="parameter-name">scrollPadding</span> = <span class="default-value">const EdgeInsets.all(20.0)</span>, </span><span class="parameter" id="-param-enableInteractiveSelection"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">enableInteractiveSelection</span>, </span><span class="parameter" id="-param-selectionControls"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/TextSelectionControls-class.html">TextSelectionControls</a>?</span> <span class="parameter-name">selectionControls</span>, </span><span class="parameter" id="-param-buildCounter"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/material/InputCounterWidgetBuilder.html">InputCounterWidgetBuilder</a>?</span> <span class="parameter-name">buildCounter</span>, </span><span class="parameter" id="-param-scrollPhysics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/ScrollPhysics-class.html">ScrollPhysics</a>?</span> <span class="parameter-name">scrollPhysics</span>, </span><span class="parameter" id="-param-autofillHints"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">autofillHints</span>, </span><span class="parameter" id="-param-autovalidateMode"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/AutovalidateMode.html">AutovalidateMode</a>?</span> <span class="parameter-name">autovalidateMode</span>, </span><span class="parameter" id="-param-scrollController"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/ScrollController-class.html">ScrollController</a>?</span> <span class="parameter-name">scrollController</span>, </span><span class="parameter" id="-param-enableIMEPersonalizedLearning"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">enableIMEPersonalizedLearning</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-mouseCursor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/services/MouseCursor-class.html">MouseCursor</a>?</span> <span class="parameter-name">mouseCursor</span>, </span><span class="parameter" id="-param-contextMenuBuilder"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/EditableTextContextMenuBuilder.html">EditableTextContextMenuBuilder</a>?</span> <span class="parameter-name">contextMenuBuilder</span>, </span><span class="parameter" id="-param-spellCheckConfiguration"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/SpellCheckConfiguration-class.html">SpellCheckConfiguration</a>?</span> <span class="parameter-name">spellCheckConfiguration</span>, </span><span class="parameter" id="-param-magnifierConfiguration"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/TextMagnifierConfiguration-class.html">TextMagnifierConfiguration</a>?</span> <span class="parameter-name">magnifierConfiguration</span>, </span><span class="parameter" id="-param-undoController"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/UndoHistoryController-class.html">UndoHistoryController</a>?</span> <span class="parameter-name">undoController</span>, </span><span class="parameter" id="-param-onAppPrivateCommand"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/AppPrivateCommandCallback.html">AppPrivateCommandCallback</a>?</span> <span class="parameter-name">onAppPrivateCommand</span>, </span><span class="parameter" id="-param-cursorOpacityAnimates"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">cursorOpacityAnimates</span>, </span><span class="parameter" id="-param-selectionHeightStyle"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/BoxHeightStyle.html">BoxHeightStyle</a></span> <span class="parameter-name">selectionHeightStyle</span> = <span class="default-value">BoxHeightStyle.tight</span>, </span><span class="parameter" id="-param-selectionWidthStyle"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/BoxWidthStyle.html">BoxWidthStyle</a></span> <span class="parameter-name">selectionWidthStyle</span> = <span class="default-value">BoxWidthStyle.tight</span>, </span><span class="parameter" id="-param-dragStartBehavior"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/gestures/DragStartBehavior.html">DragStartBehavior</a></span> <span class="parameter-name">dragStartBehavior</span> = <span class="default-value">DragStartBehavior.start</span>, </span><span class="parameter" id="-param-contentInsertionConfiguration"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/ContentInsertionConfiguration-class.html">ContentInsertionConfiguration</a>?</span> <span class="parameter-name">contentInsertionConfiguration</span>, </span><span class="parameter" id="-param-statesController"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/WidgetStatesController-class.html">WidgetStatesController</a>?</span> <span class="parameter-name">statesController</span>, </span><span class="parameter" id="-param-clipBehavior"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Clip.html">Clip</a></span> <span class="parameter-name">clipBehavior</span> = <span class="default-value">Clip.hardEdge</span>, </span><span class="parameter" id="-param-scribbleEnabled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">scribbleEnabled</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-canRequestFocus"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">canRequestFocus</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-onChanged"><span class="type-annotation">void</span> <span class="parameter-name">onChanged</span>(<span class="parameter" id="param-"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span></span>)?, </span><span class="parameter" id="-param-minLines"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">minLines</span>, </span><span class="parameter" id="-param-forceErrorText"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">forceErrorText</span>, </span><span class="parameter" id="-param-initialValue"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">initialValue</span>, </span><span class="parameter" id="-param-onSaved"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/FormFieldSetter.html">FormFieldSetter</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">onSaved</span>, </span><span class="parameter" id="-param-validator"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/FormFieldValidator.html">FormFieldValidator</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">validator</span>, </span><span class="parameter" id="-param-restorationId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">restorationId</span>, </span><span class="parameter" id="-param-onSuggestionSelected"><span class="type-annotation">void</span> <span class="parameter-name">onSuggestionSelected</span>(<span class="parameter" id="param-suggestionText"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">suggestionText</span>, </span><span class="parameter" id="param-selection"><span class="type-annotation">T</span> <span class="parameter-name">selection</span></span>)?, </span><span class="parameter" id="-param-asyncSuggestions"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">asyncSuggestions</span>(<span class="parameter" id="param-search"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">search</span></span>)?, </span><span class="parameter" id="-param-maxHeight"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span> <span class="parameter-name">maxHeight</span>, </span><span class="parameter" id="-param-itemEqualityComparator"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">itemEqualityComparator</span>(<span class="parameter" id="param-item1"><span class="type-annotation">T</span> <span class="parameter-name">item1</span>, </span><span class="parameter" id="param-item2"><span class="type-annotation">T</span> <span class="parameter-name">item2</span></span>)?, </span><span class="parameter" id="-param-itemComparator"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">itemComparator</span>(<span class="parameter" id="param-item1"><span class="type-annotation">T</span> <span class="parameter-name">item1</span>, </span><span class="parameter" id="param-item2"><span class="type-annotation">T</span> <span class="parameter-name">item2</span></span>)?</span>})</span>
+        </dt>
+        <dd>
+          
+            <div class="constructor-modifier features">const</div>
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="allIfEmpty" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/allIfEmpty.html">allIfEmpty</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to show all suggestions if the input is empty.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="appendNewLine" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/appendNewLine.html">appendNewLine</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to append a new line after a suggestion is selected.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="appendSuggestions" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/appendSuggestions.html">appendSuggestions</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  When true, append the suggestion into current line, otherwise replace the current line with the suggestion.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="asyncSuggestions" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/asyncSuggestions.html">asyncSuggestions</a></span>
+  <span class="signature">&#8594; (<a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>&gt;</span> Function<span class="signature">(<span class="parameter" id="param-search"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">search</span></span>)</span>?)</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="autocorrect" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/autocorrect.html">autocorrect</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to enable autocorrect in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="autofillHints" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/autofillHints.html">autofillHints</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  The autofill hints to use for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="autofocus" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/autofocus.html">autofocus</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to autofocus the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="autovalidateMode" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/autovalidateMode.html">autovalidateMode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/AutovalidateMode.html">AutovalidateMode</a>?</span>
+  
+
+</dt>
+<dd>
+  The autovalidate mode for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="buildCounter" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/buildCounter.html">buildCounter</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/material/InputCounterWidgetBuilder.html">InputCounterWidgetBuilder</a>?</span>
+  
+
+</dt>
+<dd>
+  The builder for the input counter widget.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="canRequestFocus" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/canRequestFocus.html">canRequestFocus</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether the text field can request focus.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="clipBehavior" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/clipBehavior.html">clipBehavior</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/Clip.html">Clip</a></span>
+  
+
+</dt>
+<dd>
+  The clip behavior for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="contentInsertionConfiguration" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/contentInsertionConfiguration.html">contentInsertionConfiguration</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/ContentInsertionConfiguration-class.html">ContentInsertionConfiguration</a>?</span>
+  
+
+</dt>
+<dd>
+  The content insertion configuration for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="contextMenuBuilder" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/contextMenuBuilder.html">contextMenuBuilder</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/EditableTextContextMenuBuilder.html">EditableTextContextMenuBuilder</a>?</span>
+  
+
+</dt>
+<dd>
+  The builder for the context menu.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="controller" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/controller.html">controller</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/TextEditingController-class.html">TextEditingController</a>?</span>
+  
+
+</dt>
+<dd>
+  The controller for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="cursorColor" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/cursorColor.html">cursorColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/Color-class.html">Color</a>?</span>
+  
+
+</dt>
+<dd>
+  The color of the cursor in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="cursorErrorColor" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/cursorErrorColor.html">cursorErrorColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/Color-class.html">Color</a>?</span>
+  
+
+</dt>
+<dd>
+  The error color of the cursor in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="cursorHeight" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/cursorHeight.html">cursorHeight</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  
+
+</dt>
+<dd>
+  The height of the cursor in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="cursorOpacityAnimates" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/cursorOpacityAnimates.html">cursorOpacityAnimates</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+  
+
+</dt>
+<dd>
+  Whether the cursor opacity animates.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="cursorRadius" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/cursorRadius.html">cursorRadius</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/Radius-class.html">Radius</a>?</span>
+  
+
+</dt>
+<dd>
+  The radius of the cursor in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="cursorWidth" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/cursorWidth.html">cursorWidth</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>
+  
+
+</dt>
+<dd>
+  The width of the cursor in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="decoration" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/decoration.html">decoration</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/material/InputDecoration-class.html">InputDecoration</a>?</span>
+  
+
+</dt>
+<dd>
+  The decoration to show around the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="displayStringForOption" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/displayStringForOption.html">displayStringForOption</a></span>
+  <span class="signature">&#8594; (<a href="../innerlibs/string.html">string</a> Function<span class="signature">(<span class="parameter" id="param-"><span class="type-annotation">T</span></span>)</span>?)</span>
+  
+
+</dt>
+<dd>
+  A function that returns the display string for a suggestion.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="dragStartBehavior" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/dragStartBehavior.html">dragStartBehavior</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/gestures/DragStartBehavior.html">DragStartBehavior</a></span>
+  
+
+</dt>
+<dd>
+  The drag start behavior for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="enabled" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/enabled.html">enabled</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+  
+
+</dt>
+<dd>
+  Whether the text field is enabled.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="enableIMEPersonalizedLearning" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/enableIMEPersonalizedLearning.html">enableIMEPersonalizedLearning</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to enable personalized learning for the IME.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="enableInteractiveSelection" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/enableInteractiveSelection.html">enableInteractiveSelection</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+  
+
+</dt>
+<dd>
+  Whether to enable interactive selection in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="enableSuggestions" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/enableSuggestions.html">enableSuggestions</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to enable suggestions in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="expands" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/expands.html">expands</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether the text field should expand to fill its parent.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="focusNode" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/focusNode.html">focusNode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/FocusNode-class.html">FocusNode</a>?</span>
+  
+
+</dt>
+<dd>
+  The focus node for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="forceErrorText" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/forceErrorText.html">forceErrorText</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  
+
+</dt>
+<dd>
+  The error text to force display.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="ignoreCase" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/ignoreCase.html">ignoreCase</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to ignore case when searching for suggestions.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="ignoreDiacritics" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/ignoreDiacritics.html">ignoreDiacritics</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to ignore diacritics when searching for suggestions.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="ignorePointers" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/ignorePointers.html">ignorePointers</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+  
+
+</dt>
+<dd>
+  Whether to ignore pointers for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="ignoreWordSplitters" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/ignoreWordSplitters.html">ignoreWordSplitters</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to ignore word splitters when searching for suggestions.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="initialValue" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/initialValue.html">initialValue</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  
+
+</dt>
+<dd>
+  The initial value for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="inputFormatters" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/inputFormatters.html">inputFormatters</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/services/TextInputFormatter-class.html">TextInputFormatter</a></span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  The input formatters to use for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="itemComparator" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/itemComparator.html">itemComparator</a></span>
+  <span class="signature">&#8594; (<a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a> Function<span class="signature">(<span class="parameter" id="param-item1"><span class="type-annotation">T</span> <span class="parameter-name">item1</span>, </span><span class="parameter" id="param-item2"><span class="type-annotation">T</span> <span class="parameter-name">item2</span></span>)</span>?)</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="itemEqualityComparator" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/itemEqualityComparator.html">itemEqualityComparator</a></span>
+  <span class="signature">&#8594; (<a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a> Function<span class="signature">(<span class="parameter" id="param-item1"><span class="type-annotation">T</span> <span class="parameter-name">item1</span>, </span><span class="parameter" id="param-item2"><span class="type-annotation">T</span> <span class="parameter-name">item2</span></span>)</span>?)</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="key" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Controls how one widget replaces another widget in the tree.
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="keyboardAppearance" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/keyboardAppearance.html">keyboardAppearance</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/Brightness.html">Brightness</a>?</span>
+  
+
+</dt>
+<dd>
+  The keyboard appearance for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="keyboardType" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/keyboardType.html">keyboardType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/TextInputType-class.html">TextInputType</a>?</span>
+  
+
+</dt>
+<dd>
+  The type of keyboard to use for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="keyCharSearches" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/keyCharSearches.html">keyCharSearches</a></span>
+  <span class="signature">&#8594; <a href="../global/CharMatch.html">CharMatch</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  A map to fire custom search functions for specific characters
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="levenshteinDistance" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/levenshteinDistance.html">levenshteinDistance</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  The maximum Levenshtein distance for suggestions.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="magnifierConfiguration" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/magnifierConfiguration.html">magnifierConfiguration</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/TextMagnifierConfiguration-class.html">TextMagnifierConfiguration</a>?</span>
+  
+
+</dt>
+<dd>
+  The magnifier configuration for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="maxHeight" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/maxHeight.html">maxHeight</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="maxLength" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/maxLength.html">maxLength</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  
+
+</dt>
+<dd>
+  The maximum length for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="maxLengthEnforcement" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/maxLengthEnforcement.html">maxLengthEnforcement</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/MaxLengthEnforcement.html">MaxLengthEnforcement</a>?</span>
+  
+
+</dt>
+<dd>
+  The max length enforcement for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="maxLines" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/maxLines.html">maxLines</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  
+
+</dt>
+<dd>
+  The maximum number of lines for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="maxResults" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/maxResults.html">maxResults</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  The maximum number of suggestions to show.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="minChars" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/minChars.html">minChars</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  The minimum number of characters required to show suggestions.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="minLines" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/minLines.html">minLines</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  
+
+</dt>
+<dd>
+  The minimum number of lines for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="mouseCursor" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/mouseCursor.html">mouseCursor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/MouseCursor-class.html">MouseCursor</a>?</span>
+  
+
+</dt>
+<dd>
+  The mouse cursor to use for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="obscureText" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/obscureText.html">obscureText</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to obscure text in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="obscuringCharacter" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/obscuringCharacter.html">obscuringCharacter</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
+
+</dt>
+<dd>
+  The character to use for obscuring text.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onAppPrivateCommand" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/onAppPrivateCommand.html">onAppPrivateCommand</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/AppPrivateCommandCallback.html">AppPrivateCommandCallback</a>?</span>
+  
+
+</dt>
+<dd>
+  The callback to call for private app commands.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onChanged" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/onChanged.html">onChanged</a></span>
+  <span class="signature">&#8594; (void Function<span class="signature">(<span class="parameter" id="param-"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span></span>)</span>?)</span>
+  
+
+</dt>
+<dd>
+  The callback to call when the text changes.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onEditingComplete" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/onEditingComplete.html">onEditingComplete</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/VoidCallback.html">VoidCallback</a>?</span>
+  
+
+</dt>
+<dd>
+  The callback to call when editing is complete.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onFieldSubmitted" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/onFieldSubmitted.html">onFieldSubmitted</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/foundation/ValueChanged.html">ValueChanged</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  The callback to call when the field is submitted.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onSaved" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/onSaved.html">onSaved</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/FormFieldSetter.html">FormFieldSetter</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  The callback to call when the text field is saved.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onSuggestionSelected" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/onSuggestionSelected.html">onSuggestionSelected</a></span>
+  <span class="signature">&#8594; (void Function<span class="signature">(<span class="parameter" id="param-suggestionText"><span class="type-annotation"><a href="../innerlibs/string.html">string</a></span> <span class="parameter-name">suggestionText</span>, </span><span class="parameter" id="param-selection"><span class="type-annotation">T</span> <span class="parameter-name">selection</span></span>)</span>?)</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onTap" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/onTap.html">onTap</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/gestures/GestureTapCallback.html">GestureTapCallback</a>?</span>
+  
+
+</dt>
+<dd>
+  The callback to call when the text field is tapped.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onTapAlwaysCalled" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/onTapAlwaysCalled.html">onTapAlwaysCalled</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether the onTap callback should always be called.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onTapOutside" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/onTapOutside.html">onTapOutside</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/TapRegionCallback.html">TapRegionCallback</a>?</span>
+  
+
+</dt>
+<dd>
+  The callback to call when the text field is tapped outside.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="optionsViewOpenDirection" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/optionsViewOpenDirection.html">optionsViewOpenDirection</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/OptionsViewOpenDirection.html">OptionsViewOpenDirection</a></span>
+  
+
+</dt>
+<dd>
+  The direction in which the options view should open.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="readOnly" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/readOnly.html">readOnly</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether the text field is read-only.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="restorationId" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/restorationId.html">restorationId</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  
+
+</dt>
+<dd>
+  The restoration ID for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="scribbleEnabled" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/scribbleEnabled.html">scribbleEnabled</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether scribble is enabled for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="scrollController" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/scrollController.html">scrollController</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/ScrollController-class.html">ScrollController</a>?</span>
+  
+
+</dt>
+<dd>
+  The scroll controller for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="scrollPadding" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/scrollPadding.html">scrollPadding</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/EdgeInsets-class.html">EdgeInsets</a></span>
+  
+
+</dt>
+<dd>
+  The padding to use when scrolling the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="scrollPhysics" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/scrollPhysics.html">scrollPhysics</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/ScrollPhysics-class.html">ScrollPhysics</a>?</span>
+  
+
+</dt>
+<dd>
+  The scroll physics to use for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="searchOn" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/searchOn.html">searchOn</a></span>
+  <span class="signature">&#8594; (<a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a> Function<span class="signature">(<span class="parameter" id="param-"><span class="type-annotation">T</span></span>)</span>?)</span>
+  
+
+</dt>
+<dd>
+  A function that returns the fields to search on for a suggestion.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="selectionControls" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/selectionControls.html">selectionControls</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/TextSelectionControls-class.html">TextSelectionControls</a>?</span>
+  
+
+</dt>
+<dd>
+  The selection controls to use for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="selectionHeightStyle" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/selectionHeightStyle.html">selectionHeightStyle</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/BoxHeightStyle.html">BoxHeightStyle</a></span>
+  
+
+</dt>
+<dd>
+  The height style for the selection.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="selectionWidthStyle" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/selectionWidthStyle.html">selectionWidthStyle</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/BoxWidthStyle.html">BoxWidthStyle</a></span>
+  
+
+</dt>
+<dd>
+  The width style for the selection.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="showCursor" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/showCursor.html">showCursor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+  
+
+</dt>
+<dd>
+  Whether to show the cursor in the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="smartDashesType" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/smartDashesType.html">smartDashesType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/SmartDashesType.html">SmartDashesType</a>?</span>
+  
+
+</dt>
+<dd>
+  The smart dashes type for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="smartQuotesType" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/smartQuotesType.html">smartQuotesType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/SmartQuotesType.html">SmartQuotesType</a>?</span>
+  
+
+</dt>
+<dd>
+  The smart quotes type for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="spellCheckConfiguration" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/spellCheckConfiguration.html">spellCheckConfiguration</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/SpellCheckConfiguration-class.html">SpellCheckConfiguration</a>?</span>
+  
+
+</dt>
+<dd>
+  The spell check configuration for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="splitCamelCase" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/splitCamelCase.html">splitCamelCase</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to split camel case when searching for suggestions.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="statesController" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/statesController.html">statesController</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/WidgetStatesController-class.html">WidgetStatesController</a>?</span>
+  
+
+</dt>
+<dd>
+  The states controller for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="strutStyle" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/strutStyle.html">strutStyle</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/StrutStyle-class.html">StrutStyle</a>?</span>
+  
+
+</dt>
+<dd>
+  The strut style to use for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="style" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/style.html">style</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/TextStyle-class.html">TextStyle</a>?</span>
+  
+
+</dt>
+<dd>
+  The style to use for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="suggestions" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/suggestions.html">suggestions</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  A function that returns a list of suggestions.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="textAlign" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/textAlign.html">textAlign</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/TextAlign.html">TextAlign</a></span>
+  
+
+</dt>
+<dd>
+  The alignment for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="textAlignVertical" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/textAlignVertical.html">textAlignVertical</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/TextAlignVertical-class.html">TextAlignVertical</a>?</span>
+  
+
+</dt>
+<dd>
+  The vertical alignment for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="textCapitalization" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/textCapitalization.html">textCapitalization</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/TextCapitalization.html">TextCapitalization</a></span>
+  
+
+</dt>
+<dd>
+  The capitalization behavior for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="textDirection" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/textDirection.html">textDirection</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection</a>?</span>
+  
+
+</dt>
+<dd>
+  The text direction for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="textInputAction" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/textInputAction.html">textInputAction</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/TextInputAction.html">TextInputAction</a>?</span>
+  
+
+</dt>
+<dd>
+  The action button to use for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="undoController" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/undoController.html">undoController</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/UndoHistoryController-class.html">UndoHistoryController</a>?</span>
+  
+
+</dt>
+<dd>
+  The undo history controller for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="useWildcards" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/useWildcards.html">useWildcards</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  Whether to use wildcards when searching for suggestions.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="validator" class="property">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/validator.html">validator</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/FormFieldValidator.html">FormFieldValidator</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  The validator for the text field.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="createElement" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/StatefulWidget/createElement.html">createElement</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/widgets/StatefulElement-class.html">StatefulElement</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Creates a <a href="https://api.flutter.dev/flutter/widgets/StatefulElement-class.html">StatefulElement</a> to manage this widget's location in the tree.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="createState" class="callable">
+  <span class="name"><a href="../widgets_multiline_autocomplete/SuggestionTextFormField/createState.html">createState</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/widgets/State-class.html">State</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html">StatefulWidget</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates the mutable state for this widget at a given location in the tree.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="debugDescribeChildren" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/debugDescribeChildren.html">debugDescribeChildren</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html">DiagnosticsNode</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a list of <a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html">DiagnosticsNode</a> objects describing this node's
+children.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="debugFillProperties" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/debugFillProperties.html">debugFillProperties</a></span><span class="signature">(<wbr><span class="parameter" id="debugFillProperties-param-properties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticPropertiesBuilder-class.html">DiagnosticPropertiesBuilder</a></span> <span class="parameter-name">properties</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Add additional properties associated with the node.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toDiagnosticsNode" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toDiagnosticsNode.html">toDiagnosticsNode</a></span><span class="signature">(<wbr>{<span class="parameter" id="toDiagnosticsNode-param-name"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">name</span>, </span><span class="parameter" id="toDiagnosticsNode-param-style"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticsTreeStyle.html">DiagnosticsTreeStyle</a>?</span> <span class="parameter-name">style</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html">DiagnosticsNode</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a debug representation of the object that is used by debugging
+tools and by <a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode/toStringDeep.html">DiagnosticsNode.toStringDeep</a>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/Diagnosticable/toString.html">toString</a></span><span class="signature">(<wbr>{<span class="parameter" id="toString-param-minLevel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticLevel.html">DiagnosticLevel</a></span> <span class="parameter-name">minLevel</span> = <span class="default-value">DiagnosticLevel.info</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toStringDeep" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringDeep.html">toStringDeep</a></span><span class="signature">(<wbr>{<span class="parameter" id="toStringDeep-param-prefixLineOne"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">prefixLineOne</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="toStringDeep-param-prefixOtherLines"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">prefixOtherLines</span>, </span><span class="parameter" id="toStringDeep-param-minLevel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticLevel.html">DiagnosticLevel</a></span> <span class="parameter-name">minLevel</span> = <span class="default-value">DiagnosticLevel.debug</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a string representation of this node and its descendants.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toStringShallow" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringShallow.html">toStringShallow</a></span><span class="signature">(<wbr>{<span class="parameter" id="toStringShallow-param-joiner"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">joiner</span> = <span class="default-value">&#39;, &#39;</span>, </span><span class="parameter" id="toStringShallow-param-minLevel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticLevel.html">DiagnosticLevel</a></span> <span class="parameter-name">minLevel</span> = <span class="default-value">DiagnosticLevel.debug</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a one-line detailed description of the object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toStringShort" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/toStringShort.html">toStringShort</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A short, textual description of this widget.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+    
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../widgets_multiline_autocomplete/widgets_multiline_autocomplete-library.html">multiline_autocomplete</a></li>
+    <li class="self-crumb">SuggestionTextFormField<span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span>&gt;</span> class</li>
+</ol>
+
+
+    <h5>multiline_autocomplete library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

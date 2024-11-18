@@ -64,7 +64,7 @@
       
 
 <span class="returntype"><a href="../../innerlibs/StringList.html">StringList</a></span>
-<span class="name ">operator &#47;</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="/-param-chunkSize"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">chunkSize</span></span></li>
+<span class="name ">operator &#47;</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="/-param-sliceSize"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">sliceSize</span></span></li>
 </ol>)
 
       
@@ -72,22 +72,14 @@
     </section>
     
 <section class="desc markdown">
-  <p>slice a string into chunks</p>
+  <p>slice a string into slices</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">StringList operator &#47;(int chunkSize) {
-  List&lt;String&gt; chunks = [];
-  if (isNotBlank) {
-    for (int i = 0; i &lt; length; i += chunkSize) {
-      chunks.add(substring(i, i + chunkSize));
-    }
-  }
-  return chunks;
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">StringList operator &#47;(int sliceSize) =&gt; toArray.slices(sliceSize).map((x) =&gt; x.join()).toList();</code></pre>
 </section>
 
 

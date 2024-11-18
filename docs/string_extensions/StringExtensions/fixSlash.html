@@ -108,10 +108,10 @@ String revFoo4 = foo1.fixSlash(null); // returns 'C:\\Documents\\user\\test'
   bool hasLastSlash = path.endsWith(&#39;&#47;&#39;) || path.endsWith(&#39;\\&#39;);
   backSlash ??= count(&#39;\\&#39;) &gt; count(&#39;&#47;&#39;);
   if (backSlash) {
-    path = (hasFirstSlash ? &quot;\\&quot; : &quot;&quot;) + splitAny([&#39;&#47;&#39;, &#39;\\&#39;]).join(&#39;\\&#39;);
+    path = (hasFirstSlash ? &quot;\\&quot; : &quot;&quot;) + splitAny([&#39;&#47;&#39;, &#39;\\&#39;], true).join(&#39;\\&#39;);
     path = (hasLastSlash ? &quot;$path\\&quot; : path);
   } else {
-    path = (hasFirstSlash ? &quot;&#47;&quot; : &quot;&quot;) + splitAny([&#39;&#47;&#39;, &#39;\\&#39;]).join(&#39;&#47;&#39;);
+    path = (hasFirstSlash ? &quot;&#47;&quot; : &quot;&quot;) + splitAny([&#39;&#47;&#39;, &#39;\\&#39;], true).join(&#39;&#47;&#39;);
     path = (hasLastSlash ? &quot;$path&#47;&quot; : path);
   }
   return path;

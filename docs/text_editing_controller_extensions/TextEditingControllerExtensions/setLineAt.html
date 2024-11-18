@@ -81,9 +81,9 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">String setLineAt(int index, String value) {
-  final lines = text.splitLines;
-  lines[index] = value;
-  text = lines.join(Get.breakline);
+  final l = lines.toList();
+  l[index] = value;
+  lines = l;
   return text;
 }</code></pre>
 </section>

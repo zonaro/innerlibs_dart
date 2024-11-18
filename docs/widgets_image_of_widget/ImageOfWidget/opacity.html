@@ -62,17 +62,36 @@
 
       <section class="multi-line-signature">
         
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
         <a href="https://api.flutter.dev/flutter/animation/Animation-class.html">Animation</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>&gt;</span>?
         <span class="name ">opacity</span>
         <div class="features"><span class="feature">final</span></div>
 
       </section>
       
+<section class="desc markdown">
+  <p>If non-null, the value from the <a href="https://api.flutter.dev/flutter/animation/Animation-class.html">Animation</a> is multiplied with the opacity
+of each image pixel before painting onto the canvas.</p>
+<p>This is more efficient than using <a href="https://api.flutter.dev/flutter/widgets/FadeTransition-class.html">FadeTransition</a> to change the opacity
+of an image, since this avoids creating a new composited layer. Composited
+layers may double memory usage as the image is painted onto an offscreen
+render target.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://api.flutter.dev/flutter/animation/AlwaysStoppedAnimation-class.html">AlwaysStoppedAnimation</a>, which allows you to create an <a href="https://api.flutter.dev/flutter/animation/Animation-class.html">Animation</a>
+from a single opacity value.</li>
+</ul>
+</section>
 
       
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">final Animation&lt;double&gt;? opacity;</code></pre>
+  <pre class="language-dart"><code class="language-dart">@override
+final Animation&lt;double&gt;? opacity;</code></pre>
 </section>
 
 

@@ -69,6 +69,14 @@
 <li><span class="parameter" id="searchMap-param-keys"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>&gt;</span></span> <span class="parameter-name">keys</span> = <span class="default-value">const []</span>, </span></li>
 <li><span class="parameter" id="searchMap-param-levenshteinDistance"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span> = <span class="default-value">0</span>, </span></li>
 <li><span class="parameter" id="searchMap-param-allIfEmpty"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">allIfEmpty</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="searchMap-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="searchMap-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="searchMap-param-ignoreWordSplitters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreWordSplitters</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="searchMap-param-splitCamelCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">splitCamelCase</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="searchMap-param-useWildcards"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useWildcards</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="searchMap-param-maxResults"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxResults</span> = <span class="default-value">0</span>, </span></li>
+<li><span class="parameter" id="searchMap-param-minChars"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">minChars</span> = <span class="default-value">0</span>, </span></li>
+<li><span class="parameter" id="searchMap-param-keyCharSearches"><span class="type-annotation"><a href="../../global/CharMatch.html">CharMatch</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">keyCharSearches</span> = <span class="default-value">const {}</span>, </span></li>
 </ol>})
 
       
@@ -88,20 +96,43 @@ The <code>allIfEmpty</code> parameter determines whether to return all <a href="
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Iterable&lt;Map&lt;K, V&gt;&gt; searchMap&lt;K, V&gt;({required Iterable&lt;Map&lt;K, V&gt;&gt; items, required dynamic searchTerms, Iterable&lt;K&gt; keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
+  <pre class="language-dart"><code class="language-dart">Iterable&lt;Map&lt;K, V&gt;&gt; searchMap&lt;K, V&gt;({
+  required Iterable&lt;Map&lt;K, V&gt;&gt; items,
+  required dynamic searchTerms,
+  Iterable&lt;K&gt; keys = const [],
+  int levenshteinDistance = 0,
+  bool allIfEmpty = true,
+  bool ignoreCase = true,
+  bool ignoreDiacritics = true,
+  bool ignoreWordSplitters = true,
+  bool splitCamelCase = true,
+  bool useWildcards = false,
+  int maxResults = 0,
+  int minChars = 0,
+  CharMatch&lt;Map&lt;K, V&gt;&gt; keyCharSearches = const {},
+}) {
   if (keys.isEmpty) {
     keys = items.expand((e) =&gt; e.keys).distinct().toList();
   }
 
   return search(
-      items: items,
-      searchTerms: searchTerms,
-      searchOn: (row) =&gt; [
-            for (var k in keys)
-              if (row[k] != null) row[k]!
-          ],
-      levenshteinDistance: levenshteinDistance,
-      allIfEmpty: allIfEmpty);
+    items: items,
+    searchTerms: searchTerms,
+    searchOn: (row) =&gt; [
+      for (var k in keys)
+        if (row[k] != null) row[k]!
+    ],
+    levenshteinDistance: levenshteinDistance,
+    allIfEmpty: allIfEmpty,
+    ignoreCase: ignoreCase,
+    ignoreDiacritics: ignoreDiacritics,
+    ignoreWordSplitters: ignoreWordSplitters,
+    maxResults: maxResults,
+    keyCharSearches: keyCharSearches,
+    minChars: minChars,
+    splitCamelCase: splitCamelCase,
+    useWildcards: useWildcards,
+  );
 }</code></pre>
 </section>
 

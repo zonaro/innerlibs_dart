@@ -62,17 +62,34 @@
 
       <section class="multi-line-signature">
         
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
         <a href="https://api.flutter.dev/flutter/widgets/ImageErrorWidgetBuilder.html">ImageErrorWidgetBuilder</a>?
         <span class="name ">errorBuilder</span>
         <div class="features"><span class="feature">final</span></div>
 
       </section>
       
+<section class="desc markdown">
+  <p>A builder function that is called if an error occurs during image loading.</p>
+<p>If this builder is not provided, any exceptions will be reported to
+<a href="https://api.flutter.dev/flutter/foundation/FlutterError/onError.html">FlutterError.onError</a>. If it is provided, the caller should either handle
+the exception by providing a replacement widget, or rethrow the exception.</p>
+<p>{@tool dartpad}
+The following sample uses <a href="../../widgets_image_of_widget/ImageOfWidget/errorBuilder.html">errorBuilder</a> to show a '😢' in place of the
+image that fails to load, and prints the error to the console.</p>
+<p>** See code in examples/api/lib/widgets/image/image.error_builder.0.dart **
+{@end-tool}</p>
+</section>
 
       
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">final ImageErrorWidgetBuilder? errorBuilder;</code></pre>
+  <pre class="language-dart"><code class="language-dart">@override
+final ImageErrorWidgetBuilder? errorBuilder;</code></pre>
 </section>
 
 

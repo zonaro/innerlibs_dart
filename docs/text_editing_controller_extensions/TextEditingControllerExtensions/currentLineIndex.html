@@ -74,24 +74,41 @@
 
     
 <section class="desc markdown">
-  <p>Gets the index of the current line where the cursor is located.</p>
+  <p>Gets or sets the current line where the cursor is located.</p>
 </section>
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">int get currentLineIndex {
-  final cursorPosition = selection.baseOffset;
-  var lines = text.substring(0, cursorPosition).splitLines;
-  if (lines.isEmpty || text.endsWithAny(Get.breaklineChars)) {
-    lines.add(&quot;&quot;);
-  }
-  return lines.length - 1;
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">int get currentLineIndex =&gt; value.currentLineIndex;</code></pre>
 </section>
 
   </section>
 
+
+        
+  <section id="setter">
+
+    <section class="multi-line-signature">
+      
+      <span class="returntype">void</span>
+      <span class="name ">currentLineIndex=</span><span class="signature">(<wbr><span class="parameter" id="currentLineIndex=-param-value"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">value</span></span>)</span>
+      
+
+    </section>
+
+    
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">set currentLineIndex(int value) {
+  var cursorPosition = lines.take(value).join(Get.breakline).length;
+  selection = TextSelection.collapsed(offset: cursorPosition);
+}</code></pre>
+</section>
+
+  </section>
 
 </div> <!-- /.main-content -->
 

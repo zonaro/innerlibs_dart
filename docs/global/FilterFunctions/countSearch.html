@@ -132,8 +132,8 @@
           removeWordSplitters: ignoreWordSplitters,
           splitCamelCase: splitCamelCase,
         );
-        if (useWildcards) return keyword.toString().isLike(searchword, !ignoreCase);
-        return keyword.toString().contains(searchword);
+        consoleLog(&quot;SearchWord: $searchword, Keyword: $keyword&quot;);
+        return useWildcards ? keyword.toString().isLike(searchword, !ignoreCase) : keyword.toString().contains(searchword);
       })
   ].length;
 }</code></pre>

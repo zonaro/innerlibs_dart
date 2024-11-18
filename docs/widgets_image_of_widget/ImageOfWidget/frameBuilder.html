@@ -62,17 +62,67 @@
 
       <section class="multi-line-signature">
         
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
         <a href="https://api.flutter.dev/flutter/widgets/ImageFrameBuilder.html">ImageFrameBuilder</a>?
         <span class="name ">frameBuilder</span>
         <div class="features"><span class="feature">final</span></div>
 
       </section>
       
+<section class="desc markdown">
+  <p>A builder function responsible for creating the widget that represents
+this image.</p>
+<p>If this is null, this widget will display an image that is painted as
+soon as the first image frame is available (and will appear to "pop" in
+if it becomes available asynchronously). Callers might use this builder to
+add effects to the image (such as fading the image in when it becomes
+available) or to display a placeholder widget while the image is loading.</p>
+<p>To have finer-grained control over the way that an image's loading
+progress is communicated to the user, see <a href="../../widgets_image_of_widget/ImageOfWidget/loadingBuilder.html">loadingBuilder</a>.</p>
+<h2 id="chaining-with-loadingbuilder">Chaining with <a href="../../widgets_image_of_widget/ImageOfWidget/loadingBuilder.html">loadingBuilder</a></h2>
+<p>If a <a href="../../widgets_image_of_widget/ImageOfWidget/loadingBuilder.html">loadingBuilder</a> has <em>also</em> been specified for an image, the two
+builders will be chained together: the <em>result</em> of this builder will
+be passed as the <code>child</code> argument to the <a href="../../widgets_image_of_widget/ImageOfWidget/loadingBuilder.html">loadingBuilder</a>. For example,
+consider the following builders used in conjunction:</p>
+<pre class="language-dart"><code class="language-dart">Image(
+  image: _image,
+  frameBuilder: (BuildContext context, Widget child, int? frame, bool? wasSynchronouslyLoaded) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: child,
+    );
+  },
+  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+    return Center(child: child);
+  },
+)
+</code></pre>
+<p>In this example, the widget hierarchy will contain the following:</p>
+<pre class="language-dart"><code class="language-dart">Center(
+  child: Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: image,
+  ),
+),
+</code></pre>
+<p>{@tool dartpad}
+The following sample demonstrates how to use this builder to implement an
+image that fades in once it's been loaded.</p>
+<p>This sample contains a limited subset of the functionality that the
+<a href="https://api.flutter.dev/flutter/widgets/FadeInImage-class.html">FadeInImage</a> widget provides out of the box.</p>
+<p>** See code in examples/api/lib/widgets/image/image.frame_builder.0.dart **
+{@end-tool}</p>
+</section>
 
       
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">final ImageFrameBuilder? frameBuilder;</code></pre>
+  <pre class="language-dart"><code class="language-dart">@override
+final ImageFrameBuilder? frameBuilder;</code></pre>
 </section>
 
 

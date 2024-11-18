@@ -126,9 +126,9 @@ The relevance is determined by the number of matches and the Levenshtein distanc
 
   if (searches.isEmpty) {
     if (allIfEmpty) {
-      return items.orderBy((e) =&gt; true);
+      return items;
     } else {
-      return &lt;T&gt;[].orderBy((e) =&gt; true);
+      return &lt;T&gt;[];
     }
   }
 
@@ -153,11 +153,10 @@ The relevance is determined by the number of matches and the Levenshtein distanc
     return false;
   });
 
-  if (maxResults &gt; 0) {
-    l = l.take(maxResults);
+  if (l.isNotEmpty) {
+    if (maxResults &gt; 0) l = l.take(maxResults);
+    return l;
   }
-
-  if (l.isNotEmpty) return l;
 
   l = items
       .where(
@@ -184,7 +183,8 @@ The relevance is determined by the number of matches and the Levenshtein distanc
         )
         .toList();
   }
-  return l.orderByDescending((item) =&gt; countJaro(
+
+  l = l.orderByDescending((item) =&gt; countJaro(
         searchTerms: searches,
         searchOn: searchOn(item),
         ignoreCase: ignoreCase,
@@ -192,6 +192,9 @@ The relevance is determined by the number of matches and the Levenshtein distanc
         ignoreWordSplitters: ignoreWordSplitters,
         splitCamelCase: splitCamelCase,
       ));
+
+  if (maxResults &gt; 0) l = l.take(maxResults);
+  return l;
 }</code></pre>
 </section>
 

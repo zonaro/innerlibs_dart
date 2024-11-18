@@ -62,17 +62,33 @@
 
       <section class="multi-line-signature">
         
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
         <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?
         <span class="name ">width</span>
         <div class="features"><span class="feature">final</span></div>
 
       </section>
       
+<section class="desc markdown">
+  <p>If non-null, require the image to have this width (in logical pixels).</p>
+<p>If null, the image will pick a size that best preserves its intrinsic
+aspect ratio.</p>
+<p>It is strongly recommended that either both the <a href="../../widgets_image_of_widget/ImageOfWidget/width.html">width</a> and the <a href="../../widgets_image_of_widget/ImageOfWidget/height.html">height</a>
+be specified, or that the widget be placed in a context that sets tight
+layout constraints, so that the image does not change size as it loads.
+Consider using <a href="../../widgets_image_of_widget/ImageOfWidget/fit.html">fit</a> to adapt the image's rendering to fit the given width
+and height if the exact image dimensions are not known in advance.</p>
+</section>
 
       
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">final double? width;</code></pre>
+  <pre class="language-dart"><code class="language-dart">@override
+final double? width;</code></pre>
 </section>
 
 
