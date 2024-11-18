@@ -280,7 +280,7 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.ignoreWordSplitters = true,
     this.splitCamelCase = true,
     this.useWildcards = false,
-    this.allIfEmpty = false,
+    this.allIfEmpty = true,
     this.minChars = 1,
     this.maxResults = 5,
     this.displayStringForOption,
