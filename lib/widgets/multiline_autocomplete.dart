@@ -5,19 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:innerlibs/innerlibs.dart';
 
-typedef SuggestionBuilder<T extends Object> = Widget Function(
-  BuildContext context,
-  TextEditingController controller,
-  AutocompleteOnSelected<T> onSelected,
-  BoxConstraints constraints,
-  Iterable<T> options,
-  string Function(T) displayStringForOption,
-  double? maxHeight,
-  TextDirection? textDirection,
-  TextAlign? textAlign,
-  Color? selectionColor,
-);
-
 /// A widget that provides a multiline autocomplete text form field.
 class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   /// The decoration to show around the text field.
@@ -274,18 +261,31 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   /// The restoration ID for the text field.
   final String? restorationId;
 
+  /// The callback to call when a suggestion is selected.
   final void Function(string suggestionText, T selection)? onSuggestionSelected;
 
-  /// A map to fire custom search functions for specific characters
+  /// A map to fire custom search functions for specific characters.
   final CharMatch<T> keyCharSearches;
 
+  /// The maximum height for the suggestions box.
   final double? maxHeight;
 
+  /// A comparator function to determine if two items are equal.
   final bool Function(T item1, T item2)? itemEqualityComparator;
 
+  /// A comparator function to sort the items.
   final int Function(T item1, T item2)? itemComparator;
 
-  final SuggestionBuilder<T>? suggestionBuilder;
+  /// A builder function to build the suggestions widget.
+  final Widget Function(
+    BuildContext context,
+    TextEditingController controller,
+    AutocompleteOnSelected<T> onSelected,
+    BoxConstraints constraints,
+    List<T> options,
+    string Function(T) displayStringForOption,
+    double? maxHeight,
+  )? suggestionBuilder;
 
   const SuggestionTextFormField({
     super.key,
@@ -382,41 +382,120 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.suggestionBuilder,
   });
 
-  @override
-  createState() => _SuggestionTextFormFieldState();
-
-  /// A builder for suggestion chips.
-  static SuggestionBuilder<T> suggestionChipsBuilder<T extends Object>() => (
-        BuildContext context,
-        TextEditingController controller,
-        AutocompleteOnSelected<T> onSelected,
-        BoxConstraints constraints,
-        Iterable<T> options,
-        string Function(T) displayStringForOption,
-        double? maxHeight,
-        TextDirection? textDirection,
-        TextAlign? textAlign,
-        Color? selectionColor,
-      ) {
-        return Align(
+  /// A widget that provides a multiline autocomplete text form field with suggestion chips.
+  factory SuggestionTextFormField.chip({
+    Key? key,
+    InputDecoration? decoration,
+    CharMatch<T> keyCharSearches = const {},
+    int levenshteinDistance = 0,
+    Iterable<dynamic> Function(T)? searchOn,
+    Iterable<T> suggestions = const [],
+    bool ignoreCase = true,
+    bool ignoreDiacritics = true,
+    bool ignoreWordSplitters = true,
+    bool splitCamelCase = true,
+    bool useWildcards = false,
+    bool allIfEmpty = true,
+    int minChars = 1,
+    int maxResults = 10,
+    String Function(T)? displayStringForOption,
+    int? maxLines,
+    TextEditingController? controller,
+    OptionsViewOpenDirection optionsViewOpenDirection = OptionsViewOpenDirection.down,
+    FocusNode? focusNode,
+    bool appendSuggestions = false,
+    bool appendNewLine = true,
+    TextInputType keyboardType = TextInputType.multiline,
+    TextCapitalization textCapitalization = TextCapitalization.none,
+    TextInputAction? textInputAction,
+    TextStyle? style,
+    StrutStyle? strutStyle,
+    TextDirection? textDirection,
+    TextAlign textAlign = TextAlign.start,
+    TextAlignVertical? textAlignVertical,
+    bool autofocus = false,
+    bool readOnly = false,
+    bool? showCursor,
+    String obscuringCharacter = '•',
+    bool obscureText = false,
+    bool autocorrect = true,
+    SmartDashesType? smartDashesType,
+    SmartQuotesType? smartQuotesType,
+    bool enableSuggestions = true,
+    MaxLengthEnforcement? maxLengthEnforcement,
+    bool expands = false,
+    int? maxLength,
+    GestureTapCallback? onTap,
+    bool onTapAlwaysCalled = false,
+    TapRegionCallback? onTapOutside,
+    VoidCallback? onEditingComplete,
+    ValueChanged<String>? onFieldSubmitted,
+    List<TextInputFormatter>? inputFormatters,
+    bool? enabled,
+    bool? ignorePointers,
+    double cursorWidth = 2.0,
+    double? cursorHeight,
+    Radius? cursorRadius,
+    Color? cursorColor,
+    Color? cursorErrorColor,
+    Brightness? keyboardAppearance,
+    EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
+    bool? enableInteractiveSelection,
+    TextSelectionControls? selectionControls,
+    InputCounterWidgetBuilder? buildCounter,
+    ScrollPhysics? scrollPhysics,
+    Iterable<String>? autofillHints,
+    AutovalidateMode? autovalidateMode,
+    ScrollController? scrollController,
+    bool enableIMEPersonalizedLearning = true,
+    MouseCursor? mouseCursor,
+    EditableTextContextMenuBuilder? contextMenuBuilder,
+    SpellCheckConfiguration? spellCheckConfiguration,
+    TextMagnifierConfiguration? magnifierConfiguration,
+    UndoHistoryController? undoController,
+    AppPrivateCommandCallback? onAppPrivateCommand,
+    bool? cursorOpacityAnimates,
+    BoxHeightStyle selectionHeightStyle = BoxHeightStyle.tight,
+    BoxWidthStyle selectionWidthStyle = BoxWidthStyle.tight,
+    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
+    ContentInsertionConfiguration? contentInsertionConfiguration,
+    WidgetStatesController? statesController,
+    Clip clipBehavior = Clip.hardEdge,
+    bool scribbleEnabled = true,
+    bool canRequestFocus = true,
+    void Function(String)? onChanged,
+    int? minLines,
+    String? forceErrorText,
+    String? initialValue,
+    FormFieldSetter<String>? onSaved,
+    FormFieldValidator<String>? validator,
+    String? restorationId,
+    void Function(String suggestionText, T selection)? onSuggestionSelected,
+    Future<Iterable<T>> Function(String search)? asyncSuggestions,
+    double? maxHeight,
+    bool Function(T item1, T item2)? itemEqualityComparator,
+    int Function(T item1, T item2)? itemComparator,
+  }) {
+    func(BuildContext context, TextEditingController controller, onSelected, BoxConstraints constraints, Iterable options, displayStringForOption, double? maxHeight) => Align(
           alignment: Alignment.topLeft,
           child: Material(
             elevation: 4.0,
-            child: SizedBox(
-              height: (constraints.minHeight.clampMin(context.theme.listTileTheme.minTileHeight ?? 45) * options.length).clampMax([maxHeight ?? constraints.maxHeight, constraints.maxHeight].min),
+            child: Container(
+              // color: context.surfaceColor,
+              // height: constraints.minHeight.clampMax([maxHeight ?? constraints.maxHeight, constraints.maxHeight].min),
+              // width: constraints.minWidth,
               child: Wrap(
-                children: options.map((T option) {
+                children: options.map((option) {
                   final optionText = displayStringForOption(option);
                   return Padding(
-                    padding: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ChoiceChip(
-                      label: AutoSizeText(
-                        displayStringForOption(option),
+                      label: Text(
+                        optionText,
                         textDirection: textDirection,
                         textAlign: textAlign,
-                        selectionColor: selectionColor,
-                        maxLines: 1,
                       ),
+                      showCheckmark: true,
                       selected: controller.lines.any((x) => x.flatEqual(optionText)),
                       onSelected: (_) => onSelected(option),
                     ),
@@ -426,70 +505,116 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
             ),
           ),
         );
-      };
 
-  /// A builder for suggestion list.
-  static SuggestionBuilder<T> suggestionListBuilder<T extends Object>() => (
-        BuildContext context,
-        TextEditingController controller,
-        AutocompleteOnSelected<T> onSelected,
-        BoxConstraints constraints,
-        Iterable<T> options,
-        string Function(T) displayStringForOption,
-        double? maxHeight,
-        TextDirection? textDirection,
-        TextAlign? textAlign,
-        Color? selectionColor,
-      ) {
-        var sugs = options.toList();
-        return Align(
-          alignment: Alignment.topLeft,
-          child: Material(
-            elevation: 4.0,
-            child: SizedBox(
-              height: (constraints.minHeight.clampMin(context.theme.listTileTheme.minTileHeight ?? 45) * sugs.length).clampMax([maxHeight ?? constraints.maxHeight, constraints.maxHeight].min),
-              width: constraints.minWidth,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: sugs.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final T option = sugs[index];
-                  final string optionText = displayStringForOption(option);
-                  return ListTile(
-                    leading: controller.currentLineText.startsWith(optionText)
-                        ? Icon(
-                            Icons.check,
-                            color: selectionColor,
-                          )
-                        : null,
-                    title: AutoSizeText(
-                      optionText,
-                      textDirection: textDirection,
-                      textAlign: textAlign,
-                      selectionColor: selectionColor,
-                      maxLines: 1,
-                    ),
-                    onTap: () => onSelected(option),
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      };
+    return SuggestionTextFormField(
+      key: key,
+      decoration: decoration,
+      keyCharSearches: keyCharSearches,
+      levenshteinDistance: levenshteinDistance,
+      searchOn: searchOn,
+      suggestions: suggestions,
+      ignoreCase: ignoreCase,
+      ignoreDiacritics: ignoreDiacritics,
+      ignoreWordSplitters: ignoreWordSplitters,
+      splitCamelCase: splitCamelCase,
+      useWildcards: useWildcards,
+      allIfEmpty: allIfEmpty,
+      minChars: minChars,
+      maxResults: maxResults,
+      displayStringForOption: displayStringForOption,
+      maxLines: maxLines,
+      controller: controller,
+      optionsViewOpenDirection: optionsViewOpenDirection,
+      focusNode: focusNode,
+      appendSuggestions: appendSuggestions,
+      appendNewLine: appendNewLine,
+      keyboardType: keyboardType,
+      textCapitalization: textCapitalization,
+      textInputAction: textInputAction,
+      style: style,
+      strutStyle: strutStyle,
+      textDirection: textDirection,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      autofocus: autofocus,
+      readOnly: readOnly,
+      showCursor: showCursor,
+      obscuringCharacter: obscuringCharacter,
+      obscureText: obscureText,
+      autocorrect: autocorrect,
+      smartDashesType: smartDashesType,
+      smartQuotesType: smartQuotesType,
+      enableSuggestions: enableSuggestions,
+      maxLengthEnforcement: maxLengthEnforcement,
+      expands: expands,
+      maxLength: maxLength,
+      onTap: onTap,
+      onTapAlwaysCalled: onTapAlwaysCalled,
+      onTapOutside: onTapOutside,
+      onEditingComplete: onEditingComplete,
+      onFieldSubmitted: onFieldSubmitted,
+      inputFormatters: inputFormatters,
+      enabled: enabled,
+      ignorePointers: ignorePointers,
+      cursorWidth: cursorWidth,
+      cursorHeight: cursorHeight,
+      cursorRadius: cursorRadius,
+      cursorColor: cursorColor,
+      cursorErrorColor: cursorErrorColor,
+      keyboardAppearance: keyboardAppearance,
+      scrollPadding: scrollPadding,
+      enableInteractiveSelection: enableInteractiveSelection,
+      selectionControls: selectionControls,
+      buildCounter: buildCounter,
+      scrollPhysics: scrollPhysics,
+      autofillHints: autofillHints,
+      autovalidateMode: autovalidateMode,
+      scrollController: scrollController,
+      enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
+      mouseCursor: mouseCursor,
+      contextMenuBuilder: contextMenuBuilder,
+      spellCheckConfiguration: spellCheckConfiguration,
+      magnifierConfiguration: magnifierConfiguration,
+      undoController: undoController,
+      onAppPrivateCommand: onAppPrivateCommand,
+      cursorOpacityAnimates: cursorOpacityAnimates,
+      selectionHeightStyle: selectionHeightStyle,
+      selectionWidthStyle: selectionWidthStyle,
+      dragStartBehavior: dragStartBehavior,
+      contentInsertionConfiguration: contentInsertionConfiguration,
+      statesController: statesController,
+      clipBehavior: clipBehavior,
+      scribbleEnabled: scribbleEnabled,
+      canRequestFocus: canRequestFocus,
+      onChanged: onChanged,
+      minLines: minLines,
+      forceErrorText: forceErrorText,
+      initialValue: initialValue,
+      onSaved: onSaved,
+      validator: validator,
+      restorationId: restorationId,
+      onSuggestionSelected: onSuggestionSelected,
+      asyncSuggestions: asyncSuggestions,
+      maxHeight: maxHeight,
+      itemEqualityComparator: itemEqualityComparator,
+      itemComparator: itemComparator,
+      suggestionBuilder: func,
+    );
+  }
+
+  @override
+  createState() => _SuggestionTextFormFieldState();
 }
 
 class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTextFormField<T>> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
 
-  /// Returns the display string for a suggestion.
+  /// A function to get the display string for a suggestion.
   string Function(T) get displayStringForOption => widget.displayStringForOption ?? (T suggestion) => suggestion is string ? suggestion : flatString(suggestion);
 
-  /// Returns the fields to search on for a suggestion.
+  /// A function to get the fields to search on for a suggestion.
   Iterable<dynamic> Function(T) get searchOn => widget.searchOn ?? (T suggestion) => [displayStringForOption(suggestion)];
-
-  SuggestionBuilder<T> get suggestionBuilder => widget.suggestionBuilder ?? SuggestionTextFormField.suggestionListBuilder<T>();
 
   @override
   Widget build(BuildContext context) {
@@ -515,13 +640,14 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
             maxResults: widget.maxResults,
             keyCharSearches: widget.keyCharSearches,
           );
+
           if (v.length == 1 && displayStringForOption(v.first) == _controller.currentLineText) {
             return [];
           }
           return v.sortedByCompare((x) => x, itemComparator);
         },
         displayStringForOption: displayStringForOption,
-        fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+        fieldViewBuilder: (_, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
           return TextFormField(
             controller: fieldTextEditingController,
             focusNode: fieldFocusNode,
@@ -599,18 +725,46 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
             },
           );
         },
-        optionsViewBuilder: (BuildContext context, _, Iterable<T> options) => suggestionBuilder(
-          context,
-          _controller,
-          _onSelected,
-          cs,
-          options,
-          displayStringForOption,
-          widget.maxHeight,
-          widget.textDirection ,
-          widget.textAlign,
-          widget.cursorColor,
-        ),
+        optionsViewBuilder: (_, __, Iterable<T> options) {
+          var sugs = options.toList();
+          if (widget.suggestionBuilder != null) {
+            return widget.suggestionBuilder!(
+              context,
+              _controller,
+              _onSelected,
+              cs,
+              sugs,
+              displayStringForOption,
+              widget.maxHeight,
+            );
+          } else {
+            return Align(
+              alignment: Alignment.topLeft,
+              child: Material(
+                elevation: 4.0,
+                child: Wrap(children: [
+                  for (var option in sugs)
+                    ListTile(
+                      leading: _controller.currentLineText.startsWith(displayStringForOption(option))
+                          ? Icon(
+                              Icons.check,
+                              color: widget.cursorColor,
+                            )
+                          : null,
+                      title: AutoSizeText(
+                        displayStringForOption(option),
+                        textDirection: widget.textDirection,
+                        textAlign: widget.textAlign,
+                        selectionColor: widget.cursorColor,
+                        maxLines: 1,
+                      ),
+                      onTap: () => _onSelected(option),
+                    ),
+                ]),
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -622,6 +776,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     _focusNode = widget.focusNode ?? FocusNode();
   }
 
+  /// A comparator function to compare two items.
   int itemComparator(T item1, T item2) {
     if (widget.itemComparator != null) {
       return widget.itemComparator!(item1, item2);
@@ -632,6 +787,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     }
   }
 
+  /// A function to check if two items are equal.
   bool itemEqualityComparator(T item1, T item2) {
     if (widget.itemEqualityComparator != null) {
       return widget.itemEqualityComparator!(item1, item2);
@@ -642,6 +798,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     }
   }
 
+  /// A function to handle the selection of a suggestion.
   void _onSelected(T selection) {
     var sug = displayStringForOption(selection);
     var lineText = _controller.currentLineText;
