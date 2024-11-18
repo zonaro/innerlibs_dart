@@ -266,6 +266,8 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   /// A map to fire custom search functions for specific characters
   final CharMatch<T> keyCharSearches;
 
+  final double? maxHeight;
+
   const SuggestionTextFormField({
     super.key,
     this.decoration,
@@ -355,6 +357,7 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.restorationId,
     this.onSuggestionSelected,
     this.asyncSuggestions,
+    this.maxHeight,
   });
 
   @override
@@ -373,14 +376,14 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
 
   @override
   Widget build(BuildContext context) {
-    var tileHeight = context.theme.listTileTheme.minTileHeight ?? 50;
+    var tileHeight = context.theme.listTileTheme.minTileHeight ?? 45;
     return LayoutBuilder(
       builder: (context, cs) => RawAutocomplete<T>(
         textEditingController: _controller,
         focusNode: _focusNode,
         optionsViewOpenDirection: widget.optionsViewOpenDirection,
         optionsBuilder: (s) async {
-          var sugs = [...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))];
+          var sugs = <T>{...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))};
 
           var v = sugs.search(
             searchTerms: _controller.currentLineText,
@@ -487,7 +490,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
             child: Material(
               elevation: 4.0,
               child: SizedBox(
-                height: (cs.minHeight.clampMin(tileHeight) * sugs.length),
+                height: (cs.minHeight.clampMin(tileHeight) * sugs.length).clampMax([widget.maxHeight ?? cs.maxHeight, cs.maxHeight].min),
                 width: cs.minWidth,
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -495,7 +498,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
                   itemBuilder: (BuildContext context, int index) {
                     final T option = sugs[index];
                     return ListTile(
-                      title: Text(
+                      title: AutoSizeText(
                         displayStringForOption(option),
                         textDirection: widget.textDirection,
                         textAlign: widget.textAlign,
@@ -530,7 +533,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
       lineText = displayStringForOption(selection);
     }
     _controller.currentLineText = lineText.trim();
-    if (widget.appendNewLine) {
+    if (widget.appendNewLine && widget.maxLines != null && index < widget.maxLines! - 1) {
       _controller.lines = _controller.lines.toList()..insert(index + 1, "");
     }
     setState(() {});
