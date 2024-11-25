@@ -480,28 +480,23 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
           alignment: Alignment.topLeft,
           child: Material(
             elevation: 4.0,
-            child: Container(
-              // color: context.surfaceColor,
-              // height: constraints.minHeight.clampMax([maxHeight ?? constraints.maxHeight, constraints.maxHeight].min),
-              // width: constraints.minWidth,
-              child: Wrap(
-                children: options.map((option) {
-                  final optionText = displayStringForOption(option);
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ChoiceChip(
-                      label: Text(
-                        optionText,
-                        textDirection: textDirection,
-                        textAlign: textAlign,
-                      ),
-                      showCheckmark: true,
-                      selected: controller.lines.any((x) => x.flatEqual(optionText)),
-                      onSelected: (_) => onSelected(option),
+            child: Wrap(
+              children: options.map((option) {
+                final optionText = displayStringForOption(option);
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ChoiceChip(
+                    label: Text(
+                      optionText,
+                      textDirection: textDirection,
+                      textAlign: textAlign,
                     ),
-                  );
-                }).toList(),
-              ),
+                    showCheckmark: true,
+                    selected: controller.lines.any((x) => x.flatEqual(optionText)),
+                    onSelected: (_) => onSelected(option),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         );
