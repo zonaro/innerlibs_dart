@@ -760,7 +760,9 @@ bool isValid<T>(T? object, {Iterable<bool> Function(T?)? customValidator}) {
 
 /// Generates a random boolean value based on the specified [trueFactor].
 /// The [trueFactor] is a percentage value between 1 and 100 that determines the likelihood of the boolean being true.
-bool randomBool([int trueFactor = 50]) => trueFactor <= 0 ? false : randomInt(1, 100) <= trueFactor.clamp(1, 100);
+bool randomBoolWithFactor([int trueFactor = 50]) => trueFactor <= 0 ? false : randomInt(1, 100) <= trueFactor.clamp(1, 100);
+
+bool randomBool() => _random.nextBool();
 
 /// Generates a random double between the specified [min] and [max] values.
 double randomDouble([double min = 0, double max = 999999]) {

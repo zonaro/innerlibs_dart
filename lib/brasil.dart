@@ -502,7 +502,7 @@ abstract interface class Brasil {
     var s1 = sobrenomesComuns[randomInt(0, sobrenomesComuns.length)];
     var s2 = sobrenomesComuns[randomInt(0, sobrenomesComuns.length)];
     var n1 = l[randomInt(0, l.length)];
-    var n2 = l[randomInt(0, l.length)].blankIf((s) => nomeComposto == false || randomBool(30) || n1 == s);
+    var n2 = l[randomInt(0, l.length)].blankIf((s) => nomeComposto == false || randomBoolWithFactor(30) || n1 == s);
     if (randomBool() || s1 == s2 || sobrenomeUnico) s2 = "";
     return [
       [n1, n2].whereValid.join(" "),
