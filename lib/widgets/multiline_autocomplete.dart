@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
@@ -287,6 +290,8 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     double? maxHeight,
   )? suggestionBuilder;
 
+  final bool onCaret;
+
   const SuggestionTextFormField({
     super.key,
     this.decoration,
@@ -380,6 +385,7 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.itemEqualityComparator,
     this.itemComparator,
     this.suggestionBuilder,
+    this.onCaret = true,
   });
 
   /// A widget that provides a multiline autocomplete text form field with suggestion chips.
@@ -477,24 +483,27 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     int Function(T item1, T item2)? itemComparator,
   }) {
     func(BuildContext context, TextEditingController controller, onSelected, BoxConstraints constraints, Iterable options, displayStringForOption, double? maxHeight) => Align(
-          alignment: Alignment.topLeft,
+          alignment: optionsViewOpenDirection == OptionsViewOpenDirection.up ? Alignment.bottomLeft : Alignment.topLeft,
           child: Material(
             elevation: 4.0,
             child: Wrap(
+              crossAxisAlignment: textAlign.toAlignment(textAlignVertical).toWrapCrossAlignment,
+              runAlignment: textAlign.toAlignment(textAlignVertical).toWrapAlignment,
+              alignment: textAlign.toAlignment(textAlignVertical).toWrapAlignment,
+              spacing: 2,
+              runSpacing: 2,
               children: options.map((option) {
                 final optionText = displayStringForOption(option);
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ChoiceChip(
-                    label: Text(
-                      optionText,
-                      textDirection: textDirection,
-                      textAlign: textAlign,
-                    ),
-                    showCheckmark: true,
-                    selected: controller.lines.any((x) => x.flatEqual(optionText)),
-                    onSelected: (_) => onSelected(option),
+                return ChoiceChip(
+                  label: Text(
+                    optionText,
+                    textDirection: textDirection,
+                    textAlign: textAlign,
+                    style: style,
                   ),
+                  showCheckmark: maxLines != 1,
+                  selected: controller.lines.any((x) => x.flatEqual(optionText)),
+                  onSelected: (_) => onSelected(option),
                 );
               }).toList(),
             ),
@@ -618,29 +627,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
         textEditingController: _controller,
         focusNode: _focusNode,
         optionsViewOpenDirection: widget.optionsViewOpenDirection,
-        optionsBuilder: (s) async {
-          var sugs = <T>[...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))].distinctByComparison(itemEqualityComparator);
-
-          var v = sugs.search(
-            searchTerms: _controller.currentLineText,
-            searchOn: searchOn,
-            levenshteinDistance: widget.levenshteinDistance,
-            allIfEmpty: widget.allIfEmpty,
-            ignoreCase: widget.ignoreCase,
-            ignoreDiacritics: widget.ignoreDiacritics,
-            ignoreWordSplitters: widget.ignoreWordSplitters,
-            splitCamelCase: widget.splitCamelCase,
-            useWildcards: widget.useWildcards,
-            minChars: widget.minChars,
-            maxResults: widget.maxResults,
-            keyCharSearches: widget.keyCharSearches,
-          );
-
-          if (v.length == 1 && displayStringForOption(v.first) == _controller.currentLineText) {
-            return [];
-          }
-          return v.sortedByCompare((x) => x, itemComparator);
-        },
+        optionsBuilder: buildSuggestions,
         displayStringForOption: displayStringForOption,
         fieldViewBuilder: (_, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
           return TextFormField(
@@ -732,9 +719,11 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
               displayStringForOption,
               widget.maxHeight,
             );
+          } else if (widget.onCaret) {
+            return nil;
           } else {
             return Align(
-              alignment: Alignment.topLeft,
+              alignment: widget.optionsViewOpenDirection == OptionsViewOpenDirection.up ? Alignment.bottomLeft : Alignment.topLeft,
               child: Material(
                 elevation: 4.0,
                 child: Wrap(children: [
@@ -751,6 +740,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
                         textDirection: widget.textDirection,
                         textAlign: widget.textAlign,
                         selectionColor: widget.cursorColor,
+                        style: widget.style,
                         maxLines: 1,
                       ),
                       onTap: () => _onSelected(option),
@@ -764,11 +754,41 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     );
   }
 
+  FutureOr<Iterable<T>> buildSuggestions(TextEditingValue s) async {
+    var sugs = <T>[...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))].distinctByComparison(itemEqualityComparator);
+
+    var v = sugs.search(
+      searchTerms: _controller.currentLineText,
+      searchOn: searchOn,
+      levenshteinDistance: widget.levenshteinDistance,
+      allIfEmpty: widget.allIfEmpty,
+      ignoreCase: widget.ignoreCase,
+      ignoreDiacritics: widget.ignoreDiacritics,
+      ignoreWordSplitters: widget.ignoreWordSplitters,
+      splitCamelCase: widget.splitCamelCase,
+      useWildcards: widget.useWildcards,
+      minChars: widget.minChars,
+      maxResults: widget.maxResults,
+      keyCharSearches: widget.keyCharSearches,
+    );
+
+    if (v.length == 1 && displayStringForOption(v.first) == _controller.currentLineText) {
+      return [];
+    }
+    return v.sortedByCompare((x) => x, itemComparator);
+  }
+
   @override
   initState() {
     super.initState();
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
+
+    _controller.addListener(() async {
+      if (widget.onCaret) {
+        showOverlaidTag();
+      }
+    });
   }
 
   /// A comparator function to compare two items.
@@ -786,11 +806,66 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
   bool itemEqualityComparator(T item1, T item2) {
     if (widget.itemEqualityComparator != null) {
       return widget.itemEqualityComparator!(item1, item2);
-    } else if (T is Comparable) {
-      return itemComparator(item1, item2) == 0;
     } else {
       return displayStringForOption(item1) == displayStringForOption(item2);
     }
+  }
+
+  void showOverlaidTag() async {
+    var options = await buildSuggestions(_controller.value);
+    TextPainter painter = TextPainter(
+      textDirection: widget.textDirection ?? Directionality.of(context),
+      text: TextSpan(
+        style: widget.style,
+        text: _controller.currentLineText,
+      ),
+    );
+    painter.layout();
+    OverlayState overlayState = Overlay.of(context);
+    OverlayEntry suggestionTagoverlayEntry = OverlayEntry(builder: (context) {
+      //  return widget.suggestionBuilder!(
+      //         context,
+      //         _controller,
+      //         _onSelected,
+      //         cs,
+      //         sugs,
+      //         displayStringForOption,
+      //         widget.maxHeight,
+      //       );
+      return Positioned(
+        // Decides where to place the tag on the screen.
+        top: _focusNode.offset.dy + painter.height + 3,
+        left: _focusNode.offset.dx + painter.width + 10,
+
+        // Tag code.
+        child: Material(
+          elevation: 4.0,
+          child: Wrap(
+            runSpacing: 2,
+            spacing: 2,
+            alignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapAlignment,
+            crossAxisAlignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapCrossAlignment,
+            children: [
+              for (var option in options)
+                ChoiceChip(onSelected: (_) => _onSelected(option),
+                  selected: _controller.currentLineText.flatEqual(displayStringForOption(option)),
+                  label: Text(
+                    displayStringForOption(option),
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+    });
+    overlayState.insert(suggestionTagoverlayEntry);
+
+    // Removes the over lay entry from the Overly after 500 milliseconds
+    await Future.delayed(const Duration(milliseconds: 500));
+    suggestionTagoverlayEntry.remove();
   }
 
   /// A function to handle the selection of a suggestion.
