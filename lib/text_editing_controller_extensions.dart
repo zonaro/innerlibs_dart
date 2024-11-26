@@ -17,30 +17,26 @@ extension TextEditingControllerExtensions on TextEditingController {
   set currentLineText(String value) => setLineAt(currentLineIndex, value);
 
   String get currentWord => value.currentWord;
-  set currentWord(String value) {
-    var cursorPosition = words.take(currentWordIndex).join(' ').length;
-    selection = TextSelection.collapsed(offset: cursorPosition);
-    //replace the current word with the new value
-    var txt = text;
-    var start = txt.lastIndexOf(RegExp(r'\s'), cursorPosition - 1) + 1;
-    var end = txt.indexOf(RegExp(r'\s'), cursorPosition);
-    end = end == -1 ? txt.length : end;
-    var newTxt = txt.replaceRange(start, end, value);
-    text = newTxt;
-  }
+
+  set currentWord(String value) => setWordAt(currentWordIndex, value);
 
   int get currentWordIndex => value.currentWordIndex;
 
   set currentWordIndex(int value) {
     var cursorPosition = words.take(value).join(' ').length;
-    selection = TextSelection.collapsed(offset: cursorPosition);
+    selection = TextSelection(baseOffset: cursorPosition - currentWord.length, extentOffset: cursorPosition);
   }
 
   /// Gets all lines in the text.
   Iterable<string> get lines => value.lines;
 
   set lines(Iterable<String> value) => text = value.join(Get.breakline);
+
+  /// Gets or sets all words in the text. this includes the splitters.
+  ///
+  /// when setting the value, your list need to include the splitters, otherswise the text will be joined without spaces or breaklines.
   Iterable<string> get words => value.words;
+  set words(Iterable<String> value) => text = value.join();
 
   /// Gets the line at the specified index.
   string lineAt(int index) => value.lineAt(index);
@@ -50,6 +46,13 @@ extension TextEditingControllerExtensions on TextEditingController {
     final l = lines.toList();
     l[index] = value;
     lines = l;
+    return text;
+  }
+
+  String setWordAt(int index, String value) {
+    final w = words.toList();
+    w[index] = value;
+    words = w;
     return text;
   }
 }
@@ -79,16 +82,18 @@ extension TextEditingValueExtensions on TextEditingValue {
   /// Gets the index of the current word where the cursor is located.
   int get currentWordIndex {
     var cursorPos = selection.base.offset;
-    var txt = text;
-    var start = txt.lastIndexOf(RegExp(r'\s'), cursorPos - 1) + 1;
-    return start;
+    var textpart = text.first(cursorPos);
+    var parts = textpart.splitWords(WordSplitMode.keepSplitters);
+    var curIndex = parts.length - 1;
+    curIndex = curIndex.clampMin(0);
+    return curIndex;
   }
 
   /// Gets all lines in the text.
   Iterable<String> get lines => text.splitLines.defaultIfEmpty(text);
 
   /// Gets all words in the text.
-  Iterable<string> get words => text.split(RegExp(r'\s+'));
+  Iterable<string> get words => text.splitWords(WordSplitMode.keepSplitters).defaultIfEmpty(text);
 
   /// Gets the line at the specified index.
   String lineAt(int index) => lines.elementAt(index);

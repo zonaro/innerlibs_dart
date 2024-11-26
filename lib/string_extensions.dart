@@ -10,6 +10,13 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/message_format.dart';
 
+/// The logic for splitting a string into words.
+enum WordSplitMode {
+  wordsOnly,
+  whitespace,
+  keepSplitters,
+}
+
 extension NullStringExtension on String? {
   /// Returns the string if it is not null, otherwise returns an empty string.
   String get blankIfNull => this ?? "";
@@ -584,12 +591,7 @@ extension StringExtensions on String {
   Iterable<string> get getUniqueWords => getWords.toList().distinctFlat();
 
   /// Returns a list with words of this sentence
-  Iterable<string> get getWords {
-    if (isBlank) {
-      return [];
-    }
-    return splitAny(Get.wordSplitters, true);
-  }
+  Iterable<string> get getWords => splitWords();
 
   /// Checks if string contains at least one Capital Letter
   bool get hasCapitalLetter => hasMatch(r'[A-Z]');
@@ -1262,7 +1264,7 @@ extension StringExtensions on String {
   /// List<String> lines = text.splitLines();
   /// print(lines); // prints ['hello', 'world']
   /// ```
-  List<String> get splitLines => splitAny(Get.breaklineChars);
+  Iterable<String> get splitLines => splitAny(Get.breaklineChars);
 
   /// Strips all HTML code from `String`.
   ///
@@ -1840,6 +1842,7 @@ extension StringExtensions on String {
   String between(String before, String after) => this.before(before).after(after);
 
   String blankIf(bool Function(String? s) fn) => asIf(fn, "", this) ?? "";
+
   String? blankIfEqual(String? comparisonString) => blankIf((s) => s == comparisonString);
 
   /// change a date string from a format to another format
@@ -3171,6 +3174,44 @@ extension StringExtensions on String {
 
     return result;
   }
+
+  /// Split a string into a list of words and word splitter following the mode
+  ///
+  /// [mode] can be [WordSplitMode.wordsOnly], [WordSplitMode.whitespace], [WordSplitMode.keepSplitters]
+  ///
+  /// - if [mode] is [WordSplitMode.wordsOnly], the string is splitted by any char of [Get.wordSplitters] resulting in a list containing only words. this is the default mode
+  /// - if [mode] is [WordSplitMode.whitespace], the string is splitted by any char of [Get.whiteSpaceOrBreakChars] resulting in a list containing only words and word splitters, excluding white spaces or breaklines.
+  /// - if [mode] is [WordSplitMode.keepSplitters], the final list will contain all characters of original string. Each entry of the list will be a full word or a word splitter, in exactly the same order as the original string.
+  List<string> splitWords([WordSplitMode mode = WordSplitMode.wordsOnly]) {
+    if (isBlank) {
+      return [];
+    } else if (mode == WordSplitMode.wordsOnly) {
+      return splitAny(Get.wordSplitters, false);
+    } else if (mode == WordSplitMode.whitespace) {
+      return splitAny(Get.whiteSpaceOrBreakChars, false);
+    } else if (mode == WordSplitMode.keepSplitters) {
+      var entries = <string>[];
+      var entry = '';
+      for (var i = 0; i < length; i++) {
+        var char = this[i];
+        if (Get.wordSplitters.contains(char)) {
+          if (entry.isNotEmpty) {
+            entries.add(entry);
+            entry = '';
+          }
+          entries.add(char);
+        } else {
+          entry += char;
+        }
+      }
+      if (entry.isNotEmpty) entries.add(entry);
+      return entries;
+    } else {
+      return [];
+    }
+  }
+
+  Iterable<Iterable<string>> splitWordsLines([WordSplitMode mode = WordSplitMode.wordsOnly]) => splitLines.map((x) => x.splitWords(mode)).toList();
 
   /// Squeezes the `String` by removing repeats of a given character.
   ///

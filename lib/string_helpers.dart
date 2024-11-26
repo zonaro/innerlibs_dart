@@ -231,7 +231,9 @@ extension StringHelpers on GetInterface {
   /// White space char
   Iterable<string> get whiteSpaceChars => [" "];
 
-  StringList get wordSplitters => [
+  Iterable<string> get whiteSpaceOrBreakChars => [...whiteSpaceChars, ...breaklineChars];
+
+  Iterable<string> get wordSplitters => [
         ...breaklineChars,
         ...whiteSpaceChars,
         ...identChars,
