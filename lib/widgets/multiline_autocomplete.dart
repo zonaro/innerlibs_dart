@@ -514,6 +514,10 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
   }
 
   Future<Iterable<T>> buildSuggestions(TextEditingValue s) async {
+    if (widget.minChars > s.text.length) {
+      return [];
+    }
+    
     var sugs = <T>[...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))].distinctByComparison(itemEqualityComparator);
 
     var v = sugs.search(
