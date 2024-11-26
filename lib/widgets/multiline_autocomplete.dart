@@ -57,9 +57,6 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   /// The controller for the text field.
   final TextEditingController? controller;
 
-  /// The direction in which the options view should open.
-  final OptionsViewOpenDirection optionsViewOpenDirection;
-
   /// The focus node for the text field.
   final FocusNode? focusNode;
 
@@ -290,8 +287,6 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     double? maxHeight,
   )? suggestionBuilder;
 
-  final bool onCaret;
-
   const SuggestionTextFormField({
     super.key,
     this.decoration,
@@ -310,7 +305,6 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.displayStringForOption,
     this.maxLines,
     this.controller,
-    this.optionsViewOpenDirection = OptionsViewOpenDirection.down,
     this.focusNode,
     this.appendSuggestions = false,
     this.appendNewLine = true,
@@ -385,226 +379,7 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
     this.itemEqualityComparator,
     this.itemComparator,
     this.suggestionBuilder,
-    this.onCaret = true,
   });
-
-  /// A widget that provides a multiline autocomplete text form field with suggestion chips.
-  factory SuggestionTextFormField.chip({
-    Key? key,
-    InputDecoration? decoration,
-    CharMatch<T> keyCharSearches = const {},
-    int levenshteinDistance = 0,
-    Iterable<dynamic> Function(T)? searchOn,
-    Iterable<T> suggestions = const [],
-    bool ignoreCase = true,
-    bool ignoreDiacritics = true,
-    bool ignoreWordSplitters = true,
-    bool splitCamelCase = true,
-    bool useWildcards = false,
-    bool allIfEmpty = true,
-    int minChars = 1,
-    int maxResults = 10,
-    String Function(T)? displayStringForOption,
-    int? maxLines,
-    TextEditingController? controller,
-    OptionsViewOpenDirection optionsViewOpenDirection = OptionsViewOpenDirection.down,
-    FocusNode? focusNode,
-    bool appendSuggestions = false,
-    bool appendNewLine = true,
-    TextInputType keyboardType = TextInputType.multiline,
-    TextCapitalization textCapitalization = TextCapitalization.none,
-    TextInputAction? textInputAction,
-    TextStyle? style,
-    StrutStyle? strutStyle,
-    TextDirection? textDirection,
-    TextAlign textAlign = TextAlign.start,
-    TextAlignVertical? textAlignVertical,
-    bool autofocus = false,
-    bool readOnly = false,
-    bool? showCursor,
-    String obscuringCharacter = '•',
-    bool obscureText = false,
-    bool autocorrect = true,
-    SmartDashesType? smartDashesType,
-    SmartQuotesType? smartQuotesType,
-    bool enableSuggestions = true,
-    MaxLengthEnforcement? maxLengthEnforcement,
-    bool expands = false,
-    int? maxLength,
-    GestureTapCallback? onTap,
-    bool onTapAlwaysCalled = false,
-    TapRegionCallback? onTapOutside,
-    VoidCallback? onEditingComplete,
-    ValueChanged<String>? onFieldSubmitted,
-    List<TextInputFormatter>? inputFormatters,
-    bool? enabled,
-    bool? ignorePointers,
-    double cursorWidth = 2.0,
-    double? cursorHeight,
-    Radius? cursorRadius,
-    Color? cursorColor,
-    Color? cursorErrorColor,
-    Brightness? keyboardAppearance,
-    EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
-    bool? enableInteractiveSelection,
-    TextSelectionControls? selectionControls,
-    InputCounterWidgetBuilder? buildCounter,
-    ScrollPhysics? scrollPhysics,
-    Iterable<String>? autofillHints,
-    AutovalidateMode? autovalidateMode,
-    ScrollController? scrollController,
-    bool enableIMEPersonalizedLearning = true,
-    MouseCursor? mouseCursor,
-    EditableTextContextMenuBuilder? contextMenuBuilder,
-    SpellCheckConfiguration? spellCheckConfiguration,
-    TextMagnifierConfiguration? magnifierConfiguration,
-    UndoHistoryController? undoController,
-    AppPrivateCommandCallback? onAppPrivateCommand,
-    bool? cursorOpacityAnimates,
-    BoxHeightStyle selectionHeightStyle = BoxHeightStyle.tight,
-    BoxWidthStyle selectionWidthStyle = BoxWidthStyle.tight,
-    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
-    ContentInsertionConfiguration? contentInsertionConfiguration,
-    WidgetStatesController? statesController,
-    Clip clipBehavior = Clip.hardEdge,
-    bool scribbleEnabled = true,
-    bool canRequestFocus = true,
-    void Function(String)? onChanged,
-    int? minLines,
-    String? forceErrorText,
-    String? initialValue,
-    FormFieldSetter<String>? onSaved,
-    FormFieldValidator<String>? validator,
-    String? restorationId,
-    void Function(String suggestionText, T selection)? onSuggestionSelected,
-    Future<Iterable<T>> Function(String search)? asyncSuggestions,
-    double? maxHeight,
-    bool Function(T item1, T item2)? itemEqualityComparator,
-    int Function(T item1, T item2)? itemComparator,
-  }) {
-    func(BuildContext context, TextEditingController controller, onSelected, BoxConstraints constraints, Iterable options, displayStringForOption, double? maxHeight) => Align(
-          alignment: optionsViewOpenDirection == OptionsViewOpenDirection.up ? Alignment.bottomLeft : Alignment.topLeft,
-          child: Material(
-            elevation: 4.0,
-            child: Wrap(
-              crossAxisAlignment: textAlign.toAlignment(textAlignVertical).toWrapCrossAlignment,
-              runAlignment: textAlign.toAlignment(textAlignVertical).toWrapAlignment,
-              alignment: textAlign.toAlignment(textAlignVertical).toWrapAlignment,
-              spacing: 2,
-              runSpacing: 2,
-              children: options.map((option) {
-                final optionText = displayStringForOption(option);
-                return ChoiceChip(
-                  label: Text(
-                    optionText,
-                    textDirection: textDirection,
-                    textAlign: textAlign,
-                    style: style,
-                  ),
-                  showCheckmark: maxLines != 1,
-                  selected: controller.lines.any((x) => x.flatEqual(optionText)),
-                  onSelected: (_) => onSelected(option),
-                );
-              }).toList(),
-            ),
-          ),
-        );
-
-    return SuggestionTextFormField(
-      key: key,
-      decoration: decoration,
-      keyCharSearches: keyCharSearches,
-      levenshteinDistance: levenshteinDistance,
-      searchOn: searchOn,
-      suggestions: suggestions,
-      ignoreCase: ignoreCase,
-      ignoreDiacritics: ignoreDiacritics,
-      ignoreWordSplitters: ignoreWordSplitters,
-      splitCamelCase: splitCamelCase,
-      useWildcards: useWildcards,
-      allIfEmpty: allIfEmpty,
-      minChars: minChars,
-      maxResults: maxResults,
-      displayStringForOption: displayStringForOption,
-      maxLines: maxLines,
-      controller: controller,
-      optionsViewOpenDirection: optionsViewOpenDirection,
-      focusNode: focusNode,
-      appendSuggestions: appendSuggestions,
-      appendNewLine: appendNewLine,
-      keyboardType: keyboardType,
-      textCapitalization: textCapitalization,
-      textInputAction: textInputAction,
-      style: style,
-      strutStyle: strutStyle,
-      textDirection: textDirection,
-      textAlign: textAlign,
-      textAlignVertical: textAlignVertical,
-      autofocus: autofocus,
-      readOnly: readOnly,
-      showCursor: showCursor,
-      obscuringCharacter: obscuringCharacter,
-      obscureText: obscureText,
-      autocorrect: autocorrect,
-      smartDashesType: smartDashesType,
-      smartQuotesType: smartQuotesType,
-      enableSuggestions: enableSuggestions,
-      maxLengthEnforcement: maxLengthEnforcement,
-      expands: expands,
-      maxLength: maxLength,
-      onTap: onTap,
-      onTapAlwaysCalled: onTapAlwaysCalled,
-      onTapOutside: onTapOutside,
-      onEditingComplete: onEditingComplete,
-      onFieldSubmitted: onFieldSubmitted,
-      inputFormatters: inputFormatters,
-      enabled: enabled,
-      ignorePointers: ignorePointers,
-      cursorWidth: cursorWidth,
-      cursorHeight: cursorHeight,
-      cursorRadius: cursorRadius,
-      cursorColor: cursorColor,
-      cursorErrorColor: cursorErrorColor,
-      keyboardAppearance: keyboardAppearance,
-      scrollPadding: scrollPadding,
-      enableInteractiveSelection: enableInteractiveSelection,
-      selectionControls: selectionControls,
-      buildCounter: buildCounter,
-      scrollPhysics: scrollPhysics,
-      autofillHints: autofillHints,
-      autovalidateMode: autovalidateMode,
-      scrollController: scrollController,
-      enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
-      mouseCursor: mouseCursor,
-      contextMenuBuilder: contextMenuBuilder,
-      spellCheckConfiguration: spellCheckConfiguration,
-      magnifierConfiguration: magnifierConfiguration,
-      undoController: undoController,
-      onAppPrivateCommand: onAppPrivateCommand,
-      cursorOpacityAnimates: cursorOpacityAnimates,
-      selectionHeightStyle: selectionHeightStyle,
-      selectionWidthStyle: selectionWidthStyle,
-      dragStartBehavior: dragStartBehavior,
-      contentInsertionConfiguration: contentInsertionConfiguration,
-      statesController: statesController,
-      clipBehavior: clipBehavior,
-      scribbleEnabled: scribbleEnabled,
-      canRequestFocus: canRequestFocus,
-      onChanged: onChanged,
-      minLines: minLines,
-      forceErrorText: forceErrorText,
-      initialValue: initialValue,
-      onSaved: onSaved,
-      validator: validator,
-      restorationId: restorationId,
-      onSuggestionSelected: onSuggestionSelected,
-      asyncSuggestions: asyncSuggestions,
-      maxHeight: maxHeight,
-      itemEqualityComparator: itemEqualityComparator,
-      itemComparator: itemComparator,
-      suggestionBuilder: func,
-    );
-  }
 
   @override
   createState() => _SuggestionTextFormFieldState();
@@ -613,6 +388,10 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
 class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTextFormField<T>> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
+
+  bool isShowing = false;
+
+  OverlayEntry? suggestionTagoverlayEntry;
 
   /// A function to get the display string for a suggestion.
   string Function(T) get displayStringForOption => widget.displayStringForOption ?? (T suggestion) => suggestion is string ? suggestion : flatString(suggestion);
@@ -623,138 +402,86 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, cs) => RawAutocomplete<T>(
-        textEditingController: _controller,
-        focusNode: _focusNode,
-        optionsViewOpenDirection: widget.optionsViewOpenDirection,
-        optionsBuilder: buildSuggestions,
-        displayStringForOption: displayStringForOption,
-        fieldViewBuilder: (_, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-          return TextFormField(
-            controller: fieldTextEditingController,
-            focusNode: fieldFocusNode,
-            maxLines: widget.maxLines,
-            minLines: widget.minLines,
-            autovalidateMode: widget.autovalidateMode,
-            expands: widget.expands,
-            forceErrorText: widget.forceErrorText,
-            initialValue: widget.initialValue,
-            onSaved: widget.onSaved,
-            validator: widget.validator,
-            statesController: widget.statesController,
-            restorationId: widget.restorationId,
-            decoration: widget.decoration,
-            keyboardType: widget.keyboardType,
-            textCapitalization: widget.textCapitalization,
-            textInputAction: widget.textInputAction,
-            style: widget.style,
-            strutStyle: widget.strutStyle,
-            textAlign: widget.textAlign,
-            textAlignVertical: widget.textAlignVertical,
-            textDirection: widget.textDirection,
-            autofocus: widget.autofocus,
-            readOnly: widget.readOnly,
-            showCursor: widget.showCursor,
-            obscuringCharacter: widget.obscuringCharacter,
-            obscureText: widget.obscureText,
-            autocorrect: widget.autocorrect,
-            smartDashesType: widget.smartDashesType,
-            smartQuotesType: widget.smartQuotesType,
-            enableSuggestions: widget.enableSuggestions,
-            maxLengthEnforcement: widget.maxLengthEnforcement,
-            maxLength: widget.maxLength,
-            onTap: widget.onTap,
-            onTapAlwaysCalled: widget.onTapAlwaysCalled,
-            onTapOutside: widget.onTapOutside,
-            onEditingComplete: widget.onEditingComplete,
-            onFieldSubmitted: widget.onFieldSubmitted,
-            inputFormatters: widget.inputFormatters,
-            enabled: widget.enabled,
-            ignorePointers: widget.ignorePointers,
-            cursorWidth: widget.cursorWidth,
-            cursorHeight: widget.cursorHeight,
-            cursorRadius: widget.cursorRadius,
-            cursorColor: widget.cursorColor,
-            cursorErrorColor: widget.cursorErrorColor,
-            scrollPadding: widget.scrollPadding,
-            scrollPhysics: widget.scrollPhysics,
-            keyboardAppearance: widget.keyboardAppearance,
-            enableInteractiveSelection: widget.enableInteractiveSelection,
-            selectionControls: widget.selectionControls,
-            buildCounter: widget.buildCounter,
-            autofillHints: widget.autofillHints,
-            scrollController: widget.scrollController,
-            enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
-            mouseCursor: widget.mouseCursor,
-            contextMenuBuilder: widget.contextMenuBuilder,
-            spellCheckConfiguration: widget.spellCheckConfiguration,
-            magnifierConfiguration: widget.magnifierConfiguration,
-            undoController: widget.undoController,
-            onAppPrivateCommand: widget.onAppPrivateCommand,
-            cursorOpacityAnimates: widget.cursorOpacityAnimates,
-            selectionHeightStyle: widget.selectionHeightStyle,
-            selectionWidthStyle: widget.selectionWidthStyle,
-            dragStartBehavior: widget.dragStartBehavior,
-            contentInsertionConfiguration: widget.contentInsertionConfiguration,
-            clipBehavior: widget.clipBehavior,
-            scribbleEnabled: widget.scribbleEnabled,
-            canRequestFocus: widget.canRequestFocus,
-            onChanged: (s) {
-              if (widget.onChanged != null) {
-                widget.onChanged!(s);
-              }
-              setState(() {});
-            },
-          );
-        },
-        optionsViewBuilder: (_, __, Iterable<T> options) {
-          var sugs = options.toList();
-          if (widget.suggestionBuilder != null) {
-            return widget.suggestionBuilder!(
-              context,
-              _controller,
-              _onSelected,
-              cs,
-              sugs,
-              displayStringForOption,
-              widget.maxHeight,
-            );
-          } else if (widget.onCaret) {
-            return nil;
-          } else {
-            return Align(
-              alignment: widget.optionsViewOpenDirection == OptionsViewOpenDirection.up ? Alignment.bottomLeft : Alignment.topLeft,
-              child: Material(
-                elevation: 4.0,
-                child: Wrap(children: [
-                  for (var option in sugs)
-                    ListTile(
-                      leading: _controller.currentLineText.startsWith(displayStringForOption(option))
-                          ? Icon(
-                              Icons.check,
-                              color: widget.cursorColor,
-                            )
-                          : null,
-                      title: AutoSizeText(
-                        displayStringForOption(option),
-                        textDirection: widget.textDirection,
-                        textAlign: widget.textAlign,
-                        selectionColor: widget.cursorColor,
-                        style: widget.style,
-                        maxLines: 1,
-                      ),
-                      onTap: () => _onSelected(option),
-                    ),
-                ]),
-              ),
-            );
-          }
-        },
-      ),
-    );
+        builder: (context, cs) => TextFormField(
+              controller: _controller,
+              focusNode: _focusNode,
+              maxLines: widget.maxLines,
+              minLines: widget.minLines,
+              autovalidateMode: widget.autovalidateMode,
+              expands: widget.expands,
+              forceErrorText: widget.forceErrorText,
+              initialValue: widget.initialValue,
+              onSaved: widget.onSaved,
+              validator: widget.validator,
+              statesController: widget.statesController,
+              restorationId: widget.restorationId,
+              decoration: widget.decoration,
+              keyboardType: widget.keyboardType,
+              textCapitalization: widget.textCapitalization,
+              textInputAction: widget.textInputAction,
+              style: widget.style,
+              strutStyle: widget.strutStyle,
+              textAlign: widget.textAlign,
+              textAlignVertical: widget.textAlignVertical,
+              textDirection: widget.textDirection,
+              autofocus: widget.autofocus,
+              readOnly: widget.readOnly,
+              showCursor: widget.showCursor,
+              obscuringCharacter: widget.obscuringCharacter,
+              obscureText: widget.obscureText,
+              autocorrect: widget.autocorrect,
+              smartDashesType: widget.smartDashesType,
+              smartQuotesType: widget.smartQuotesType,
+              enableSuggestions: widget.enableSuggestions,
+              maxLengthEnforcement: widget.maxLengthEnforcement,
+              maxLength: widget.maxLength,
+              onTap: widget.onTap,
+              onTapAlwaysCalled: widget.onTapAlwaysCalled,
+              onTapOutside: widget.onTapOutside,
+              onEditingComplete: widget.onEditingComplete,
+              onFieldSubmitted: widget.onFieldSubmitted,
+              inputFormatters: widget.inputFormatters,
+              enabled: widget.enabled,
+              ignorePointers: widget.ignorePointers,
+              cursorWidth: widget.cursorWidth,
+              cursorHeight: widget.cursorHeight,
+              cursorRadius: widget.cursorRadius,
+              cursorColor: widget.cursorColor,
+              cursorErrorColor: widget.cursorErrorColor,
+              scrollPadding: widget.scrollPadding,
+              scrollPhysics: widget.scrollPhysics,
+              keyboardAppearance: widget.keyboardAppearance,
+              enableInteractiveSelection: widget.enableInteractiveSelection,
+              selectionControls: widget.selectionControls,
+              buildCounter: widget.buildCounter,
+              autofillHints: widget.autofillHints,
+              scrollController: widget.scrollController,
+              enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
+              mouseCursor: widget.mouseCursor,
+              contextMenuBuilder: widget.contextMenuBuilder,
+              spellCheckConfiguration: widget.spellCheckConfiguration,
+              magnifierConfiguration: widget.magnifierConfiguration,
+              undoController: widget.undoController,
+              onAppPrivateCommand: widget.onAppPrivateCommand,
+              cursorOpacityAnimates: widget.cursorOpacityAnimates,
+              selectionHeightStyle: widget.selectionHeightStyle,
+              selectionWidthStyle: widget.selectionWidthStyle,
+              dragStartBehavior: widget.dragStartBehavior,
+              contentInsertionConfiguration: widget.contentInsertionConfiguration,
+              clipBehavior: widget.clipBehavior,
+              scribbleEnabled: widget.scribbleEnabled,
+              canRequestFocus: widget.canRequestFocus,
+              onChanged: (s) {
+                showOverlaidTag(cs);
+                if (widget.onChanged != null) {
+                  widget.onChanged!(s);
+                }
+                setState(() {});
+              },
+            ));
   }
 
-  FutureOr<Iterable<T>> buildSuggestions(TextEditingValue s) async {
+  Future<Iterable<T>> buildSuggestions(TextEditingValue s) async {
     var sugs = <T>[...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s.text))].distinctByComparison(itemEqualityComparator);
 
     var v = sugs.search(
@@ -783,12 +510,6 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     super.initState();
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
-
-    _controller.addListener(() async {
-      if (widget.onCaret) {
-        showOverlaidTag();
-      }
-    });
   }
 
   /// A comparator function to compare two items.
@@ -811,8 +532,8 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     }
   }
 
-  void showOverlaidTag() async {
-    var options = await buildSuggestions(_controller.value);
+  void showOverlaidTag(BoxConstraints cs) async {
+    var options = (await buildSuggestions(_controller.value)).toList();
     TextPainter painter = TextPainter(
       textDirection: widget.textDirection ?? Directionality.of(context),
       text: TextSpan(
@@ -822,16 +543,12 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     );
     painter.layout();
     OverlayState overlayState = Overlay.of(context);
-    OverlayEntry suggestionTagoverlayEntry = OverlayEntry(builder: (context) {
-      //  return widget.suggestionBuilder!(
-      //         context,
-      //         _controller,
-      //         _onSelected,
-      //         cs,
-      //         sugs,
-      //         displayStringForOption,
-      //         widget.maxHeight,
-      //       );
+
+    if (suggestionTagoverlayEntry != null) {
+      suggestionTagoverlayEntry!.dispose();
+    }
+
+    suggestionTagoverlayEntry = OverlayEntry(builder: (context) {
       return Positioned(
         // Decides where to place the tag on the screen.
         top: _focusNode.offset.dy + painter.height + 3,
@@ -840,32 +557,48 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
         // Tag code.
         child: Material(
           elevation: 4.0,
-          child: Wrap(
-            runSpacing: 2,
-            spacing: 2,
-            alignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapAlignment,
-            crossAxisAlignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapCrossAlignment,
-            children: [
-              for (var option in options)
-                ChoiceChip(onSelected: (_) => _onSelected(option),
-                  selected: _controller.currentLineText.flatEqual(displayStringForOption(option)),
-                  label: Text(
-                    displayStringForOption(option),
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
+          child: widget.suggestionBuilder != null
+              ? widget.suggestionBuilder!(
+                  context,
+                  _controller,
+                  _onSelected,
+                  cs,
+                  options,
+                  displayStringForOption,
+                  widget.maxHeight,
+                )
+              : Wrap(
+                  runSpacing: 10,
+                  spacing: 10,
+                  alignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapAlignment,
+                  crossAxisAlignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapCrossAlignment,
+                  children: [
+                    for (var option in options)
+                      ChoiceChip(
+                        onSelected: (_) {
+                          _onSelected(option);
+                        },
+                        selected: _controller.currentLineText.flatEqual(displayStringForOption(option)),
+                        label: Text(
+                          displayStringForOption(option),
+                          style: const TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-            ],
-          ),
         ),
       );
     });
-    overlayState.insert(suggestionTagoverlayEntry);
-
-    // Removes the over lay entry from the Overly after 500 milliseconds
-    await Future.delayed(const Duration(milliseconds: 500));
-    suggestionTagoverlayEntry.remove();
+    overlayState.insert(suggestionTagoverlayEntry!);
+    Future.delayed(
+      const Duration(seconds: 3),
+      () {
+        suggestionTagoverlayEntry!.remove();
+        suggestionTagoverlayEntry?.dispose();
+      },
+    );
   }
 
   /// A function to handle the selection of a suggestion.
