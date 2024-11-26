@@ -451,7 +451,6 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
         autovalidateMode: widget.autovalidateMode,
         expands: widget.expands,
         forceErrorText: widget.forceErrorText,
-        initialValue: widget.initialValue,
         onSaved: widget.onSaved,
         validator: widget.validator,
         statesController: widget.statesController,
@@ -538,6 +537,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     super.initState();
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
+    _controller.text = widget.initialValue ?? _controller.text;
     _controller.addListener(() async {
       showOverlaidTag();
     });
@@ -564,12 +564,24 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
   }
 
   Future<Iterable<T>> processSuggestions() async {
+    if (widget.enableSuggestions == false) {
+      return [];
+    }
+
     var s = widget.suggestionMode == SuggestionMode.word ? _controller.currentWord : _controller.currentLineText;
     if (widget.minChars > (s.length)) {
       return [];
     }
+    var sugs = <T>[];
 
-    var sugs = <T>[...widget.suggestions, if (widget.asyncSuggestions != null) ...(await widget.asyncSuggestions!(s))].distinctByComparison(itemEqualityComparator);
+    var aSugs = await widget.asyncSuggestions!(s);
+
+    var lsugs = widget.suggestions;
+
+    sugs.addAll(aSugs);
+    sugs.addAll(lsugs);
+
+    sugs = sugs.distinctByComparison(itemEqualityComparator).toList();
 
     var v = sugs.search(
       searchTerms: s,
@@ -594,7 +606,11 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
 
   void showOverlaidTag() async {
     var options = (await processSuggestions()).toList();
-    if (options.isEmpty) return;
+    if (options.isEmpty) {
+      destroyOverlay();
+      _focusNode.requestFocus();
+      return;
+    }
     TextPainter painter = TextPainter(
       textDirection: widget.textDirection ?? Directionality.of(context),
       text: TextSpan(
