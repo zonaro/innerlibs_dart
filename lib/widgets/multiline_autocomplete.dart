@@ -398,6 +398,41 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
   /// A function to get the fields to search on for a suggestion.
   Iterable<dynamic> Function(T) get searchOn => widget.searchOn ?? (T suggestion) => [displayStringForOption(suggestion)];
 
+  Widget Function(
+    BuildContext context,
+    TextEditingController controller,
+    AutocompleteOnSelected<T> onSelected,
+    List<T> options,
+    string Function(T) displayStringForOption,
+    double? maxHeight,
+  ) get suggestionBuilder =>
+      widget.suggestionBuilder ??
+      (context, controller, onSelectet, options, displayStringForOption, maxHeight) => Wrap(
+            runSpacing: 10,
+            spacing: 10,
+            alignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapAlignment,
+            crossAxisAlignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapCrossAlignment,
+            children: [
+              for (var option in options)
+                ChoiceChip(
+                  onSelected: (_) {
+                    if (suggestionTagoverlayEntry != null) {
+                      suggestionTagoverlayEntry!.remove();
+                      suggestionTagoverlayEntry?.dispose();
+                    }
+                    onSelectet(option);
+                  },
+                  selected: _controller.currentWord.flatEqual(displayStringForOption(option)),
+                  label: Text(
+                    displayStringForOption(option),
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+            ],
+          );
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -540,7 +575,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
       textDirection: widget.textDirection ?? Directionality.of(context),
       text: TextSpan(
         style: widget.style,
-        text: _controller.currentLineText,
+        text: _controller.currentWord,
       ),
     );
     painter.layout();
@@ -561,40 +596,14 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
         // Tag code.
         child: Material(
           elevation: 4.0,
-          child: widget.suggestionBuilder != null
-              ? widget.suggestionBuilder!(
-                  context,
-                  _controller,
-                  _onSelected,
-                  options,
-                  displayStringForOption,
-                  widget.maxHeight,
-                )
-              : Wrap(
-                  runSpacing: 10,
-                  spacing: 10,
-                  alignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapAlignment,
-                  crossAxisAlignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapCrossAlignment,
-                  children: [
-                    for (var option in options)
-                      ChoiceChip(
-                        onSelected: (_) {
-                          if (suggestionTagoverlayEntry != null) {
-                            suggestionTagoverlayEntry!.remove();
-                            suggestionTagoverlayEntry?.dispose();
-                          }
-                          _onSelected(option);
-                        },
-                        selected: _controller.currentLineText.flatEqual(displayStringForOption(option)),
-                        label: Text(
-                          displayStringForOption(option),
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+          child: suggestionBuilder(
+            context,
+            _controller,
+            _onSelected,
+            options,
+            displayStringForOption,
+            widget.maxHeight,
+          ),
         ),
       );
     });
