@@ -403,8 +403,6 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
   /// A function to get the display string for a suggestion.
   string Function(T) get displayStringForOption => widget.itemAsString ?? (T suggestion) => suggestion is string ? suggestion : flatString(suggestion);
 
-  /// A function to get the fields to search on for a suggestion.
-  Iterable<dynamic> Function(T) get searchOn => widget.searchOn ?? (T suggestion) => [displayStringForOption(suggestion)];
   Widget Function(
     BuildContext context,
     TextEditingController controller,
@@ -572,36 +570,43 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     if (widget.minChars > (s.length)) {
       return [];
     }
-    var sugs = <T>[];
+    var sugs = <T>[...widget.suggestions];
+    if (widget.asyncSuggestions != null) {
+      var aSugs = await widget.asyncSuggestions!(s);
+      sugs.addAll(aSugs);
+    }
 
-    var aSugs = await widget.asyncSuggestions!(s);
+    sugs = sugs
+        .distinctByComparison(itemEqualityComparator)
+        .search(
+          searchTerms: s,
+          searchOn: searchOn,
+          levenshteinDistance: widget.levenshteinDistance,
+          allIfEmpty: widget.allIfEmpty,
+          ignoreCase: widget.ignoreCase,
+          ignoreDiacritics: widget.ignoreDiacritics,
+          ignoreWordSplitters: widget.ignoreWordSplitters,
+          splitCamelCase: widget.splitCamelCase,
+          useWildcards: widget.useWildcards,
+          minChars: widget.minChars,
+          maxResults: widget.maxResults,
+          keyCharSearches: widget.keyCharSearches,
+        )
+        .toList();
 
-    var lsugs = widget.suggestions;
-
-    sugs.addAll(aSugs);
-    sugs.addAll(lsugs);
-
-    sugs = sugs.distinctByComparison(itemEqualityComparator).toList();
-
-    var v = sugs.search(
-      searchTerms: s,
-      searchOn: searchOn,
-      levenshteinDistance: widget.levenshteinDistance,
-      allIfEmpty: widget.allIfEmpty,
-      ignoreCase: widget.ignoreCase,
-      ignoreDiacritics: widget.ignoreDiacritics,
-      ignoreWordSplitters: widget.ignoreWordSplitters,
-      splitCamelCase: widget.splitCamelCase,
-      useWildcards: widget.useWildcards,
-      minChars: widget.minChars,
-      maxResults: widget.maxResults,
-      keyCharSearches: widget.keyCharSearches,
-    );
-
-    if (v.length == 1 && displayStringForOption(v.first).flatEqual(s)) {
+    if (sugs.length == 1 && displayStringForOption(sugs.first).flatEqual(s)) {
       return [];
     }
-    return v.sortedByCompare((x) => x, itemComparator);
+    return sugs.sortedByCompare((x) => x, itemComparator);
+  }
+
+  /// A function to get the fields to search on for a suggestion.
+  Iterable<dynamic> searchOn(T suggestion) {
+    if (widget.searchOn != null) {
+      return widget.searchOn!(suggestion);
+    } else {
+      return <dynamic>[displayStringForOption(suggestion)];
+    }
   }
 
   void showOverlaidTag() async {

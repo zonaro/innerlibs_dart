@@ -301,7 +301,7 @@ String flatString(dynamic value) {
 /// If [item] is `null`, an empty list is returned.
 /// If [item] is already a Iterable, a copy of items is returned in list.
 /// Otherwise, [item] is wrapped in a list and returned.
-List forceList(dynamic item) {
+List<dynamic> forceList(dynamic item) {
   return [
     if (item != null)
       if (item is Iterable) ...item else item
@@ -321,7 +321,7 @@ List<T> forceListOf<T>(dynamic item) => forceList(item).map((e) => changeTo<T>(e
 /// If [item] is already a Iterable, a copy of items is returned in list.
 /// If any item in the [item] is an Iterable, it is expanded into the list recursively.
 /// Otherwise, [item] is wrapped in a list and returned.
-List forceRecursiveList(dynamic item) {
+List<dynamic> forceRecursiveList(dynamic item) {
   if (item == null) return [];
   if (item is Iterable) {
     return item.expand((e) => forceRecursiveList(e)).toList();
@@ -758,11 +758,11 @@ bool isValid<T>(T? object, {Iterable<bool> Function(T?)? customValidator}) {
   }
 }
 
+bool randomBool() => _random.nextBool();
+
 /// Generates a random boolean value based on the specified [trueFactor].
 /// The [trueFactor] is a percentage value between 1 and 100 that determines the likelihood of the boolean being true.
 bool randomBoolWithFactor([int trueFactor = 50]) => trueFactor <= 0 ? false : randomInt(1, 100) <= trueFactor.clamp(1, 100);
-
-bool randomBool() => _random.nextBool();
 
 /// Generates a random double between the specified [min] and [max] values.
 double randomDouble([double min = 0, double max = 999999]) {
@@ -1171,46 +1171,49 @@ extension FilterFunctions on GetInterface {
     });
 
     if (l.isNotEmpty) {
-      if (maxResults > 0) l = l.take(maxResults);
-      return l;
+      if (maxResults > 0) return l.take(maxResults);
     }
 
-    l = items
-        .where(
-          (item) => Get.searchFunction(
-            searchTerms: searches,
-            searchOn: searchOn(item),
-            ignoreCase: ignoreCase,
-            ignoreDiacritics: ignoreDiacritics,
-            ignoreWordSplitters: ignoreWordSplitters,
-            splitCamelCase: splitCamelCase,
-            useWildcards: useWildcards,
-          ),
-        )
-        .toList();
-
-    if (l.isEmpty && levenshteinDistance > 0) {
-      l = items
-          .where(
-            (item) => levenshteinFunction(
-              searchTerms: searches,
-              searchOn: searchOn(item),
-              levenshteinDistance: levenshteinDistance,
-            ),
-          )
-          .toList();
-    }
-
-    l = l.orderByDescending((item) => countJaro(
+    l = [
+      ...items.where(
+        (item) => Get.searchFunction(
           searchTerms: searches,
           searchOn: searchOn(item),
           ignoreCase: ignoreCase,
           ignoreDiacritics: ignoreDiacritics,
           ignoreWordSplitters: ignoreWordSplitters,
           splitCamelCase: splitCamelCase,
-        ));
+          useWildcards: useWildcards,
+        ),
+      )
+    ];
 
-    if (maxResults > 0) l = l.take(maxResults);
+    if (l.isEmpty && levenshteinDistance > 0) {
+      l = [
+        ...items.where(
+          (item) => levenshteinFunction(
+            searchTerms: searches,
+            searchOn: searchOn(item),
+            levenshteinDistance: levenshteinDistance,
+          ),
+        )
+      ];
+    }
+
+    l = [
+      ...l.orderByDescending(
+        (item) => countJaro(
+          searchTerms: searches,
+          searchOn: searchOn(item),
+          ignoreCase: ignoreCase,
+          ignoreDiacritics: ignoreDiacritics,
+          ignoreWordSplitters: ignoreWordSplitters,
+          splitCamelCase: splitCamelCase,
+        ),
+      ),
+    ];
+
+    if (maxResults > 0) l = [...l.take(maxResults)];
     return l;
   }
 
