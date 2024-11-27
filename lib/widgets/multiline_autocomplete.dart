@@ -8,13 +8,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:innerlibs/innerlibs.dart';
 
+typedef ComparisonFunction<T> = int Function(T item1, T item2);
+
+typedef EqualityFunction<T> = bool Function(T item1, T item2);
+
+typedef ItemAsString<T> = string Function(T item);
+
+typedef SearchOnFunction<T> = Iterable<dynamic> Function(T item);
+
+typedef SuggestionBuilder<T> = Widget Function(
+  TextEditingController controller,
+  VoidItemCallback<T> onSelected,
+  List<T> options,
+  ItemAsString<T> itemAsString,
+);
+
+typedef SuggestionSelectedCallback<T> = void Function(string suggestion, T item);
+
+typedef VoidItemCallback<T> = void Function(T item);
+
 enum SuggestionMode {
   word,
   line,
 }
 
 /// A widget that provides a multiline autocomplete text form field.
-class SuggestionTextFormField<T extends Object> extends StatefulWidget {
+class SuggestionTextFormField<T> extends StatefulWidget {
   /// The decoration to show around the text field.
   final InputDecoration? decoration;
 
@@ -51,13 +70,13 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   final int maxResults;
 
   /// A function that returns the fields to search on for a suggestion.
-  final Iterable<dynamic> Function(T)? searchOn;
+  final SearchOnFunction? searchOn;
 
   /// The maximum number of lines for the text field.
   final int? maxLines;
 
   /// A function that returns the display string for a suggestion.
-  final string Function(T)? itemAsString;
+  final ItemAsString<T>? itemAsString;
 
   /// The controller for the text field.
   final TextEditingController? controller;
@@ -261,30 +280,24 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   final String? restorationId;
 
   /// The callback to call when a suggestion is selected.
-  final void Function(string suggestionText, T selection)? onSuggestionSelected;
+  final SuggestionSelectedCallback<T>? onSuggestionSelected;
 
   /// A map to fire custom search functions for specific characters.
-  final CharMatch<T> keyCharSearches;
+  final KeyCharSearches<T> keyCharSearches;
 
   /// The maximum height for the suggestions box.
   final double? maxHeight;
 
   /// A comparator function to determine if two items are equal.
-  final bool Function(T item1, T item2)? itemEqualityComparator;
+  final EqualityFunction<T>? itemEqualityComparator;
 
   /// A comparator function to sort the items.
-  final int Function(T item1, T item2)? itemComparator;
+  final ComparisonFunction<T>? itemComparator;
 
   final SuggestionMode suggestionMode;
 
   /// A builder function to build the suggestions widget.
-  final Widget Function(
-    BuildContext context,
-    TextEditingController controller,
-    AutocompleteOnSelected<T> onSelected,
-    List<T> options,
-    string Function(T) displayStringForOption,
-  )? suggestionBuilder;
+  final SuggestionBuilder<T>? suggestionBuilder;
 
   final Duration dismissTimeout;
 
@@ -386,7 +399,7 @@ class SuggestionTextFormField<T extends Object> extends StatefulWidget {
   createState() => _SuggestionTextFormFieldState();
 }
 
-class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTextFormField<T>> {
+class _SuggestionTextFormFieldState<T> extends State<SuggestionTextFormField<T>> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
 
@@ -399,41 +412,6 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
   double _maxWidth = 0;
 
   double _maxHeight = 0;
-
-  /// A function to get the display string for a suggestion.
-  string Function(T) get displayStringForOption => widget.itemAsString ?? (T suggestion) => suggestion is string ? suggestion : flatString(suggestion);
-
-  Widget Function(
-    BuildContext context,
-    TextEditingController controller,
-    AutocompleteOnSelected<T> onSelected,
-    List<T> options,
-    string Function(T) displayStringForOption,
-  ) get suggestionBuilder =>
-      widget.suggestionBuilder ??
-      (context, controller, onSelectet, options, displayStringForOption) => Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              runSpacing: 10,
-              spacing: 10,
-              textDirection: widget.textDirection ?? Directionality.of(context),
-              alignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapAlignment,
-              crossAxisAlignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapCrossAlignment,
-              children: [
-                for (var option in options)
-                  ChoiceChip(
-                    onSelected: (_) => onSelectet(option),
-                    selected: (widget.suggestionMode == SuggestionMode.word ? _controller.currentWord : _controller.currentLineText).flatEqual(displayStringForOption(option)),
-                    label: Text(
-                      displayStringForOption(option),
-                      style: const TextStyle(
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          );
 
   @override
   Widget build(BuildContext context) {
@@ -541,6 +519,14 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     });
   }
 
+  /// A function to get the display string for a suggestion.
+  string itemAsString(T item) {
+    if (widget.itemAsString != null) {
+      return widget.itemAsString!(item);
+    }
+    return changeTo<string>(item);
+  }
+
   /// A comparator function to compare two items for ordering.
   int itemComparator(T item1, T item2) {
     if (widget.itemComparator != null) {
@@ -548,7 +534,7 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     } else if (T is Comparable) {
       return (item1 as Comparable).compareTo(item2);
     } else {
-      return displayStringForOption(item1).compareTo(displayStringForOption(item2));
+      return itemAsString(item1).compareTo(itemAsString(item2));
     }
   }
 
@@ -557,8 +543,42 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
     if (widget.itemEqualityComparator != null) {
       return widget.itemEqualityComparator!(item1, item2);
     } else {
-      return displayStringForOption(item1) == displayStringForOption(item2);
+      return itemAsString(item1) == itemAsString(item2);
     }
+  }
+
+  /// A function to handle the selection of a suggestion.
+  void onSelected(T selection) {
+    destroyOverlay();
+
+    var index = widget.suggestionMode == SuggestionMode.word ? _controller.currentWordIndex : _controller.currentLineIndex;
+
+    if (widget.suggestionMode == SuggestionMode.word) {
+      _controller.setWordAt(index, itemAsString(selection));
+    } else {
+      _controller.setLineAt(index, itemAsString(selection));
+    }
+
+    if (widget.suggestionMode == SuggestionMode.line && widget.maxLines != null && index < widget.maxLines! - 1) {
+      _controller.lines = _controller.lines.toList()..insert(index + 1, "");
+    }
+
+    setState(() {});
+    _focusNode.requestFocus();
+
+    if (widget.suggestionMode == SuggestionMode.word) {
+      _controller.currentWordIndex = index + itemAsString(selection).length;
+    } else {
+      _controller.currentLineIndex = index + 2;
+    }
+
+    if (widget.onSuggestionSelected != null) {
+      widget.onSuggestionSelected!(itemAsString(selection), selection);
+    }
+    if (widget.onChanged != null) {
+      widget.onChanged!(_controller.text);
+    }
+    setState(() {});
   }
 
   Future<Iterable<T>> processSuggestions() async {
@@ -590,24 +610,17 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
           useWildcards: widget.useWildcards,
           minChars: widget.minChars,
           maxResults: widget.maxResults,
-          keyCharSearches: widget.keyCharSearches,
         )
         .toList();
 
-    if (sugs.length == 1 && displayStringForOption(sugs.first).flatEqual(s)) {
+    if (sugs.length == 1 && itemAsString(sugs.first).flatEqual(s)) {
       return [];
     }
     return sugs.sortedByCompare((x) => x, itemComparator);
   }
 
   /// A function to get the fields to search on for a suggestion.
-  Iterable<dynamic> searchOn(T suggestion) {
-    if (widget.searchOn != null) {
-      return widget.searchOn!(suggestion);
-    } else {
-      return <dynamic>[displayStringForOption(suggestion)];
-    }
-  }
+  Iterable searchOn(T item) => (widget.searchOn ?? (T item) => [itemAsString(item)])(item);
 
   void showOverlaidTag() async {
     var options = (await processSuggestions()).toList();
@@ -642,59 +655,48 @@ class _SuggestionTextFormFieldState<T extends Object> extends State<SuggestionTe
           child: SizedBox(
             width: _maxWidth,
             height: _maxHeight,
-            child: suggestionBuilder(
-              context,
-              _controller,
-              _onSelected,
-              options,
-              displayStringForOption,
-            ),
+            child: suggestionBuilder(options),
           ),
         ),
       );
     });
     overlayState.insert(suggestionTagoverlayEntry!);
     if (widget.dismissTimeout.inMicroseconds > 0) {
-      Future.delayed(
-        widget.dismissTimeout,
-        () {
-          destroyOverlay();
-        },
-      );
+      Future.delayed(widget.dismissTimeout, () {
+        destroyOverlay();
+      });
     }
   }
 
-  /// A function to handle the selection of a suggestion.
-  void _onSelected(T selection) {
-    destroyOverlay();
-
-    var index = widget.suggestionMode == SuggestionMode.word ? _controller.currentWordIndex : _controller.currentLineIndex;
-
-    if (widget.suggestionMode == SuggestionMode.word) {
-      _controller.setWordAt(index, displayStringForOption(selection));
+  Widget suggestionBuilder(
+    List<T> options,
+  ) {
+    if (widget.suggestionBuilder != null) {
+      return widget.suggestionBuilder!(_controller, onSelected, options, itemAsString);
     } else {
-      _controller.setLineAt(index, displayStringForOption(selection));
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Wrap(
+          runSpacing: 10,
+          spacing: 10,
+          textDirection: widget.textDirection ?? Directionality.of(context),
+          alignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapAlignment,
+          crossAxisAlignment: widget.textAlign.toAlignment(widget.textAlignVertical).toWrapCrossAlignment,
+          children: [
+            for (var option in options)
+              ChoiceChip(
+                onSelected: (_) => onSelected(option),
+                selected: (widget.suggestionMode == SuggestionMode.word ? _controller.currentWord : _controller.currentLineText).flatEqual(itemAsString(option)),
+                label: Text(
+                  itemAsString(option),
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
     }
-
-    if (widget.suggestionMode == SuggestionMode.line && widget.maxLines != null && index < widget.maxLines! - 1) {
-      _controller.lines = _controller.lines.toList()..insert(index + 1, "");
-    }
-
-    setState(() {});
-    _focusNode.requestFocus();
-
-    if (widget.suggestionMode == SuggestionMode.word) {
-      _controller.currentWordIndex = index + displayStringForOption(selection).length;
-    } else {
-      _controller.currentLineIndex = index + 2;
-    }
-
-    if (widget.onSuggestionSelected != null) {
-      widget.onSuggestionSelected!(displayStringForOption(selection), selection);
-    }
-    if (widget.onChanged != null) {
-      widget.onChanged!(_controller.text);
-    }
-    setState(() {});
   }
 }

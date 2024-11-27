@@ -322,11 +322,18 @@ List<T> forceListOf<T>(dynamic item) => forceList(item).map((e) => changeTo<T>(e
 /// If any item in the [item] is an Iterable, it is expanded into the list recursively.
 /// Otherwise, [item] is wrapped in a list and returned.
 List<dynamic> forceRecursiveList(dynamic item) {
-  if (item == null) return [];
-  if (item is Iterable) {
-    return item.expand((e) => forceRecursiveList(e)).toList();
-  } else {}
-  return [item];
+  var list = <dynamic>[];
+  if (item != null) {
+    if (item is Iterable) {
+      for (var e in item) {
+        list.addAll(forceRecursiveList(e));
+      }
+      return list;
+    } else {
+      list.add(item);
+    }
+  }
+  return list;
 }
 
 List<T> forceRecursiveListOf<T>(dynamic item) => forceRecursiveList(item).map((e) => changeTo<T>(e)).toList();
@@ -873,7 +880,7 @@ T? valid<T>(T value, List<bool> Function(T?)? validations, [string? throwErrorMe
         ? throw Exception(throwErrorMessage)
         : null;
 
-typedef CharMatch<T> = Map<string, bool Function(string search, string keyword, T item)>;
+typedef KeyCharSearches<T> = Map<string, bool Function(string search, T item)>;
 
 /// A mixin that provides various filter functions for searching and filtering data.
 ///
@@ -896,19 +903,21 @@ extension FilterFunctions on GetInterface {
   /// Returns the sum of the Jaro similarity scores between the item and each search term.
   double countJaro({
     required dynamic searchTerms,
-    required Iterable<dynamic> searchOn,
+    required Iterable searchOn,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
     bool ignoreWordSplitters = true,
     bool splitCamelCase = true,
   }) {
-    return searchOn
+    var terms = [...searchOn];
+    var searches = forceRecursiveList(searchTerms);
+    return terms
         .expand((e) {
           return e == null
-              ? <double>[for (var _ in forceList(searchTerms)) 0]
+              ? <double>[for (var _ in searches) 0]
               : e.toString().getUniqueWords.map((keyword) {
                   decimal jaro = 0.0;
-                  for (var searchTerm in forceList(searchTerms)) {
+                  for (var searchTerm in searches) {
                     keyword = generateKeyword(
                       keyword,
                       forceLowerCase: ignoreCase,
@@ -932,11 +941,11 @@ extension FilterFunctions on GetInterface {
         .toDouble();
   }
 
-  /// Calculates the Levenshtein distance between an [searchOn] items and a list of search terms.
+  /// Calculates the Levenshtein distance between an [searchOnItems] items and a list of search terms.
   ///
   /// The Levenshtein distance is a measure of the difference between two strings. It represents the minimum number of single-character edits (insertions, deletions, or substitutions) required to change one string into another.
   ///
-  /// The [searchOn] function is used to extract the relevant terms from the [item] for comparison.
+  /// The [searchOnItems] function is used to extract the relevant terms from the [item] for comparison.
   /// The [levenshteinDistance] is the maximum allowed Levenshtein distance for a match to be considered.
   /// The optional parameters [ignoreCase], [ignoreDiacritics], [ignoreWordSplitters], [splitCamelCase], and [useWildcards] control various aspects of the comparison.
   ///
@@ -944,7 +953,7 @@ extension FilterFunctions on GetInterface {
 
   int countLevenshtein({
     required dynamic searchTerms,
-    required Iterable<dynamic> searchOn,
+    required Iterable searchOnItems,
     required int levenshteinDistance,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -954,9 +963,11 @@ extension FilterFunctions on GetInterface {
     if (levenshteinDistance <= 0) {
       return 0;
     } else {
+      var terms = <dynamic>[...searchOnItems];
+      var searches = forceRecursiveList(searchTerms);
       return [
-        for (var searchTerm in forceList(searchTerms))
-          ...searchOn.expand((e) {
+        for (var searchTerm in searches)
+          ...terms.expand((e) {
             if (e == null) return [];
             return e.toString().getUniqueWords.map((keyword) {
               keyword = generateKeyword(
@@ -996,16 +1007,18 @@ extension FilterFunctions on GetInterface {
   /// The function returns the count of occurrences of the search terms in the item.
   int countSearch({
     required dynamic searchTerms,
-    required Iterable<dynamic> searchOn,
+    required Iterable searchOnItems,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
     bool ignoreWordSplitters = true,
     bool splitCamelCase = true,
     bool useWildcards = false,
   }) {
+    var terms = <dynamic>[...searchOnItems];
+    var searches = forceRecursiveList(searchTerms);
     return [
-      for (var searchTerm in forceList(searchTerms))
-        ...searchOn.where((v) {
+      for (var searchTerm in searches)
+        ...terms.where((v) {
           if (v == null) return false;
           var searchword = generateKeyword(
             searchTerm,
@@ -1043,7 +1056,7 @@ extension FilterFunctions on GetInterface {
   /// and several optional parameters to customize the filtering behavior.
   ///
   /// - The [searchTerms] parameter contains search terms to filter on. If [searchTerms] is a Iterable, the function will return `true` if any of the search terms match the item.
-  /// - The [searchOn] parameter is a function that takes in an item and returns an iterable of search terms extracted from the item.
+  /// - The [searchOnItems] parameter is a function that takes in an item and returns an iterable of search terms extracted from the item.
   /// - The [levenshteinDistance] parameter is an optional parameter that specifies the maximum Levenshtein distance allowed for a match.
   /// - The [ignoreCase] parameter is an optional parameter that specifies whether to ignore case when performing the filter.
   /// - The [ignoreDiacritics] parameter is an optional parameter that specifies whether to ignore diacritics when performing the filter.
@@ -1054,18 +1067,17 @@ extension FilterFunctions on GetInterface {
   /// The function returns `true` if the item passes the filter, and `false` otherwise.
   bool fullFilterFunction({
     required dynamic searchTerms,
-    required Iterable<dynamic> searchOn,
+    required Iterable searchOnItems,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
     bool ignoreWordSplitters = true,
     bool splitCamelCase = true,
     bool useWildcards = false,
-    CharMatch keyCharSearches = const {},
   }) =>
       searchFunction(
         searchTerms: searchTerms,
-        searchOn: searchOn,
+        searchOnItems: searchOnItems,
         ignoreCase: ignoreCase,
         ignoreDiacritics: ignoreDiacritics,
         ignoreWordSplitters: ignoreWordSplitters,
@@ -1074,10 +1086,56 @@ extension FilterFunctions on GetInterface {
       ) ||
       levenshteinFunction(
         searchTerms: searchTerms,
-        searchOn: searchOn,
+        searchOnItems: searchOnItems,
         levenshteinDistance: levenshteinDistance,
         ignoreCase: ignoreCase,
       );
+
+  /// Searches for items in the provided [items] iterable based on the given [searchTerms].
+  ///
+  /// The [keyCharSearches] parameter is a map where the keys are strings representing search prefixes,
+  /// and the values are functions that take a search term and an item, and return a boolean indicating
+  /// whether the item matches the search term.
+  ///
+  /// The [items] parameter is the iterable of items to search through.
+  ///
+  /// The [searchTerms] parameter is the term or terms to search for. It can be a single term or a list of terms.
+  ///
+  /// The [maxResults] parameter specifies the maximum number of results to return. If it is 0, all matching items are returned.
+  ///
+  /// Returns an iterable of items that match the search criteria.
+  Iterable<T> keySearch<T>({
+    required KeyCharSearches<T> keyCharSearches,
+    required Iterable<T> items,
+    required dynamic searchTerms,
+    int maxResults = 0,
+  }) {
+    var searches = forceRecursiveList(searchTerms);
+    keyCharSearches[""] ??= (String search, T item) => false;
+    var l = [
+      ...items.where((item) {
+        for (var s in searches) {
+          var searchWord = changeTo<string>(s);
+          if (searchWord.startsWithAny(keyCharSearches.keys.whereNot((e) => e.isEmpty))) {
+            for (var entry in keyCharSearches.entries.where((e) => e.key.isNotEmpty)) {
+              if (searchWord.startsWith(entry.key)) {
+                return entry.value(
+                  searchWord.removeFirstEqual(entry.key),
+                  item,
+                );
+              }
+            }
+          } else {
+            return keyCharSearches[""]!(searchWord, item);
+          }
+        }
+        return false;
+      })
+    ];
+
+    if (maxResults > 0) return l.take(maxResults);
+    return l;
+  }
 
   /// Calculates the Levenshtein distance between an item and a collection of search terms.
   ///
@@ -1087,7 +1145,7 @@ extension FilterFunctions on GetInterface {
   /// the specified Levenshtein distance of the item, and `false` otherwise.
   ///
   /// The [searchTerms] parameter is the collection of search terms to compare against the item.
-  /// The [searchOn] parameter is a list of search terms to compare against.
+  /// The [searchOnItems] parameter is a list of search terms to compare against.
   /// The [levenshteinDistance] parameter is the maximum allowed Levenshtein distance.
   /// The [ignoreCase] parameter specifies whether to ignore case when comparing strings. It is `true` by default.
   ///
@@ -1095,13 +1153,13 @@ extension FilterFunctions on GetInterface {
   /// and `false` otherwise.
   bool levenshteinFunction({
     required dynamic searchTerms,
-    required Iterable<dynamic> searchOn,
+    required Iterable searchOnItems,
     required int levenshteinDistance,
     bool ignoreCase = true,
   }) =>
       countLevenshtein(
         searchTerms: searchTerms,
-        searchOn: searchOn,
+        searchOnItems: searchOnItems,
         levenshteinDistance: levenshteinDistance,
         ignoreCase: ignoreCase,
       ) >
@@ -1120,7 +1178,7 @@ extension FilterFunctions on GetInterface {
   Iterable<T> search<T>({
     required Iterable<T> items,
     required dynamic searchTerms,
-    required Iterable<dynamic> Function(T) searchOn,
+    SearchOnFunction<T>? searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -1130,14 +1188,13 @@ extension FilterFunctions on GetInterface {
     bool allIfEmpty = true,
     int maxResults = 0,
     int minChars = 0,
-    CharMatch<T> keyCharSearches = const {},
   }) {
     if (items.isEmpty) return <T>[].orderBy((e) => true);
 
     var searches = forceRecursiveList(searchTerms).whereNotBlank;
 
     if (minChars > 0) {
-      searches = searches.where((e) => e.length >= minChars);
+      searches = searches.where((e) => flatString(e).length >= minChars);
       allIfEmpty = false;
     }
 
@@ -1149,42 +1206,22 @@ extension FilterFunctions on GetInterface {
       }
     }
 
-    var l = items.where((item) {
-      for (var entry in keyCharSearches.entries) {
-        for (var searchword in forceList(searchTerms)) {
-          if (changeTo<string>(searchword).startsWith(entry.key)) {
-            return entry.value(
-              changeTo<string>(searchword).removeFirstEqual(entry.key),
-              generateKeyword(
-                searchword,
-                forceLowerCase: ignoreCase,
-                removeDiacritics: ignoreDiacritics,
-                removeWordSplitters: ignoreWordSplitters,
-                splitCamelCase: splitCamelCase,
-              ),
-              item,
-            );
-          }
-        }
-      }
-      return false;
-    });
+    searchOn ??= (T item) => [changeTo<string>(item)];
 
-    if (l.isNotEmpty) {
-      if (maxResults > 0) return l.take(maxResults);
-    }
-
-    l = [
+    var l = [
       ...items.where(
-        (item) => Get.searchFunction(
-          searchTerms: searches,
-          searchOn: searchOn(item),
-          ignoreCase: ignoreCase,
-          ignoreDiacritics: ignoreDiacritics,
-          ignoreWordSplitters: ignoreWordSplitters,
-          splitCamelCase: splitCamelCase,
-          useWildcards: useWildcards,
-        ),
+        (item) {
+          return Get.searchFunction(
+            searchTerms: searches,
+            searchOnItems: searchOn!(item),
+            ignoreCase: ignoreCase,
+            ignoreDiacritics: ignoreDiacritics,
+            ignoreWordSplitters: ignoreWordSplitters,
+            splitCamelCase: splitCamelCase,
+            useWildcards: useWildcards,
+            levenshteinDistance: levenshteinDistance,
+          );
+        },
       )
     ];
 
@@ -1193,8 +1230,9 @@ extension FilterFunctions on GetInterface {
         ...items.where(
           (item) => levenshteinFunction(
             searchTerms: searches,
-            searchOn: searchOn(item),
+            searchOnItems: searchOn!(item),
             levenshteinDistance: levenshteinDistance,
+            ignoreCase: ignoreCase,
           ),
         )
       ];
@@ -1204,7 +1242,7 @@ extension FilterFunctions on GetInterface {
       ...l.orderByDescending(
         (item) => countJaro(
           searchTerms: searches,
-          searchOn: searchOn(item),
+          searchOn: searchOn!(item),
           ignoreCase: ignoreCase,
           ignoreDiacritics: ignoreDiacritics,
           ignoreWordSplitters: ignoreWordSplitters,
@@ -1232,7 +1270,7 @@ extension FilterFunctions on GetInterface {
   /// Returns `true` if the item matches any of the search terms based on the given criteria, `false` otherwise.
   bool searchFunction({
     required dynamic searchTerms,
-    required Iterable<dynamic> searchOn,
+    required Iterable searchOnItems,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -1242,7 +1280,7 @@ extension FilterFunctions on GetInterface {
   }) =>
       countSearch(
         searchTerms: searchTerms,
-        searchOn: searchOn,
+        searchOnItems: searchOnItems,
         ignoreCase: ignoreCase,
         ignoreDiacritics: ignoreDiacritics,
         ignoreWordSplitters: ignoreWordSplitters,
@@ -1272,12 +1310,10 @@ extension FilterFunctions on GetInterface {
     bool useWildcards = false,
     int maxResults = 0,
     int minChars = 0,
-    CharMatch<Map<K, V>> keyCharSearches = const {},
   }) {
     if (keys.isEmpty) {
       keys = items.expand((e) => e.keys).distinct().toList();
     }
-
     return search(
       items: items,
       searchTerms: searchTerms,
@@ -1291,7 +1327,6 @@ extension FilterFunctions on GetInterface {
       ignoreDiacritics: ignoreDiacritics,
       ignoreWordSplitters: ignoreWordSplitters,
       maxResults: maxResults,
-      keyCharSearches: keyCharSearches,
       minChars: minChars,
       splitCamelCase: splitCamelCase,
       useWildcards: useWildcards,

@@ -781,7 +781,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
               filters.isBlank ||
               Get.fullFilterFunction(
                 searchTerms: filters.split(";").whereValid,
-                searchOn: searchOn(item),
+                searchOnItems: searchOn(item),
               ),
           enabled: !widget.readOnly,
           compareFn: (item1, item2) => textValueSelector(item1).last == textValueSelector(item2).last,

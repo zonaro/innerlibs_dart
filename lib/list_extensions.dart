@@ -191,6 +191,30 @@ extension IterablesExtension<T> on Iterable<T> {
         return toList().sublist(start, end);
       });
 
+  /// Searches for items in this iterable based on the given [searchTerms].
+  ///
+  /// The [keyCharSearches] parameter is a map where the keys are strings representing search prefixes,
+  /// and the values are functions that take a search term and an item, and return a boolean indicating
+  /// whether the item matches the search term.
+  ///
+  /// The [searchTerms] parameter is the term or terms to search for. It can be a single term or a list of terms.
+  ///
+  /// The [maxResults] parameter specifies the maximum number of results to return. If it is 0, all matching items are returned.
+  ///
+  /// Returns an iterable of items that match the search criteria.
+  Iterable<T> keySearch({
+    required KeyCharSearches<T> keyCharSearches,
+    required dynamic searchTerms,
+    int maxResults = 0,
+  }) {
+    return Get.keySearch(
+      items: this,
+      searchTerms: searchTerms,
+      maxResults: maxResults,
+      keyCharSearches: keyCharSearches,
+    );
+  }
+
   /// Pairs up the elements of this list with the elements of the [other] list.
   /// Returns a new list of tuples, where each tuple contains two elements:
   /// the corresponding element from this list and the corresponding element from the [other] list.
@@ -228,7 +252,7 @@ extension IterablesExtension<T> on Iterable<T> {
 
   Iterable<T> search({
     required dynamic searchTerms,
-    required Iterable<dynamic> Function(T) searchOn,
+    SearchOnFunction<T>? searchOn,
     int levenshteinDistance = 0,
     bool ignoreCase = true,
     bool ignoreDiacritics = true,
@@ -238,7 +262,6 @@ extension IterablesExtension<T> on Iterable<T> {
     bool allIfEmpty = true,
     int minChars = 0,
     int maxResults = 0,
-    CharMatch<T> keyCharSearches = const {},
   }) =>
       Get.search(
         items: this,
@@ -251,7 +274,6 @@ extension IterablesExtension<T> on Iterable<T> {
         splitCamelCase: splitCamelCase,
         useWildcards: useWildcards,
         allIfEmpty: allIfEmpty,
-        keyCharSearches: keyCharSearches,
         minChars: minChars,
         maxResults: maxResults,
       );

@@ -588,7 +588,7 @@ extension StringExtensions on String {
   }
 
   /// Returns a list with distinct words of this sentence
-  Iterable<string> get getUniqueWords => getWords.toList().distinctFlat();
+  Iterable<string> get getUniqueWords => getWords.distinctFlat();
 
   /// Returns a list with words of this sentence
   Iterable<string> get getWords => splitWords();
