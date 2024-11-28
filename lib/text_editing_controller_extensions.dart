@@ -8,7 +8,7 @@ extension TextEditingControllerExtensions on TextEditingController {
   /// Gets or sets the current line where the cursor is located.
   int get currentLineIndex => value.currentLineIndex;
   set currentLineIndex(int value) {
-    var cursorPosition = lines.take(value).join(Get.breakline).length;
+    var cursorPosition = lines.take(value.clamp(0, lines.length - 1).clampMin(0)).join(Get.breakline).length;
     selection = TextSelection.collapsed(offset: cursorPosition);
   }
 

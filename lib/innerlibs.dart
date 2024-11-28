@@ -86,7 +86,6 @@ export 'widgets/image_card.dart';
 export 'widgets/image_of_widget.dart';
 export 'widgets/milk_truck.dart';
 export 'widgets/min_size.dart';
-export 'widgets/multiline_autocomplete.dart';
 export 'widgets/nil.dart';
 export 'widgets/placeholders.dart';
 export 'widgets/responsive.dart';

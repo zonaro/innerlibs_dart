@@ -13,6 +13,7 @@ import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/
 final _random = Random();
 
 bool get isAndroid => GetPlatform.isAndroid;
+
 bool get isApple => (isIOS || isMacOS);
 bool get isDesktop => (isMacOS || isWindows || isLinux);
 bool get isFuchsia => GetPlatform.isFuchsia;
@@ -881,6 +882,8 @@ T? valid<T>(T value, List<bool> Function(T?)? validations, [string? throwErrorMe
         : null;
 
 typedef KeyCharSearches<T> = Map<string, bool Function(string search, T item)>;
+
+typedef SearchOnFunction<T> = Iterable Function(T item);
 
 /// A mixin that provides various filter functions for searching and filtering data.
 ///
