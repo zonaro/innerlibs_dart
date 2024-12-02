@@ -55,8 +55,9 @@
         "IBGE": 1200203,
         "SIAFI": 107,
         "DDD": 68,
-        "TimeZone": "America/Rio_Branco"
-
+        "TimeZone": "America/Rio_Branco",
+        "latitude": -7.62762,
+        "longitude": -72.6756
     },
     {
         "Nome": "Epitaciolândia",

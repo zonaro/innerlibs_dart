@@ -24,7 +24,8 @@ dependencies:
   brasil_fields: 
   download: 
   gap: 
-  dropdown_search: 
+  dropdown_search:
+  flutter_typeahead : 
   mime:
   latlong2:
   icons_plus:

@@ -604,7 +604,16 @@ abstract interface class Brasil {
     if (nomeEstadoOuUFOuIBGEouRegiao is num || nomeEstadoOuUFOuIBGEouRegiao is int || nomeEstadoOuUFOuIBGEouRegiao is double) {
       nomeEstadoOuUFOuIBGEouRegiao = nomeEstadoOuUFOuIBGEouRegiao.toString().first(2);
     }
+
     nomeCidadeOuIBGE = flatString(nomeCidadeOuIBGE);
+
+    if ("$nomeCidadeOuIBGE".flatContains(" - ")) {
+      var l = "$nomeCidadeOuIBGE".split(" - ").whereValid.toList();
+      nomeCidadeOuIBGE = l.first;
+      if (l.length > 1) {
+        nomeEstadoOuUFOuIBGEouRegiao ??= l[1];
+      }
+    }
 
     Estado est = pegarEstado(nomeCidadeOuIBGE);
     if (est.estadoReal == false && isValid(nomeEstadoOuUFOuIBGEouRegiao)) {
@@ -722,7 +731,7 @@ abstract interface class Brasil {
   /// ```dart
   /// var cidades = await pesquisarCidade("São Paulo");
   /// ```
-  static Future<Iterable<Cidade>> pesquisarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeEstadoOuUFOuIBGEouRegiao, int minChars=0]) async {
+  static Future<Iterable<Cidade>> pesquisarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeEstadoOuUFOuIBGEouRegiao, int minChars = 0]) async {
     try {
       if (nomeCidadeOuIBGE is Cidade) {
         return [nomeCidadeOuIBGE];
@@ -755,6 +764,14 @@ abstract interface class Brasil {
       }
 
       nomeCidadeOuIBGE = flatString(nomeCidadeOuIBGE);
+
+      if ("$nomeCidadeOuIBGE".flatContains(" - ")) {
+        var l = "$nomeCidadeOuIBGE".split(" - ").whereValid.toList();
+        nomeCidadeOuIBGE = l.first;
+        if (l.length > 1) {
+          nomeEstadoOuUFOuIBGEouRegiao ??= l[1];
+        }
+      }
 
       Estado est = pegarEstado(nomeCidadeOuIBGE);
       if (est.estadoReal == false && isValid(nomeEstadoOuUFOuIBGEouRegiao)) {

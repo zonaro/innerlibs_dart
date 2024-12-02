@@ -231,9 +231,12 @@ class PercentFormatter extends TextInputFormatter {
 }
 
 class TitleCaseTextFormatter extends TextInputFormatter {
+  final bool? forceCase;
+
+  TitleCaseTextFormatter({this.forceCase});
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    return TextEditingValue(text: newValue.text.toTitleCase(), selection: newValue.selection);
+    return TextEditingValue(text: newValue.text.toTitleCase(forceCase), selection: newValue.selection);
   }
 }
 

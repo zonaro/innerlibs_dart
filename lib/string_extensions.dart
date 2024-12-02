@@ -3141,40 +3141,6 @@ extension StringExtensions on String {
     return [parts.join(pattern), last];
   }
 
-  List<String> splitWith(Iterable<String> delimiters) {
-    List<String> result = [];
-    if (isBlank) return result;
-    if (delimiters.isEmpty) return [this];
-    string input = this;
-    int start = 0;
-
-    while (start < input.length) {
-      int closestIndex = input.length;
-      String closestDelimiter = "";
-
-      for (String delimiter in delimiters) {
-        int index = input.indexOf(delimiter, start);
-        if (index != -1 && index < closestIndex) {
-          closestIndex = index;
-          closestDelimiter = delimiter;
-        }
-      }
-
-      if (closestIndex == input.length) {
-        result.add(input.substring(start));
-        break;
-      }
-
-      if (start != closestIndex) {
-        result.add(input.substring(start, closestIndex));
-      }
-      result.add(closestDelimiter);
-      start = closestIndex + closestDelimiter.length;
-    }
-
-    return result;
-  }
-
   /// Split a string into a list of words and word splitter following the mode
   ///
   /// [mode] can be [WordSplitMode.wordsOnly], [WordSplitMode.whitespace], [WordSplitMode.keepSplitters]
@@ -3300,23 +3266,39 @@ extension StringExtensions on String {
     }
   }
 
-  /// Returns the `String` title cased.
+  /// Converts the string to title case, where the first letter of each word is
+  /// capitalized. Optionally, the rest of the letters in each word can be
+  /// forced to lower case.
   ///
-  /// ```dart
-  /// String foo = 'Hello dear friend how you doing';
-  /// Sting titleCased = foo.toTitleCase; // returns 'Hello Dear Friend How You Doing'.
-  /// ```
-  String toTitleCase([bool forceCase = false]) {
+  /// If the string is blank, it returns a blank string.
+  ///
+  /// If the string is in upper case, the [forceCase] parameter defaults to true,
+  /// otherwise it defaults to false.
+  ///
+  /// - [forceCase]: If true, forces the rest of the letters in each word to be
+  ///   lower case. If false, leaves the rest of the letters unchanged. Defaults
+  ///   to false if the string is not in upper case.
+  ///
+  /// Returns the string converted to title case.
+  String toTitleCase([bool? forceCase]) {
     if (isBlank) {
       return blankIfNull;
     }
 
-    var words = trim().split(RegExp(r'\s+'));
+    if (isUpperCase) {
+      forceCase ??= true;
+    } else {
+      forceCase ??= false;
+    }
+
+    var words = splitWords(WordSplitMode.keepSplitters);
     var result = '';
 
     for (var word in words) {
-      if (word.isNotEmpty) {
-        result += '${word[0].toUpperCase()}${forceCase ? word.substring(1).toLowerCase() : word.substring(1)} ';
+      if (word.length > 1) {
+        result += '${word[0].toUpperCase()}${forceCase ? word.substring(1).toLowerCase() : word.substring(1)}';
+      } else {
+        result += word[0].toUpperCase();
       }
     }
 
