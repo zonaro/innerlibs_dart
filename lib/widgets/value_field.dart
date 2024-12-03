@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
@@ -93,6 +92,76 @@ typedef IntField = ValueField<int>;
 typedef NumField = ValueField<num>;
 
 typedef StringField = ValueField<string>;
+
+class EnumField<T extends Enum> extends StatelessWidget {
+  final String? label;
+
+  final void Function(T?)? onChange;
+  final void Function()? onEditingComplete;
+  final string? Function(T?)? validator;
+  final T? defaultValue;
+  final bool readOnly;
+  final Color? borderColor;
+  final TextAlign textAlign;
+  final FocusNode? focusNode;
+  final bool autofocus;
+  final IconData? icon;
+  final double? max;
+  final List<T> values;
+  final string Function(T?)? itemAsString;
+
+  EnumField({
+    super.key,
+    required this.values,
+    this.label,
+    this.onChange,
+    this.onEditingComplete,
+    this.validator,
+    this.defaultValue,
+    this.readOnly = false,
+    this.borderColor,
+    this.textAlign = TextAlign.start,
+    this.focusNode,
+    this.autofocus = false,
+    this.icon,
+    this.max,
+    this.itemAsString,
+  }) {
+    if (values.isEmpty) {
+      throw "EnumField: values cannot be empty";
+    }
+  }
+
+  String Function(T?) get itemString => itemAsString ?? ((e) => e.toString().split(".").last.pascalSplitString);
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueField<T>(
+      icon: icon,
+      max: max,
+      label: label,
+      onChanged: (newValue, _) {
+        if (onChange != null) {
+          onChange!(changeTo<T>(newValue));
+        }
+      },
+      onEditingComplete: onEditingComplete,
+      validator: (v) {
+        if (validator != null) {
+          return (validator)!(changeTo(v));
+        }
+        return null;
+      },
+      value: changeTo(defaultValue),
+      readOnly: readOnly,
+      textAlign: textAlign,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      options: values,
+      textValueSelector: (x) => [itemString(x), x.toString()],
+    );
+  }
+}
 
 class ValueField<T> extends StatefulWidget {
   final String? label;

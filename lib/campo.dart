@@ -303,17 +303,14 @@ class DateField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: fieldsPadding,
-      child: DateTimePickerFormField(
-        decoration: inputStyles(label, icon),
-        invalidDateMessage: context.translations.invalidItem(context.translations.date),
-        outOfRangeMessage: context.translations.dateOutOfRange,
-        value: value ?? now,
-        fromDate: fromDate ?? minDate,
-        toDate: toDate ?? now.sum(years: 999),
-        onChanged: onChanged,
-      ),
+    return DateTimePickerFormField(
+      decoration: inputStyles(label, icon),
+      invalidDateMessage: context.translations.invalidItem(context.translations.date),
+      outOfRangeMessage: context.translations.dateOutOfRange,
+      value: value ?? now,
+      fromDate: fromDate ?? minDate,
+      toDate: toDate ?? now.sum(years: 999),
+      onChanged: onChanged,
     );
   }
 }
@@ -337,75 +334,6 @@ class DeleteButton extends StatelessWidget {
   }
 }
 
-class EnumField<T extends Enum> extends StatelessWidget {
-  final String? label;
-
-  final void Function(T?)? onChange;
-  final void Function()? onEditingComplete;
-  final string? Function(T?)? validator;
-  final T? defaultValue;
-  final bool readOnly;
-  final Color? borderColor;
-  final TextAlign textAlign;
-  final FocusNode? focusNode;
-  final bool autofocus;
-  final IconData? icon;
-  final double? max;
-  final List<T> values;
-  final string Function(T?)? itemAsString;
-
-  EnumField({
-    super.key,
-    required this.values,
-    this.label,
-    this.onChange,
-    this.onEditingComplete,
-    this.validator,
-    this.defaultValue,
-    this.readOnly = false,
-    this.borderColor,
-    this.textAlign = TextAlign.start,
-    this.focusNode,
-    this.autofocus = false,
-    this.icon,
-    this.max,
-    this.itemAsString,
-  }) {
-    if (values.isEmpty) {
-      throw "EnumField: values cannot be empty";
-    }
-  }
-
-  String Function(T?) get itemString => itemAsString ?? ((e) => e.toString().split(".").last.pascalSplitString);
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueField<T>(
-      icon: icon,
-      max: max,
-      label: label,
-      onChanged: (newValue, _) {
-        if (onChange != null) {
-          onChange!(changeTo<T>(newValue));
-        }
-      },
-      onEditingComplete: onEditingComplete,
-      validator: (v) {
-        if (validator != null) {
-          return (validator)!(changeTo(v));
-        }
-        return null;
-      },
-      value: changeTo(defaultValue),
-      readOnly: readOnly,
-      textAlign: textAlign,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      options: values,
-      textValueSelector: (x) => [itemString(x), x.toString()],
-    );
-  }
-}
 
 class FabSave<T> extends StatelessWidget {
   final T? id;
