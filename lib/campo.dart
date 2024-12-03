@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
@@ -10,7 +11,7 @@ const fieldsPadding = EdgeInsets.all(8);
 
 /// gera os chips que aparecem nas buscas de SELECTs quando nao tem resultados
 Widget emptySearch(BuildContext context, string searchEntry, string label) {
-  var searches = searchEntry.split(";").where((e) => e.isNotBlank).toList();
+  var searches = searchEntry.split(";").whereNotBlank.toList();
   return Expanded(
     child: Center(
       child: ListView(shrinkWrap: true, children: [
@@ -564,7 +565,7 @@ class FabTextBase extends StatelessWidget {
     if (parts.length == 1) {
       return FloatingActionButton(
         onPressed: onPressed,
-        heroTag: heroTag ?? (label?.hashCode, icon?.hashCode, randomInt()),
+        heroTag: heroTag ?? (label?.hashCode, icon?.hashCode),
         backgroundColor: color,
         child: parts.first,
       );
@@ -615,8 +616,9 @@ class SaveButton extends StatelessWidget {
   }
 }
 
-class ValueField<T extends Object> extends StatefulWidget {
+class ValueField<T> extends StatefulWidget {
   final String? label;
+  final TextEditingController? controller;
 
   final Iterable<T> options;
   final List<TextInputFormatter> inputFormatters;
@@ -645,12 +647,15 @@ class ValueField<T extends Object> extends StatefulWidget {
   final Duration? debounce;
   final void Function(string)? onFieldSubmitted;
 
+  final bool Function(T a, T b)? equalityFunction;
+  final int Function(T a, T b)? comparatorFunction;
+
   const ValueField({
     super.key,
+    required this.onChanged,
     this.label,
     this.options = const [],
     this.inputFormatters = const [],
-    required this.onChanged,
     this.onEditingComplete,
     this.validator,
     this.max,
@@ -674,28 +679,40 @@ class ValueField<T extends Object> extends StatefulWidget {
     this.onSuffixIconTap,
     this.debounce,
     this.onFieldSubmitted,
+    this.controller,
+    this.equalityFunction,
+    this.comparatorFunction,
   });
 
   @override
   createState() => ValueFieldState<T>();
 }
 
-class ValueFieldState<T extends Object> extends State<ValueField<T>> {
+class ValueFieldState<T> extends State<ValueField<T>> {
   late FocusNode _focusNode;
 
-  final ValueNotifier<T?> value = ValueNotifier<T?>(null);
+  late TextEditingController _textController;
+
+  final ValueNotifier<T?> _value = ValueNotifier<T?>(null);
 
   Timer? _debounce;
 
-  late TextInputType keyboardType;
-  late TextAlign textAlign;
+  late TextInputType _keyboardType;
+  late TextAlign _textAlign;
 
-  late List<TextInputFormatter> inputFormatters;
+  late List<TextInputFormatter> _inputFormatters;
 
-  int? maxLen;
-  TextEditingValue? tev;
+  int? _maxLen;
 
-  Iterable<T> get options => [value.value, ...widget.options].whereNotNull().distinctBy((x) => textValueSelector(x).last).toList();
+  Iterable<T> get options {
+    List<T> opts = [];
+    if (_value.value != null) {
+      opts.add(_value.value as T);
+    }
+    opts.addAll(widget.options);
+
+    return opts.distinctByComparison(equalityFunction);
+  }
 
   StringList Function(T?) get textValueSelector {
     if (widget.textValueSelector == null) {
@@ -711,6 +728,7 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   }
 
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
+
   Future<List<T>> allOptions(string v) async {
     List<T> values = widget.options.toList();
     if (widget.asyncItems != null) {
@@ -732,89 +750,81 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
     _maxLenByType();
 
     if (widget.isAutoComplete || (useOptionsList == false)) {
-      return Padding(
-        padding: fieldsPadding,
-        child: useOptionsList
-            ? Autocomplete<T>(
-                optionsViewBuilder: (context, onSelected, options) {
-                  var opt = options.toList();
-                  return Container(
-                    color: context.colorScheme.surface,
-                    width: 100,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemBuilder: (context, i) => GestureDetector(
-                              onTap: () => onSelected(opt[i]),
-                              child: itemBuilder(
-                                context,
-                                opt[i],
-                                false,
-                                value.value != null ? (i == opt.indexOf(value.value!)) : false,
-                              ),
-                            ),
-                        itemCount: opt.length),
-                  );
-                },
-                onSelected: (v) => onChanged(v, textValueSelector(v).last),
-                displayStringForOption: (v) => textValueSelector(v).last,
-                optionsBuilder: (v) async => await allOptions(v.text),
-                fieldViewBuilder: (context, textEditingController, fn, onFieldSubmitted) {
-                  return Focus(
-                    focusNode: _focusNode,
-                    autofocus: widget.autofocus,
-                    onFocusChange: (v) {
-                      if (v) {
-                        fn.requestFocus();
-                      }
-                    },
-                    child: field(fn, textEditingController),
-                  );
-                },
-              )
-            : field(_focusNode),
-      );
+      return useOptionsList
+          ? TypeAheadField<T>(
+              controller: _textController,
+              focusNode: _focusNode,
+              itemBuilder: (context, item) {
+                return itemBuilder(
+                  context,
+                  item,
+                  false,
+                  _value.value == null ? false : equalityFunction(_value.value as T, item),
+                );
+              },
+              onSelected: (v) => onChanged(v, textValueSelector(v).last),
+              // displayStringForOption: (v) => textValueSelector(v).last,
+
+              suggestionsCallback: (v) async => await allOptions(v),
+              builder: (context, controller, fn) => field(fn, controller),
+            )
+          : field(_focusNode, _textController);
     } else {
-      return Padding(
-        padding: fieldsPadding,
-        child: DropdownSearch<T>(
-          filterFn: (item, filters) =>
-              filters.isBlank ||
-              Get.fullFilterFunction(
-                searchTerms: filters.split(";").whereValid,
-                searchOnItems: searchOn(item),
-              ),
-          enabled: !widget.readOnly,
-          compareFn: (item1, item2) => textValueSelector(item1).last == textValueSelector(item2).last,
-          popupProps: popupFields(
-            context,
-            widget.label,
-            itemBuilder: itemBuilder,
-          ),
-          selectedItem: value.value,
-          decoratorProps: DropDownDecoratorProps(
-            decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
-          ),
-          items: (v, l) async => await allOptions(v),
-          itemAsString: (x) => textValueSelector(x).first,
-          onChanged: (newValue) {
-            if (value.value == newValue || newValue == null) {
-              value.value = null;
-            } else {
-              value.value = newValue;
-            }
-            onChanged(newValue, textValueSelector(newValue).last);
-          },
+      return DropdownSearch<T>(
+        filterFn: (item, filters) =>
+            filters.isBlank ||
+            Get.fullFilterFunction(
+              searchTerms: filters.split(";").whereNotBlank,
+              searchOnItems: searchOn(item),
+            ),
+        enabled: !widget.readOnly,
+        compareFn: (a, b) => equalityFunction(a, b),
+        popupProps: popupFields(
+          context,
+          widget.label,
+          itemBuilder: itemBuilder,
         ),
+        selectedItem: _value.value,
+        decoratorProps: DropDownDecoratorProps(
+          decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
+        ),
+        items: (v, l) async => await allOptions(v),
+        itemAsString: (x) => textValueSelector(x).first,
+        onChanged: (newValue) {
+          if (_value.value == newValue || newValue == null) {
+            _value.value = null;
+          } else {
+            _value.value = newValue;
+          }
+          onChanged(newValue, textValueSelector(newValue).last);
+        },
       );
     }
   }
 
-  field(FocusNode fn, [TextEditingController? textEditingController]) => TextFormField(
+  int comparatorFunction(T a, T b) {
+    if (widget.comparatorFunction != null) {
+      return widget.comparatorFunction!(a, b);
+    } else if (T is Comparable) {
+      return (a as Comparable).compareTo(b);
+    }
+    return textValueSelector(a).last.compareTo(textValueSelector(b).last);
+  }
+
+  bool equalityFunction(T a, T b) {
+    if (widget.equalityFunction != null) {
+      return widget.equalityFunction!(a, b);
+    } else if (T is Comparable) {
+      return comparatorFunction(a, b) == 0;
+    }
+    return textValueSelector(a).last == textValueSelector(b).last;
+  }
+
+  field(FocusNode fn, TextEditingController textEditingController) => TextFormField(
         focusNode: fn,
-        textAlign: textAlign,
-        initialValue: textEditingController == null ? (value.value != null ? textValueSelector(value.value as T).last : "") : null,
-        maxLength: maxLen,
-        controller: textEditingController?..text = value.value != null ? textValueSelector(value.value as T).last : "",
+        textAlign: _textAlign,
+        maxLength: _maxLen,
+        controller: textEditingController..text = _value.value != null ? textValueSelector(_value.value as T).last : "",
         onChanged: (newValue) async {
           if (useOptionsList) {
             var opt = await allOptions(newValue);
@@ -826,8 +836,8 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
         },
         onEditingComplete: widget.onEditingComplete,
         onFieldSubmitted: widget.onFieldSubmitted,
-        inputFormatters: inputFormatters,
-        keyboardType: keyboardType,
+        inputFormatters: _inputFormatters,
+        keyboardType: _keyboardType,
         decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
         validator: (s) {
           if (widget.validator != null) {
@@ -847,28 +857,31 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
 
   @override
   void initState() {
-    value.value = widget.value;
+    this._textController = widget.controller ?? TextEditingController();
+    _focusNode = widget.focusNode ?? FocusNode();
+    _value.value = widget.value;
+
     if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
-      keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: T is decimal);
-      inputFormatters = widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters;
-      textAlign = widget.textAlign ?? TextAlign.end;
+      _keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: T is decimal);
+      _inputFormatters = widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters;
+      _textAlign = widget.textAlign ?? TextAlign.end;
     } else {
-      keyboardType = widget.keyboardType ?? TextInputType.text;
-      inputFormatters = widget.inputFormatters;
-      textAlign = widget.textAlign ?? TextAlign.start;
+      _keyboardType = widget.keyboardType ?? TextInputType.text;
+      _inputFormatters = widget.inputFormatters;
+      _textAlign = widget.textAlign ?? TextAlign.start;
     }
 
-    _focusNode = widget.focusNode ?? FocusNode();
     super.initState();
   }
 
   Widget itemBuilder(BuildContext context, T item, bool isDisabled, bool isSelected) {
-    isSelected = (isSelected || item == value.value) && !isDisabled;
+    isSelected = (isSelected || item == _value.value) && !isDisabled;
     if (widget.itemBuilder != null) {
       return widget.itemBuilder!(context, item, isSelected);
     }
     return ListTile(
       enabled: !isDisabled,
+      selected: isSelected,
       leading: Visibility(
         visible: isSelected,
         child: Icon(
@@ -886,7 +899,8 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
       if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
         value = (value as num).clampMax(widget.max!) as T;
       }
-      textValue = textValue?.first(maxLen!);
+      textValue = textValue?.first(_maxLen!);
+      this._textController.text = textValue!;
     }
 
     if (widget.debounce == null) {
@@ -915,9 +929,9 @@ class ValueFieldState<T extends Object> extends State<ValueField<T>> {
   void _maxLenByType() {
     if (widget.max != null && widget.max! > 0) {
       if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
-        maxLen = widget.max.toString().length;
+        _maxLen = widget.max.toString().length;
       } else {
-        maxLen = widget.max!.ceil();
+        _maxLen = widget.max!.ceil();
       }
     }
   }
