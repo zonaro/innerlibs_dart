@@ -10,10 +10,58 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 
+const Map<String, IconData> categoryIcons = {
+  "audio": Icons.audiotrack,
+  "book": Icons.book,
+  "books": Icons.book,
+  "business": Icons.business,
+  "communication": Icons.chat,
+  "drink": Icons.local_drink,
+  "education": Icons.school,
+  "entertainment": Icons.movie,
+  "finance": Icons.monetization_on,
+  "fitness": Icons.fitness_center,
+  "food": Icons.fastfood,
+  "game": Icons.games,
+  "games": Icons.games,
+  "health": Icons.fitness_center,
+  "home": Icons.home,
+  "house": Icons.home,
+  "image": Icons.image,
+  "images": Icons.image,
+  "lifestyle": Icons.favorite,
+  "local": Icons.map,
+  "magazines": Icons.article,
+  "magazine": Icons.article,
+  "map": Icons.map,
+  "maps": Icons.map,
+  "medical": Icons.local_hospital,
+  "message": Icons.chat,
+  "messages": Icons.chat,
+  "music": Icons.music_note,
+  "navigation": Icons.map,
+  "nature": Icons.nature,
+  "news": Icons.article,
+  "personalization": Icons.palette,
+  "photography": Icons.camera,
+  "picture": Icons.image,
+  "pictures": Icons.image,
+  "productivity": Icons.work,
+  "settings": Icons.settings,
+  "shopping": Icons.shopping_cart,
+  "social": Icons.people,
+  "sports": Icons.sports,
+  "tools": Icons.build,
+  "travel": Icons.airplanemode_active,
+  "utilities": Icons.settings,
+  "video": Icons.video_library,
+  "weather": Icons.wb_sunny,
+  "work": Icons.work,
+};
+
 final _random = Random();
 
 bool get isAndroid => GetPlatform.isAndroid;
-
 bool get isApple => (isIOS || isMacOS);
 bool get isDesktop => (isMacOS || isWindows || isLinux);
 bool get isFuchsia => GetPlatform.isFuchsia;
@@ -35,6 +83,7 @@ bool get isNativeWindows => isWindows && !isWeb;
 bool get isPlatformDarkMode => platformBrightness == Brightness.dark;
 bool get isPlatformLightMode => platformBrightness == Brightness.light;
 bool get isWeb => GetPlatform.isWeb;
+
 bool get isWindows => GetPlatform.isWindows;
 
 /// Returns a date representing the last week.
@@ -78,54 +127,6 @@ date get yesterday => today.subtract(1.days);
 
 /// Returns the [IconData] associated with the given app [category].
 IconData categoryIcon(String category) {
-  final Map<String, IconData> categoryIcons = {
-    "audio": Icons.audiotrack,
-    "book": Icons.book,
-    "books": Icons.book,
-    "business": Icons.business,
-    "communication": Icons.chat,
-    "drink": Icons.local_drink,
-    "education": Icons.school,
-    "entertainment": Icons.movie,
-    "finance": Icons.monetization_on,
-    "fitness": Icons.fitness_center,
-    "food": Icons.fastfood,
-    "game": Icons.games,
-    "games": Icons.games,
-    "health": Icons.fitness_center,
-    "home": Icons.home,
-    "house": Icons.home,
-    "image": Icons.image,
-    "images": Icons.image,
-    "lifestyle": Icons.favorite,
-    "local": Icons.map,
-    "magazines": Icons.article,
-    "magazine": Icons.article,
-    "map": Icons.map,
-    "maps": Icons.map,
-    "medical": Icons.local_hospital,
-    "message": Icons.chat,
-    "messages": Icons.chat,
-    "music": Icons.music_note,
-    "navigation": Icons.map,
-    "nature": Icons.nature,
-    "news": Icons.article,
-    "personalization": Icons.palette,
-    "photography": Icons.camera,
-    "picture": Icons.image,
-    "pictures": Icons.image,
-    "productivity": Icons.work,
-    "settings": Icons.settings,
-    "shopping": Icons.shopping_cart,
-    "social": Icons.people,
-    "sports": Icons.sports,
-    "tools": Icons.build,
-    "travel": Icons.airplanemode_active,
-    "utilities": Icons.settings,
-    "video": Icons.video_library,
-    "weather": Icons.wb_sunny,
-    "work": Icons.work,
-  };
   return category.getUniqueWords.whereValid.map((x) => categoryIcons[x.toLowerCase()]).mostFrequent ?? Icons.category;
 }
 
