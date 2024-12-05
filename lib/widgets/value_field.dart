@@ -530,12 +530,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     return widget.textValueSelector!;
   }
 
-  string textSelector(T? e) => textValueSelector(e).firstOrNull??"";
-    string valueSelector(T? e) => textValueSelector(e).lastOrNull??"";
-
-
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
-
   Future<List<T>> allOptions(string v) async {
     List<T> values = widget.options.toList();
     if (widget.asyncItems != null) {
@@ -569,9 +564,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
                   _value.value == null ? false : equalityFunction(_value.value as T, item),
                 );
               },
-              onSelected: (v) => onChanged(v, textValueSelector(v).last),
-              // displayStringForOption: (v) => textValueSelector(v).last,
-
+              onSelected: (v) => onChanged(v, valueSelector(v)),
               suggestionsCallback: (v) async => await allOptions(v),
               builder: (context, controller, fn) => field(fn, controller),
             )
@@ -596,14 +589,14 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
         ),
         items: (v, l) async => await allOptions(v),
-        itemAsString: (x) => textValueSelector(x).first,
+        itemAsString: (x) => textSelector(x),
         onChanged: (newValue) {
           if (_value.value == newValue || newValue == null) {
             _value.value = null;
           } else {
             _value.value = newValue;
           }
-          onChanged(newValue, textValueSelector(newValue).last);
+          onChanged(newValue, valueSelector(newValue));
         },
       );
     }
@@ -635,7 +628,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         onChanged: (newValue) async {
           if (useOptionsList) {
             var opt = await allOptions(newValue);
-            var item = opt.where((e) => textValueSelector(e).last == newValue).firstOrNull;
+            var item = opt.where((e) => valueSelector(e) == newValue).firstOrNull;
             onChanged(item, newValue);
           } else {
             onChanged(newValue.changeTo<T>(), newValue);
@@ -732,6 +725,10 @@ class ValueFieldState<T> extends State<ValueField<T>> {
       if (T is JsonMap) ...(x as JsonMap).values,
     ];
   }
+
+  string textSelector(T? e) => textValueSelector(e).firstOrNull ?? "";
+
+  string valueSelector(T? e) => textValueSelector(e).lastOrNull ?? "";
 
   void _maxLenByType() {
     if (widget.max != null && widget.max! > 0) {
