@@ -557,14 +557,12 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           ? TypeAheadField<T>(
               controller: _textController,
               focusNode: _focusNode,
-              itemBuilder: (context, item) {
-                return itemBuilder(
-                  context,
-                  item,
-                  false,
-                  _value.value == null ? false : equalityFunction(_value.value as T, item),
-                );
-              },
+              itemBuilder: (context, item) => itemBuilder(
+                context,
+                item,
+                false,
+                _value.value == null ? false : equalityFunction(_value.value as T, item),
+              ),
               onSelected: (v) => onChanged(v, valueSelector(v)),
               suggestionsCallback: (v) async => await allOptions(v),
               builder: (context, controller, fn) => field(fn, controller),
@@ -609,7 +607,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     } else if (T is Comparable) {
       return (a as Comparable).compareTo(b);
     }
-    return textValueSelector(a).last.compareTo(textValueSelector(b).last);
+    return valueSelector(a).compareTo(valueSelector(b));
   }
 
   bool equalityFunction(T a, T b) {
@@ -618,18 +616,18 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     } else if (T is Comparable) {
       return comparatorFunction(a, b) == 0;
     }
-    return textValueSelector(a).last == textValueSelector(b).last;
+    return valueSelector(a) == valueSelector(b);
   }
 
   field(FocusNode fn, TextEditingController textEditingController) => TextFormField(
         focusNode: fn,
         textAlign: _textAlign,
         maxLength: _maxLen,
-        controller: textEditingController..text = _value.value != null ? textValueSelector(_value.value as T).last : "",
+        controller: textEditingController..text = _value.value != null ? valueSelector(_value.value as T) : "",
         onChanged: (newValue) async {
           if (useOptionsList) {
             var opt = await allOptions(newValue);
-            var item = opt.where((e) => valueSelector(e) == newValue).firstOrNull;
+            var item = opt.firstWhereOrNull((e) => valueSelector(e) == newValue);
             onChanged(item, newValue);
           } else {
             onChanged(newValue.changeTo<T>(), newValue);
@@ -658,12 +656,13 @@ class ValueFieldState<T> extends State<ValueField<T>> {
 
   @override
   void initState() {
+    super.initState();
     this._textController = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
     _value.value = widget.value;
 
     if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
-      _keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: T is decimal);
+      _keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: isSameType<T, decimal>());
       _inputFormatters = widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters;
       _textAlign = widget.textAlign ?? TextAlign.end;
     } else {
@@ -671,8 +670,6 @@ class ValueFieldState<T> extends State<ValueField<T>> {
       _inputFormatters = widget.inputFormatters;
       _textAlign = widget.textAlign ?? TextAlign.start;
     }
-
-    super.initState();
   }
 
   Widget itemBuilder(BuildContext context, T item, bool isDisabled, bool isSelected) {
@@ -690,8 +687,8 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           color: widget.color ?? context.colorScheme.primary,
         ),
       ),
-      title: Text(textValueSelector(item).first),
-      subtitle: textValueSelector(item).last != textValueSelector(item).first ? Text(textValueSelector(item).last) : null,
+      title: Text(textSelector(item)),
+      subtitle: valueSelector(item) != textSelector(item) ? Text(valueSelector(item)) : null,
     );
   }
 
@@ -720,8 +717,8 @@ class ValueFieldState<T> extends State<ValueField<T>> {
       return widget.searchOn!(x);
     }
     return [
-      textValueSelector(x).first,
-      textValueSelector(x).last,
+      textSelector(x),
+      valueSelector(x),
       flatString(x),
       if (T is JsonMap) ...(x as JsonMap).values,
     ];
