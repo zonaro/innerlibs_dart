@@ -531,6 +531,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
   }
 
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
+
   Future<List<T>> allOptions(string v) async {
     List<T> values = widget.options.toList();
     if (widget.asyncItems != null) {
