@@ -783,6 +783,7 @@ abstract interface class Brasil {
         searchOn: (x) => [x.nome, x.ibge],
         minChars: minChars,
         levenshteinDistance: levenshteinDistance,
+        
       );
     } catch (e) {
       return [];

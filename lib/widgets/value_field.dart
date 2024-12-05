@@ -103,6 +103,8 @@ class CampoListaCidade extends StatelessWidget {
   final IconData? icon;
   final bool isAutoComplete;
   final bool useIbge;
+  final int minChars = 0;
+  final int levenshteinDistance = 2;
 
   const CampoListaCidade({
     super.key,
@@ -121,8 +123,13 @@ class CampoListaCidade extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueField<Cidade>(
       icon: icon,
-    
-      asyncItems: (s) async => (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao)).toList(),
+      asyncItems: (s) async => (await Brasil.pesquisarCidade(
+        s,
+        nomeEstadoOuUFOuIBGEouRegiao,
+        minChars,
+        levenshteinDistance,
+      ))
+          .toList(),
       validator: validator,
       readOnly: readOnly,
       textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", useIbge ? item?.ibge.toString() : null].whereNotNull().toList(),
@@ -147,7 +154,6 @@ class CampoListaCidade extends StatelessWidget {
           trailing: Text(item.estado.uf).fontSize(20),
         );
       },
-      
       value: value,
       onChanged: (v, _) {
         onChanged(v);
