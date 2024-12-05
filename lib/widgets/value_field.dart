@@ -121,6 +121,7 @@ class CampoListaCidade extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueField<Cidade>(
       icon: icon,
+    
       asyncItems: (s) async => (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao)).toList(),
       validator: validator,
       readOnly: readOnly,
@@ -146,6 +147,7 @@ class CampoListaCidade extends StatelessWidget {
           trailing: Text(item.estado.uf).fontSize(20),
         );
       },
+      
       value: value,
       onChanged: (v, _) {
         onChanged(v);
