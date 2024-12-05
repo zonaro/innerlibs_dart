@@ -530,6 +530,10 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     return widget.textValueSelector!;
   }
 
+  string textSelector(T? e) => textValueSelector(e).firstOrNull??"";
+    string valueSelector(T? e) => textValueSelector(e).lastOrNull??"";
+
+
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
 
   Future<List<T>> allOptions(string v) async {
