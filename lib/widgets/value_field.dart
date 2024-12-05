@@ -101,6 +101,8 @@ class CampoListaCidade extends StatelessWidget {
   final String? label;
   final bool readOnly;
   final IconData? icon;
+  final bool isAutoComplete;
+  final bool useIbge;
 
   const CampoListaCidade({
     super.key,
@@ -111,6 +113,8 @@ class CampoListaCidade extends StatelessWidget {
     this.label,
     this.readOnly = false,
     this.icon = Icons.location_city,
+    this.isAutoComplete = false,
+    this.useIbge = false,
   });
 
   @override
@@ -120,7 +124,7 @@ class CampoListaCidade extends StatelessWidget {
       asyncItems: (s) async => (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao)).toList(),
       validator: validator,
       readOnly: readOnly,
-      textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", item?.ibge.toString()].whereNotNull().toList(),
+      textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", useIbge ? item?.ibge.toString() : null].whereNotNull().toList(),
       searchOn: (item) => [
         item.nome,
         item.ibge,
