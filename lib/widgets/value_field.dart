@@ -118,13 +118,10 @@ class CampoListaCidade extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueField<Cidade>(
       icon: icon,
-      asyncItems: (s) async => (await Brasil.pesquisarCidade(
-        s,
-        nomeEstadoOuUFOuIBGEouRegiao,
-        minChars,
-        levenshteinDistance,
-      ))
-          .toList(),
+      asyncItems: (s) async {
+        var l = (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao, minChars, levenshteinDistance)).toList();
+        return l;
+      },
       validator: validator,
       readOnly: readOnly,
       textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", useIbge ? item?.ibge.toString() : null].whereNotNull().toList(),
@@ -133,7 +130,7 @@ class CampoListaCidade extends StatelessWidget {
         item.ibge,
         item.estado.uf,
       ],
-      label: label ?? (isValid(nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
+      label: label ?? (isValid(nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade" : "Cidade/Estado"),
       itemBuilder: (context, item, isSelected) {
         isSelected = isSelected || item.ibge == value?.ibge;
         return ListTile(
@@ -150,9 +147,7 @@ class CampoListaCidade extends StatelessWidget {
         );
       },
       value: value,
-      onChanged: (v, _) {
-        onChanged(v);
-      },
+      onChanged: (v, _) => onChanged(v),
     );
   }
 }
@@ -460,10 +455,13 @@ class ValueField<T> extends StatefulWidget {
   final bool Function(T a, T b)? equalityFunction;
   final int Function(T a, T b)? comparatorFunction;
 
+  final int levenshteinDistance;
+
   const ValueField({
     super.key,
     required this.onChanged,
     this.label,
+    this.levenshteinDistance = 2,
     this.options = const [],
     this.inputFormatters = const [],
     this.onEditingComplete,
@@ -514,16 +512,6 @@ class ValueFieldState<T> extends State<ValueField<T>> {
 
   int? _maxLen;
 
-  Iterable<T> get options {
-    List<T> opts = [];
-    if (_value.value != null) {
-      opts.add(_value.value as T);
-    }
-    opts.addAll(widget.options);
-
-    return opts.distinctByComparison(equalityFunction);
-  }
-
   StringList Function(T?) get textValueSelector {
     if (widget.textValueSelector == null) {
       if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
@@ -549,10 +537,11 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         .search(
           searchTerms: v.split(";").whereValid,
           searchOn: searchOn,
-          levenshteinDistance: 2,
+          levenshteinDistance: widget.levenshteinDistance,
         )
         .toList();
-    return values.distinctByComparison(equalityFunction).toList();
+
+    return values;
   }
 
   @override
