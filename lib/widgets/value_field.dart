@@ -7,88 +7,19 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
-/// gera os chips que aparecem nas buscas de SELECTs quando nao tem resultados
-Widget emptySearch(BuildContext context, string searchEntry, string label) {
-  var searches = searchEntry.split(";").whereNotBlank.toList();
-  return SizedBox(
-    width: context.width,
-    child: Center(
-      child: ResponsiveRow.withColumns(
-        xxs: 2,
-        xs: 3,
-        sm: 4,
-        lg: 5,
-        runAlignment: WrapAlignment.center,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        alignment: WrapAlignment.center,
-        horizontalSpacing: 8,
-        children: [
-          ResponsiveColumn(
-              child: Center(
-                  child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text(context.translations.couldNotFindItem(label)),
-          ))),
-          ...searches.defaultIfEmpty(label).map((e) => Chip(label: e.asText())),
-        ],
-      ),
+InputDecoration outlineInputStyle([string? label, IconData? icon, void Function()? onIconTap, Color? color, dynamic suffixIcon, void Function()? onSuffixIconTap, InputDecoration? other]) {
+  other = other ?? const InputDecoration();
+  return other.copyWith(
+    fillColor: Colors.transparent,
+    label: label.asNullableText(),
+    icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
+    suffixIcon: suffixIcon == null ? null : forceWidget(suffixIcon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onSuffixIconTap),
+    border: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(5)),
+      borderSide: BorderSide(color: color ?? Get.context!.colorScheme.primary, width: 20),
     ),
+    filled: true,
   );
-}
-
-InputDecoration inputStyles([string? label, IconData? icon, void Function()? onIconTap, Color? color, dynamic suffixIcon, void Function()? onSuffixIconTap]) => InputDecoration(
-      fillColor: Colors.transparent,
-      label: label.asNullableText(),
-      icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
-      suffixIcon: suffixIcon == null ? null : forceWidget(suffixIcon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onSuffixIconTap),
-      border: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(5)),
-        borderSide: BorderSide(color: color ?? Get.context!.colorScheme.primary, width: 20),
-      ),
-      filled: true,
-    );
-
-PopupProps<T> popupFields<T>(
-  BuildContext context,
-  string? title, {
-  DropdownSearchPopupItemBuilder<T>? itemBuilder,
-  IconData? icon,
-  void Function()? onIconTap,
-  Color? color,
-  IconData? suffixIcon,
-  void Function()? onSuffixIconTap,
-}) {
-  var tt = "${context.translations.search} $title:".trim();
-  return Get.screenTier < ScreenTier.sm
-      ? PopupProps.modalBottomSheet(
-          constraints: const BoxConstraints.expand(),
-          searchFieldProps: TextFieldProps(decoration: inputStyles(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
-          title: InkWell(
-            onTap: () => Get.back(),
-            child: Padding(
-              padding: 6.allAround,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Icon(Icons.arrow_back),
-                  const Gap(10),
-                  Get.context!.translations.back.asText().fontSize(10),
-                ],
-              ).toCenter().paddingAll(8),
-            ),
-          ),
-          modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: Get.context?.colorScheme.surfaceBright),
-          showSearchBox: true,
-          emptyBuilder: (context, search) => emptySearch(context, search, title ?? ""),
-          itemBuilder: itemBuilder,
-        )
-      : PopupProps.menu(
-          fit: FlexFit.tight,
-          showSearchBox: true,
-          emptyBuilder: (context, search) => emptySearch(context, search, title ?? ""),
-          itemBuilder: itemBuilder,
-          searchFieldProps: TextFieldProps(decoration: inputStyles(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
-        );
 }
 
 typedef DecimalField = ValueField<decimal>;
@@ -353,7 +284,7 @@ class DateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DateTimePickerFormField(
-      decoration: inputStyles(label, icon),
+      decoration: outlineInputStyle(label, icon),
       invalidDateMessage: context.translations.invalidItem(context.translations.date),
       outOfRangeMessage: context.translations.dateOutOfRange,
       value: value ?? now,
@@ -470,6 +401,12 @@ class ValueField<T> extends StatefulWidget {
 
   final int levenshteinDistance;
 
+  final TextInputAction? textInputAction;
+
+  final InputDecoration? decoration;
+
+  final Widget Function(BuildContext context, string searchEntry, string label)? emptySearch;
+
   const ValueField({
     super.key,
     required this.onChanged,
@@ -503,6 +440,9 @@ class ValueField<T> extends StatefulWidget {
     this.controller,
     this.equalityFunction,
     this.comparatorFunction,
+    this.textInputAction,
+    this.emptySearch,
+    this.decoration,
   });
 
   @override
@@ -514,15 +454,15 @@ class ValueFieldState<T> extends State<ValueField<T>> {
 
   late TextEditingController _textController;
 
-  final ValueNotifier<T?> _value = ValueNotifier<T?>(null);
+  T? _value;
 
   Timer? _debounce;
 
   late TextInputType _keyboardType;
+
   late TextAlign _textAlign;
 
   late List<TextInputFormatter> _inputFormatters;
-
   int? _maxLen;
 
   StringList Function(T?) get textValueSelector {
@@ -548,7 +488,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     }
     values = values
         .search(
-          searchTerms: v.split(";").whereValid,
+          searchTerms: v,
           searchOn: searchOn,
           levenshteinDistance: widget.levenshteinDistance,
         )
@@ -566,11 +506,13 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           ? TypeAheadField<T>(
               controller: _textController,
               focusNode: _focusNode,
+              emptyBuilder: (context) => emptySearch(context, _textController.text, widget.label ?? ""),
+              hideOnEmpty: emptySearch(context, _textController.text, widget.label ?? "") is Nil,
               itemBuilder: (context, item) => itemBuilder(
                 context,
                 item,
                 false,
-                _value.value == null ? false : equalityFunction(_value.value as T, item),
+                _value == null ? false : equalityFunction(_value as T, item),
               ),
               onSelected: (v) => onChanged(v, valueSelector(v)),
               suggestionsCallback: (v) async => await allOptions(v),
@@ -582,7 +524,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         filterFn: (item, filters) =>
             filters.isBlank ||
             Get.fullFilterFunction(
-              searchTerms: filters.split(";").whereNotBlank,
+              searchTerms: filters,
               searchOnItems: searchOn(item),
             ),
         enabled: !widget.readOnly,
@@ -592,17 +534,17 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           widget.label,
           itemBuilder: itemBuilder,
         ),
-        selectedItem: _value.value,
+        selectedItem: _value,
         decoratorProps: DropDownDecoratorProps(
-          decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
+          decoration: outlineInputStyle(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
         ),
         items: (v, l) async => await allOptions(v),
         itemAsString: (x) => textSelector(x),
         onChanged: (newValue) {
-          if (_value.value == newValue || newValue == null) {
-            _value.value = null;
+          if (newValue == null || (_value != null && equalityFunction(_value as T, newValue))) {
+            _value = null;
           } else {
-            _value.value = newValue;
+            _value = newValue;
           }
           onChanged(newValue, valueSelector(newValue));
         },
@@ -619,6 +561,23 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     return valueSelector(a).compareTo(valueSelector(b));
   }
 
+  /// gera os chips que aparecem nas buscas de SELECTs quando nao tem resultados
+  Widget emptySearch(BuildContext context, string searchEntry, string label) {
+    if (widget.emptySearch != null) {
+      return widget.emptySearch!(context, searchEntry, label);
+    } else {
+      return SizedBox(
+        width: context.width,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: AutoSizeText(context.translations.couldNotFindItemWith(label, searchEntry.quote), maxLines: 2),
+          ),
+        ),
+      );
+    }
+  }
+
   bool equalityFunction(T a, T b) {
     if (widget.equalityFunction != null) {
       return widget.equalityFunction!(a, b);
@@ -632,7 +591,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         focusNode: fn,
         textAlign: _textAlign,
         maxLength: _maxLen,
-        controller: textEditingController..text = _value.value != null ? valueSelector(_value.value as T) : "",
+        controller: textEditingController..text = _value != null ? valueSelector(_value as T) : "",
         onChanged: (newValue) async {
           if (useOptionsList) {
             var opt = await allOptions(newValue);
@@ -646,7 +605,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         onFieldSubmitted: widget.onFieldSubmitted,
         inputFormatters: _inputFormatters,
         keyboardType: _keyboardType,
-        decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
+        decoration: outlineInputStyle(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
         validator: (s) {
           if (widget.validator != null) {
             try {
@@ -660,15 +619,18 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         maxLines: widget.lines,
         readOnly: widget.readOnly,
         obscureText: widget.obscureText,
-        textInputAction: TextInputAction.none,
+        textInputAction: widget.textInputAction,
       );
 
   @override
   void initState() {
     super.initState();
-    this._textController = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
-    _value.value = widget.value;
+    _value = widget.value;
+    this._textController = widget.controller ?? TextEditingController();
+    if (_value != null) {
+      this._textController.text = valueSelector(_value as T);
+    }
 
     if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
       _keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: isSameType<T, decimal>());
@@ -679,29 +641,27 @@ class ValueFieldState<T> extends State<ValueField<T>> {
       _inputFormatters = widget.inputFormatters;
       _textAlign = widget.textAlign ?? TextAlign.start;
     }
-    if (_value.value != null) {
-      this._textController.text = valueSelector(_value.value as T);
-    }
   }
 
   Widget itemBuilder(BuildContext context, T item, bool isDisabled, bool isSelected) {
-    isSelected = (isSelected || item == _value.value) && !isDisabled;
+    isSelected = !isDisabled && (isSelected || (_value != null && equalityFunction(item, _value as T)));
     if (widget.itemBuilder != null) {
       return widget.itemBuilder!(context, item, isSelected);
-    }
-    return ListTile(
-      enabled: !isDisabled,
-      selected: isSelected,
-      leading: Visibility(
-        visible: isSelected,
-        child: Icon(
-          Icons.check,
-          color: widget.color ?? context.colorScheme.primary,
+    } else {
+      return ListTile(
+        enabled: !isDisabled,
+        selected: isSelected,
+        leading: Visibility(
+          visible: isSelected,
+          child: Icon(
+            Icons.check,
+            color: widget.color ?? context.colorScheme.primary,
+          ),
         ),
-      ),
-      title: Text(textSelector(item)),
-      subtitle: valueSelector(item) != textSelector(item) ? Text(valueSelector(item)) : null,
-    );
+        title: Text(textSelector(item)),
+        subtitle: valueSelector(item) != textSelector(item) ? Text(valueSelector(item)) : null,
+      );
+    }
   }
 
   void onChanged(T? value, string? textValue) {
@@ -722,6 +682,49 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         setState(() {});
       });
     }
+  }
+
+  PopupProps<T> popupFields(
+    BuildContext context,
+    string? title, {
+    DropdownSearchPopupItemBuilder<T>? itemBuilder,
+    IconData? icon,
+    void Function()? onIconTap,
+    Color? color,
+    IconData? suffixIcon,
+    void Function()? onSuffixIconTap,
+  }) {
+    var tt = "${context.translations.search} $title:".trim();
+    return Get.screenTier < ScreenTier.sm
+        ? PopupProps.modalBottomSheet(
+            constraints: const BoxConstraints.expand(),
+            searchFieldProps: TextFieldProps(decoration: outlineInputStyle(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
+            title: InkWell(
+              onTap: () => Get.back(),
+              child: Padding(
+                padding: 6.allAround,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.arrow_back),
+                    const Gap(10),
+                    Get.context!.translations.back.asText().fontSize(10),
+                  ],
+                ).toCenter().paddingAll(8),
+              ),
+            ),
+            modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: Get.context?.colorScheme.surfaceBright),
+            showSearchBox: true,
+            emptyBuilder: (context, search) => emptySearch(context, search, title ?? ""),
+            itemBuilder: itemBuilder,
+          )
+        : PopupProps.menu(
+            fit: FlexFit.tight,
+            showSearchBox: true,
+            emptyBuilder: (context, search) => emptySearch(context, search, title ?? ""),
+            itemBuilder: itemBuilder,
+            searchFieldProps: TextFieldProps(decoration: outlineInputStyle(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
+          );
   }
 
   List<dynamic> searchOn(T x) {

@@ -1155,5 +1155,18 @@
         "type": "String"
       }
     }
+  },
+  "couldNotFindItemWith": "Não foi possível encontrar {item} com {property}.",
+  "@couldNotFindItemWith": {
+    "placeholders": {
+      "item": {
+        "description": "O item que não pôde ser encontrado",
+        "type": "String"
+      },
+      "property": {
+        "description": "a propriedade pelo qual o item não pôde ser encontrado",
+        "type": "String"
+      }
+    }
   }
 }

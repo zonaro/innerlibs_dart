@@ -305,6 +305,12 @@ abstract class InnerLibsLocalizations {
   /// **'Could not find {item}.'**
   String couldNotFindItem(String item);
 
+  /// No description provided for @couldNotFindItemWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not find {item} with {property}.'**
+  String couldNotFindItemWith(String item, String property);
+
   /// Country
   ///
   /// In en, this message translates to:

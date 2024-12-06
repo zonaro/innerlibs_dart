@@ -146,6 +146,11 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   }
 
   @override
+  String couldNotFindItemWith(String item, String property) {
+    return 'Não foi possível encontrar $item com $property.';
+  }
+
+  @override
   String get country => 'País';
 
   @override

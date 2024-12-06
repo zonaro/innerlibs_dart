@@ -208,6 +208,19 @@
       }
     }
   },
+  "couldNotFindItemWith": "Could not find {item} with {property}.",
+  "@couldNotFindItemWith": {
+    "placeholders": {
+      "item": {
+        "description": "The item that could not be found",
+        "type": "String"
+      },
+      "property": {
+        "description": "The property that could not be found",
+        "type": "String"
+      }
+    }
+  },
   "country": "Country",
   "@country": {
     "description": "Country"
