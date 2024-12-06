@@ -27,12 +27,7 @@ InputDecoration inputStyles([string? label, IconData? icon, void Function()? onI
       fillColor: Colors.transparent,
       label: label.asNullableText(),
       icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
-      suffixIcon: suffixIcon == null
-          ? null
-          : Padding(
-              padding: 15.fromRight,
-              child: forceWidget(suffixIcon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onSuffixIconTap),
-            ),
+      suffixIcon: suffixIcon == null ? null : forceWidget(suffixIcon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onSuffixIconTap),
       border: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(5)),
         borderSide: BorderSide(color: color ?? Get.context!.colorScheme.primary, width: 20),
@@ -51,7 +46,7 @@ PopupProps<T> popupFields<T>(
   void Function()? onSuffixIconTap,
 }) {
   var tt = "${context.translations.search} $title:".trim();
-  return Get.screenTier < ScreenTier.xs
+  return Get.screenTier < ScreenTier.sm
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
           searchFieldProps: TextFieldProps(decoration: inputStyles(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap)),
@@ -557,7 +552,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           levenshteinDistance: 2,
         )
         .toList();
-    return values.distinct().toList();
+    return values.distinctByComparison(equalityFunction).toList();
   }
 
   @override
@@ -653,7 +648,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         validator: (s) {
           if (widget.validator != null) {
             try {
-              return widget.validator!(s.changeTo<T>());
+              return widget.validator!(changeTo<T>(s));
             } catch (e) {
               return "$e";
             }
