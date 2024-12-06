@@ -187,7 +187,11 @@ class _FutureAwaiterState<T> extends State<FutureAwaiter<T>> {
       if (data.hasError) {
         throw snapshot.error!;
       } else if (!data.hasData) {
-        return empty();
+        if (data.validateData) {
+          return empty();
+        } else {
+          return widget.builder(null as T);
+        }
       } else {
         return widget.builder(data.value as T);
       }
