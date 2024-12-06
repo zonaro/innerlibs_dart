@@ -10,15 +10,28 @@ import 'package:intl/intl.dart';
 /// gera os chips que aparecem nas buscas de SELECTs quando nao tem resultados
 Widget emptySearch(BuildContext context, string searchEntry, string label) {
   var searches = searchEntry.split(";").whereNotBlank.toList();
-  return Expanded(
+  return SizedBox(
+    width: context.width,
     child: Center(
-      child: ListView(shrinkWrap: true, children: [
-        Text(context.translations.couldNotFindItem(label)).toCenter(),
-        ...searches.defaultIfEmpty(label).map((e) => Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Chip(label: e.asText()),
-            )),
-      ]),
+      child: ResponsiveRow.withColumns(
+        xxs: 2,
+        xs: 3,
+        sm: 4,
+        lg: 5,
+        runAlignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        alignment: WrapAlignment.center,
+        horizontalSpacing: 8,
+        children: [
+          ResponsiveColumn(
+              child: Center(
+                  child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(context.translations.couldNotFindItem(label)),
+          ))),
+          ...searches.defaultIfEmpty(label).map((e) => Chip(label: e.asText())),
+        ],
+      ),
     ),
   );
 }
