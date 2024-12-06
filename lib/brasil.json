@@ -65,7 +65,9 @@
         "IBGE": 1200252,
         "SIAFI": 651,
         "DDD": 68,
-        "TimeZone": "America/Rio_Branco"
+        "TimeZone": "America/Rio_Branco",
+        "latitude": -11.0187,
+        "longitude": -68.7341
     },
     {
         "Nome": "Feijó",
@@ -73,7 +75,9 @@
         "IBGE": 1200302,
         "SIAFI": 113,
         "DDD": 68,
-        "TimeZone": "America/Rio_Branco"
+        "TimeZone": "America/Rio_Branco",
+        "latitude": -8.17054,
+        "longitude": -70.351
     },
     {
         "Nome": "Jordão",

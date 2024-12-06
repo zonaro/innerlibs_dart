@@ -96,6 +96,10 @@ class CampoListaCidade extends StatelessWidget {
   final String? label;
   final bool readOnly;
   final IconData? icon;
+  final bool isAutoComplete;
+  final bool useIbge;
+  final int minChars = 0;
+  final int levenshteinDistance = 2;
 
   const CampoListaCidade({
     super.key,
@@ -106,22 +110,27 @@ class CampoListaCidade extends StatelessWidget {
     this.label,
     this.readOnly = false,
     this.icon = Icons.location_city,
+    this.isAutoComplete = false,
+    this.useIbge = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return ValueField<Cidade>(
       icon: icon,
-      asyncItems: (s) async => (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao)).toList(),
+      asyncItems: (s) async {
+        var l = (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao, minChars, levenshteinDistance)).toList();
+        return l;
+      },
       validator: validator,
       readOnly: readOnly,
-      textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", item?.ibge.toString()].whereNotNull().toList(),
+      textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", useIbge ? item?.ibge.toString() : null].whereNotNull().toList(),
       searchOn: (item) => [
         item.nome,
         item.ibge,
         item.estado.uf,
       ],
-      label: label ?? (isValid(nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade/Estado" : "Cidade"),
+      label: label ?? (isValid(nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade" : "Cidade/Estado"),
       itemBuilder: (context, item, isSelected) {
         isSelected = isSelected || item.ibge == value?.ibge;
         return ListTile(
@@ -138,9 +147,7 @@ class CampoListaCidade extends StatelessWidget {
         );
       },
       value: value,
-      onChanged: (v, _) {
-        onChanged(v);
-      },
+      onChanged: (v, _) => onChanged(v),
     );
   }
 }
@@ -448,10 +455,13 @@ class ValueField<T> extends StatefulWidget {
   final bool Function(T a, T b)? equalityFunction;
   final int Function(T a, T b)? comparatorFunction;
 
+  final int levenshteinDistance;
+
   const ValueField({
     super.key,
     required this.onChanged,
     this.label,
+    this.levenshteinDistance = 2,
     this.options = const [],
     this.inputFormatters = const [],
     this.onEditingComplete,
@@ -502,16 +512,6 @@ class ValueFieldState<T> extends State<ValueField<T>> {
 
   int? _maxLen;
 
-  Iterable<T> get options {
-    List<T> opts = [];
-    if (_value.value != null) {
-      opts.add(_value.value as T);
-    }
-    opts.addAll(widget.options);
-
-    return opts.distinctByComparison(equalityFunction);
-  }
-
   StringList Function(T?) get textValueSelector {
     if (widget.textValueSelector == null) {
       if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
@@ -537,10 +537,11 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         .search(
           searchTerms: v.split(";").whereValid,
           searchOn: searchOn,
-          levenshteinDistance: 2,
+          levenshteinDistance: widget.levenshteinDistance,
         )
         .toList();
-    return values.distinctByComparison(equalityFunction).toList();
+
+    return values;
   }
 
   @override
@@ -552,15 +553,13 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           ? TypeAheadField<T>(
               controller: _textController,
               focusNode: _focusNode,
-              itemBuilder: (context, item) {
-                return itemBuilder(
-                  context,
-                  item,
-                  false,
-                  _value.value == null ? false : equalityFunction(_value.value as T, item),
-                );
-              },
-              onSelected: (v) => onChanged(v, textValueSelector(v).last),
+              itemBuilder: (context, item) => itemBuilder(
+                context,
+                item,
+                false,
+                _value.value == null ? false : equalityFunction(_value.value as T, item),
+              ),
+              onSelected: (v) => onChanged(v, valueSelector(v)),
               suggestionsCallback: (v) async => await allOptions(v),
               builder: (context, controller, fn) => field(fn, controller),
             )
@@ -585,14 +584,14 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           decoration: inputStyles(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap),
         ),
         items: (v, l) async => await allOptions(v),
-        itemAsString: (x) => textValueSelector(x).first,
+        itemAsString: (x) => textSelector(x),
         onChanged: (newValue) {
           if (_value.value == newValue || newValue == null) {
             _value.value = null;
           } else {
             _value.value = newValue;
           }
-          onChanged(newValue, textValueSelector(newValue).last);
+          onChanged(newValue, valueSelector(newValue));
         },
       );
     }
@@ -604,7 +603,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     } else if (T is Comparable) {
       return (a as Comparable).compareTo(b);
     }
-    return textValueSelector(a).last.compareTo(textValueSelector(b).last);
+    return valueSelector(a).compareTo(valueSelector(b));
   }
 
   bool equalityFunction(T a, T b) {
@@ -613,18 +612,18 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     } else if (T is Comparable) {
       return comparatorFunction(a, b) == 0;
     }
-    return textValueSelector(a).last == textValueSelector(b).last;
+    return valueSelector(a) == valueSelector(b);
   }
 
   field(FocusNode fn, TextEditingController textEditingController) => TextFormField(
         focusNode: fn,
         textAlign: _textAlign,
         maxLength: _maxLen,
-        controller: textEditingController..text = _value.value != null ? textValueSelector(_value.value as T).last : "",
+        controller: textEditingController..text = _value.value != null ? valueSelector(_value.value as T) : "",
         onChanged: (newValue) async {
           if (useOptionsList) {
             var opt = await allOptions(newValue);
-            var item = opt.where((e) => textValueSelector(e).last == newValue).firstOrNull;
+            var item = opt.firstWhereOrNull((e) => valueSelector(e) == newValue);
             onChanged(item, newValue);
           } else {
             onChanged(newValue.changeTo<T>(), newValue);
@@ -653,12 +652,13 @@ class ValueFieldState<T> extends State<ValueField<T>> {
 
   @override
   void initState() {
+    super.initState();
     this._textController = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
     _value.value = widget.value;
 
     if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
-      _keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: T is decimal);
+      _keyboardType = widget.keyboardType ?? TextInputType.numberWithOptions(decimal: isSameType<T, decimal>());
       _inputFormatters = widget.inputFormatters.isEmpty ? [NumberInputFormatter()] : widget.inputFormatters;
       _textAlign = widget.textAlign ?? TextAlign.end;
     } else {
@@ -666,8 +666,6 @@ class ValueFieldState<T> extends State<ValueField<T>> {
       _inputFormatters = widget.inputFormatters;
       _textAlign = widget.textAlign ?? TextAlign.start;
     }
-
-    super.initState();
   }
 
   Widget itemBuilder(BuildContext context, T item, bool isDisabled, bool isSelected) {
@@ -685,8 +683,8 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           color: widget.color ?? context.colorScheme.primary,
         ),
       ),
-      title: Text(textValueSelector(item).first),
-      subtitle: textValueSelector(item).last != textValueSelector(item).first ? Text(textValueSelector(item).last) : null,
+      title: Text(textSelector(item)),
+      subtitle: valueSelector(item) != textSelector(item) ? Text(valueSelector(item)) : null,
     );
   }
 
@@ -715,12 +713,16 @@ class ValueFieldState<T> extends State<ValueField<T>> {
       return widget.searchOn!(x);
     }
     return [
-      textValueSelector(x).first,
-      textValueSelector(x).last,
+      textSelector(x),
+      valueSelector(x),
       flatString(x),
       if (T is JsonMap) ...(x as JsonMap).values,
     ];
   }
+
+  string textSelector(T? e) => textValueSelector(e).firstOrNull ?? "";
+
+  string valueSelector(T? e) => textValueSelector(e).lastOrNull ?? "";
 
   void _maxLenByType() {
     if (widget.max != null && widget.max! > 0) {

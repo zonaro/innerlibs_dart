@@ -731,7 +731,7 @@ abstract interface class Brasil {
   /// ```dart
   /// var cidades = await pesquisarCidade("São Paulo");
   /// ```
-  static Future<Iterable<Cidade>> pesquisarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeEstadoOuUFOuIBGEouRegiao, int minChars = 0]) async {
+  static Future<Iterable<Cidade>> pesquisarCidade(dynamic nomeCidadeOuIBGE, [dynamic nomeEstadoOuUFOuIBGEouRegiao, int minChars = 0, int levenshteinDistance = 0]) async {
     try {
       if (nomeCidadeOuIBGE is Cidade) {
         return [nomeCidadeOuIBGE];
@@ -778,7 +778,13 @@ abstract interface class Brasil {
         est = pegarEstado(nomeEstadoOuUFOuIBGEouRegiao);
         cids.removeWhere((c) => c.estado.ibge != est.ibge);
       }
-      return cids.search(searchTerms: nomeCidadeOuIBGE, searchOn: (x) => [x.nome, x.ibge], minChars: minChars);
+      return cids.search(
+        searchTerms: nomeCidadeOuIBGE,
+        searchOn: (x) => [x.nome, x.ibge],
+        minChars: minChars,
+        levenshteinDistance: levenshteinDistance,
+        
+      );
     } catch (e) {
       return [];
     }
