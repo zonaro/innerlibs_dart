@@ -481,7 +481,8 @@ class ValueFieldState<T> extends State<ValueField<T>> {
   bool get useOptionsList => widget.options.isNotEmpty || widget.asyncItems != null;
 
   Future<List<T>> allOptions(string v) async {
-    List<T> values = widget.options.toList();
+    List<T> values = [if (_value != null) _value as T, ...widget.options];
+
     if (widget.asyncItems != null) {
       var asyncOptions = (await widget.asyncItems!(v)).toList();
       values = [...values, ...asyncOptions];
@@ -492,6 +493,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           searchOn: searchOn,
           levenshteinDistance: widget.levenshteinDistance,
         )
+      
         .toList();
 
     return values;
@@ -581,8 +583,6 @@ class ValueFieldState<T> extends State<ValueField<T>> {
   bool equalityFunction(T a, T b) {
     if (widget.equalityFunction != null) {
       return widget.equalityFunction!(a, b);
-    } else if (T is Comparable) {
-      return comparatorFunction(a, b) == 0;
     }
     return valueSelector(a) == valueSelector(b);
   }
@@ -591,7 +591,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         focusNode: fn,
         textAlign: _textAlign,
         maxLength: _maxLen,
-        controller: textEditingController..text = _value != null ? valueSelector(_value as T) : "",
+        controller: textEditingController,
         onChanged: (newValue) async {
           if (useOptionsList) {
             var opt = await allOptions(newValue);

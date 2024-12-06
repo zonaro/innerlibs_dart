@@ -238,6 +238,9 @@ class PageTabController extends GlobalKey<_PageTabScaffoldState> with ChangeNoti
   set isSearching(bool value) {
     _isSearching = value;
     if (!value) search = "";
+    if (onSearch != null) {
+      onSearch!(search);
+    }
   }
 
   /// Whether there is a single page.
@@ -643,8 +646,8 @@ class TabEntry {
   String get tabRoute => route ?? "/${titleString.urlFriendly}";
 
   /// Returns the title string of the tab.
-  /// 
-  /// This will extract the text from widget tree if the title is a widget. 
+  ///
+  /// This will extract the text from widget tree if the title is a widget.
   String get titleString => titleWidget?.text | "";
 
   /// Returns the title widget of the tab.
