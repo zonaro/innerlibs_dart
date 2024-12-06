@@ -679,6 +679,9 @@ class ValueFieldState<T> extends State<ValueField<T>> {
       _inputFormatters = widget.inputFormatters;
       _textAlign = widget.textAlign ?? TextAlign.start;
     }
+    if (_value.value != null) {
+      this._textController.text = valueSelector(_value.value as T);
+    }
   }
 
   Widget itemBuilder(BuildContext context, T item, bool isDisabled, bool isSelected) {
