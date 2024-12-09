@@ -77,7 +77,10 @@ class FutureAwaiter<T> extends StatefulWidget {
   /// The default value is [kReleaseMode]
   final bool supressError;
 
-  /// Function thats receive a non-null [T] data returned by [future] and return a [Widget].
+  /// Function thats receive a [T] data returned by [future] and return a [Widget].
+  ///
+  /// If [data.validateData] is true, [data] will be validated against [Object.IsValid] function.
+  /// If [data.validateData] is false, [data] will be considered valid if not null.
   final Widget Function(T data) builder;
 
   /// A [Widget] to return if [T] is null (or invalid if [data.validateData] is true). If not specified return a shrink [SizedBox]
@@ -95,7 +98,7 @@ class FutureAwaiter<T> extends StatefulWidget {
   /// Function to be called before the data is loaded.
   final void Function()? beforeLoad;
 
-  /// Data to store the data returned by [future] function. If not specified, a new instance of [AwaiterData] is created.
+  /// Store the data returned by [future] function. If not specified, a new instance of [AwaiterData] is created.
   final AwaiterData<T>? data;
 
   const FutureAwaiter({
@@ -186,14 +189,14 @@ class _FutureAwaiterState<T> extends State<FutureAwaiter<T>> {
 
       if (data.hasError) {
         throw snapshot.error!;
-      } else if (!data.hasData) {
-        if (data.validateData) {
-          return empty();
-        } else {
-          return widget.builder(null as T);
-        }
+      } else if (!data.hasData && data.validateData) {
+        return empty();
       } else {
-        return widget.builder(data.value as T);
+        try {
+          return widget.builder(changeTo<T>(data.value));
+        } finally {
+          throw "Data is null, but type is not nullable. Use nullable type or set `data.validateData` to true.";
+        }
       }
     } catch (e) {
       data.error = e;
