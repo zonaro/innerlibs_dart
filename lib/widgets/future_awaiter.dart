@@ -190,7 +190,11 @@ class _FutureAwaiterState<T> extends State<FutureAwaiter<T>> {
         if (data.validateData) {
           return empty();
         } else {
-          return widget.builder(changeTo(data.value));
+          try {
+            return widget.builder(changeTo(data.value));
+          } finally {
+            throw "Data is null but type is not nullable. Use nullable type or set validateData to true";
+          }
         }
       } else {
         return widget.builder(data.value as T);
