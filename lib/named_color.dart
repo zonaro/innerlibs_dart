@@ -3443,10 +3443,12 @@ enum NamedColor implements Color {
   /// A color named "Tawny" with hexadecimal value <a href='https://www.colorhexa.com/CD5700' />#CD5700</a> <br><img src="https://www.colorhexa.com/CD5700.png" width="50" height='50' />
   tawny("#cd5700", "Tawny");
 
+  static Iterable<string> get names => values.map((e) => e.name);
+
   /// A random color from the list of named colors.
   static NamedColor get random => values.orderByRandom.first;
-
   final String hexadecimal;
+
   final String _name;
 
   const NamedColor(this.hexadecimal, this._name);
