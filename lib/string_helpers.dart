@@ -148,10 +148,10 @@ extension StringHelpers on GetInterface {
       };
 
   /// Lower consonants
-  Iterable<string> get lowerConsonants => ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"];
+  Iterable<string> get lowerConsonants => ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z", "ç", "ñ"];
 
   /// Lower vowels
-  Iterable<string> get lowerVowels => ["a", "e", "i", "o", "u", "y"];
+  Iterable<string> get lowerVowels => ["a", "e", "i", "o", "u", "y", "a", "á", "à", "â", "ã", "ä", "e", "é", "è", "ê", "ë", "i", "í", "ì", "î", "ï", "o", "ó", "ò", "ô", "õ", "ö", "u", "ú", "ù", "û", "ü", "y", "ý", "ÿ"];
 
   Iterable<string> get mathOperators => [
         "+",

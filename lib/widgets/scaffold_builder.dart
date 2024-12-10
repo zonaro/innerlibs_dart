@@ -546,6 +546,8 @@ class PageTabScaffold<T> extends StatefulWidget {
   /// The builder function for tabs.
   final Widget Function(PageEntry page, TabEntry tab)? tabBuilder;
 
+  final double? leadingWidth;
+
   const PageTabScaffold({
     required this.pageTabController,
     required this.items,
@@ -585,6 +587,7 @@ class PageTabScaffold<T> extends StatefulWidget {
     this.automaticallyImplyLeading = true,
     this.onNavigate,
     this.tabBuilder,
+    this.leadingWidth,
   }) : super(key: pageTabController);
 
   @override
@@ -765,6 +768,7 @@ class _PageTabScaffoldState extends State<PageTabScaffold> with TickerProviderSt
       key: scaffoldKey,
       appBar: ((pageEntry.showAppBar || pageEntry.tabs.length > 1)) || useDrawerInsteadOfBottomNavigationBar
           ? AppBar(
+              leadingWidth: widget.leadingWidth,
               title: isSearching
                   ? TextFormField(
                       autofocus: true,
