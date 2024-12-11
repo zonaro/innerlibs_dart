@@ -83,12 +83,19 @@ Otherwise, <code>item</code> is wrapped in a list and returned.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">List forceRecursiveList(dynamic item) {
-  if (item == null) return [];
-  if (item is Iterable) {
-    return item.expand((e) =&gt; forceRecursiveList(e)).toList();
-  } else {}
-  return [item];
+  <pre class="language-dart"><code class="language-dart">List&lt;dynamic&gt; forceRecursiveList(dynamic item) {
+  var list = &lt;dynamic&gt;[];
+  if (item != null) {
+    if (item is Iterable) {
+      for (var e in item) {
+        list.addAll(forceRecursiveList(e));
+      }
+      return list;
+    } else {
+      list.add(item);
+    }
+  }
+  return list;
 }</code></pre>
 </section>
 

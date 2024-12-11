@@ -66,18 +66,21 @@
 
     <section class="multi-line-signature">
       
-      <span class="returntype"><a href="../../innerlibs/string.html">string</a></span>
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
       <span class="name ">search</span>
       
 
     </section>
 
     
+<section class="desc markdown">
+  <p>Gets or sets the search text.</p>
+</section>
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">string get search =&gt; _searchController.text;</code></pre>
+  <pre class="language-dart"><code class="language-dart">String get search =&gt; _searchController.text;</code></pre>
 </section>
 
   </section>
@@ -89,7 +92,7 @@
     <section class="multi-line-signature">
       
       <span class="returntype">void</span>
-      <span class="name ">search=</span><span class="signature">(<wbr><span class="parameter" id="search=-param-text"><span class="type-annotation"><a href="../../innerlibs/string.html">string</a></span> <span class="parameter-name">text</span></span>)</span>
+      <span class="name ">search=</span><span class="signature">(<wbr><span class="parameter" id="search=-param-text"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">text</span></span>)</span>
       
 
     </section>
@@ -99,7 +102,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">set search(string text) {
+  <pre class="language-dart"><code class="language-dart">set search(String text) {
   if (onSearch != null) {
     if (text.isNotBlank) {
       isSearching = true;

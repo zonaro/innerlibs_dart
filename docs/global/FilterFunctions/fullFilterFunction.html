@@ -65,14 +65,13 @@
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
 <span class="name ">fullFilterFunction</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="fullFilterFunction-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
-<li><span class="parameter" id="fullFilterFunction-param-searchOn"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>, </span></li>
+<li><span class="parameter" id="fullFilterFunction-param-searchOnItems"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOnItems</span>, </span></li>
 <li><span class="parameter" id="fullFilterFunction-param-levenshteinDistance"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span> = <span class="default-value">0</span>, </span></li>
 <li><span class="parameter" id="fullFilterFunction-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="fullFilterFunction-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="fullFilterFunction-param-ignoreWordSplitters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreWordSplitters</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="fullFilterFunction-param-splitCamelCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">splitCamelCase</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="fullFilterFunction-param-useWildcards"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useWildcards</span> = <span class="default-value">false</span>, </span></li>
-<li><span class="parameter" id="fullFilterFunction-param-keyCharSearches"><span class="type-annotation"><a href="../../global/CharMatch.html">CharMatch</a></span> <span class="parameter-name">keyCharSearches</span> = <span class="default-value">const {}</span>, </span></li>
 </ol>})
 
       
@@ -86,7 +85,7 @@ the search terms to filter on, the function to extract search terms from the ite
 and several optional parameters to customize the filtering behavior.</p>
 <ul>
 <li>The <code>searchTerms</code> parameter contains search terms to filter on. If <code>searchTerms</code> is a Iterable, the function will return <code>true</code> if any of the search terms match the item.</li>
-<li>The <code>searchOn</code> parameter is a function that takes in an item and returns an iterable of search terms extracted from the item.</li>
+<li>The <code>searchOnItems</code> parameter is a function that takes in an item and returns an iterable of search terms extracted from the item.</li>
 <li>The <code>levenshteinDistance</code> parameter is an optional parameter that specifies the maximum Levenshtein distance allowed for a match.</li>
 <li>The <code>ignoreCase</code> parameter is an optional parameter that specifies whether to ignore case when performing the filter.</li>
 <li>The <code>ignoreDiacritics</code> parameter is an optional parameter that specifies whether to ignore diacritics when performing the filter.</li>
@@ -103,18 +102,17 @@ and several optional parameters to customize the filtering behavior.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">bool fullFilterFunction({
   required dynamic searchTerms,
-  required Iterable&lt;dynamic&gt; searchOn,
+  required Iterable searchOnItems,
   int levenshteinDistance = 0,
   bool ignoreCase = true,
   bool ignoreDiacritics = true,
   bool ignoreWordSplitters = true,
   bool splitCamelCase = true,
   bool useWildcards = false,
-  CharMatch keyCharSearches = const {},
 }) =&gt;
     searchFunction(
       searchTerms: searchTerms,
-      searchOn: searchOn,
+      searchOnItems: searchOnItems,
       ignoreCase: ignoreCase,
       ignoreDiacritics: ignoreDiacritics,
       ignoreWordSplitters: ignoreWordSplitters,
@@ -123,7 +121,7 @@ and several optional parameters to customize the filtering behavior.</p>
     ) ||
     levenshteinFunction(
       searchTerms: searchTerms,
-      searchOn: searchOn,
+      searchOnItems: searchOnItems,
       levenshteinDistance: levenshteinDistance,
       ignoreCase: ignoreCase,
     );</code></pre>

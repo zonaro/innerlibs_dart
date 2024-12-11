@@ -931,7 +931,7 @@ Returns the modified string with diacritics removed.
 
         <dt id="splitLines" class="property">
   <span class="name"><a href="../string_extensions/StringExtensions/splitLines.html">splitLines</a></span>
-  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
   
 
 </dt>
@@ -2242,9 +2242,22 @@ If the string cannot be split, it returns a list containing the original string.
 
 </dd>
 
-        <dt id="splitWith" class="callable">
-  <span class="name"><a href="../string_extensions/StringExtensions/splitWith.html">splitWith</a></span><span class="signature">(<wbr><span class="parameter" id="splitWith-param-delimiters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">delimiters</span></span>)
-    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+        <dt id="splitWords" class="callable">
+  <span class="name"><a href="../string_extensions/StringExtensions/splitWords.html">splitWords</a></span><span class="signature">(<wbr>[<span class="parameter" id="splitWords-param-mode"><span class="type-annotation"><a href="../string_extensions/WordSplitMode.html">WordSplitMode</a></span> <span class="parameter-name">mode</span> = <span class="default-value">WordSplitMode.wordsOnly</span></span>])
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../innerlibs/string.html">string</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Split a string into a list of words and word splitter following the mode
+  
+
+</dd>
+
+        <dt id="splitWordsLines" class="callable">
+  <span class="name"><a href="../string_extensions/StringExtensions/splitWordsLines.html">splitWordsLines</a></span><span class="signature">(<wbr>[<span class="parameter" id="splitWordsLines-param-mode"><span class="type-annotation"><a href="../string_extensions/WordSplitMode.html">WordSplitMode</a></span> <span class="parameter-name">mode</span> = <span class="default-value">WordSplitMode.wordsOnly</span></span>])
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../innerlibs/string.html">string</a></span>&gt;</span></span>&gt;</span></span>
   </span>
   
 
@@ -2322,14 +2335,16 @@ Returns <code>true</code> if the string starts with any of the provided strings,
 </dd>
 
         <dt id="toTitleCase" class="callable">
-  <span class="name"><a href="../string_extensions/StringExtensions/toTitleCase.html">toTitleCase</a></span><span class="signature">(<wbr>[<span class="parameter" id="toTitleCase-param-forceCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">forceCase</span> = <span class="default-value">false</span></span>])
+  <span class="name"><a href="../string_extensions/StringExtensions/toTitleCase.html">toTitleCase</a></span><span class="signature">(<wbr>[<span class="parameter" id="toTitleCase-param-forceCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">forceCase</span></span>])
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns the <code>String</code> title cased.
+  Converts the string to title case, where the first letter of each word is
+capitalized. Optionally, the rest of the letters in each word can be
+forced to lower case.
   
 
 </dd>

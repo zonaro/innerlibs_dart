@@ -65,7 +65,7 @@
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
 <span class="name ">searchFunction</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="searchFunction-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
-<li><span class="parameter" id="searchFunction-param-searchOn"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>, </span></li>
+<li><span class="parameter" id="searchFunction-param-searchOnItems"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOnItems</span>, </span></li>
 <li><span class="parameter" id="searchFunction-param-levenshteinDistance"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span> = <span class="default-value">0</span>, </span></li>
 <li><span class="parameter" id="searchFunction-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="searchFunction-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
@@ -100,7 +100,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">bool searchFunction({
   required dynamic searchTerms,
-  required Iterable&lt;dynamic&gt; searchOn,
+  required Iterable searchOnItems,
   int levenshteinDistance = 0,
   bool ignoreCase = true,
   bool ignoreDiacritics = true,
@@ -110,7 +110,7 @@
 }) =&gt;
     countSearch(
       searchTerms: searchTerms,
-      searchOn: searchOn,
+      searchOnItems: searchOnItems,
       ignoreCase: ignoreCase,
       ignoreDiacritics: ignoreDiacritics,
       ignoreWordSplitters: ignoreWordSplitters,

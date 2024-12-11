@@ -103,7 +103,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">set currentLineIndex(int value) {
-  var cursorPosition = lines.take(value).join(Get.breakline).length;
+  var cursorPosition = lines.take(value.clamp(0, lines.length - 1).clampMin(0)).join(Get.breakline).length;
   selection = TextSelection.collapsed(offset: cursorPosition);
 }</code></pre>
 </section>

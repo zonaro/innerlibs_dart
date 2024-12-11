@@ -82,7 +82,7 @@ Otherwise, <code>item</code> is wrapped in a list and returned.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">List forceList(dynamic item) {
+  <pre class="language-dart"><code class="language-dart">List&lt;dynamic&gt; forceList(dynamic item) {
   return [
     if (item != null)
       if (item is Iterable) ...item else item

@@ -66,19 +66,22 @@
 <span class="returntype">(<span class="field"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>, </span><span class="field"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>, </span><span class="field"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span></span>)</span>
 <span class="name ">insertHistory</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="insertHistory-param-pageIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">pageIndex</span>, </span></li>
 <li><span class="parameter" id="insertHistory-param-tabIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">tabIndex</span>, [</span></li>
-<li><span class="parameter" id="insertHistory-param-timestamp"><span class="type-annotation"><a href="../../innerlibs/date.html">date</a>?</span> <span class="parameter-name">timestamp</span></span></li>
+<li><span class="parameter" id="insertHistory-param-timestamp"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a>?</span> <span class="parameter-name">timestamp</span></span></li>
 </ol>])
 
       
 
     </section>
     
+<section class="desc markdown">
+  <p>Inserts a history entry with the specified page and tab indices.</p>
+</section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">(int, int, DateTime) insertHistory(int pageIndex, int tabIndex, [date? timestamp]) {
+  <pre class="language-dart"><code class="language-dart">(int, int, DateTime) insertHistory(int pageIndex, int tabIndex, [DateTime? timestamp]) {
   timestamp ??= now;
   var historyEntry = (pageIndex, tabIndex, timestamp);
   _history = [historyEntry, ..._history].orderBy((x) =&gt; x.$3).toList();

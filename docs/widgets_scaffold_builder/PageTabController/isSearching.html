@@ -73,6 +73,9 @@
     </section>
 
     
+<section class="desc markdown">
+  <p>Whether the search is active.</p>
+</section>
 
     
 <section class="summary source-code" id="source">
@@ -102,6 +105,9 @@
   <pre class="language-dart"><code class="language-dart">set isSearching(bool value) {
   _isSearching = value;
   if (!value) search = &quot;&quot;;
+  if (onSearch != null) {
+    onSearch!(search);
+  }
 }</code></pre>
 </section>
 

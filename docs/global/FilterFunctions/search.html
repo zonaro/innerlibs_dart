@@ -66,8 +66,7 @@
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
 <span class="name ">search</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="search-param-items"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">items</span>, </span></li>
 <li><span class="parameter" id="search-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
-<li><span class="parameter" id="search-param-searchOn"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-"><span class="type-annotation">T</span></span></li>
-</ol>), </span></li>
+<li><span class="parameter" id="search-param-searchOn"><span class="type-annotation"><a href="../../global/SearchOnFunction.html">SearchOnFunction</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span>?</span> <span class="parameter-name">searchOn</span>, </span></li>
 <li><span class="parameter" id="search-param-levenshteinDistance"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span> = <span class="default-value">0</span>, </span></li>
 <li><span class="parameter" id="search-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="search-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
@@ -77,7 +76,6 @@
 <li><span class="parameter" id="search-param-allIfEmpty"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">allIfEmpty</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="search-param-maxResults"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxResults</span> = <span class="default-value">0</span>, </span></li>
 <li><span class="parameter" id="search-param-minChars"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">minChars</span> = <span class="default-value">0</span>, </span></li>
-<li><span class="parameter" id="search-param-keyCharSearches"><span class="type-annotation"><a href="../../global/CharMatch.html">CharMatch</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">keyCharSearches</span> = <span class="default-value">const {}</span>, </span></li>
 </ol>})
 
       
@@ -103,7 +101,7 @@ The relevance is determined by the number of matches and the Levenshtein distanc
   <pre class="language-dart"><code class="language-dart">Iterable&lt;T&gt; search&lt;T&gt;({
   required Iterable&lt;T&gt; items,
   required dynamic searchTerms,
-  required Iterable&lt;dynamic&gt; Function(T) searchOn,
+  SearchOnFunction&lt;T&gt;? searchOn,
   int levenshteinDistance = 0,
   bool ignoreCase = true,
   bool ignoreDiacritics = true,
@@ -113,14 +111,13 @@ The relevance is determined by the number of matches and the Levenshtein distanc
   bool allIfEmpty = true,
   int maxResults = 0,
   int minChars = 0,
-  CharMatch&lt;T&gt; keyCharSearches = const {},
 }) {
   if (items.isEmpty) return &lt;T&gt;[].orderBy((e) =&gt; true);
 
   var searches = forceRecursiveList(searchTerms).whereNotBlank;
 
   if (minChars &gt; 0) {
-    searches = searches.where((e) =&gt; e.length &gt;= minChars);
+    searches = searches.where((e) =&gt; flatString(e).length &gt;= minChars);
     allIfEmpty = false;
   }
 
@@ -132,68 +129,52 @@ The relevance is determined by the number of matches and the Levenshtein distanc
     }
   }
 
-  var l = items.where((item) {
-    for (var entry in keyCharSearches.entries) {
-      for (var searchword in forceList(searchTerms)) {
-        if (changeTo&lt;string&gt;(searchword).startsWith(entry.key)) {
-          return entry.value(
-            changeTo&lt;string&gt;(searchword).removeFirstEqual(entry.key),
-            generateKeyword(
-              searchword,
-              forceLowerCase: ignoreCase,
-              removeDiacritics: ignoreDiacritics,
-              removeWordSplitters: ignoreWordSplitters,
-              splitCamelCase: splitCamelCase,
-            ),
-            item,
-          );
-        }
-      }
-    }
-    return false;
-  });
+  searchOn ??= (T item) =&gt; [changeTo&lt;string&gt;(item)];
 
-  if (l.isNotEmpty) {
-    if (maxResults &gt; 0) l = l.take(maxResults);
-    return l;
-  }
-
-  l = items
-      .where(
-        (item) =&gt; Get.searchFunction(
+  var l = [
+    ...items.where(
+      (item) {
+        return Get.searchFunction(
           searchTerms: searches,
-          searchOn: searchOn(item),
+          searchOnItems: searchOn!(item),
           ignoreCase: ignoreCase,
           ignoreDiacritics: ignoreDiacritics,
           ignoreWordSplitters: ignoreWordSplitters,
           splitCamelCase: splitCamelCase,
           useWildcards: useWildcards,
-        ),
-      )
-      .toList();
+          levenshteinDistance: levenshteinDistance,
+        );
+      },
+    )
+  ];
 
   if (l.isEmpty &amp;&amp; levenshteinDistance &gt; 0) {
-    l = items
-        .where(
-          (item) =&gt; levenshteinFunction(
-            searchTerms: searches,
-            searchOn: searchOn(item),
-            levenshteinDistance: levenshteinDistance,
-          ),
-        )
-        .toList();
+    l = [
+      ...items.where(
+        (item) =&gt; levenshteinFunction(
+          searchTerms: searches,
+          searchOnItems: searchOn!(item),
+          levenshteinDistance: levenshteinDistance,
+          ignoreCase: ignoreCase,
+        ),
+      )
+    ];
   }
 
-  l = l.orderByDescending((item) =&gt; countJaro(
+  l = [
+    ...l.orderByDescending(
+      (item) =&gt; countJaro(
         searchTerms: searches,
-        searchOn: searchOn(item),
+        searchOn: searchOn!(item),
         ignoreCase: ignoreCase,
         ignoreDiacritics: ignoreDiacritics,
         ignoreWordSplitters: ignoreWordSplitters,
         splitCamelCase: splitCamelCase,
-      ));
+      ),
+    ),
+  ];
 
-  if (maxResults &gt; 0) l = l.take(maxResults);
+  if (maxResults &gt; 0) l = [...l.take(maxResults)];
   return l;
 }</code></pre>
 </section>

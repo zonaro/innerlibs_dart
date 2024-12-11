@@ -65,7 +65,7 @@
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
 <span class="name ">countLevenshtein</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="countLevenshtein-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
-<li><span class="parameter" id="countLevenshtein-param-searchOn"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>, </span></li>
+<li><span class="parameter" id="countLevenshtein-param-searchOnItems"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOnItems</span>, </span></li>
 <li><span class="parameter" id="countLevenshtein-param-levenshteinDistance"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span>, </span></li>
 <li><span class="parameter" id="countLevenshtein-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="countLevenshtein-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
@@ -78,9 +78,9 @@
     </section>
     
 <section class="desc markdown">
-  <p>Calculates the Levenshtein distance between an <code>searchOn</code> items and a list of search terms.</p>
+  <p>Calculates the Levenshtein distance between an <code>searchOnItems</code> items and a list of search terms.</p>
 <p>The Levenshtein distance is a measure of the difference between two strings. It represents the minimum number of single-character edits (insertions, deletions, or substitutions) required to change one string into another.</p>
-<p>The <code>searchOn</code> function is used to extract the relevant terms from the <code>item</code> for comparison.
+<p>The <code>searchOnItems</code> function is used to extract the relevant terms from the <code>item</code> for comparison.
 The <code>levenshteinDistance</code> is the maximum allowed Levenshtein distance for a match to be considered.
 The optional parameters <code>ignoreCase</code>, <code>ignoreDiacritics</code>, <code>ignoreWordSplitters</code>, <code>splitCamelCase</code>, and <code>useWildcards</code> control various aspects of the comparison.</p>
 <p>Returns the count of <code>searchTerms</code> that have a Levenshtein distance less than or equal to <code>levenshteinDistance</code>.</p>
@@ -92,7 +92,7 @@ The optional parameters <code>ignoreCase</code>, <code>ignoreDiacritics</code>, 
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">int countLevenshtein({
   required dynamic searchTerms,
-  required Iterable&lt;dynamic&gt; searchOn,
+  required Iterable searchOnItems,
   required int levenshteinDistance,
   bool ignoreCase = true,
   bool ignoreDiacritics = true,
@@ -102,9 +102,11 @@ The optional parameters <code>ignoreCase</code>, <code>ignoreDiacritics</code>, 
   if (levenshteinDistance &lt;= 0) {
     return 0;
   } else {
+    var terms = &lt;dynamic&gt;[...searchOnItems];
+    var searches = forceRecursiveList(searchTerms);
     return [
-      for (var searchTerm in forceList(searchTerms))
-        ...searchOn.expand((e) {
+      for (var searchTerm in searches)
+        ...terms.expand((e) {
           if (e == null) return [];
           return e.toString().getUniqueWords.map((keyword) {
             keyword = generateKeyword(

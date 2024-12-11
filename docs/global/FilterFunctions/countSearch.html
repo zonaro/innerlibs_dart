@@ -65,7 +65,7 @@
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
 <span class="name ">countSearch</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="countSearch-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
-<li><span class="parameter" id="countSearch-param-searchOn"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>, </span></li>
+<li><span class="parameter" id="countSearch-param-searchOnItems"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOnItems</span>, </span></li>
 <li><span class="parameter" id="countSearch-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="countSearch-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="countSearch-param-ignoreWordSplitters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreWordSplitters</span> = <span class="default-value">true</span>, </span></li>
@@ -98,16 +98,18 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">int countSearch({
   required dynamic searchTerms,
-  required Iterable&lt;dynamic&gt; searchOn,
+  required Iterable searchOnItems,
   bool ignoreCase = true,
   bool ignoreDiacritics = true,
   bool ignoreWordSplitters = true,
   bool splitCamelCase = true,
   bool useWildcards = false,
 }) {
+  var terms = &lt;dynamic&gt;[...searchOnItems];
+  var searches = forceRecursiveList(searchTerms);
   return [
-    for (var searchTerm in forceList(searchTerms))
-      ...searchOn.where((v) {
+    for (var searchTerm in searches)
+      ...terms.where((v) {
         if (v == null) return false;
         var searchword = generateKeyword(
           searchTerm,

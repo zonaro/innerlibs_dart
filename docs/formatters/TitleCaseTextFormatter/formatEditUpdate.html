@@ -91,7 +91,7 @@ the incoming new text value.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-  return TextEditingValue(text: newValue.text.toTitleCase(), selection: newValue.selection);
+  return TextEditingValue(text: newValue.text.toTitleCase(forceCase), selection: newValue.selection);
 }</code></pre>
 </section>
 

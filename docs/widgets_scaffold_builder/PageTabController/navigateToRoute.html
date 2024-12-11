@@ -64,19 +64,22 @@
       
 
 <span class="returntype">void</span>
-<span class="name ">navigateToRoute</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="navigateToRoute-param-route"><span class="type-annotation"><a href="../../innerlibs/string.html">string</a></span> <span class="parameter-name">route</span></span></li>
+<span class="name ">navigateToRoute</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="navigateToRoute-param-route"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">route</span></span></li>
 </ol>)
 
       
 
     </section>
     
+<section class="desc markdown">
+  <p>Navigates to the specified route.</p>
+</section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">void navigateToRoute(string route) {
+  <pre class="language-dart"><code class="language-dart">void navigateToRoute(String route) {
   var parts = route.split(&quot;&#47;&quot;);
   var pageIndex = pages.indexWhere((x) =&gt; x.pageRoute == &quot;&#47;${parts[1]}&quot;);
   var tabIndex = pages[pageIndex].tabs.indexWhere((x) =&gt; x.tabRoute == &quot;&#47;${parts[2]}&quot;);

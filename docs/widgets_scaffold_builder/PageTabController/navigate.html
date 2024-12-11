@@ -92,7 +92,7 @@ indicating the navigation change.</p>
   if (pageCount == 0) return;
   pageIndex ??= this.pageIndex;
 
-  &#47;&#47; if page index is highter than the page count, round navigate to index 0 + the difference
+  &#47;&#47; if page index is higher than the page count, round navigate to index 0 + the difference
   if (pageIndex &gt;= pageCount) {
     pageIndex = 0 + (pageIndex - pageCount);
   }
@@ -107,7 +107,7 @@ indicating the navigation change.</p>
     consoleLog(&quot;From $previousPageIndex:$previousTabIndex to $pageIndex:$tabIndex&quot;);
     _pageIndex = pageIndex;
     if (currentPage.hasTabs) {
-      &#47;&#47; if page index is highter than the tab count, round navigate to index 0 + the difference
+      &#47;&#47; if page index is higher than the tab count, round navigate to index 0 + the difference
       if (tabIndex &gt;= currentPage.tabs.length) {
         tabIndex = 0 + (tabIndex - currentPage.tabs.length);
         currentPage.tabController?.animateTo(tabIndex);

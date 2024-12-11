@@ -66,18 +66,21 @@
 
     <section class="multi-line-signature">
       
-      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">(<span class="field"><span class="type-annotation"><a href="../../widgets_scaffold_builder/PageEntry-class.html">PageEntry</a></span>, </span><span class="field"><span class="type-annotation"><a href="../../widgets_scaffold_builder/TabEntry-class.html">TabEntry</a></span>, </span><span class="field"><span class="type-annotation"><a href="../../innerlibs/date.html">date</a></span></span>)</span>&gt;</span></span>
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">(<span class="field"><span class="type-annotation"><a href="../../widgets_scaffold_builder/PageEntry-class.html">PageEntry</a></span>, </span><span class="field"><span class="type-annotation"><a href="../../widgets_scaffold_builder/TabEntry-class.html">TabEntry</a></span>, </span><span class="field"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span></span>)</span>&gt;</span></span>
       <span class="name ">historyPageTabs</span>
       
 
     </section>
 
     
+<section class="desc markdown">
+  <p>Returns the history page tabs.</p>
+</section>
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Iterable&lt;(PageEntry, TabEntry, date)&gt; get historyPageTabs =&gt; history.map((x) =&gt; (pages[x.$1], pages[x.$1].tabs[x.$2], x.$3));</code></pre>
+  <pre class="language-dart"><code class="language-dart">Iterable&lt;(PageEntry, TabEntry, DateTime)&gt; get historyPageTabs =&gt; history.map((x) =&gt; (pages[x.$1], pages[x.$1].tabs[x.$2], x.$3));</code></pre>
 </section>
 
   </section>

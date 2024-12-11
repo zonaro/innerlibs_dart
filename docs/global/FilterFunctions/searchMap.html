@@ -76,7 +76,6 @@
 <li><span class="parameter" id="searchMap-param-useWildcards"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useWildcards</span> = <span class="default-value">false</span>, </span></li>
 <li><span class="parameter" id="searchMap-param-maxResults"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxResults</span> = <span class="default-value">0</span>, </span></li>
 <li><span class="parameter" id="searchMap-param-minChars"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">minChars</span> = <span class="default-value">0</span>, </span></li>
-<li><span class="parameter" id="searchMap-param-keyCharSearches"><span class="type-annotation"><a href="../../global/CharMatch.html">CharMatch</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">keyCharSearches</span> = <span class="default-value">const {}</span>, </span></li>
 </ol>})
 
       
@@ -109,12 +108,10 @@ The <code>allIfEmpty</code> parameter determines whether to return all <a href="
   bool useWildcards = false,
   int maxResults = 0,
   int minChars = 0,
-  CharMatch&lt;Map&lt;K, V&gt;&gt; keyCharSearches = const {},
 }) {
   if (keys.isEmpty) {
     keys = items.expand((e) =&gt; e.keys).distinct().toList();
   }
-
   return search(
     items: items,
     searchTerms: searchTerms,
@@ -128,7 +125,6 @@ The <code>allIfEmpty</code> parameter determines whether to return all <a href="
     ignoreDiacritics: ignoreDiacritics,
     ignoreWordSplitters: ignoreWordSplitters,
     maxResults: maxResults,
-    keyCharSearches: keyCharSearches,
     minChars: minChars,
     splitCamelCase: splitCamelCase,
     useWildcards: useWildcards,

@@ -66,21 +66,24 @@
 <span class="returntype">void</span>
 <span class="name ">showHistoryMenu</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="showHistoryMenu-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span>, </span></li>
 <li><span class="parameter" id="showHistoryMenu-param-position"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Offset-class.html">Offset</a></span> <span class="parameter-name">position</span>, [</span></li>
-<li><span class="parameter" id="showHistoryMenu-param-format"><span class="type-annotation"><a href="../../innerlibs/string.html">string</a>?</span> <span class="parameter-name">format</span>, </span></li>
-<li><span class="parameter" id="showHistoryMenu-param-locale"><span class="type-annotation"><a href="../../innerlibs/string.html">string</a>?</span> <span class="parameter-name">locale</span>, </span></li>
+<li><span class="parameter" id="showHistoryMenu-param-format"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">format</span>, </span></li>
+<li><span class="parameter" id="showHistoryMenu-param-locale"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">locale</span>, </span></li>
 </ol>])
 
       
 
     </section>
     
+<section class="desc markdown">
+  <p>Shows the history menu at the specified position.</p>
+</section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">void showHistoryMenu(BuildContext context, Offset position, [string? format, string? locale]) async {
-  &#47;&#47; show a contextmenu with the history.
+  <pre class="language-dart"><code class="language-dart">void showHistoryMenu(BuildContext context, Offset position, [String? format, String? locale]) async {
+  &#47;&#47; show a context menu with the history.
   final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
   await showMenu(

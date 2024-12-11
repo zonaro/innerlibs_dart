@@ -65,8 +65,7 @@
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
 <span class="name ">search</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="search-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
-<li><span class="parameter" id="search-param-searchOn"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-"><span class="type-annotation">T</span></span></li>
-</ol>), </span></li>
+<li><span class="parameter" id="search-param-searchOn"><span class="type-annotation"><a href="../../global/SearchOnFunction.html">SearchOnFunction</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span>?</span> <span class="parameter-name">searchOn</span>, </span></li>
 <li><span class="parameter" id="search-param-levenshteinDistance"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span> = <span class="default-value">0</span>, </span></li>
 <li><span class="parameter" id="search-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="search-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
@@ -76,7 +75,6 @@
 <li><span class="parameter" id="search-param-allIfEmpty"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">allIfEmpty</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="search-param-minChars"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">minChars</span> = <span class="default-value">0</span>, </span></li>
 <li><span class="parameter" id="search-param-maxResults"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxResults</span> = <span class="default-value">0</span>, </span></li>
-<li><span class="parameter" id="search-param-keyCharSearches"><span class="type-annotation"><a href="../../global/CharMatch.html">CharMatch</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">keyCharSearches</span> = <span class="default-value">const {}</span>, </span></li>
 </ol>})
 
       
@@ -90,7 +88,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Iterable&lt;T&gt; search({
   required dynamic searchTerms,
-  required Iterable&lt;dynamic&gt; Function(T) searchOn,
+  SearchOnFunction&lt;T&gt;? searchOn,
   int levenshteinDistance = 0,
   bool ignoreCase = true,
   bool ignoreDiacritics = true,
@@ -100,7 +98,6 @@
   bool allIfEmpty = true,
   int minChars = 0,
   int maxResults = 0,
-  CharMatch&lt;T&gt; keyCharSearches = const {},
 }) =&gt;
     Get.search(
       items: this,
@@ -113,7 +110,6 @@
       splitCamelCase: splitCamelCase,
       useWildcards: useWildcards,
       allIfEmpty: allIfEmpty,
-      keyCharSearches: keyCharSearches,
       minChars: minChars,
       maxResults: maxResults,
     );</code></pre>

@@ -64,7 +64,7 @@
       
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
-<span class="name ">toTitleCase</span>(<wbr>[<ol class="parameter-list single-line"> <li><span class="parameter" id="toTitleCase-param-forceCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">forceCase</span> = <span class="default-value">false</span></span></li>
+<span class="name ">toTitleCase</span>(<wbr>[<ol class="parameter-list single-line"> <li><span class="parameter" id="toTitleCase-param-forceCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">forceCase</span></span></li>
 </ol>])
 
       
@@ -72,27 +72,43 @@
     </section>
     
 <section class="desc markdown">
-  <p>Returns the <code>String</code> title cased.</p>
-<pre class="language-dart"><code class="language-dart">String foo = 'Hello dear friend how you doing';
-Sting titleCased = foo.toTitleCase; // returns 'Hello Dear Friend How You Doing'.
-</code></pre>
+  <p>Converts the string to title case, where the first letter of each word is
+capitalized. Optionally, the rest of the letters in each word can be
+forced to lower case.</p>
+<p>If the string is blank, it returns a blank string.</p>
+<p>If the string is in upper case, the <code>forceCase</code> parameter defaults to true,
+otherwise it defaults to false.</p>
+<ul>
+<li><code>forceCase</code>: If true, forces the rest of the letters in each word to be
+lower case. If false, leaves the rest of the letters unchanged. Defaults
+to false if the string is not in upper case.</li>
+</ul>
+<p>Returns the string converted to title case.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">String toTitleCase([bool forceCase = false]) {
+  <pre class="language-dart"><code class="language-dart">String toTitleCase([bool? forceCase]) {
   if (isBlank) {
     return blankIfNull;
   }
 
-  var words = trim().split(RegExp(r&#39;\s+&#39;));
+  if (isUpperCase) {
+    forceCase ??= true;
+  } else {
+    forceCase ??= false;
+  }
+
+  var words = splitWords(WordSplitMode.keepSplitters);
   var result = &#39;&#39;;
 
   for (var word in words) {
-    if (word.isNotEmpty) {
-      result += &#39;${word[0].toUpperCase()}${forceCase ? word.substring(1).toLowerCase() : word.substring(1)} &#39;;
+    if (word.length &gt; 1) {
+      result += &#39;${word[0].toUpperCase()}${forceCase ? word.substring(1).toLowerCase() : word.substring(1)}&#39;;
+    } else {
+      result += word[0].toUpperCase();
     }
   }
 

@@ -74,9 +74,14 @@
     </section>
     
 <section class="desc markdown">
-  <p>Busca um endereço no Nominatim do OpenStreetMap a partir de um texto de busca.
-A latitude e longitude são referentes ao centro do endereço e não ao local designado.
-o Número do endereço é extraido a partir do texto de busca, ja que OpenStreetMaps não retorna essa informação. Caso não seja encontrado, o número é vazio.</p>
+  <p>Busca endereços no Nominatim do OpenStreetMap a partir de um texto de busca.</p>
+<p>A busca retorna uma lista de endereços correspondentes ao texto de busca.</p>
+<p>Parâmetros:
+- query: O texto de busca.
+- limit: O número máximo de resultados (padrão é 5).
+- viaCep: Indica se deve buscar o endereço via CEP (padrão é false).</p>
+<p>Retorna:
+- Uma lista de endereços correspondentes ao texto de busca.</p>
 </section>
 
 
@@ -99,10 +104,7 @@ o Número do endereço é extraido a partir do texto de busca, ja que OpenStreet
           viacepEndereco = await Brasil.pesquisarCEP(cep, numero);
         }
 
-        var cidade = viacepEndereco?.cidade ??
-            await Cidade.pegar(e[&#39;address&#39;][&#39;city_district&#39;], e[&#39;address&#39;][&#39;state&#39;]) ??
-            await Cidade.pegar(e[&#39;address&#39;][&#39;village&#39;], e[&#39;address&#39;][&#39;state&#39;]) ??
-            await Cidade.pegar(e[&#39;address&#39;][&#39;municipality&#39;], e[&#39;address&#39;][&#39;state&#39;]);
+        var cidade = viacepEndereco?.cidade ?? await Cidade.pegar(e[&#39;address&#39;][&#39;city_district&#39;], e[&#39;address&#39;][&#39;state&#39;]) ?? await Cidade.pegar(e[&#39;address&#39;][&#39;village&#39;], e[&#39;address&#39;][&#39;state&#39;]) ?? await Cidade.pegar(e[&#39;address&#39;][&#39;municipality&#39;], e[&#39;address&#39;][&#39;state&#39;]);
 
         return Endereco(
           cep: viacepEndereco?.cep ?? e[&#39;address&#39;][&#39;postcode&#39;],

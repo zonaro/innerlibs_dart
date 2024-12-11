@@ -64,23 +64,18 @@
         
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
-<span class="name ">randomBool</span>(<wbr>[<ol class="parameter-list single-line"> <li><span class="parameter" id="randomBool-param-trueFactor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">trueFactor</span> = <span class="default-value">50</span></span></li>
-</ol>])
+<span class="name ">randomBool</span>(<wbr>)
 
         
 
     </section>
     
-<section class="desc markdown">
-  <p>Generates a random boolean value based on the specified <code>trueFactor</code>.
-The <code>trueFactor</code> is a percentage value between 1 and 100 that determines the likelihood of the boolean being true.</p>
-</section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">bool randomBool([int trueFactor = 50]) =&gt; trueFactor &lt;= 0 ? false : randomInt(1, 100) &lt;= trueFactor.clamp(1, 100);</code></pre>
+  <pre class="language-dart"><code class="language-dart">bool randomBool() =&gt; _random.nextBool();</code></pre>
 </section>
 
 

@@ -114,7 +114,16 @@
   if (nomeEstadoOuUFOuIBGEouRegiao is num || nomeEstadoOuUFOuIBGEouRegiao is int || nomeEstadoOuUFOuIBGEouRegiao is double) {
     nomeEstadoOuUFOuIBGEouRegiao = nomeEstadoOuUFOuIBGEouRegiao.toString().first(2);
   }
+
   nomeCidadeOuIBGE = flatString(nomeCidadeOuIBGE);
+
+  if (&quot;$nomeCidadeOuIBGE&quot;.flatContains(&quot; - &quot;)) {
+    var l = &quot;$nomeCidadeOuIBGE&quot;.split(&quot; - &quot;).whereValid.toList();
+    nomeCidadeOuIBGE = l.first;
+    if (l.length &gt; 1) {
+      nomeEstadoOuUFOuIBGEouRegiao ??= l[1];
+    }
+  }
 
   Estado est = pegarEstado(nomeCidadeOuIBGE);
   if (est.estadoReal == false &amp;&amp; isValid(nomeEstadoOuUFOuIBGEouRegiao)) {

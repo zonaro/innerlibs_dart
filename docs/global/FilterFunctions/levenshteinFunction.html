@@ -65,7 +65,7 @@
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
 <span class="name ">levenshteinFunction</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="levenshteinFunction-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
-<li><span class="parameter" id="levenshteinFunction-param-searchOn"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOn</span>, </span></li>
+<li><span class="parameter" id="levenshteinFunction-param-searchOnItems"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a></span> <span class="parameter-name">searchOnItems</span>, </span></li>
 <li><span class="parameter" id="levenshteinFunction-param-levenshteinDistance"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span>, </span></li>
 <li><span class="parameter" id="levenshteinFunction-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
 </ol>})
@@ -81,7 +81,7 @@ This function takes an item, a collection of search terms, a function to extract
 and a maximum allowed Levenshtein distance. It returns <code>true</code> if there is at least one search term that is within
 the specified Levenshtein distance of the item, and <code>false</code> otherwise.</p>
 <p>The <code>searchTerms</code> parameter is the collection of search terms to compare against the item.
-The <code>searchOn</code> parameter is a list of search terms to compare against.
+The <code>searchOnItems</code> parameter is a list of search terms to compare against.
 The <code>levenshteinDistance</code> parameter is the maximum allowed Levenshtein distance.
 The <code>ignoreCase</code> parameter specifies whether to ignore case when comparing strings. It is <code>true</code> by default.</p>
 <p>Returns <code>true</code> if there is at least one search term within the specified Levenshtein distance of the item,
@@ -94,13 +94,13 @@ and <code>false</code> otherwise.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">bool levenshteinFunction({
   required dynamic searchTerms,
-  required Iterable&lt;dynamic&gt; searchOn,
+  required Iterable searchOnItems,
   required int levenshteinDistance,
   bool ignoreCase = true,
 }) =&gt;
     countLevenshtein(
       searchTerms: searchTerms,
-      searchOn: searchOn,
+      searchOnItems: searchOnItems,
       levenshteinDistance: levenshteinDistance,
       ignoreCase: ignoreCase,
     ) &gt;

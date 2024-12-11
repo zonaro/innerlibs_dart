@@ -98,19 +98,21 @@ It returns the sum of the Jaro similarity scores between the item and each searc
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">double countJaro({
   required dynamic searchTerms,
-  required Iterable&lt;dynamic&gt; searchOn,
+  required Iterable searchOn,
   bool ignoreCase = true,
   bool ignoreDiacritics = true,
   bool ignoreWordSplitters = true,
   bool splitCamelCase = true,
 }) {
-  return searchOn
+  var terms = [...searchOn];
+  var searches = forceRecursiveList(searchTerms);
+  return terms
       .expand((e) {
         return e == null
-            ? &lt;double&gt;[for (var _ in forceList(searchTerms)) 0]
+            ? &lt;double&gt;[for (var _ in searches) 0]
             : e.toString().getUniqueWords.map((keyword) {
                 decimal jaro = 0.0;
-                for (var searchTerm in forceList(searchTerms)) {
+                for (var searchTerm in searches) {
                   keyword = generateKeyword(
                     keyword,
                     forceLowerCase: ignoreCase,
