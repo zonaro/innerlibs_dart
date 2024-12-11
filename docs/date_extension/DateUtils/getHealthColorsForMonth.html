@@ -71,12 +71,16 @@
 
     </section>
     
+<section class="desc markdown">
+  <p>Return a list of colors for the specified month based on health awareness campaigns</p>
+</section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">static Iterable&lt;Color&gt; getHealthColorsForMonth(int month) {
+  month = month.clampRotate(1, 12);
   switch (month) {
     case 1: &#47;&#47; Janeiro
       return [Colors.white, Colors.purple]; &#47;&#47; Saúde mental e hanseníase
@@ -103,7 +107,7 @@
     case 12: &#47;&#47; Dezembro
       return [Colors.red]; &#47;&#47; Prevenção à AIDS
     default:
-      return []; &#47;&#47; Retorna preto se o mês for inválido
+      return [];
   }
 }</code></pre>
 </section>

@@ -13,13 +13,19 @@ class ColorUtils {
 }
 
 extension ColorExtensions<T extends Color> on T {
+  /// Returns the alpha value of the color in hexadecimal format.
   String get alphaHexadecimal => '#${value.toRadixString(16).padLeft(8, '0')}';
 
+  /// Returns a list of analogous colors.
   Iterable<Color> get analogousColors => modColors([30, -30]);
 
+  /// Returns the ARGB value of the color.
   int get argb => value;
 
+  /// Returns the black component of the color in CMYK color model.
   double get black => 1 - hsv.value;
+
+  /// Returns the brightness of the color.
   double get brightness => hsv.value;
 
   /// Return the closest [NamedColor] to this color.
@@ -36,46 +42,67 @@ extension ColorExtensions<T extends Color> on T {
     return color;
   }
 
-  string get closestColorName => closestColor?.name ?? '';
+  /// Returns the name of the closest [NamedColor] to this color.
+  String get closestColorName => closestColor?.name ?? '';
 
+  /// Returns the complementary color.
   Color get complementaryColor => modColor(180);
 
+  /// Returns the CSS representation of the color.
   String get css => alpha == 255 ? 'rgb($red, $green, $blue)' : 'rgba($red, $green, $blue, $opacity)';
 
+  /// Returns the cyan component of the color in CMYK color model.
   double get cyan => 1 - (red / 255);
 
+  /// Returns the dominant value among the red, green, and blue components.
   int get dominantValue => [red, green, blue].max;
 
+  /// Returns the hexadecimal representation of the color.
   String get hexadecimal => '#${value.toRadixString(16).removeFirst(2).padLeft(6, '0')}';
 
+  /// Returns the HSL representation of the color.
   HSLColor get hsl => HSLColor.fromColor(this);
 
+  /// Returns the HSV representation of the color.
   HSVColor get hsv => HSVColor.fromColor(this);
 
+  /// Returns the hue of the color.
   double get hue => hsl.hue;
 
+  /// Returns true if the color is dark.
   bool get isDark => brightness < 0.5;
 
+  /// Returns true if the color is light.
   bool get isLight => !isDark;
 
+  /// Returns the lightness of the color.
   double get lightness => hsl.lightness;
 
   /// The Luminance of this color.
   /// The Luminance is a measure of the brightness of a color.
+  /// Returns a brightness value between 0 for darkest and 1 for lightest.
+  /// This value is computationally expensive to calculate.
   double get luminance => computeLuminance();
 
+  /// Returns the magenta component of the color in CMYK color model.
   double get magenta => 1 - (green / 255);
 
+  /// Returns the opacity of the color.
   double get opacity => alpha / 255.0;
 
+  /// Returns the saturation of the color.
   double get saturation => hsv.saturation;
 
-  /// The Split-Complementary colors of this color.
+  /// Returns a list of split-complementary colors.
   Iterable<Color> get splitComplementaryColors => modColors([150, 210]);
 
+  /// Returns a list of tetradic colors.
   Iterable<Color> get tetradicColors => modColors([60, 180, 240]);
+
+  /// Returns a list of triadic colors.
   Iterable<Color> get triadicColors => modColors([120, 240]);
 
+  /// Returns the yellow component of the color in CMYK color model.
   double get yellow => 1 - (blue / 255);
 
   Color operator *(other) {
@@ -129,6 +156,7 @@ extension ColorExtensions<T extends Color> on T {
     return Color.fromARGB(alpha, red, green, blue);
   }
 
+  /// Compares this color to another color.
   int compareColor(dynamic other) {
     if (other is int) {
       return argb.compareTo(other);
@@ -161,15 +189,16 @@ extension ColorExtensions<T extends Color> on T {
     return h + s + v;
   }
 
-  /// Retorna uma cor de contraste baseado na iluminacao da primeira cor: Uma cor clara se a
-  /// primeira for escura. Uma cor escura se a primeira for clara
+  /// Returns a contrast color based on the brightness of the first color: A light color if the
+  /// first color is dark. A dark color if the first color is light.
   ///
-  /// TheColor: Primeira cor
-  /// Percent: Grau de mesclagem da cor escura ou clara
+  /// TheColor: First color
+  /// Percent: Degree of blending of the dark or light color
   ///
-  /// Retorna uma cor clara se a primeira cor for escura, uma cor escura se a primeira for clara
+  /// Returns a light color if the first color is dark, a dark color if the first color is light.
   Color getContrastColor([double percent = .8]) => luminance < 0.5 ? this.makeDarker(percent) : this.makeLighter(percent);
 
+  /// Checks if the color is a named color.
   bool isNamedColor(String value) {
     try {
       NamedColor.fromValue(value);
@@ -179,13 +208,14 @@ extension ColorExtensions<T extends Color> on T {
     }
   }
 
-  /// Mescla duas cores usando Lerp
+  /// Blends two colors using Lerp
   ///
-  /// FromColor: Cor
-  /// ToColor: Outra cor
-  /// Amount: Indice de mesclagem
+  /// FromColor: Color
+  /// ToColor: Another color
+  /// Amount: Blending index
   ///
-  /// Retorna a cor mesclada
+  /// Returns the blended color
+
   Color lerp(Color toColor, double amount) {
     if (amount.isNaN) return this;
     // start colours as lerp-able floats
@@ -204,31 +234,32 @@ extension ColorExtensions<T extends Color> on T {
     return Color.fromRGBO(r, g, b, 1.0);
   }
 
-  /// Escurece a cor misturando ela com preto
+  /// Darkens the color by blending it with black
   ///
-  /// TheColor: Cor
-  /// percent: Porcentagem de mesclagem
+  /// TheColor: Color
+  /// percent: Blending percentage
   ///
-  /// Retorna a cor mesclada
+  /// Returns the blended color
   Color makeDarker([double percent = .5]) => mergeWith(Colors.black, percent);
 
-  /// Clareia a cor misturando ela com branco
+  /// Lightens the color by blending it with white
   ///
-  /// TheColor: Cor
-  /// percent: Porcentagem de mesclagem
+  /// TheColor: Color
+  /// percent: Blending percentage
   ///
-  /// Retorna a cor mesclada
+  /// Returns the blended color
   Color makeLighter([double percent = .5]) => mergeWith(Colors.white, percent);
 
-  /// Mescla duas cores a partir de uma porcentagem
+  /// Blends two colors based on a percentage
   ///
-  /// TheColor: Cor principal
-  /// AnotherColor: Cor de mesclagem
-  /// Percent: Porcentagem de mescla
+  /// TheColor: Main color
+  /// AnotherColor: Blending color
+  /// Percent: Blending percentage
   ///
-  /// Retorna a cor mesclada
+  /// Returns the blended color
   Color mergeWith(Color anotherColor, double percent) => lerp(anotherColor, percent);
 
+  /// Returns a color modified by the provided [degrees] int the color wheel.
   Color modColor(int degrees) => modColors([degrees]).first;
 
   /// Returns a list of colors that are modified by the provided [degrees] int the color wheel.

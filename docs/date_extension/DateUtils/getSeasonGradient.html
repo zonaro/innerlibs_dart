@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the monthGradient method from the DateTimeExtensions extension, for the Dart programming language.">
-  <title>monthGradient method - DateTimeExtensions extension - date_extension library - Dart API</title>
+  <meta name="description" content="API docs for the getSeasonGradient method from the DateUtils mixin, for the Dart programming language.">
+  <title>getSeasonGradient method - DateUtils mixin - date_extension library - Dart API</title>
 
 
   
@@ -30,10 +30,10 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../date_extension/date_extension-library.html">date_extension.dart</a></li>
-    <li><a href="../../date_extension/DateTimeExtensions.html">DateTimeExtensions</a></li>
-    <li class="self-crumb">monthGradient method</li>
+    <li><a href="../../date_extension/DateUtils-mixin.html">DateUtils</a></li>
+    <li class="self-crumb">getSeasonGradient static method</li>
   </ol>
-  <div class="self-name">monthGradient</div>
+  <div class="self-name">getSeasonGradient</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -54,40 +54,54 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="date_extension&#47;DateTimeExtensions-extension-sidebar.html"
+    data-above-sidebar="date_extension&#47;DateUtils-mixin-sidebar.html"
     data-below-sidebar="">
     <div>
-<h1><span class="kind-method">monthGradient</span> method 
+<h1><span class="kind-method">getSeasonGradient</span> static method 
 </h1></div>
 
     <section class="multi-line-signature">
       
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/painting/Gradient-class.html">Gradient</a></span>
-<span class="name ">monthGradient</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="monthGradient-param-begin"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a></span> <span class="parameter-name">begin</span> = <span class="default-value">Alignment.topCenter</span>, </span></li>
-<li><span class="parameter" id="monthGradient-param-end"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a></span> <span class="parameter-name">end</span> = <span class="default-value">Alignment.bottomCenter</span>, </span></li>
-<li><span class="parameter" id="monthGradient-param-stops"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>&gt;</span>?</span> <span class="parameter-name">stops</span>, </span></li>
-<li><span class="parameter" id="monthGradient-param-tileMode"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/TileMode.html">TileMode</a></span> <span class="parameter-name">tileMode</span> = <span class="default-value">TileMode.clamp</span>, </span></li>
-<li><span class="parameter" id="monthGradient-param-transform"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/GradientTransform-class.html">GradientTransform</a>?</span> <span class="parameter-name">transform</span>, </span></li>
+<span class="name ">getSeasonGradient</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="getSeasonGradient-param-month"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span>, </span></li>
+<li><span class="parameter" id="getSeasonGradient-param-begin"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a></span> <span class="parameter-name">begin</span> = <span class="default-value">Alignment.topCenter</span>, </span></li>
+<li><span class="parameter" id="getSeasonGradient-param-end"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a></span> <span class="parameter-name">end</span> = <span class="default-value">Alignment.bottomCenter</span>, </span></li>
+<li><span class="parameter" id="getSeasonGradient-param-stops"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>&gt;</span>?</span> <span class="parameter-name">stops</span>, </span></li>
+<li><span class="parameter" id="getSeasonGradient-param-tileMode"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/TileMode.html">TileMode</a></span> <span class="parameter-name">tileMode</span> = <span class="default-value">TileMode.clamp</span>, </span></li>
+<li><span class="parameter" id="getSeasonGradient-param-transform"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/GradientTransform-class.html">GradientTransform</a>?</span> <span class="parameter-name">transform</span>, </span></li>
 </ol>})
 
       
 
     </section>
     
+<section class="desc markdown">
+  <p>Return a gradient for the specified month based on season</p>
+</section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Gradient monthGradient({
+  <pre class="language-dart"><code class="language-dart">static Gradient getSeasonGradient({
+  required int month,
   AlignmentGeometry begin = Alignment.topCenter,
   AlignmentGeometry end = Alignment.bottomCenter,
   List&lt;double&gt;? stops,
   TileMode tileMode = TileMode.clamp,
   GradientTransform? transform,
-}) =&gt;
-    DateUtils.getSeasonGradient(month: month, begin: begin, end: end, stops: stops, tileMode: tileMode, transform: transform);</code></pre>
+}) {
+  final colors = getSeasonColors(month).toList();
+  return LinearGradient(
+    colors: colors,
+    begin: begin,
+    end: end,
+    stops: stops,
+    tileMode: tileMode,
+    transform: transform,
+  );
+}</code></pre>
 </section>
 
 
@@ -104,12 +118,12 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../date_extension/date_extension-library.html">date_extension</a></li>
-    <li><a href="../../date_extension/DateTimeExtensions.html">DateTimeExtensions</a></li>
-    <li class="self-crumb">monthGradient method</li>
+    <li><a href="../../date_extension/DateUtils-mixin.html">DateUtils</a></li>
+    <li class="self-crumb">getSeasonGradient static method</li>
 </ol>
 
 
-    <h5>DateTimeExtensions extension on <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></h5>
+    <h5>DateUtils mixin</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
 

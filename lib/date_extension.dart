@@ -31,49 +31,9 @@ mixin DateUtils {
 
   static List<string> days([string? locale]) => [for (var i = 1; i <= 7; i++) DateFormat.E(locale).format(DateTime(now.year, 1, i))];
 
-  static Iterable<Color> getColorsForMonth(int month) {
-    switch (month) {
-      case 1: // Janeiro - Verão
-      case 2: // Fevereiro - Verão
-      case 12: // Dezembro - Verão
-        return [Colors.yellow, Colors.orange, Colors.red];
-      case 3: // Março - Outono
-      case 4: // Abril - Outono
-      case 5: // Maio - Outono
-        return [Colors.brown, Colors.deepOrange, NamedColors.gold];
-      case 6: // Junho - Inverno
-      case 7: // Julho - Inverno
-      case 8: // Agosto - Inverno
-        return [Colors.blue, Colors.grey, Colors.black];
-      case 9: // Setembro - Primavera
-      case 10: // Outubro - Primavera
-      case 11: // Novembro - Primavera
-        return [Colors.green, Colors.pink, Colors.lightBlue];
-      default:
-        return []; // Retorna preto se o mês for inválido
-    }
-  }
-
-  static Gradient getGradientForMonth({
-    required int month,
-    AlignmentGeometry begin = Alignment.topCenter,
-    AlignmentGeometry end = Alignment.bottomCenter,
-    List<double>? stops,
-    TileMode tileMode = TileMode.clamp,
-    GradientTransform? transform,
-  }) {
-    final colors = getColorsForMonth(month).toList();
-    return LinearGradient(
-      colors: colors,
-      begin: begin,
-      end: end,
-      stops: stops,
-      tileMode: tileMode,
-      transform: transform,
-    );
-  }
-
+  /// Return a list of colors for the specified month based on health awareness campaigns
   static Iterable<Color> getHealthColorsForMonth(int month) {
+    month = month.clampRotate(1, 12);
     switch (month) {
       case 1: // Janeiro
         return [Colors.white, Colors.purple]; // Saúde mental e hanseníase
@@ -100,10 +60,11 @@ mixin DateUtils {
       case 12: // Dezembro
         return [Colors.red]; // Prevenção à AIDS
       default:
-        return []; // Retorna preto se o mês for inválido
+        return [];
     }
   }
 
+  /// Returns a gradient for the specified month based on health awareness campaigns
   static Gradient getHealthGradientForMonth({
     required int month,
     AlignmentGeometry begin = Alignment.topCenter,
@@ -113,6 +74,52 @@ mixin DateUtils {
     GradientTransform? transform,
   }) {
     final colors = getHealthColorsForMonth(month).toList();
+    return LinearGradient(
+      colors: colors,
+      begin: begin,
+      end: end,
+      stops: stops,
+      tileMode: tileMode,
+      transform: transform,
+    );
+  }
+
+  /// Return a list of colors for the specified month based on season
+  static Iterable<NamedColor> getSeasonColors(int month) {
+    month = month.clampRotate(1, 12);
+
+    switch (month) {
+      case 12: // Dezembro - Verão
+      case 1: // Janeiro - Verão
+      case 2: // Fevereiro - Verão
+        return [NamedColors.yellow, NamedColors.orange, NamedColors.redColor];
+      case 3: // Março - Outono
+      case 4: // Abril - Outono
+      case 5: // Maio - Outono
+        return [NamedColors.brownSugar, NamedColors.deepOrange, NamedColors.gold];
+      case 6: // Junho - Inverno
+      case 7: // Julho - Inverno
+      case 8: // Agosto - Inverno
+        return [NamedColors.blueGreen, NamedColors.gray, NamedColors.black];
+      case 9: // Setembro - Primavera
+      case 10: // Outubro - Primavera
+      case 11: // Novembro - Primavera
+        return [NamedColors.greenColor, NamedColors.pink, NamedColors.blueCrayola];
+      default:
+        return [];
+    }
+  }
+
+  /// Return a gradient for the specified month based on season
+  static Gradient getSeasonGradient({
+    required int month,
+    AlignmentGeometry begin = Alignment.topCenter,
+    AlignmentGeometry end = Alignment.bottomCenter,
+    List<double>? stops,
+    TileMode tileMode = TileMode.clamp,
+    GradientTransform? transform,
+  }) {
+    final colors = getSeasonColors(month).toList();
     return LinearGradient(
       colors: colors,
       begin: begin,
@@ -243,12 +250,10 @@ extension DateTimeExtensions on DateTime {
   /// Returns the last day of the year for the given date.
   date get lastDayOfYear => DateTime(year, 12, 31);
 
-  Iterable<Color> get monthColors => DateUtils.getColorsForMonth(month);
-
   /// Returns the next bimester
   date get nextBimester => date(year, lastDayOfBimester.add(1.days).month, day.clampMax(lastDayOfBimester.add(1.days).lastDayOfMonth.day));
 
-  ///
+  /// Return the next fortnight
   date get nextFortnight => add(15.days);
 
   /// Returns the next month.
@@ -301,6 +306,8 @@ extension DateTimeExtensions on DateTime {
   /// Returns time string in the format 08:00:34
   String get readableTime => "${hour >= 10 ? hour : "0$hour"}:${minute >= 10 ? minute : "0$minute"}"
       ":${second >= 10 ? second : "0$second"}";
+
+  Iterable<NamedColors> get seasonColors => DateUtils.getSeasonColors(month);
 
   /// Returns the semester number.
   int get semesterNumber => monthGroupNumber(6);
@@ -497,7 +504,7 @@ extension DateTimeExtensions on DateTime {
     TileMode tileMode = TileMode.clamp,
     GradientTransform? transform,
   }) =>
-      DateUtils.getGradientForMonth(month: month, begin: begin, end: end, stops: stops, tileMode: tileMode, transform: transform);
+      DateUtils.getSeasonGradient(month: month, begin: begin, end: end, stops: stops, tileMode: tileMode, transform: transform);
 
   /// Returns the month group number.
   int monthGroupNumber(int group) => ((month - 1) ~/ group) + 1;

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the compareColor method from the ColorExtensions extension, for the Dart programming language.">
-  <title>compareColor method - ColorExtensions extension - color_extensions library - Dart API</title>
+  <meta name="description" content="API docs for the getSeasonColors method from the DateUtils mixin, for the Dart programming language.">
+  <title>getSeasonColors method - DateUtils mixin - date_extension library - Dart API</title>
 
 
   
@@ -29,11 +29,11 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">innerlibs</a></li>
-    <li><a href="../../color_extensions/color_extensions-library.html">color_extensions.dart</a></li>
-    <li><a href="../../color_extensions/ColorExtensions.html">ColorExtensions<span class="signature">&lt;<wbr><span class="type-parameter">T extends Color</span>&gt;</span></a></li>
-    <li class="self-crumb">compareColor method</li>
+    <li><a href="../../date_extension/date_extension-library.html">date_extension.dart</a></li>
+    <li><a href="../../date_extension/DateUtils-mixin.html">DateUtils</a></li>
+    <li class="self-crumb">getSeasonColors static method</li>
   </ol>
-  <div class="self-name">compareColor</div>
+  <div class="self-name">getSeasonColors</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -54,17 +54,17 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="color_extensions&#47;ColorExtensions-extension-sidebar.html"
+    data-above-sidebar="date_extension&#47;DateUtils-mixin-sidebar.html"
     data-below-sidebar="">
     <div>
-<h1><span class="kind-method">compareColor</span> method 
+<h1><span class="kind-method">getSeasonColors</span> static method 
 </h1></div>
 
     <section class="multi-line-signature">
       
 
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
-<span class="name ">compareColor</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="compareColor-param-other"><span class="type-annotation">dynamic</span> <span class="parameter-name">other</span></span></li>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../named_color/NamedColor.html">NamedColor</a></span>&gt;</span></span>
+<span class="name ">getSeasonColors</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="getSeasonColors-param-month"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span></span></li>
 </ol>)
 
       
@@ -72,28 +72,35 @@
     </section>
     
 <section class="desc markdown">
-  <p>Compares this color to another color.</p>
+  <p>Return a list of colors for the specified month based on season</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">int compareColor(dynamic other) {
-  if (other is int) {
-    return argb.compareTo(other);
-  } else if (other is NamedColor) {
-    return argb.compareTo(other.argb);
-  } else if (other is Color) {
-    return argb.compareTo(other.value);
-  } else if (other is String) {
-    return argb.compareTo(other.asColor.argb);
-  } else if (other is HSLColor) {
-    return other.toColor().value.compareTo(argb);
-  } else if (other is HSVColor) {
-    return other.toColor().value.compareTo(argb);
-  } else {
-    throw ArgumentError(&#39;Cannot compare $Color with ${other.runtimeType}&#39;);
+  <pre class="language-dart"><code class="language-dart">static Iterable&lt;NamedColor&gt; getSeasonColors(int month) {
+  month = month.clampRotate(1, 12);
+
+  switch (month) {
+    case 12: &#47;&#47; Dezembro - Verão
+    case 1: &#47;&#47; Janeiro - Verão
+    case 2: &#47;&#47; Fevereiro - Verão
+      return [NamedColors.yellow, NamedColors.orange, NamedColors.redColor];
+    case 3: &#47;&#47; Março - Outono
+    case 4: &#47;&#47; Abril - Outono
+    case 5: &#47;&#47; Maio - Outono
+      return [NamedColors.brownSugar, NamedColors.deepOrange, NamedColors.gold];
+    case 6: &#47;&#47; Junho - Inverno
+    case 7: &#47;&#47; Julho - Inverno
+    case 8: &#47;&#47; Agosto - Inverno
+      return [NamedColors.blueGreen, NamedColors.gray, NamedColors.black];
+    case 9: &#47;&#47; Setembro - Primavera
+    case 10: &#47;&#47; Outubro - Primavera
+    case 11: &#47;&#47; Novembro - Primavera
+      return [NamedColors.greenColor, NamedColors.pink, NamedColors.blueCrayola];
+    default:
+      return [];
   }
 }</code></pre>
 </section>
@@ -111,13 +118,13 @@
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">innerlibs</a></li>
-    <li><a href="../../color_extensions/color_extensions-library.html">color_extensions</a></li>
-    <li><a href="../../color_extensions/ColorExtensions.html">ColorExtensions<span class="signature">&lt;<wbr><span class="type-parameter">T extends Color</span>&gt;</span></a></li>
-    <li class="self-crumb">compareColor method</li>
+    <li><a href="../../date_extension/date_extension-library.html">date_extension</a></li>
+    <li><a href="../../date_extension/DateUtils-mixin.html">DateUtils</a></li>
+    <li class="self-crumb">getSeasonColors static method</li>
 </ol>
 
 
-    <h5>ColorExtensions extension on T</h5>
+    <h5>DateUtils mixin</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
 

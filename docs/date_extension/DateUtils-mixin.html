@@ -182,32 +182,6 @@
 
 </dd>
 
-        <dt id="getColorsForMonth" class="callable">
-  <span class="name"><a href="../date_extension/DateUtils/getColorsForMonth.html">getColorsForMonth</a></span><span class="signature">(<wbr><span class="parameter" id="getColorsForMonth-param-month"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span></span>)
-    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-ui/Color-class.html">Color</a></span>&gt;</span></span>
-  </span>
-  
-
-</dt>
-<dd>
-  
-  
-
-</dd>
-
-        <dt id="getGradientForMonth" class="callable">
-  <span class="name"><a href="../date_extension/DateUtils/getGradientForMonth.html">getGradientForMonth</a></span><span class="signature">(<wbr>{<span class="parameter" id="getGradientForMonth-param-month"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span>, </span><span class="parameter" id="getGradientForMonth-param-begin"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a></span> <span class="parameter-name">begin</span> = <span class="default-value">Alignment.topCenter</span>, </span><span class="parameter" id="getGradientForMonth-param-end"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a></span> <span class="parameter-name">end</span> = <span class="default-value">Alignment.bottomCenter</span>, </span><span class="parameter" id="getGradientForMonth-param-stops"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>&gt;</span>?</span> <span class="parameter-name">stops</span>, </span><span class="parameter" id="getGradientForMonth-param-tileMode"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/TileMode.html">TileMode</a></span> <span class="parameter-name">tileMode</span> = <span class="default-value">TileMode.clamp</span>, </span><span class="parameter" id="getGradientForMonth-param-transform"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/GradientTransform-class.html">GradientTransform</a>?</span> <span class="parameter-name">transform</span></span>})
-    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/painting/Gradient-class.html">Gradient</a></span>
-  </span>
-  
-
-</dt>
-<dd>
-  
-  
-
-</dd>
-
         <dt id="getHealthColorsForMonth" class="callable">
   <span class="name"><a href="../date_extension/DateUtils/getHealthColorsForMonth.html">getHealthColorsForMonth</a></span><span class="signature">(<wbr><span class="parameter" id="getHealthColorsForMonth-param-month"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-ui/Color-class.html">Color</a></span>&gt;</span></span>
@@ -216,7 +190,7 @@
 
 </dt>
 <dd>
-  
+  Return a list of colors for the specified month based on health awareness campaigns
   
 
 </dd>
@@ -229,7 +203,33 @@
 
 </dt>
 <dd>
+  Returns a gradient for the specified month based on health awareness campaigns
   
+
+</dd>
+
+        <dt id="getSeasonColors" class="callable">
+  <span class="name"><a href="../date_extension/DateUtils/getSeasonColors.html">getSeasonColors</a></span><span class="signature">(<wbr><span class="parameter" id="getSeasonColors-param-month"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../named_color/NamedColor.html">NamedColor</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Return a list of colors for the specified month based on season
+  
+
+</dd>
+
+        <dt id="getSeasonGradient" class="callable">
+  <span class="name"><a href="../date_extension/DateUtils/getSeasonGradient.html">getSeasonGradient</a></span><span class="signature">(<wbr>{<span class="parameter" id="getSeasonGradient-param-month"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span>, </span><span class="parameter" id="getSeasonGradient-param-begin"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a></span> <span class="parameter-name">begin</span> = <span class="default-value">Alignment.topCenter</span>, </span><span class="parameter" id="getSeasonGradient-param-end"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a></span> <span class="parameter-name">end</span> = <span class="default-value">Alignment.bottomCenter</span>, </span><span class="parameter" id="getSeasonGradient-param-stops"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>&gt;</span>?</span> <span class="parameter-name">stops</span>, </span><span class="parameter" id="getSeasonGradient-param-tileMode"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/TileMode.html">TileMode</a></span> <span class="parameter-name">tileMode</span> = <span class="default-value">TileMode.clamp</span>, </span><span class="parameter" id="getSeasonGradient-param-transform"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/GradientTransform-class.html">GradientTransform</a>?</span> <span class="parameter-name">transform</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/painting/Gradient-class.html">Gradient</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Return a gradient for the specified month based on season
   
 
 </dd>

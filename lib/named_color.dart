@@ -797,6 +797,9 @@ enum NamedColor implements Color {
   /// A color named "Deep Jungle Green" with hexadecimal value <a href='https://www.colorhexa.com/004B49' />#004B49</a> <br><img src="https://www.colorhexa.com/004B49.png" width="50" height='50' />
   deepJungleGreen("#004B49", "Deep jungle green"),
 
+  /// A color named "Deep Orange" with hexadecimal value <a href='https://www.colorhexa.com/FF5722' />#FF5722</a> <br><img src="https://www.colorhexa.com/FF5722.png" width="50" height='50' />
+  deepOrange("#FF5722", "Deep orange"),
+
   /// A color named "Deep Pink" with hexadecimal value <a href='https://www.colorhexa.com/FF1493' />#FF1493</a> <br><img src="https://www.colorhexa.com/FF1493.png" width="50" height='50' />
   deepPink('#FF1493', 'Deep Pink'),
 
