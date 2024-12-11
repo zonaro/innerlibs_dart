@@ -15,11 +15,14 @@ extension BuildContextExtensions on BuildContext {
   /// performs a simple [Theme.of(context).appBarTheme] action and returns given [appBarTheme]
   AppBarTheme get appBarTheme => theme.appBarTheme;
 
+  /// Returns the aspect ratio of the screen.
   double get aspectRatio => width / height;
 
-  Iterable<string> get aspectRatioParts => aspectRatioString.split(":");
+  /// Returns the parts of the aspect ratio as an iterable of strings.
+  Iterable<String> get aspectRatioParts => aspectRatioString.split(":");
 
-  string get aspectRatioString => screenSize.getAspectRatioString();
+  /// Returns the aspect ratio as a string.
+  String get aspectRatioString => screenSize.getAspectRatioString();
 
   /// Middle size of the body styles.
   ///
@@ -48,6 +51,7 @@ extension BuildContextExtensions on BuildContext {
   /// performs a simple [Theme.of(context).bottomSheetTheme] action and returns given [bottomSheetTheme]
   BottomSheetThemeData get bottomSheetTheme => theme.bottomSheetTheme;
 
+  /// Returns the boundary of the render object.
   RenderRepaintBoundary? get boundary => [findRenderObject()].whereNotNull().whereType<RenderRepaintBoundary>().firstOrNull;
 
   /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
@@ -83,6 +87,7 @@ extension BuildContextExtensions on BuildContext {
   /// [Divider.createBorderSide].
   Color get dividerColor => theme.dividerColor;
 
+  /// Return the current FlutterView
   FlutterView get flutterView => View.of(this);
 
   /// The focus color used indicate that a component has the input focus.
@@ -112,16 +117,22 @@ extension BuildContextExtensions on BuildContext {
 
   InnerLibsLocalizations get innerLibsLocalizations => InnerLibsLocalizations.of(this);
 
+  /// Returns true if the aspect ratio is 16:9.
   bool get is16x9 => aspectRatioString == "16:9";
 
+  /// Returns true if the aspect ratio is 1:1.
   bool get is1x1 => aspectRatioString == "1:1";
 
+  /// Returns true if the aspect ratio is 21:9.
   bool get is21x9 => aspectRatioString == "4:3";
 
+  /// Returns true if the aspect ratio is 3:2.
   bool get is3x2 => aspectRatioString == "3:2";
 
+  /// Returns true if the aspect ratio is 4:3.
   bool get is4x3 => aspectRatioString == "4:3";
 
+  /// Returns true if the aspect ratio is 5:4.
   bool get is5x4 => aspectRatioString == "5:4";
 
   /// is dark mode currently enabled?
@@ -173,16 +184,22 @@ extension BuildContextExtensions on BuildContext {
   /// content body, like captions
   TextStyle? get labelSmall => textTheme.labelSmall;
 
+  /// Returns the logical aspect ratio of the screen.
   double get logicalAspectRatio => logicalWidth / logicalHeight;
 
-  string get logicalAspectRatioString => logicalScreenSize.getAspectRatioString();
+  /// Returns the logical aspect ratio as a string.
+  String get logicalAspectRatioString => logicalScreenSize.getAspectRatioString();
 
+  /// Returns the logical height of the screen.
   double get logicalHeight => logicalScreenSize.height;
 
   //Size in logical pixels
   Size get logicalScreenSize => flutterView.physicalSize / pixelRatio;
 
+  /// Returns the logical width of the screen.
   double get logicalWidth => logicalScreenSize.width;
+
+  /// Returns the longest side of the screen.
   double get longestSide => screenSize.longestSide;
 
   MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
@@ -220,16 +237,23 @@ extension BuildContextExtensions on BuildContext {
 
   double get paddingRight => flutterView.padding.right / flutterView.devicePixelRatio;
   double get paddingTop => flutterView.padding.top / flutterView.devicePixelRatio;
+
+  /// Returns the physical aspect ratio of the screen.
   double get physicalAspectRatio => physicalWidth / physicalHeight;
 
-  string get physicalAspectRatioString => physicalScreenSize.getAspectRatioString();
+  /// Returns the physical aspect ratio as a string.
+  String get physicalAspectRatioString => physicalScreenSize.getAspectRatioString();
+
+  /// Returns the physical height of the screen.
   double get physicalHeight => physicalScreenSize.height;
 
   //Size in physical pixels
   Size get physicalScreenSize => flutterView.physicalSize;
 
+  /// Returns the physical width of the screen.
   double get physicalWidth => physicalScreenSize.width;
 
+  /// Returns the pixel ratio of the screen.
   double get pixelRatio => flutterView.devicePixelRatio;
 
   /// similar to [MediaQuery.platformBrightnessOf(context)]
@@ -247,9 +271,11 @@ extension BuildContextExtensions on BuildContext {
   /// performs a simple [Theme.of(context).primaryTextTheme] action and returns given [primaryTextTheme]
   TextTheme get primaryTextTheme => theme.primaryTextTheme;
 
+  /// Returns the safe height of the screen.
   double get safeHeight => logicalHeight - paddingTop - paddingBottom;
 
   //Safe area in logical pixels
+  /// Returns the safe width of the screen.
   double get safeWidth => logicalWidth - paddingLeft - paddingRight;
 
   ScaffoldState get scaffold => Scaffold.of(this);
@@ -259,6 +285,10 @@ extension BuildContextExtensions on BuildContext {
   Color get scaffoldBackgroundColor => theme.scaffoldBackgroundColor;
 
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
+
+  void clearSnackBars()=> scaffoldMessenger.clearSnackBars();
+
+ 
 
   /// This change makes MediaQuery an InheritedModel rather than an InheritedWidget,
   /// so any widget which knows it only depends on a
@@ -305,7 +335,7 @@ extension BuildContextExtensions on BuildContext {
   /// medium-emphasis text.
   TextStyle? get titleSmall => textTheme.titleSmall;
 
-  InnerLibsLocalizations get translations => InnerLibsLocalizations.of(this);
+  InnerLibsLocalizations get translations => innerLibsLocalizations;
 
   /// similar to [MediaQuery.of(context).viewInsets]
   EdgeInsets get viewInsets => MediaQuery.viewInsetsOf(this);
@@ -454,7 +484,7 @@ extension MoreGetExtensions on GetInterface {
   // Returns the current [ScreenTier] based on the current [width] of the screen.
   ScreenTier get screenTier => ScreenTier.fromWidth(width);
 
-  closeDialog() => Get.until((route) => Get.isDialogOpen == true);
+  closeDialog() => Get.until((_) => Get.isDialogOpen == true);
 
   bool focus([int times = 1]) => Get.context!.focus(times);
 

@@ -1,23 +1,25 @@
  
+# InnerLibs 
 
+A library of classes and methods for Dart. Flexible and easy-to-use options to simplify and keep your code clean.
+The project was born out of the need to repeat code in various projects. Initially, it was a class with some methods that always needed to be modified in each project. Today, InnerLibs has more than 120 extension methods for various common operations.
+ 
 
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Tons of `String`, `num` and `date` manipulation methods
+- Classe `Brasil` para desenvolvedores brasileiros integrarem informações sobre cidades e estados em suas aplicações
+- enum `NamedColors` com praticamente todos os nomes de cores do mundo
+- `InputFormatters` diversos,
+- 
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Just add the following line on top of your file
 
 ```dart
-const like = 'sample';
+  import 'package:inerlibs/innerlibs.dart'
 ```
 
 ## Additional information

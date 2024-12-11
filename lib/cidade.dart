@@ -83,8 +83,7 @@ class Cidade extends LatLng implements Comparable<Cidade> {
 
   /// Converte a instância de Cidade para um mapa JSON.
   @override
-  Map<String, dynamic> toJson() =>
-      {'Nome': nome, 'Capital': capital, 'IBGE': ibge, 'SIAFI': siafi, 'DDD': ddd, 'TimeZone': timeZone, 'Latitude': latitude, 'Longitude': longitude, "Estado": estado.toJson()};
+  Map<String, dynamic> toJson() => {'Nome': nome, 'Capital': capital, 'IBGE': ibge, 'SIAFI': siafi, 'DDD': ddd, 'TimeZone': timeZone, 'Latitude': latitude, 'Longitude': longitude, "Estado": estado.toJson()};
 
   @override
   String toString() => nome;

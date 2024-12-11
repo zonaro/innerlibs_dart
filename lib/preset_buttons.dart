@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:innerlibs/innerlibs.dart';
 
+/// A button that clears the current context.
 class ClearButton extends StatelessWidget {
+  /// Callback when the button is pressed.
   final void Function()? onPressed;
 
+  /// Creates a ClearButton.
   const ClearButton({
     Key? key,
     required this.onPressed,
@@ -19,12 +22,21 @@ class ClearButton extends StatelessWidget {
   }
 }
 
+/// A base class for context buttons with a label and an icon.
 class ContextButtonBase extends StatelessWidget {
+  /// The label of the button.
   final String label;
+
+  /// The icon of the button.
   final IconData icon;
+
+  /// The color of the button.
   final Color? color;
+
+  /// Callback when the button is pressed.
   final void Function()? onPressed;
 
+  /// Creates a ContextButtonBase.
   const ContextButtonBase({
     super.key,
     required this.label,
@@ -57,9 +69,12 @@ class ContextButtonBase extends StatelessWidget {
   }
 }
 
+/// A button that deletes the current context.
 class DeleteButton extends StatelessWidget {
+  /// Callback when the button is pressed.
   final void Function()? onPressed;
 
+  /// Creates a DeleteButton.
   const DeleteButton({
     Key? key,
     required this.onPressed,
@@ -76,10 +91,15 @@ class DeleteButton extends StatelessWidget {
   }
 }
 
+/// A floating action button for saving or registering.
 class FabSave<T> extends StatelessWidget {
+  /// The ID associated with the save action.
   final T? id;
+
+  /// Callback when the button is pressed.
   final VoidCallback onPressed;
 
+  /// Creates a FabSave button.
   const FabSave({
     Key? key,
     required this.id,
@@ -97,9 +117,12 @@ class FabSave<T> extends StatelessWidget {
   }
 }
 
+/// A floating action button for searching.
 class FabSearch extends StatelessWidget {
+  /// Callback when the button is pressed.
   final VoidCallback onPressed;
 
+  /// Creates a FabSearch button.
   const FabSearch({
     Key? key,
     required this.onPressed,
@@ -115,13 +138,24 @@ class FabSearch extends StatelessWidget {
   }
 }
 
+/// A base class for floating action buttons with a label and an icon.
 class FabTextBase extends StatelessWidget {
+  /// The label of the button.
   final String? label;
+
+  /// The icon of the button.
   final IconData? icon;
+
+  /// The color of the button.
   final Color? color;
+
+  /// Callback when the button is pressed.
   final VoidCallback onPressed;
+
+  /// The hero tag for the button.
   final Object? heroTag;
 
+  /// Creates a FabTextBase button.
   const FabTextBase({
     super.key,
     this.label,
@@ -157,9 +191,12 @@ class FabTextBase extends StatelessWidget {
   }
 }
 
+/// A button that registers the current context.
 class RegisterButton extends StatelessWidget {
+  /// Callback when the button is pressed.
   final void Function()? onPressed;
 
+  /// Creates a RegisterButton.
   const RegisterButton({
     Key? key,
     this.onPressed,
@@ -175,9 +212,12 @@ class RegisterButton extends StatelessWidget {
   }
 }
 
+/// A button that saves the current context.
 class SaveButton extends StatelessWidget {
+  /// Callback when the button is pressed.
   final void Function()? onPressed;
 
+  /// Creates a SaveButton.
   const SaveButton({
     Key? key,
     required this.onPressed,
