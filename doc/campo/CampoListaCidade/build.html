@@ -123,7 +123,7 @@ Widget build(BuildContext context) {
     asyncItems: (s) async =&gt; (await Brasil.pesquisarCidade(s, nomeEstadoOuUFOuIBGEouRegiao)).toList(),
     validator: validator,
     readOnly: readOnly,
-    textValueSelector: (item) =&gt; [&quot;${item?.nome} - ${item?.estado.uf}&quot;, item?.ibge.toString()].whereNotNull().toList(),
+    textValueSelector: (item) =&gt; [&quot;${item?.nome} - ${item?.estado.uf}&quot;, item?.ibge.toString()].nonNulls.toList(),
     searchOn: (item) =&gt; [
       item.nome,
       item.ibge,

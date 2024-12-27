@@ -81,7 +81,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">static double getColumnSizeBySegments(double totalSegments, List&lt;double?&gt; sizes) {
-  double size = (sizes.whereNotNull().firstOrNull ?? 1);
+  double size = (sizes.nonNulls.firstOrNull ?? 1);
   if (size &gt; 0) {
     size = (totalSegments &#47; size);
   }

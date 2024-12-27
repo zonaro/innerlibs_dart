@@ -208,9 +208,26 @@
       }
     }
   },
+  "couldNotFindItemWith": "Não foi possível encontrar {item} com {property}.",
+  "@couldNotFindItemWith": {
+    "placeholders": {
+      "item": {
+        "description": "O item que não pôde ser encontrado",
+        "type": "String"
+      },
+      "property": {
+        "description": "a propriedade pelo qual o item não pôde ser encontrado",
+        "type": "String"
+      }
+    }
+  },
   "country": "País",
   "@country": {
     "description": "País"
+  },
+  "create": "Criar",
+  "@create": {
+    "description": "Criar"
   },
   "darkMode": "Modo Escuro",
   "@darkMode": {
@@ -255,6 +272,28 @@
   "delete": "Excluir",
   "@delete": {
     "description": "Excluir"
+  },
+  "deletedItem": "{item} excluído",
+  "@deletedItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item excluído",
+        "type": "String"
+      }
+    }
+  },
+  "deletedItemFrom": "{item} excluído de {location}",
+  "@deletedItemFrom": {
+    "placeholders": {
+      "item": {
+        "description": "O item excluído",
+        "type": "String"
+      },
+      "location": {
+        "description": "O local de onde o item foi excluído",
+        "type": "String"
+      }
+    }
   },
   "device": "Dispositivo",
   "@device": {
@@ -582,6 +621,15 @@
       }
     }
   },
+  "itemDeletedSuccessfully": "{item} excluído com sucesso",
+  "@itemDeletedSuccessfully": {
+    "placeholders": {
+      "item": {
+        "description": "O item excluído com sucesso",
+        "type": "String"
+      }
+    }
+  },
   "itemLibrary": "Biblioteca de {item}",
   "@itemLibrary": {
     "placeholders": {
@@ -609,6 +657,24 @@
       },
       "location": {
         "description": "O local onde o item não foi encontrado",
+        "type": "String"
+      }
+    }
+  },
+  "itemSavedSuccessfully": "{item} salvo com sucesso",
+  "@itemSavedSuccessfully": {
+    "placeholders": {
+      "item": {
+        "description": "O item salvo com sucesso",
+        "type": "String"
+      }
+    }
+  },
+  "itemUpdatedSuccessfully": "{item} atualizado com sucesso",
+  "@itemUpdatedSuccessfully": {
+    "placeholders": {
+      "item": {
+        "description": "O item atualizado com sucesso",
         "type": "String"
       }
     }
@@ -862,6 +928,24 @@
   "@previous": {
     "description": "Anterior"
   },
+  "recentItem": "{item} recente",
+  "@recentItem": {
+    "placeholders": {
+      "item": {
+        "description": "O item recente",
+        "type": "String"
+      }
+    }
+  },
+  "recentItems": "{items} recentes",
+  "@recentItems": {
+    "placeholders": {
+      "items": {
+        "description": "Os itens recentes",
+        "type": "String"
+      }
+    }
+  },
   "register": "Registrar",
   "@register": {
     "description": "Registrar"
@@ -886,6 +970,14 @@
   "save": "Salvar",
   "@save": {
     "description": "Salvar"
+  },
+  "saved": "Salvo",
+  "@saved": {
+    "description": "Salvo"
+  },
+  "sdCard": "Cartão SD",
+  "@sdCard": {
+    "description": "Cartão SD"
   },
   "search": "Pesquisar",
   "@search": {
@@ -971,6 +1063,30 @@
   "size": "Tamanho",
   "@size": {
     "description": "Tamanho"
+  },
+  "storage": "Armazenamento",
+  "@storage": {
+    "description": "Armazenamento"
+  },
+  "storageAvailable": "Armazenamento Disponível",
+  "@storageAvailable": {
+    "description": "Armazenamento Disponível"
+  },
+  "storageDevices": "Dispositivos de Armazenamento",
+  "@storageDevices": {
+    "description": "Dispositivos de Armazenamento"
+  },
+  "storageFree": "Armazenamento Livre",
+  "@storageFree": {
+    "description": "Armazenamento Livre"
+  },
+  "storageSize": "Tamanho do Armazenamento",
+  "@storageSize": {
+    "description": "Tamanho do Armazenamento"
+  },
+  "storageUsed": "Armazenamento Usado",
+  "@storageUsed": {
+    "description": "Armazenamento Usado"
   },
   "success": "Sucesso",
   "@success": {
@@ -1156,15 +1272,22 @@
       }
     }
   },
-  "couldNotFindItemWith": "Não foi possível encontrar {item} com {property}.",
-  "@couldNotFindItemWith": {
+  "addNewItem": "Adicionar Novo {item}",
+  "@addNewItem": {
+    "description": "Adicionar Novo {item}",
     "placeholders": {
       "item": {
-        "description": "O item que não pôde ser encontrado",
+        "description": "O item a ser adicionado",
         "type": "String"
-      },
-      "property": {
-        "description": "a propriedade pelo qual o item não pôde ser encontrado",
+      }
+    }
+  },
+  "addItem": "Adicionar {item}",
+  "@addItem": {
+    "description": "Adicionar {item}",
+    "placeholders": {
+      "item": {
+        "description": "O item a ser adicionado",
         "type": "String"
       }
     }

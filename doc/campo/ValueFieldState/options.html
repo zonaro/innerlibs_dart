@@ -77,7 +77,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Iterable&lt;T&gt; get options =&gt; [value.value, ...widget.options].whereNotNull().distinctBy((x) =&gt; textValueSelector(x).last).toList();</code></pre>
+  <pre class="language-dart"><code class="language-dart">Iterable&lt;T&gt; get options =&gt; [value.value, ...widget.options].nonNulls.distinctBy((x) =&gt; textValueSelector(x).last).toList();</code></pre>
 </section>
 
   </section>

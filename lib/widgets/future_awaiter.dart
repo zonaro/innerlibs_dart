@@ -62,7 +62,7 @@ class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
       if (validations.isEmpty) {
         return value.isValid() ? [] : ["Data is invalid"];
       }
-      return validations.map((x) => x(value)).whereNotNull();
+      return validations.map((x) => x(value)).nonNulls;
     }
     return [];
   }

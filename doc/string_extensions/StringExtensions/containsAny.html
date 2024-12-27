@@ -84,7 +84,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">bool containsAny(Iterable&lt;string?&gt; patterns) {
   if (isNotBlank) {
-    for (String? item in patterns.whereNotNull().where((element) =&gt; element.isNotEmpty)) {
+    for (String? item in patterns.nonNulls.where((element) =&gt; element.isNotEmpty)) {
       if (contains(item!)) {
         return true;
       }

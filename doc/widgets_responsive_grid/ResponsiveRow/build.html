@@ -150,7 +150,7 @@ Widget build(BuildContext context) {
                   child: c.child,
                 );
               })
-              .whereNotNull()
+              .nonNulls
               .toList(),
         ),
       );

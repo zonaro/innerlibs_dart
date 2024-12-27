@@ -13,13 +13,13 @@ class ResponsiveColumn {
   final double? height;
   final Decoration? decoration;
   final Decoration? foregroundDecoration;
-  
+
   /// The alignment of the column.
   final Alignment? alignment;
-  
+
   /// The padding inside the column.
   final EdgeInsets? padding;
-  
+
   /// The margin outside the column.
   final EdgeInsets? margin;
 
@@ -442,7 +442,7 @@ class ResponsiveRow extends StatelessWidget {
                     child: c.child,
                   );
                 })
-                .whereNotNull()
+                .nonNulls
                 .toList(),
           ),
         );
@@ -450,10 +450,9 @@ class ResponsiveRow extends StatelessWidget {
     );
   }
 
-
   /// Calculates the column size based on the total segments and the provided sizes.
   static double getColumnSizeBySegments(double totalSegments, List<double?> sizes) {
-    double size = (sizes.whereNotNull().firstOrNull ?? 1);
+    double size = (sizes.nonNulls.firstOrNull ?? 1);
     if (size > 0) {
       size = (totalSegments / size);
     }

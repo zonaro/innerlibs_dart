@@ -81,7 +81,7 @@ Returns a list of strings representing the words in the pascal case string.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">List&lt;String&gt; get pascalSplit =&gt; camelSplit.map((w) =&gt; w.capitalizeFirst).whereNotNull().toList();</code></pre>
+  <pre class="language-dart"><code class="language-dart">List&lt;String&gt; get pascalSplit =&gt; camelSplit.map((w) =&gt; w.capitalizeFirst).nonNulls.toList();</code></pre>
 </section>
 
   </section>

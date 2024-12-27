@@ -52,7 +52,7 @@ extension BuildContextExtensions on BuildContext {
   BottomSheetThemeData get bottomSheetTheme => theme.bottomSheetTheme;
 
   /// Returns the boundary of the render object.
-  RenderRepaintBoundary? get boundary => [findRenderObject()].whereNotNull().whereType<RenderRepaintBoundary>().firstOrNull;
+  RenderRepaintBoundary? get boundary => [findRenderObject()].nonNulls.whereType<RenderRepaintBoundary>().firstOrNull;
 
   /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
   ColorScheme get colorScheme => theme.colorScheme;
@@ -286,10 +286,6 @@ extension BuildContextExtensions on BuildContext {
 
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
 
-  void clearSnackBars()=> scaffoldMessenger.clearSnackBars();
-
- 
-
   /// This change makes MediaQuery an InheritedModel rather than an InheritedWidget,
   /// so any widget which knows it only depends on a
   /// specific property of MediaQuery the ability to declare that when reading the MediaQuery from the context.
@@ -362,6 +358,8 @@ extension BuildContextExtensions on BuildContext {
 
   ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
   bool canPop() => Navigator.canPop(this);
+
+  void clearSnackBars() => scaffoldMessenger.clearSnackBars();
 
   /// Control the focus of the current context
   /// [times] is the number of times to move the focus.

@@ -125,7 +125,7 @@
       }
     });
 
-    return (await Future.wait(futures)).whereNotNull();
+    return (await Future.wait(futures)).nonNulls;
   } else {
     throw Exception(&quot;Erro ao buscar o endereço: ${response.statusCode}&quot;);
   }

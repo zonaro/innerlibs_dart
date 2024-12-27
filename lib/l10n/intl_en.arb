@@ -225,6 +225,10 @@
   "@country": {
     "description": "Country"
   },
+  "create": "Create",
+  "@create": {
+    "description": "Create"
+  },
   "darkMode": "Dark Mode",
   "@darkMode": {
     "description": "Dark Mode"
@@ -268,6 +272,28 @@
   "delete": "Delete",
   "@delete": {
     "description": "Delete"
+  },
+  "deletedItem": "Deleted {item}",
+  "@deletedItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item that was deleted",
+        "type": "String"
+      }
+    }
+  },
+  "deletedItemFrom": "Deleted {item} from {location}",
+  "@deletedItemFrom": {
+    "placeholders": {
+      "item": {
+        "description": "The item that was deleted",
+        "type": "String"
+      },
+      "location": {
+        "description": "The location from which the item was deleted",
+        "type": "String"
+      }
+    }
   },
   "device": "Device",
   "@device": {
@@ -595,6 +621,15 @@
       }
     }
   },
+  "itemDeletedSuccessfully": "{item} deleted successfully",
+  "@itemDeletedSuccessfully": {
+    "placeholders": {
+      "item": {
+        "description": "The item that was deleted",
+        "type": "String"
+      }
+    }
+  },
   "itemLibrary": "{item} Library",
   "@itemLibrary": {
     "placeholders": {
@@ -622,6 +657,24 @@
       },
       "location": {
         "description": "The location where the item was not found",
+        "type": "String"
+      }
+    }
+  },
+  "itemSavedSuccessfully": "{item} saved successfully",
+  "@itemSavedSuccessfully": {
+    "placeholders": {
+      "item": {
+        "description": "The item that was saved",
+        "type": "String"
+      }
+    }
+  },
+  "itemUpdatedSuccessfully": "{item} updated successfully",
+  "@itemUpdatedSuccessfully": {
+    "placeholders": {
+      "item": {
+        "description": "The item that was updated",
         "type": "String"
       }
     }
@@ -875,6 +928,24 @@
   "@previous": {
     "description": "Previous"
   },
+  "recentItem": "Recent {item}",
+  "@recentItem": {
+    "placeholders": {
+      "item": {
+        "description": "The recent item",
+        "type": "String"
+      }
+    }
+  },
+  "recentItems": "Recent {items}",
+  "@recentItems": {
+    "placeholders": {
+      "items": {
+        "description": "The recent items",
+        "type": "String"
+      }
+    }
+  },
   "register": "Register",
   "@register": {
     "description": "Register"
@@ -899,6 +970,14 @@
   "save": "Save",
   "@save": {
     "description": "Save"
+  },
+  "saved": "Saved",
+  "@saved": {
+    "description": "Saved"
+  },
+  "sdCard": "SD Card",
+  "@sdCard": {
+    "description": "SD Card"
   },
   "search": "Search",
   "@search": {
@@ -984,6 +1063,30 @@
   "size": "Size",
   "@size": {
     "description": "Size"
+  },
+  "storage": "Storage",
+  "@storage": {
+    "description": "Storage"
+  },
+  "storageAvailable": "Storage Available",
+  "@storageAvailable": {
+    "description": "Storage Available"
+  },
+  "storageDevices": "Storage Devices",
+  "@storageDevices": {
+    "description": "Storage Devices"
+  },
+  "storageFree": "Storage Free",
+  "@storageFree": {
+    "description": "Storage Free"
+  },
+  "storageSize": "Storage Size",
+  "@storageSize": {
+    "description": "Storage Size"
+  },
+  "storageUsed": "Storage Used",
+  "@storageUsed": {
+    "description": "Storage Used"
   },
   "success": "Success",
   "@success": {
@@ -1165,6 +1268,26 @@
     "placeholders": {
       "item": {
         "description": "Your item",
+        "type": "String"
+      }
+    }
+  },
+  "addNewItem": "Add New {item}",
+  "@addNewItem": {
+    "description": "Add New {item}",
+    "placeholders": {
+      "item": {
+        "description": "The new item",
+        "type": "String"
+      }
+    }
+  },
+ 
+  "addItem": "Add {item}",
+  "@addItem": {
+    "placeholders": {
+      "item": {
+        "description": "The item to be added",
         "type": "String"
       }
     }

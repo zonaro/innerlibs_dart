@@ -317,6 +317,12 @@ abstract class InnerLibsLocalizations {
   /// **'Country'**
   String get country;
 
+  /// Create
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
   /// Dark Mode
   ///
   /// In en, this message translates to:
@@ -382,6 +388,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
+
+  /// No description provided for @deletedItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {item}'**
+  String deletedItem(String item);
+
+  /// No description provided for @deletedItemFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {item} from {location}'**
+  String deletedItemFrom(String item, String location);
 
   /// Device
   ///
@@ -755,6 +773,12 @@ abstract class InnerLibsLocalizations {
   /// **'Invalid {item}.'**
   String invalidItem(String item);
 
+  /// No description provided for @itemDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} deleted successfully'**
+  String itemDeletedSuccessfully(String item);
+
   /// No description provided for @itemLibrary.
   ///
   /// In en, this message translates to:
@@ -772,6 +796,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'{item} not found in {location}'**
   String itemNotFoundIn(String item, String location);
+
+  /// No description provided for @itemSavedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} saved successfully'**
+  String itemSavedSuccessfully(String item);
+
+  /// No description provided for @itemUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} updated successfully'**
+  String itemUpdatedSuccessfully(String item);
 
   /// Libraries
   ///
@@ -1073,6 +1109,18 @@ abstract class InnerLibsLocalizations {
   /// **'Previous'**
   String get previous;
 
+  /// No description provided for @recentItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent {item}'**
+  String recentItem(String item);
+
+  /// No description provided for @recentItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent {items}'**
+  String recentItems(String items);
+
   /// Register
   ///
   /// In en, this message translates to:
@@ -1102,6 +1150,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// Saved
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get saved;
+
+  /// SD Card
+  ///
+  /// In en, this message translates to:
+  /// **'SD Card'**
+  String get sdCard;
 
   /// Search
   ///
@@ -1180,6 +1240,42 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Size'**
   String get size;
+
+  /// Storage
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get storage;
+
+  /// Storage Available
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Available'**
+  String get storageAvailable;
+
+  /// Storage Devices
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Devices'**
+  String get storageDevices;
+
+  /// Storage Free
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Free'**
+  String get storageFree;
+
+  /// Storage Size
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Size'**
+  String get storageSize;
+
+  /// Storage Used
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Used'**
+  String get storageUsed;
 
   /// Success
   ///
@@ -1396,6 +1492,18 @@ abstract class InnerLibsLocalizations {
   /// In en, this message translates to:
   /// **'Your {item}'**
   String yourItem(String item);
+
+  /// Add New {item}
+  ///
+  /// In en, this message translates to:
+  /// **'Add New {item}'**
+  String addNewItem(String item);
+
+  /// No description provided for @addItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {item}'**
+  String addItem(String item);
 }
 
 class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {

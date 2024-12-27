@@ -412,7 +412,7 @@ class MercosulPlate extends StatelessWidget implements LicensePlate {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
+              color: Colors.grey.withValues(alpha:  0.5),
               spreadRadius: 5,
               blurRadius: 7,
               offset: const Offset(0, 3),
@@ -570,7 +570,6 @@ enum MercosulPlateCategory implements PlateCategory {
       case MercosulPlateCategory.colecionadorNacional:
         return ThreeLettersPlateCategory.colecionador;
       case MercosulPlateCategory.particular:
-      default:
         return ThreeLettersPlateCategory.particular;
     }
   }
@@ -813,7 +812,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
               height: 1.2,
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha:  0.5),
                   blurRadius: 2 * (realWidth / 1000),
                   offset: Offset(2 * (realWidth / 1000), 2 * (realWidth / 1000)),
                 ),
@@ -836,7 +835,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha:  0.5),
             spreadRadius: 5 * (realWidth / 300),
             blurRadius: 7 * (realWidth / 300),
             offset: Offset(0, 3 * (realWidth / 300)),
@@ -873,7 +872,7 @@ class ThreeLettersPlate extends StatelessWidget implements LicensePlate {
         color: getTextColor(),
         shadows: [
           Shadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha:  0.5),
             blurRadius: 2 * (fontSize / 98),
             offset: Offset(2 * (fontSize / 98), 2 * (fontSize / 98)),
           ),
@@ -994,7 +993,6 @@ enum ThreeLettersPlateCategory implements PlateCategory {
       case ThreeLettersPlateCategory.representacao:
         return MercosulPlateCategory.diplomatico;
       case ThreeLettersPlateCategory.particular:
-      default:
         return MercosulPlateCategory.particular;
     }
   }
@@ -1211,7 +1209,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
             locality.toUpperCase(),
             textAlign: TextAlign.center,
             style: TextStyle(
-              shadows: [Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 1, offset: Offset(1 * (realWidth / 1000), 1 * (realWidth / 1000)))],
+              shadows: [Shadow(color: Colors.black.withValues(alpha:  0.5), blurRadius: 1, offset: Offset(1 * (realWidth / 1000), 1 * (realWidth / 1000)))],
               fontSize: realHeight * _localityContainerLettersRelation,
               fontFamily: _fontFamily,
               package: 'innerlibs',
@@ -1230,7 +1228,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha:  0.5),
             spreadRadius: 5 * (realWidth / 300),
             blurRadius: 7 * (realWidth / 300),
             offset: Offset(0, 3 * (realWidth / 300)),
@@ -1267,7 +1265,7 @@ class TwoLettersPlate extends StatelessWidget implements LicensePlate {
           color: getTextColor(),
           shadows: [
             Shadow(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha:  0.5),
               blurRadius: 1 * (fontSize / 98),
               offset: Offset(1 * (fontSize / 98), 1 * (fontSize / 98)),
             ),

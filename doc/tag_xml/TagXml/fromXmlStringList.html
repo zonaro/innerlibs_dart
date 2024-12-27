@@ -86,7 +86,7 @@ Provide the <a href="../../tag_xml/TagXml/tagName.html">tagName</a> if <code>T</
   if (xml.isBlank) return [];
   try {
     var tags = XmlDocument.parse(xml).findAllElements(constructor().tagName);
-    var typedTags = tags.map((x) =&gt; mutate(x, constructor)).whereNotNull().toList();
+    var typedTags = tags.map((x) =&gt; mutate(x, constructor)).nonNulls.toList();
     return typedTags;
   } catch (e) {
     consoleLog(&quot;$e&quot;, error: e);

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:convert/convert.dart';
@@ -294,6 +295,27 @@ extension StringExtensions on String {
     return Color(hash + 0xFF000000);
   }
 
+  /// Return a [Directory] if the string is a directory or file path, otherwise return null.
+  ///
+  /// If the string is a file path, it returns the parent directory.
+  Directory? get asDirectory {
+    if (FileSystemEntity.isDirectorySync(fixPath)) {
+      return Directory(fixPath);
+    } else if (FileSystemEntity.isFileSync(fixPath)) {
+      return File(fixPath).parent;
+    } else {
+      return null;
+    }
+  }
+
+  /// Return a [File] if the string is a file path, otherwise return null.
+  File? get asFile {
+    if (FileSystemEntity.isFileSync(this)) {
+      return File(this);
+    }
+    return null;
+  }
+
   String? get asNullable => this;
 
   /// Return a base64 encoded string
@@ -497,9 +519,6 @@ extension StringExtensions on String {
     }
     return this;
   }
-
-  /// return a string in a firendly format
-  string get friendlyTitle => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(Get.endOfSentenceChars).toTitleCase();
 
   /// Return a checksum digit for a barcode
   String get generateBarcodeCheckSum {
@@ -1091,7 +1110,7 @@ extension StringExtensions on String {
 
   /// Splits a pascal case string into individual words.
   /// Returns a list of strings representing the words in the pascal case string.
-  List<String> get pascalSplit => camelSplit.map((w) => w.capitalizeFirst).whereNotNull().toList();
+  List<String> get pascalSplit => camelSplit.map((w) => w.capitalizeFirst).nonNulls.toList();
 
   /// Returns a string with pascal case split into separate words.
   ///
@@ -1373,6 +1392,11 @@ extension StringExtensions on String {
   int? get toInt {
     if (isBlank) {
       return null;
+    }
+
+    //check if string is an hexadecimal
+    if (isHexadecimal) {
+      return int.tryParse(removeFirstEqual("#"), radix: 16);
     }
 
     return int.tryParse(this) ?? double.tryParse(this)?.floor();
@@ -1979,7 +2003,7 @@ extension StringExtensions on String {
   /// ```
   bool containsAny(Iterable<string?> patterns) {
     if (isNotBlank) {
-      for (String? item in patterns.whereNotNull().where((element) => element.isNotEmpty)) {
+      for (String? item in patterns.nonNulls.where((element) => element.isNotEmpty)) {
         if (contains(item!)) {
           return true;
         }
@@ -2047,7 +2071,7 @@ extension StringExtensions on String {
           final suggestionRegex = RegExp(r'<suggestion data="([^"]+)"');
           final matches = suggestionRegex.allMatches(xmlData);
           final suggestions = matches.map((match) => match.group(1)?.urlDecode.trimAll).distinct().toList();
-          return suggestions.whereNotNull().toList();
+          return suggestions.nonNulls.toList();
         }
       } catch (e) {
         consoleLog('Error fetching suggestions: $e');
@@ -2251,6 +2275,9 @@ extension StringExtensions on String {
     }
     return out;
   }
+
+  /// return a string in a firendly format
+  string friendlyTitle([bool? forceCase]) => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(Get.endOfSentenceChars).toTitleCase(forceCase);
 
   /// Returns the day name of the date provided in `String` format.
   ///

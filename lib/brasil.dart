@@ -1114,7 +1114,7 @@ abstract interface class Brasil {
     if (documento is Cidade) return documento.ibge.nullIfZero;
     if (documento is Endereco) return documento.cep.onlyNumbers.toInt.nullIfZero;
     if (documento is num) return documento.floor();
-    if (documento is Color) return documento.value;
+    if (documento is Color) return documento.alphaHexadecimal.toInt!;
 
     if (validarCPF(documento) || validarCNPJ(documento) || validarCEP(documento) || validarEAN(documento) || validarPIS(documento) || validarCNH(documento) || validarTelefone(documento) || validarInscricaoEstadual(documento)) {
       return int.tryParse("$documento".onlyNumbers).nullIfZero;

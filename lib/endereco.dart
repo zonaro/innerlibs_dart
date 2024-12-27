@@ -53,18 +53,18 @@ class Endereco extends LatLng implements Comparable<Endereco> {
   string get bairroCidadeEstadoCep => [bairroCidadeEstado, cep].whereValid.join(" - ").trim();
 
   /// Codigo do país
-  /// 
+  ///
   /// O código do país é um número inteiro que representa o Brasil.
-  /// 
+  ///
   /// Retorna:
   ///     - O código do país.
   int get codigoPais => 1058;
 
   /// Retorna as coordenadas do endereço.
-  /// 
+  ///
   /// As coordenadas são representadas como uma string no formato "(latitude, longitude)".
   /// Se a latitude e a longitude forem iguais a 0, retorna uma string vazia.
-  /// 
+  ///
   /// Retorna:
   ///     - As coordenadas do endereço.
   string get coordenadas => latitude != 0 && longitude != 0 ? "($latitude, $longitude)" : "";
@@ -106,9 +106,9 @@ class Endereco extends LatLng implements Comparable<Endereco> {
   string get enderecoCompletoComCoordenadas => [enderecoCompleto, coordenadas].whereValid.join(" - ").trim();
 
   /// Retorna o estado do endereço.
-  /// 
+  ///
   /// O estado é obtido a partir da cidade do endereço.
-  /// 
+  ///
   /// Retorna:
   ///     - O estado do endereço.
   Estado? get estado => cidade?.estado;
@@ -117,9 +117,9 @@ class Endereco extends LatLng implements Comparable<Endereco> {
   int get hashCode => Object.hash(cep, numero, complemento);
 
   /// Retorna o código IBGE da cidade do endereço.
-  /// 
+  ///
   /// O código IBGE é um número inteiro que identifica a cidade.
-  /// 
+  ///
   /// Retorna:
   ///     - O código IBGE da cidade.
   int? get ibge => cidade?.ibge;
@@ -141,17 +141,17 @@ class Endereco extends LatLng implements Comparable<Endereco> {
   string get logradouroCompleto => [logradouro, numero, complemento].whereValid.join(", ").trim();
 
   /// Retorna o país do endereço.
-  /// 
+  ///
   /// O país é representado como uma string.
-  /// 
+  ///
   /// Retorna:
   ///     - O país do endereço.
   String get pais => "Brasil";
 
   /// Retorna a URI para o Google Maps com as coordenadas do endereço.
-  /// 
+  ///
   /// A URI é gerada a partir da latitude e longitude do endereço.
-  /// 
+  ///
   /// Retorna:
   ///     - A URI para o Google Maps.
   Uri get toGoogleMapsUri => Uri.parse("https://www.google.com/maps/search/?api=1&query=$latitude,$longitude");
@@ -173,12 +173,12 @@ class Endereco extends LatLng implements Comparable<Endereco> {
   }
 
   /// Busca um endereço a partir do CEP.
-  /// 
+  ///
   /// O CEP é utilizado para buscar o endereço correspondente.
-  /// 
+  ///
   /// Parâmetros:
   ///     - cep: O CEP do endereço.
-  /// 
+  ///
   /// Retorna:
   ///     - O endereço correspondente ao CEP.
   Future<Endereco> fromCEP(String cep) async {
@@ -190,12 +190,12 @@ class Endereco extends LatLng implements Comparable<Endereco> {
   }
 
   /// Cria um endereço a partir de um JSON parcial.
-  /// 
+  ///
   /// O JSON parcial contém informações do endereço.
-  /// 
+  ///
   /// Parâmetros:
   ///     - json: O JSON parcial com as informações do endereço.
-  /// 
+  ///
   /// Retorna:
   ///     - O endereço criado a partir do JSON parcial.
   Endereco fromPartialJson(Map<String, dynamic> json) {
@@ -231,12 +231,12 @@ class Endereco extends LatLng implements Comparable<Endereco> {
   String toString() => enderecoCompleto;
 
   /// Cria um endereço a partir de um JSON.
-  /// 
+  ///
   /// O JSON contém informações do endereço.
-  /// 
+  ///
   /// Parâmetros:
   ///     - json: O JSON com as informações do endereço.
-  /// 
+  ///
   /// Retorna:
   ///     - O endereço criado a partir do JSON.
   static Future<Endereco> fromJson(Map<String, dynamic> json) async {
@@ -255,14 +255,14 @@ class Endereco extends LatLng implements Comparable<Endereco> {
   }
 
   /// Busca endereços no Nominatim do OpenStreetMap a partir de um texto de busca.
-  /// 
+  ///
   /// A busca retorna uma lista de endereços correspondentes ao texto de busca.
-  /// 
+  ///
   /// Parâmetros:
   ///     - query: O texto de busca.
   ///     - limit: O número máximo de resultados (padrão é 5).
   ///     - viaCep: Indica se deve buscar o endereço via CEP (padrão é false).
-  /// 
+  ///
   /// Retorna:
   ///     - Uma lista de endereços correspondentes ao texto de busca.
   static Future<Iterable<Endereco>> searchOpenStreetMap(String query, {int limit = 5, bool viaCep = false}) async {
@@ -302,20 +302,20 @@ class Endereco extends LatLng implements Comparable<Endereco> {
         }
       });
 
-      return (await Future.wait(futures)).whereNotNull();
+      return (await Future.wait(futures)).nonNulls;
     } else {
       throw Exception("Erro ao buscar o endereço: ${response.statusCode}");
     }
   }
 
   /// Tenta converter uma string em um endereço.
-  /// 
+  ///
   /// A conversão é feita a partir da string fornecida, que é analisada e dividida em partes.
   /// As partes são então usadas para preencher os campos do endereço.
-  /// 
+  ///
   /// Parâmetros:
   ///     - address: A string com o endereço.
-  /// 
+  ///
   /// Retorna:
   ///     - O endereço criado a partir da string.
   static Future<Endereco> tryParse(string address) async {

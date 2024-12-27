@@ -99,7 +99,7 @@ If the language is not provided, it defaults to an empty string.</p>
         final suggestionRegex = RegExp(r&#39;&lt;suggestion data=&quot;([^&quot;]+)&quot;&#39;);
         final matches = suggestionRegex.allMatches(xmlData);
         final suggestions = matches.map((match) =&gt; match.group(1)?.urlDecode.trimAll).distinct().toList();
-        return suggestions.whereNotNull().toList();
+        return suggestions.nonNulls.toList();
       }
     } catch (e) {
       consoleLog(&#39;Error fetching suggestions: $e&#39;);

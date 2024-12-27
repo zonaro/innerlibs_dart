@@ -3449,7 +3449,8 @@ enum NamedColor implements Color {
   static Iterable<string> get names => values.map((e) => e.name);
 
   /// A random color from the list of named colors.
-  static NamedColor get random => values.orderByRandom.first;
+  static NamedColor get random => values.randomItem!;
+
   final String hexadecimal;
 
   final String _name;
@@ -3483,11 +3484,26 @@ enum NamedColor implements Color {
   }
 
   @override
+  double get a => _color.a;
+
+  @Deprecated("'alpha' is deprecated and shouldn't be used. Use .a.")
+  @override
   int get alpha => _color.alpha;
 
   @override
+  double get b => _color.b;
+
+  @Deprecated("'blue' is deprecated and shouldn't be used. Use .b.")
+  @override
   int get blue => _color.blue;
 
+  @override
+  ColorSpace get colorSpace => _color.colorSpace;
+
+  @override
+  double get g => _color.g;
+
+  @Deprecated("'green' is deprecated and shouldn't be used. Use .g.")
   @override
   int get green => _color.green;
 
@@ -3497,12 +3513,18 @@ enum NamedColor implements Color {
   /// The name of the color.
   string get name => _name.toTitleCase();
 
+  @Deprecated("'opacity' is deprecated and shouldn't be used. Use a.")
   @override
   double get opacity => _color.opacity;
 
   @override
+  double get r => _color.r;
+
+  @Deprecated("'red' is deprecated and shouldn't be used. Use .r.")
+  @override
   int get red => _color.red;
 
+  @Deprecated("'value' is deprecated and shouldn't be used. Use component accessors like .r or .g.")
   @override
   int get value => _color.value;
 
@@ -3523,9 +3545,13 @@ enum NamedColor implements Color {
   @override
   Color withGreen(int g) => _color.withGreen(g);
 
+  @Deprecated("'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.")
   @override
   Color withOpacity(double opacity) => _color.withOpacity(opacity);
 
   @override
   Color withRed(int r) => _color.withRed(r);
+
+  @override
+  Color withValues({double? alpha, double? red, double? green, double? blue, ColorSpace? colorSpace}) => _color.withValues(alpha: alpha, red: red, green: green, blue: blue, colorSpace: colorSpace);
 }

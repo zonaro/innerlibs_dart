@@ -126,7 +126,7 @@ Widget build(BuildContext context) {
     },
     validator: validator,
     readOnly: readOnly,
-    textValueSelector: (item) =&gt; [&quot;${item?.nome} - ${item?.estado.uf}&quot;, useIbge ? item?.ibge.toString() : null].whereNotNull().toList(),
+    textValueSelector: (item) =&gt; [&quot;${item?.nome} - ${item?.estado.uf}&quot;, useIbge ? item?.ibge.toString() : null].nonNulls.toList(),
     searchOn: (item) =&gt; [
       item.nome,
       item.ibge,

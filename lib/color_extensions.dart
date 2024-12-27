@@ -14,19 +14,29 @@ class ColorUtils {
 
 extension ColorExtensions<T extends Color> on T {
   /// Returns the alpha value of the color in hexadecimal format.
-  String get alphaHexadecimal => '#${value.toRadixString(16).padLeft(8, '0')}';
+  String get alphaHexadecimal => '#${argb.toRadixString(16).padLeft(8, '0')}';
 
   /// Returns a list of analogous colors.
   Iterable<Color> get analogousColors => modColors([30, -30]);
 
-  /// Returns the ARGB value of the color.
-  int get argb => value;
+  /// A 32 bit value representing this color.
+  ///
+  /// The bits are assigned as follows:
+  ///
+  /// * Bits 24-31 are the alpha value.
+  /// * Bits 16-23 are the red value.
+  /// * Bits 8-15 are the green value.
+  /// * Bits 0-7 are the blue value.
+  int get argb => floatToInt8(a) << 24 | floatToInt8(r) << 16 | floatToInt8(g) << 8 | floatToInt8(b) << 0;
 
   /// Returns the black component of the color in CMYK color model.
-  double get black => 1 - hsv.value;
+  double get b => cmyk[3];
 
   /// Returns the brightness of the color.
   double get brightness => hsv.value;
+
+  /// Returns the cyan component of the color in CMYK color model.
+  double get c => cmyk[0];
 
   /// Return the closest [NamedColor] to this color.
   NamedColor? get closestColor {
@@ -45,20 +55,37 @@ extension ColorExtensions<T extends Color> on T {
   /// Returns the name of the closest [NamedColor] to this color.
   String get closestColorName => closestColor?.name ?? '';
 
+  List<double> get cmyk {
+    double c = 1 - (r / 255);
+    double m = 1 - (g / 255);
+    double y = 1 - (b / 255);
+    double k = 1;
+    if (c < k) k = c;
+    if (m < k) k = m;
+    if (y < k) k = y;
+    if (k < 1) {
+      c = (c - k) / (1 - k);
+      m = (m - k) / (1 - k);
+      y = (y - k) / (1 - k);
+    } else {
+      c = 0;
+      m = 0;
+      y = 0;
+    }
+    return [c, m, y, k];
+  }
+
   /// Returns the complementary color.
   Color get complementaryColor => modColor(180);
 
   /// Returns the CSS representation of the color.
-  String get css => alpha == 255 ? 'rgb($red, $green, $blue)' : 'rgba($red, $green, $blue, $opacity)';
-
-  /// Returns the cyan component of the color in CMYK color model.
-  double get cyan => 1 - (red / 255);
+  String get css => a == 1 ? 'rgb($r, $g, $b)' : 'rgba($r, $g, $b, $a)';
 
   /// Returns the dominant value among the red, green, and blue components.
-  int get dominantValue => [red, green, blue].max;
+  double get dominantValue => [r, g, b].max;
 
   /// Returns the hexadecimal representation of the color.
-  String get hexadecimal => '#${value.toRadixString(16).removeFirst(2).padLeft(6, '0')}';
+  String get hexadecimal => '#${argb.toRadixString(16).removeFirst(2).padLeft(6, '0')}';
 
   /// Returns the HSL representation of the color.
   HSLColor get hsl => HSLColor.fromColor(this);
@@ -85,10 +112,11 @@ extension ColorExtensions<T extends Color> on T {
   double get luminance => computeLuminance();
 
   /// Returns the magenta component of the color in CMYK color model.
-  double get magenta => 1 - (green / 255);
+  double get m => cmyk[1];
 
-  /// Returns the opacity of the color.
-  double get opacity => alpha / 255.0;
+  Iterable<double> get rgb => [r, g, b];
+
+  Iterable<double> get rgba => [r, g, b, a];
 
   /// Returns the saturation of the color.
   double get saturation => hsv.saturation;
@@ -103,73 +131,86 @@ extension ColorExtensions<T extends Color> on T {
   Iterable<Color> get triadicColors => modColors([120, 240]);
 
   /// Returns the yellow component of the color in CMYK color model.
-  double get yellow => 1 - (blue / 255);
+  double get y => cmyk[2];
 
   Color operator *(other) {
+    double red = 0;
+    double green = 0;
+    double blue = 0;
+    double alpha = 0;
+
     if (other is num) {
-      var red = (this.red * other).clamp(0, 255).round();
-      var green = (this.green * other).clamp(0, 255).round();
-      var blue = (this.blue * other).clamp(0, 255).round();
-      var alpha = (this.alpha * other).clamp(0, 255).round();
-      return Color.fromARGB(alpha, red, green, blue);
+      red = (r * other).clamp(0, 255);
+      green = (g * other).clamp(0, 255);
+      blue = (b * other).clamp(0, 255);
+      alpha = (a * other).clamp(0, 255);
+    } else {
+      var c = flatString(other).asColor;
+      red = (r * c.r).clamp(0, 255);
+      green = (g * c.g).clamp(0, 255);
+      blue = (b * c.b).clamp(0, 255);
+      alpha = (a * c.a).clamp(0, 255);
     }
 
-    var c = "$other".asColor;
-    var red = (this.red * c.red).clamp(0, 255);
-    var green = (this.green * c.green).clamp(0, 255);
-    var blue = (this.blue * c.blue).clamp(0, 255);
-    var alpha = (this.alpha * c.alpha).clamp(0, 255);
-    return Color.fromARGB(alpha, red, green, blue);
+    return Color.from(alpha: alpha, red: red, green: green, blue: blue);
   }
 
   Color operator +(other) {
+    double red = 0;
+    double green = 0;
+    double blue = 0;
+    double alpha = 0;
+
     if (other is num) {
-      var red = (this.red + other).clamp(0, 255).round();
-      var green = (this.green + other).clamp(0, 255).round();
-      var blue = (this.blue + other).clamp(0, 255).round();
-      var alpha = (this.alpha + other).clamp(0, 255).round();
-      return Color.fromARGB(alpha, red, green, blue);
+      red = (r + other).clamp(0, 255);
+      green = (g + other).clamp(0, 255);
+      blue = (b + other).clamp(0, 255);
+      alpha = (a + other).clamp(0, 255);
+    } else {
+      var c = flatString(other).asColor;
+      red = (r + c.r).clamp(0, 255);
+      green = (g + c.g).clamp(0, 255);
+      blue = (b + c.b).clamp(0, 255);
+      alpha = (a + c.a).clamp(0, 255);
     }
 
-    var c = "$other".asColor;
-    var red = (this.red + c.red).clamp(0, 255);
-    var green = (this.green + c.green).clamp(0, 255);
-    var blue = (this.blue + c.blue).clamp(0, 255);
-    var alpha = (this.alpha + c.alpha).clamp(0, 255);
-    return Color.fromARGB(alpha, red, green, blue);
+    return Color.from(alpha: alpha, red: red, green: green, blue: blue);
   }
 
-  Color operator -(other) {
+  operator -(other) {
+    double red = 0;
+    double green = 0;
+    double blue = 0;
+    double alpha = 0;
+
     if (other is num) {
-      var red = (this.red - other).clamp(0, 255).round();
-      var green = (this.green - other).clamp(0, 255).round();
-      var blue = (this.blue - other).clamp(0, 255).round();
-      var alpha = (this.alpha - other).clamp(0, 255).round();
-      return Color.fromARGB(alpha, red, green, blue);
+      red = (r - other).clamp(0, 255);
+      green = (g - other).clamp(0, 255);
+      blue = (b - other).clamp(0, 255);
+      alpha = (a - other).clamp(0, 255);
+    } else {
+      var c = flatString(other).asColor;
+      red = (r - c.r).clamp(0, 255);
+      green = (g - c.g).clamp(0, 255);
+      blue = (b - c.b).clamp(0, 255);
+      alpha = (a - c.a).clamp(0, 255);
     }
 
-    var c = "$other".asColor;
-    var red = (this.red - c.red).clamp(0, 255);
-    var green = (this.green - c.green).clamp(0, 255);
-    var blue = (this.blue - c.blue).clamp(0, 255);
-    var alpha = (this.alpha - c.alpha).clamp(0, 255);
-    return Color.fromARGB(alpha, red, green, blue);
+    return Color.from(alpha: alpha, red: red, green: green, blue: blue);
   }
 
   /// Compares this color to another color.
   int compareColor(dynamic other) {
     if (other is int) {
       return argb.compareTo(other);
-    } else if (other is NamedColor) {
-      return argb.compareTo(other.argb);
     } else if (other is Color) {
-      return argb.compareTo(other.value);
+      return argb.compareTo(other.argb);
     } else if (other is String) {
       return argb.compareTo(other.asColor.argb);
     } else if (other is HSLColor) {
-      return other.toColor().value.compareTo(argb);
+      return other.toColor().argb.compareTo(argb);
     } else if (other is HSVColor) {
-      return other.toColor().value.compareTo(argb);
+      return other.toColor().argb.compareTo(argb);
     } else {
       throw ArgumentError('Cannot compare $Color with ${other.runtimeType}');
     }
@@ -187,6 +228,10 @@ extension ColorExtensions<T extends Color> on T {
     var s = (saturation - color.saturation).abs();
     var v = (brightness - color.brightness).abs();
     return h + s + v;
+  }
+
+  int floatToInt8(double x) {
+    return (x * 255.0).round() & 0xff;
   }
 
   /// Returns a contrast color based on the brightness of the first color: A light color if the
@@ -219,13 +264,13 @@ extension ColorExtensions<T extends Color> on T {
   Color lerp(Color toColor, double amount) {
     if (amount.isNaN) return this;
     // start colours as lerp-able floats
-    double sr = red.toDouble();
-    double sg = green.toDouble();
-    double sb = blue.toDouble();
+    double sr = this.r.toDouble();
+    double sg = this.g.toDouble();
+    double sb = this.b.toDouble();
     // end colours as lerp-able floats
-    double er = toColor.red.toDouble();
-    double eg = toColor.green.toDouble();
-    double eb = toColor.blue.toDouble();
+    double er = toColor.r.toDouble();
+    double eg = toColor.g.toDouble();
+    double eb = toColor.b.toDouble();
     // lerp the colours to get the difference
     int r = (sr + (er - sr) * amount).round();
     int g = (sg + (eg - sg) * amount).round();
@@ -258,6 +303,16 @@ extension ColorExtensions<T extends Color> on T {
   ///
   /// Returns the blended color
   Color mergeWith(Color anotherColor, double percent) => lerp(anotherColor, percent);
+
+  Color mixChannel(Color other, double proportion) {
+    double mixChannel(double lower, double upper) => (lower + ((upper - lower) * proportion));
+    return Color.from(
+      alpha: mixChannel(a, other.a),
+      red: mixChannel(r, other.r),
+      green: mixChannel(g, other.g),
+      blue: mixChannel(b, other.b),
+    );
+  }
 
   /// Returns a color modified by the provided [degrees] int the color wheel.
   Color modColor(int degrees) => modColors([degrees]).first;

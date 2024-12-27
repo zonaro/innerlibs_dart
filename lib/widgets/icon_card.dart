@@ -187,12 +187,12 @@ class IconCard extends StatelessWidget {
           child: LayoutBuilder(builder: (context, cs) {
             return InkWell(
               borderRadius: BorderRadius.circular(radius),
-              splashColor: accentColor?.withOpacity(.7),
+              splashColor: accentColor?.withValues(alpha: .7),
               autofocus: autofocus,
               canRequestFocus: canRequestFocus,
-              focusColor: accentColor?.withOpacity(.3),
+              focusColor: accentColor?.withValues(alpha: .3),
               enableFeedback: enableFeedback,
-              hoverColor: accentColor?.withOpacity(.3),
+              hoverColor: accentColor?.withValues(alpha: .3),
               mouseCursor: mouseCursor,
               focusNode: focusNode,
               hoverDuration: hoverDuration,
@@ -215,7 +215,7 @@ class IconCard extends StatelessWidget {
                 height: height,
                 decoration: accentColor != null
                     ? BoxDecoration(
-                        color: accentColor?.withOpacity(.1),
+                        color: accentColor?.withValues(alpha: .1),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(radius),
                           bottomLeft: Radius.circular(radius),
@@ -233,7 +233,7 @@ class IconCard extends StatelessWidget {
                       Icon(
                         icon,
                         size: 50,
-                        color: accentColor?.withOpacity(1),
+                        color: accentColor?.withValues(alpha: 1),
                       ).setOpacity(opacity: .4).positionTop(top: 0),
                       Positioned(
                         bottom: 0,

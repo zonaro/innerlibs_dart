@@ -530,12 +530,12 @@ extension DialogExt on BuildContext {
                   remainTime != null && remainTime!.inSeconds > 0
                       ? CircularProgressIndicator(
                           value: 1 - (remainTime!.inSeconds / timeout!.inSeconds),
-                          backgroundColor: Colors.grey.withOpacity(.1),
+                          backgroundColor: Colors.grey.withValues(alpha: .1),
                         )
                       : const CircularProgressIndicator(),
                   if (loadingText != null) forceWidget(loadingText)!,
                   if (remainTimeWidget != null && remainTime != null && remainTime!.inSeconds > 0) forceWidget(remainTimeWidget(remainTime!))!,
-                ].whereNotNull().toList()
+                ].nonNulls.toList()
                   ..insertBetween(const Gap(20)),
               ),
             ),

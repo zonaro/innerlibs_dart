@@ -68,7 +68,7 @@ class CampoListaCidade extends StatelessWidget {
       },
       validator: validator,
       readOnly: readOnly,
-      textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", useIbge ? item?.ibge.toString() : null].whereNotNull().toList(),
+      textValueSelector: (item) => ["${item?.nome} - ${item?.estado.uf}", useIbge ? item?.ibge.toString() : null].nonNulls.toList(),
       searchOn: (item) => [
         item.nome,
         item.ibge,
@@ -493,7 +493,6 @@ class ValueFieldState<T> extends State<ValueField<T>> {
           searchOn: searchOn,
           levenshteinDistance: widget.levenshteinDistance,
         )
-      
         .toList();
 
     return values;

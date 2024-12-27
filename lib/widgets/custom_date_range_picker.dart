@@ -7,6 +7,53 @@ import 'package:intl/intl.dart';
 import '../date_range.dart';
 import 'custom_calendar.dart';
 
+/// Displays a custom date range picker dialog box.
+/// `context` The context in which to show the dialog.
+/// `dismissible` A boolean value indicating whether the dialog can be dismissed by tapping outside of it.
+/// `minimumDate` A DateTime object representing the minimum allowable date that can be selected in the date range picker.
+/// `maximumDate` A DateTime object representing the maximum allowable date that can be selected in the date range picker.
+/// `startDate` A nullable DateTime object representing the initial start date of the date range selection.
+/// `endDate` A nullable DateTime object representing the initial end date of the date range selection.
+/// `onApplyClick` A function that takes two DateTime parameters representing the selected start and end dates, respectively, and is called when the user taps the "Apply" button.
+/// `onCancelClick` A function that is called when the user taps the "Cancel" button.
+/// `backgroundColor` The background color of the dialog.
+/// `primaryColor` The primary color of the dialog.
+/// `fontFamily` The font family to use for the text in the dialog.
+
+void showCustomDateRangePicker(
+  BuildContext context, {
+  required bool dismissible,
+  required DateTime minimumDate,
+  required DateTime maximumDate,
+  DateRange? value,
+  required Function(DateRange?) onApplyClick,
+  required Function() onCancelClick,
+  required Color backgroundColor,
+  required Color primaryColor,
+  String? fontFamily,
+  double? width,
+  double? height,
+}) {
+  /// Request focus to take it away from any input field that might be in focus
+  FocusScope.of(context).requestFocus(FocusNode());
+
+  /// Show the CustomDateRangePicker dialog box
+  showDialog<dynamic>(
+    context: context,
+    builder: (BuildContext context) => CustomDateRangePicker(
+      barrierDismissible: true,
+      backgroundColor: backgroundColor,
+      primaryColor: primaryColor,
+      minimumDate: minimumDate,
+      maximumDate: maximumDate,
+      initialStartDate: value?.startDate,
+      initialEndDate: value?.endDate,
+      onApplyClick: onApplyClick,
+      onCancelClick: onCancelClick,
+    ),
+  );
+}
+
 /// A custom date range picker widget that allows users to select a date range.
 /// `const CustomDateRangePicker({
 ///   Key? key,
@@ -76,20 +123,6 @@ class CustomDateRangePickerState extends State<CustomDateRangePicker> with Ticke
   DateRange? selectedRange;
 
   @override
-  void initState() {
-    animationController = AnimationController(duration: const Duration(milliseconds: 400), vsync: this);
-
-    animationController?.forward();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    animationController?.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Center(
       child: Scaffold(
@@ -114,7 +147,7 @@ class CustomDateRangePickerState extends State<CustomDateRangePicker> with Ticke
                     color: widget.backgroundColor,
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                     boxShadow: <BoxShadow>[
-                      BoxShadow(color: Colors.grey.withOpacity(0.2), offset: const Offset(4, 4), blurRadius: 8.0),
+                      BoxShadow(color: Colors.grey.withValues(alpha: 0.2), offset: const Offset(4, 4), blurRadius: 8.0),
                     ],
                   ),
                   child: InkWell(
@@ -298,51 +331,18 @@ class CustomDateRangePickerState extends State<CustomDateRangePicker> with Ticke
       ),
     );
   }
-}
 
-/// Displays a custom date range picker dialog box.
-/// `context` The context in which to show the dialog.
-/// `dismissible` A boolean value indicating whether the dialog can be dismissed by tapping outside of it.
-/// `minimumDate` A DateTime object representing the minimum allowable date that can be selected in the date range picker.
-/// `maximumDate` A DateTime object representing the maximum allowable date that can be selected in the date range picker.
-/// `startDate` A nullable DateTime object representing the initial start date of the date range selection.
-/// `endDate` A nullable DateTime object representing the initial end date of the date range selection.
-/// `onApplyClick` A function that takes two DateTime parameters representing the selected start and end dates, respectively, and is called when the user taps the "Apply" button.
-/// `onCancelClick` A function that is called when the user taps the "Cancel" button.
-/// `backgroundColor` The background color of the dialog.
-/// `primaryColor` The primary color of the dialog.
-/// `fontFamily` The font family to use for the text in the dialog.
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
+  }
 
-void showCustomDateRangePicker(
-  BuildContext context, {
-  required bool dismissible,
-  required DateTime minimumDate,
-  required DateTime maximumDate,
-  DateRange? value,
-  required Function(DateRange?) onApplyClick,
-  required Function() onCancelClick,
-  required Color backgroundColor,
-  required Color primaryColor,
-  String? fontFamily,
-  double? width,
-  double? height,
-}) {
-  /// Request focus to take it away from any input field that might be in focus
-  FocusScope.of(context).requestFocus(FocusNode());
+  @override
+  void initState() {
+    animationController = AnimationController(duration: const Duration(milliseconds: 400), vsync: this);
 
-  /// Show the CustomDateRangePicker dialog box
-  showDialog<dynamic>(
-    context: context,
-    builder: (BuildContext context) => CustomDateRangePicker(
-      barrierDismissible: true,
-      backgroundColor: backgroundColor,
-      primaryColor: primaryColor,
-      minimumDate: minimumDate,
-      maximumDate: maximumDate,
-      initialStartDate: value?.startDate,
-      initialEndDate: value?.endDate,
-      onApplyClick: onApplyClick,
-      onCancelClick: onCancelClick,
-    ),
-  );
+    animationController?.forward();
+    super.initState();
+  }
 }

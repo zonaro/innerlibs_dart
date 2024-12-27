@@ -202,7 +202,7 @@ class CustomCalendarState extends State<CustomCalendar> {
                           decoration: BoxDecoration(
                             color: startDate != null && endDate != null
                                 ? getIsItStartAndEndDate(date) || getIsInRange(date)
-                                    ? widget.primaryColor.withOpacity(0.4)
+                                    ? widget.primaryColor.withValues(alpha: 0.4)
                                     : Colors.transparent
                                 : Colors.transparent,
                             borderRadius: BorderRadius.only(
@@ -255,7 +255,7 @@ class CustomCalendarState extends State<CustomCalendar> {
                             ),
                             boxShadow: getIsItStartAndEndDate(date)
                                 ? <BoxShadow>[
-                                    BoxShadow(color: Colors.grey.withOpacity(0.6), blurRadius: 4, offset: const Offset(0, 0)),
+                                    BoxShadow(color: Colors.grey.withValues(alpha: 0.6), blurRadius: 4, offset: const Offset(0, 0)),
                                   ]
                                 : null,
                           ),
@@ -267,7 +267,7 @@ class CustomCalendarState extends State<CustomCalendar> {
                                       ? Colors.white
                                       : currentMonthDate.month == date.month
                                           ? widget.primaryColor
-                                          : Colors.grey.withOpacity(0.6),
+                                          : Colors.grey.withValues(alpha: 0.6),
                                   fontSize: context.width > 360 ? 18 : 16,
                                   fontWeight: getIsItStartAndEndDate(date) ? FontWeight.bold : FontWeight.normal),
                             ),

@@ -108,25 +108,13 @@ class _CaminhaoPainter extends CustomPainter {
     Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.01538462;
-    paint0Stroke.color = strokeColor.withOpacity(1.0);
+    paint0Stroke.color = strokeColor.withValues(alpha: 1.0);
     paint0Stroke.strokeJoin = StrokeJoin.round;
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.09423077, size.height * 0.8862258, size.width * 0.8230769, size.height * 0.1097050),
-            bottomRight: Radius.circular(size.width * 0.07069231),
-            bottomLeft: Radius.circular(size.width * 0.07069231),
-            topLeft: Radius.circular(size.width * 0.07069231),
-            topRight: Radius.circular(size.width * 0.07069231)),
-        paint0Stroke);
+    canvas.drawRRect(RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.09423077, size.height * 0.8862258, size.width * 0.8230769, size.height * 0.1097050), bottomRight: Radius.circular(size.width * 0.07069231), bottomLeft: Radius.circular(size.width * 0.07069231), topLeft: Radius.circular(size.width * 0.07069231), topRight: Radius.circular(size.width * 0.07069231)), paint0Stroke);
 
     Paint parachoqueFill = Paint()..style = PaintingStyle.fill;
-    parachoqueFill.color = bumperColor.withOpacity(1.0);
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.09423077, size.height * 0.8862258, size.width * 0.8230769, size.height * 0.1097050),
-            bottomRight: Radius.circular(size.width * 0.07069231),
-            bottomLeft: Radius.circular(size.width * 0.07069231),
-            topLeft: Radius.circular(size.width * 0.07069231),
-            topRight: Radius.circular(size.width * 0.07069231)),
-        parachoqueFill);
+    parachoqueFill.color = bumperColor.withValues(alpha: 1.0);
+    canvas.drawRRect(RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.09423077, size.height * 0.8862258, size.width * 0.8230769, size.height * 0.1097050), bottomRight: Radius.circular(size.width * 0.07069231), bottomLeft: Radius.circular(size.width * 0.07069231), topLeft: Radius.circular(size.width * 0.07069231), topRight: Radius.circular(size.width * 0.07069231)), parachoqueFill);
 
     Path path_1 = Path();
     path_1.moveTo(size.width * 0.06923077, size.height * 0.7121058);
@@ -187,12 +175,12 @@ class _CaminhaoPainter extends CustomPainter {
     Paint paint3Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.01538462;
-    paint3Stroke.color = strokeColor.withOpacity(1.0);
+    paint3Stroke.color = strokeColor.withValues(alpha: 1.0);
     paint3Stroke.strokeJoin = StrokeJoin.round;
     canvas.drawPath(path_3, paint3Stroke);
 
     Paint paint3Fill = Paint()..style = PaintingStyle.fill;
-    paint3Fill.color = truckColor.withOpacity(1.0);
+    paint3Fill.color = truckColor.withValues(alpha: 1.0);
     canvas.drawPath(path_3, paint3Fill);
 
     Path path_4 = Path();
@@ -248,67 +236,31 @@ class _CaminhaoPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.01538462;
     paint7Stroke.color = strokeColor;
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.3500000, size.height * 0.9460834, size.width * 0.3076923, size.height * 0.01932859),
-            bottomRight: Radius.circular(size.width * 0.01146154),
-            bottomLeft: Radius.circular(size.width * 0.01146154),
-            topLeft: Radius.circular(size.width * 0.01146154),
-            topRight: Radius.circular(size.width * 0.01146154)),
-        paint7Stroke);
+    canvas.drawRRect(RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.3500000, size.height * 0.9460834, size.width * 0.3076923, size.height * 0.01932859), bottomRight: Radius.circular(size.width * 0.01146154), bottomLeft: Radius.circular(size.width * 0.01146154), topLeft: Radius.circular(size.width * 0.01146154), topRight: Radius.circular(size.width * 0.01146154)), paint7Stroke);
 
     Paint paint7Fill = Paint()..style = PaintingStyle.fill;
     paint7Fill.color = frontGrilleColor;
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.3500000, size.height * 0.9460834, size.width * 0.3076923, size.height * 0.01932859),
-            bottomRight: Radius.circular(size.width * 0.01146154),
-            bottomLeft: Radius.circular(size.width * 0.01146154),
-            topLeft: Radius.circular(size.width * 0.01146154),
-            topRight: Radius.circular(size.width * 0.01146154)),
-        paint7Fill);
+    canvas.drawRRect(RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.3500000, size.height * 0.9460834, size.width * 0.3076923, size.height * 0.01932859), bottomRight: Radius.circular(size.width * 0.01146154), bottomLeft: Radius.circular(size.width * 0.01146154), topLeft: Radius.circular(size.width * 0.01146154), topRight: Radius.circular(size.width * 0.01146154)), paint7Fill);
 
     Paint paint8Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.01538462;
     paint8Stroke.color = strokeColor;
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.1730769, size.height * 0.9420142, size.width * 0.1076923, size.height * 0.02034588),
-            bottomRight: Radius.circular(size.width * 0.01688462),
-            bottomLeft: Radius.circular(size.width * 0.01688462),
-            topLeft: Radius.circular(size.width * 0.01688462),
-            topRight: Radius.circular(size.width * 0.01688462)),
-        paint8Stroke);
+    canvas.drawRRect(RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.1730769, size.height * 0.9420142, size.width * 0.1076923, size.height * 0.02034588), bottomRight: Radius.circular(size.width * 0.01688462), bottomLeft: Radius.circular(size.width * 0.01688462), topLeft: Radius.circular(size.width * 0.01688462), topRight: Radius.circular(size.width * 0.01688462)), paint8Stroke);
 
     Paint paint8Fill = Paint()..style = PaintingStyle.fill;
     paint8Fill.color = headLightColor;
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.1730769, size.height * 0.9420142, size.width * 0.1076923, size.height * 0.02034588),
-            bottomRight: Radius.circular(size.width * 0.01688462),
-            bottomLeft: Radius.circular(size.width * 0.01688462),
-            topLeft: Radius.circular(size.width * 0.01688462),
-            topRight: Radius.circular(size.width * 0.01688462)),
-        paint8Fill);
+    canvas.drawRRect(RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.1730769, size.height * 0.9420142, size.width * 0.1076923, size.height * 0.02034588), bottomRight: Radius.circular(size.width * 0.01688462), bottomLeft: Radius.circular(size.width * 0.01688462), topLeft: Radius.circular(size.width * 0.01688462), topRight: Radius.circular(size.width * 0.01688462)), paint8Fill);
 
     Paint paint9Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.01538462;
     paint9Stroke.color = strokeColor;
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.7269231, size.height * 0.9420142, size.width * 0.1076923, size.height * 0.02034588),
-            bottomRight: Radius.circular(size.width * 0.01688462),
-            bottomLeft: Radius.circular(size.width * 0.01688462),
-            topLeft: Radius.circular(size.width * 0.01688462),
-            topRight: Radius.circular(size.width * 0.01688462)),
-        paint9Stroke);
+    canvas.drawRRect(RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.7269231, size.height * 0.9420142, size.width * 0.1076923, size.height * 0.02034588), bottomRight: Radius.circular(size.width * 0.01688462), bottomLeft: Radius.circular(size.width * 0.01688462), topLeft: Radius.circular(size.width * 0.01688462), topRight: Radius.circular(size.width * 0.01688462)), paint9Stroke);
 
     Paint paint9Fill = Paint()..style = PaintingStyle.fill;
     paint9Fill.color = headLightColor;
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.7269231, size.height * 0.9420142, size.width * 0.1076923, size.height * 0.02034588),
-            bottomRight: Radius.circular(size.width * 0.01688462),
-            bottomLeft: Radius.circular(size.width * 0.01688462),
-            topLeft: Radius.circular(size.width * 0.01688462),
-            topRight: Radius.circular(size.width * 0.01688462)),
-        paint9Fill);
+    canvas.drawRRect(RRect.fromRectAndCorners(Rect.fromLTWH(size.width * 0.7269231, size.height * 0.9420142, size.width * 0.1076923, size.height * 0.02034588), bottomRight: Radius.circular(size.width * 0.01688462), bottomLeft: Radius.circular(size.width * 0.01688462), topLeft: Radius.circular(size.width * 0.01688462), topRight: Radius.circular(size.width * 0.01688462)), paint9Fill);
 
     Path path_10 = Path();
     path_10.moveTo(size.width * 0.5019231, size.height * 0.7538149);
@@ -493,8 +445,7 @@ class _CaminhaoPainter extends CustomPainter {
     path_18.close();
 
     Paint paint18Fill = Paint()..style = PaintingStyle.fill;
-    paint18Fill.shader = ui.Gradient.linear(Offset(size.width * 0.09230769, size.height * 0.6571719), Offset(size.width * 0.9115385, size.height * 0.6571719),
-        [windshieldColor.makeLighter(), windshieldColor, windshieldColor.makeLighter()], [0, 0.51, 1]);
+    paint18Fill.shader = ui.Gradient.linear(Offset(size.width * 0.09230769, size.height * 0.6571719), Offset(size.width * 0.9115385, size.height * 0.6571719), [windshieldColor.makeLighter(), windshieldColor, windshieldColor.makeLighter()], [0, 0.51, 1]);
     canvas.drawPath(path_18, paint18Fill);
 
     Path path_19 = Path();

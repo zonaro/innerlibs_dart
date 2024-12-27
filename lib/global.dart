@@ -292,9 +292,10 @@ String flatString(dynamic value) {
   if (value is num) value = value.toString();
   if (value is DateTime) value = value.format();
   if (value is bool) value = value.toString();
+  if (value is Color) value = value.hexadecimal;
+  if (value is Widget) value = value.text;
   if (value is Map) value = value.values.join(", ");
   if (value is Iterable) value = value.join(", ");
-  if (value is Widget) value = value.text;
   return "$value".removeDiacritics.toLowerCase().trimAll;
 }
 

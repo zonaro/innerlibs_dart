@@ -267,7 +267,10 @@ extension FileExtensionPlus on File {
     return checksum;
   }
 
-  string get mimeType => lookupMimeType(name) ?? "application/octet-stream";
+  string get mimeType => lookupMimeType(this.path) ?? "application/octet-stream";
+
+  string get mimeTypeSubType => mimeType.after("/");
+  string get mimeTypeType => mimeType.before("/");
 }
 
 extension FileSystemEntityExtensionPlus on FileSystemEntity {
@@ -286,86 +289,98 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
     if (this is Directory) {
       return FontAwesome.folder;
     } else if (this is File) {
-      switch ((this as File).fileExtensionWithoutDot.toLowerCase()) {
-        case 'jpg':
-        case 'jpeg':
-        case 'png':
-        case 'gif':
-        case 'bmp':
-        case 'webp':
-        case 'svg':
-        case 'tiff':
-        case 'ico':
-          return FontAwesome.file_image;
-        case 'pdf':
-          return FontAwesome.file_pdf;
-        case 'doc':
-        case 'docx':
-          return FontAwesome.file_word;
-        case 'xls':
-        case 'xlsx':
-        case 'csv':
-          return FontAwesome.file_excel;
-        case 'ppt':
-        case 'pptx':
-        case 'pps':
-          return FontAwesome.file_powerpoint;
-        case 'txt':
-        case 'md':
-          return FontAwesome.file_lines;
-        case 'html':
-        case 'htm':
-        case 'css':
-        case 'js':
-        case 'dart':
-        case 'json':
-        case 'xml':
-        case 'yaml':
-        case 'yml':
-        case 'cs':
-        case 'java':
-        case 'php':
-        case 'py':
-          return FontAwesome.file_code;
-        case 'sql':
-          return FontAwesome.database_solid;
-        case 'zip':
-        case 'rar':
-        case '7z':
-        case 'tar':
-        case 'gz':
-        case 'bz2':
-        case 'xz':
-        case 'zst':
-          return FontAwesome.file_zipper;
-        case 'mp3':
-        case 'wav':
-        case 'flac':
-        case 'ogg':
-        case 'm4a':
-        case 'wma':
-        case 'aac':
-        case 'opus':
-          return FontAwesome.file_audio;
-        case 'mp4':
-        case 'mkv':
-        case 'webm':
-        case 'flv':
-        case 'mov':
-        case 'wmv':
-        case '3gp':
-        case '3g2':
-        case 'm4v':
-        case 'avi':
-          return FontAwesome.file_video;
-        case 'apk':
-        case 'appbundle':
-          return FontAwesome.android_brand;
-        case 'exe':
-        case 'msi':
-          return FontAwesome.window_maximize;
-        default:
-          return FontAwesome.file;
+      var f = this as File;
+      if (f.mimeTypeType == "image") {
+        return FontAwesome.file_image;
+      } else if (f.mimeTypeType == "video") {
+        return FontAwesome.file_video;
+      } else if (f.mimeTypeType == "audio") {
+        return FontAwesome.file_audio;
+      } else if (f.mimeTypeType == "text") {
+        return FontAwesome.file_code;
+      } else {
+        switch (f.fileExtensionWithoutDot.toLowerCase()) {
+          case 'jpg':
+          case 'jpeg':
+          case 'png':
+          case 'gif':
+          case 'bmp':
+          case 'webp':
+          case 'svg':
+          case 'tiff':
+          case 'ico':
+            return FontAwesome.file_image;
+          case 'pdf':
+            return FontAwesome.file_pdf;
+          case 'doc':
+          case 'docx':
+            return FontAwesome.file_word;
+          case 'xls':
+          case 'xlsx':
+          case 'csv':
+            return FontAwesome.file_excel;
+          case 'ppt':
+          case 'pptx':
+          case 'pps':
+            return FontAwesome.file_powerpoint;
+          case 'txt':
+          case 'md':
+            return FontAwesome.file_lines;
+          case 'html':
+          case 'htm':
+          case 'css':
+          case 'js':
+          case 'dart':
+          case 'json':
+          case 'xml':
+          case 'yaml':
+          case 'yml':
+          case 'cs':
+          case 'java':
+          case 'php':
+          case 'py':
+            return FontAwesome.file_code;
+          case 'sql':
+            return FontAwesome.database_solid;
+          case 'zip':
+          case 'rar':
+          case 'rar5':
+          case '7z':
+          case 'tar':
+          case 'gz':
+          case 'bz2':
+          case 'xz':
+          case 'zst':
+            return FontAwesome.file_zipper;
+          case 'mp3':
+          case 'wav':
+          case 'flac':
+          case 'ogg':
+          case 'm4a':
+          case 'wma':
+          case 'aac':
+          case 'opus':
+            return FontAwesome.file_audio;
+          case 'mp4':
+          case 'mkv':
+          case 'webm':
+          case 'flv':
+          case 'mov':
+          case 'wmv':
+          case '3gp':
+          case '3g2':
+          case 'm4v':
+          case 'avi':
+            return FontAwesome.file_video;
+          case 'apk':
+          case 'appbundle':
+            return FontAwesome.android_brand;
+          case 'exe':
+          case 'msi':
+            return FontAwesome.window_maximize;
+          default:
+            return FontAwesome.file;
+        }
       }
     }
     return FontAwesome.file;
@@ -377,6 +392,22 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
   /// Get the index of the file or directory in the parent directory
   int get index => parent.listFilesSync.map((x) => x.id).toList().indexOf(id);
 
+  bool get isAudio {
+    if (this is File) {
+      var f = this as File;
+      return f.mimeTypeType == "audio" || f.fileExtensionWithoutDot.flatContainsAny(["mp3", "wav", "flac", "ogg", "m4a", "wma", "aac", "opus"]);
+    }
+    return false;
+  }
+
+  bool get isDocument {
+    if (this is File) {
+      var f = this as File;
+      return f.fileExtensionWithoutDot.flatContainsAny(["pdf", "doc", "docx", "xls", "xlsx", "csv", "ppt", "pptx", "pps", "txt", "md", "html", "htm"]);
+    }
+    return false;
+  }
+
   bool get isEmpty {
     if (this is Directory) {
       return (this as Directory).listSync().isEmpty;
@@ -384,6 +415,215 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
       return (this as File).lengthSync() == 0;
     }
     return size == 0;
+  }
+
+  bool get isHidden => name.startsWith('.');
+
+  bool get isImage {
+    if (this is File) {
+      var f = this as File;
+      return f.mimeTypeType == "image" || f.fileExtensionWithoutDot.flatContainsAny(["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico"]);
+    }
+    return false;
+  }
+
+  bool get isSourceCode {
+    if (this is File) {
+      var f = this as File;
+      return f.fileExtensionWithoutDot.flatContainsAny([
+        "dart",
+        "html",
+        "css",
+        "js",
+        "json",
+        "xml",
+        "yaml",
+        "yml",
+        "cs",
+        "java",
+        "php",
+        "py",
+        "sql",
+        "sh",
+        "bat",
+        "cmd",
+        "ps1",
+        "psm1",
+        "psd1",
+        "ps1xml",
+        "psc1",
+        "psm1",
+        "psrc",
+        "pssc",
+        "cdxml",
+        "xaml",
+        "lua",
+        "pl",
+        "pm",
+        "t",
+        "r",
+        "rb",
+        "rake",
+        "gemspec",
+        "pp",
+        "podspec",
+        "scala",
+        "scm",
+        "ss",
+        "st",
+        "swift",
+        "vb",
+        "vbs",
+        "vbe",
+        "wsf",
+        "wsc",
+        "wsh",
+        "c",
+        "h",
+        "cpp",
+        "hpp",
+        "cc",
+        "hh",
+        "cxx",
+        "hxx",
+        "c++",
+        "h++",
+        "cs",
+        "m",
+        "mm",
+        "go",
+        "rs",
+        "ts",
+        "tsx",
+        "jl",
+        "kt",
+        "kts",
+        "clj",
+        "cljs",
+        "cljc",
+        "edn",
+        "scala",
+        "groovy",
+        "gradle",
+        "kt",
+        "kts",
+        "pl",
+        "pm",
+        "t",
+        "r",
+        "rb",
+        "rake",
+        "gemspec",
+        "pp",
+        "podspec",
+        "scala",
+        "scm",
+        "ss",
+        "st",
+        "swift",
+        "vb",
+        "vbs",
+        "vbe",
+        "wsf",
+        "wsc",
+        "wsh",
+        "c",
+        "h",
+        "cpp",
+        "hpp",
+        "cc",
+        "hh",
+        "cxx",
+        "hxx",
+        "c++",
+        "h++",
+        "cs",
+        "m",
+        "mm",
+        "go",
+        "rs",
+        "ts",
+        "tsx",
+        "jl",
+        "kt",
+        "kts",
+        "clj",
+        "cljs",
+        "cljc",
+        "edn",
+        "scala",
+        "groovy",
+        "gradle",
+        "kt",
+        "kts",
+        "pl",
+        "pm",
+        "t",
+        "r",
+        "rb",
+        "rake",
+        "gemspec",
+        "pp",
+        "podspec",
+        "scala",
+        "scm",
+        "ss",
+        "st",
+        "swift",
+        "vb",
+        "vbs",
+        "vbe",
+        "wsf",
+        "wsc",
+        "wsh",
+        "c",
+        "h",
+        "cpp",
+        "hpp",
+        "cc",
+        "hh",
+        "cxx",
+        "hxx",
+        "c++",
+        "h++",
+        "cs",
+        "m",
+        "mm",
+        "go",
+        "rs",
+        "ts",
+        "tsx",
+        "jl",
+        "kt",
+        "kts",
+        "clj",
+        "cljs",
+        "cljc",
+        "edn",
+        "scala",
+        "groovy",
+        "gradle",
+        "kt",
+        "kts",
+      ]);
+    }
+    return false;
+  }
+
+  bool get isText {
+    if (this is File) {
+      var f = this as File;
+      return f.mimeTypeType == "text" || f.fileExtensionWithoutDot.flatContainsAny(["txt", "md"]) || isSourceCode;
+    }
+    return false;
+  }
+
+  bool get isVideo {
+    if (this is File) {
+      var f = this as File;
+      return f.mimeTypeType == "video" || f.fileExtensionWithoutDot.flatContainsAny(["mp4", "mkv", "webm", "flv", "mov", "wmv", "3gp", "3g2", "m4v", "avi"]);
+    }
+    return false;
   }
 
   date get lastAccessed {
@@ -433,9 +673,10 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
     return 0;
   }
 
-  /// Get the title of the file or directory
+  /// Get the title of the file or directory.
+  /// 
   /// The title is the name of the file or directory without the extension. If the name is camelCase or snake_case, it will be converted into Title Case
-  string get title => nameWithoutExtension.friendlyTitle;
+  string get title => nameWithoutExtension.friendlyTitle();
 
   /// Get the type description of the file or directory
   string get typeDescription {

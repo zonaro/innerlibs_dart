@@ -194,7 +194,7 @@ class TagXml extends XmlElement implements Validator, Comparable {
     if (xml.isBlank) return [];
     try {
       var tags = XmlDocument.parse(xml).findAllElements(constructor().tagName);
-      var typedTags = tags.map((x) => mutate(x, constructor)).whereNotNull().toList();
+      var typedTags = tags.map((x) => mutate(x, constructor)).nonNulls.toList();
       return typedTags;
     } catch (e) {
       consoleLog("$e", error: e);

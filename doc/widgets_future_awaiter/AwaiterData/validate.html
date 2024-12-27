@@ -102,7 +102,7 @@ Iterable&lt;String&gt; validate() {
     if (validations.isEmpty) {
       return value.isValid() ? [] : [&quot;Data is invalid&quot;];
     }
-    return validations.map((x) =&gt; x(value)).whereNotNull();
+    return validations.map((x) =&gt; x(value)).nonNulls;
   }
   return [];
 }</code></pre>

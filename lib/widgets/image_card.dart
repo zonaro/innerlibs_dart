@@ -208,9 +208,9 @@ class ImageCard extends StatelessWidget {
           splashColor: accentColor,
           autofocus: autofocus,
           canRequestFocus: canRequestFocus,
-          focusColor: accentColor.withOpacity(.7),
+          focusColor: accentColor.withValues(alpha: .7),
           enableFeedback: enableFeedback,
-          hoverColor: accentColor.withOpacity(.7),
+          hoverColor: accentColor.withValues(alpha: .7),
           mouseCursor: mouseCursor,
           focusNode: focusNode,
           hoverDuration: hoverDuration,
@@ -241,7 +241,7 @@ class ImageCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: title.isValid() || description.isValid()
                     ? LinearGradient(
-                        colors: [accentColor, (accentColor).withOpacity(.3), Colors.transparent],
+                        colors: [accentColor, (accentColor).withValues(alpha: .3), Colors.transparent],
                         begin: begin,
                         end: end,
                       )

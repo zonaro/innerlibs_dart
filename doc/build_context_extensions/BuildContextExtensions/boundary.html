@@ -80,7 +80,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">RenderRepaintBoundary? get boundary =&gt; [findRenderObject()].whereNotNull().whereType&lt;RenderRepaintBoundary&gt;().firstOrNull;</code></pre>
+  <pre class="language-dart"><code class="language-dart">RenderRepaintBoundary? get boundary =&gt; [findRenderObject()].nonNulls.whereType&lt;RenderRepaintBoundary&gt;().firstOrNull;</code></pre>
 </section>
 
   </section>

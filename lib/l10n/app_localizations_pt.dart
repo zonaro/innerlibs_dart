@@ -154,6 +154,9 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get country => 'País';
 
   @override
+  String get create => 'Criar';
+
+  @override
   String get darkMode => 'Modo Escuro';
 
   @override
@@ -185,6 +188,16 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get delete => 'Excluir';
+
+  @override
+  String deletedItem(String item) {
+    return '$item excluído';
+  }
+
+  @override
+  String deletedItemFrom(String item, String location) {
+    return '$item excluído de $location';
+  }
 
   @override
   String get device => 'Dispositivo';
@@ -401,6 +414,11 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   }
 
   @override
+  String itemDeletedSuccessfully(String item) {
+    return '$item excluído com sucesso';
+  }
+
+  @override
   String itemLibrary(String item) {
     return 'Biblioteca de $item';
   }
@@ -413,6 +431,16 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   @override
   String itemNotFoundIn(String item, String location) {
     return '$item não encontrado em $location';
+  }
+
+  @override
+  String itemSavedSuccessfully(String item) {
+    return '$item salvo com sucesso';
+  }
+
+  @override
+  String itemUpdatedSuccessfully(String item) {
+    return '$item atualizado com sucesso';
   }
 
   @override
@@ -582,6 +610,16 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   String get previous => 'Anterior';
 
   @override
+  String recentItem(String item) {
+    return '$item recente';
+  }
+
+  @override
+  String recentItems(String items) {
+    return '$items recentes';
+  }
+
+  @override
   String get register => 'Registrar';
 
   @override
@@ -597,6 +635,12 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get save => 'Salvar';
+
+  @override
+  String get saved => 'Salvo';
+
+  @override
+  String get sdCard => 'Cartão SD';
 
   @override
   String get search => 'Pesquisar';
@@ -646,6 +690,24 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
 
   @override
   String get size => 'Tamanho';
+
+  @override
+  String get storage => 'Armazenamento';
+
+  @override
+  String get storageAvailable => 'Armazenamento Disponível';
+
+  @override
+  String get storageDevices => 'Dispositivos de Armazenamento';
+
+  @override
+  String get storageFree => 'Armazenamento Livre';
+
+  @override
+  String get storageSize => 'Tamanho do Armazenamento';
+
+  @override
+  String get storageUsed => 'Armazenamento Usado';
 
   @override
   String get success => 'Sucesso';
@@ -769,5 +831,15 @@ class InnerLibsLocalizationsPt extends InnerLibsLocalizations {
   @override
   String yourItem(String item) {
     return 'Seu $item';
+  }
+
+  @override
+  String addNewItem(String item) {
+    return 'Adicionar Novo $item';
+  }
+
+  @override
+  String addItem(String item) {
+    return 'Adicionar $item';
   }
 }
