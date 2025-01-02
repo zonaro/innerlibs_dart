@@ -1,6 +1,6 @@
 name: innerlibs
 description: All-in-one extensions, widgets and tools to improve dart code.
-version: 0.0.1-dev.1
+version: 0.0.1-dev.2
 homepage: http://zonaro.github.io/innerlibs_dart
 
 environment:
