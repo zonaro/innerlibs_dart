@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:innerlibs/innerlibs.dart';
 
 class _InnerOperation {
-  VoidCallback? callback;
+  VoidCallback callback;
   VoidCallback? onAfter;
   Timer timer;
 
@@ -105,7 +105,7 @@ extension InnerDebounce on GetInterface {
   /// `fire(tag)` and then `cancel(tag)`.
   void fireDebounce(String tag) {
     if (_debounceOperations[tag]?.callback != null) {
-      _debounceOperations[tag]?.callback!();
+      _debounceOperations[tag]?.callback();
     }
   }
 
@@ -139,13 +139,11 @@ extension InnerDebounce on GetInterface {
         final operation = _rateLimitOperations[tag];
 
         if (operation != null) {
-          if (operation.callback != null) {
-            operation.callback!();
-          }
+          operation.callback();
           if (operation.onAfter != null) {
             operation.onAfter!();
           }
-          operation.callback = null;
+          operation.callback = () {};
           operation.onAfter = null;
         }
       }),
