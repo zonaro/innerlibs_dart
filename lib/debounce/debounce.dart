@@ -61,16 +61,6 @@ extension InnerDebounce on GetInterface {
     _throttleOperations.remove(tag);
   }
 
-  /// Returns the number of active debouncers (debouncers that haven't yet called their
-  /// [onExecute] methods).
-  int countDebounce() => _debounceOperations.length;
-
-  /// Returns the number of active rate limiters
-  int countRateLimit() => _rateLimitOperations.length;
-
-  /// Returns the number of active throttles
-  int countThrottle() => _throttleOperations.length;
-
   /// Will delay the execution of [onExecute] with the given [duration]. If another call to
   /// debounce() with the same [tag] happens within this duration, the first call will be
   /// cancelled and the debouncer will start waiting for another [duration] before executing
@@ -108,6 +98,33 @@ extension InnerDebounce on GetInterface {
       _debounceOperations[tag]?.callback();
     }
   }
+
+  /// Returns a list of active debouncers.
+  ///
+  /// Active debouncers are those that have not yet executed their [onExecute] methods.
+  Iterable<String> getDebounceTags() => _debounceOperations.keys;
+
+  /// Returns the tags of the active rate limiters.
+  ///
+  /// This function retrieves and returns a list of tags associated with
+  /// the currently active rate limiters. Rate limiters are used to control
+  /// the rate at which certain operations are allowed to execute, preventing
+  /// them from being performed too frequently.
+  ///
+  /// Returns:
+  ///   A list of strings representing the tags of the active rate limiters.
+
+  Iterable<String> getRateLimitTags() => _rateLimitOperations.keys;
+
+  /// Returns a list of all active throttle tags.
+  ///
+  /// Throttle tags are used to identify and manage throttled functions.
+  /// This method provides a way to retrieve all currently active tags,
+  /// which can be useful for debugging or monitoring purposes.
+  ///
+  /// Returns:
+  ///   A list of strings representing the active throttle tags.
+  Iterable<String> getThrottleTags() => _throttleOperations.keys;
 
   /// Will execute [onExecute] immediately and record additional attempts to
   /// call rateLimit with the same [tag] happens until the given [duration] has passed
