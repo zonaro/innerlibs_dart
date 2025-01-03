@@ -99,6 +99,17 @@ extension InnerDebounce on GetInterface {
     }
   }
 
+  /// Fires the debounce action associated with the given [tag] and then cancels the debounce.
+  ///
+  /// This function first calls [fireDebounce] with the provided [tag] to execute the debounce action.
+  /// After that, it calls [cancelDebounce] with the same [tag] to cancel any further debounce actions.
+  ///
+  /// [tag]: A string identifier used to reference the debounce action.
+  void fireDebounceEnd(String tag) {
+    fireDebounce(tag);
+    cancelDebounce(tag);
+  }
+
   /// Returns a list of active debouncers.
   ///
   /// Active debouncers are those that have not yet executed their [onExecute] methods.

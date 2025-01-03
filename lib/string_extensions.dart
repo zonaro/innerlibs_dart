@@ -2276,7 +2276,7 @@ extension StringExtensions on String {
     return out;
   }
 
-  /// return a string in a firendly format
+  /// return a string in a friendly format
   string friendlyTitle([bool? forceCase]) => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(Get.endOfSentenceChars).toTitleCase(forceCase);
 
   /// Returns the day name of the date provided in `String` format.
@@ -2472,6 +2472,17 @@ extension StringExtensions on String {
   /// Return [this] if not blank. Otherwise return [newString].
   S ifBlank<S extends string>(S newString) => asIf((s) => (s ?? "").isNotBlank, this, newString) as S;
 
+  int indexOfAny(Iterable<Pattern> patterns, [int start = 0]) {
+    int index = length;
+    for (var pattern in patterns) {
+      int i = indexOf(pattern, start);
+      if (i != -1 && i < index) {
+        index = i;
+      }
+    }
+    return index == length ? -1 : index;
+  }
+
   /// Inserts a `String` at the specified index.
   ///
   /// If the `String` is `null`, an `ArgumentError` is thrown.
@@ -2603,6 +2614,17 @@ extension StringExtensions on String {
       return blankIfNull;
     }
     return toDate(format, locale).lastDayOfMonth.format('EEEE');
+  }
+
+  int lastIndexOfAny(Iterable<Pattern> patterns, [int? start]) {
+    int index = -1;
+    for (var pattern in patterns) {
+      int i = lastIndexOf(pattern, start);
+      if (i > index) {
+        index = i;
+      }
+    }
+    return index;
   }
 
   /// Returns the last element after splitting the string using the specified [pattern].
@@ -3204,6 +3226,14 @@ extension StringExtensions on String {
     }
   }
 
+  /// First Splits the String into a List of lines, and then split each line into a list of words and word splitters following the mode
+  ///
+  /// [mode] can be [WordSplitMode.wordsOnly], [WordSplitMode.whitespace], [WordSplitMode.keepSplitters]
+  ///
+  /// - if [mode] is [WordSplitMode.wordsOnly], the string is splitted by any char of [Get.wordSplitters] resulting in a list containing only words. this is the default mode
+  /// - if [mode] is [WordSplitMode.whitespace], the string is splitted by any char of [Get.whiteSpaceOrBreakChars] resulting in a list containing only words and word splitters, excluding white spaces or breaklines.
+  /// - if [mode] is [WordSplitMode.keepSplitters], the final list will contain all characters of original string. Each entry of the list will be a full word or a word splitter, in exactly the same order as the original string.
+
   Iterable<Iterable<string>> splitWordsLines([WordSplitMode mode = WordSplitMode.wordsOnly]) => splitLines.map((x) => x.splitWords(mode)).toList();
 
   /// Squeezes the `String` by removing repeats of a given character.
@@ -3332,28 +3362,48 @@ extension StringExtensions on String {
     return result.trim();
   }
 
+  /// Trims the current string by removing any of the specified patterns from both the start and the end of the string.
+  ///
+  /// This method first removes any of the specified patterns from the end of the string,
+  /// and then removes any of the specified patterns from the start of the string.
+  ///
+  /// - Parameter patterns: An iterable collection of string patterns to be removed from the start and end of the string.
+  /// - Returns: A new string with the specified patterns removed from both the start and the end.
   string trimAny(Iterable<String?> patterns) => removeLastAny(patterns).removeFirstAny(patterns);
 
-  /// Truncates a long `String` in the middle while retaining the beginning and the end.
+  /// Truncates the string to a specified maximum number of characters.
   ///
-  /// [maxChars] must be more than 0.
+  /// If the string is blank, or if `maxChars` is less than or equal to 0, or if
+  /// `maxChars` is greater than the length of the string, the function returns
+  /// an empty string or the original string if it is not null.
   ///
-  /// If [maxChars] > String.length the same `String` is returned without truncation.
+  /// If the length of the string is less than or equal to `maxChars`, the
+  /// function returns the original string.
   ///
-  /// ### Example
+  /// If the string is truncated, an optional ellipsis (`...`) can be appended
+  /// to the truncated string by setting the `ellipsis` parameter to `true`.
   ///
-  /// ```dart
-  /// String f = 'congratulations';
-  /// String truncated = f.truncateMiddle(5); // Returns 'con...ns'
-  /// ```
-  String truncateMiddle(int maxChars) {
+  /// - Parameters:
+  ///   - maxChars: The maximum number of characters to keep in the string.
+  ///   - ellipsis: A boolean value indicating whether to append an ellipsis
+  ///     (`...`) to the truncated string. Defaults to `false`.
+  ///
+  /// - Returns: The truncated string, optionally with an ellipsis appended.
+  String truncateOnWord(int maxChars, [bool ellipsis = false]) {
     if (isBlank || maxChars <= 0 || maxChars > length) {
       return blankIfNull;
     }
 
-    int leftChars = (maxChars / 2).round();
-    int rightChars = maxChars - leftChars;
-    return '${first(leftChars)}...${last(rightChars)}';
+    if (length <= maxChars) {
+      return this;
+    }
+
+    int index = lastIndexOfAny(Get.wordSplitters, maxChars);
+    if (index == -1) {
+      return blankIfNull;
+    }
+
+    return first(index) + (ellipsis ? '...' : '');
   }
 
   /// Returns a Set of the uncommon characters between the two `String`s.

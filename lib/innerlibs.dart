@@ -70,6 +70,7 @@ export 'theme_extension.dart';
 export 'tooltip_extension.dart';
 export 'validation_interface.dart';
 export 'widget_ext.dart';
+export 'debounce.dart';
 export 'widgets/auto_size_text.dart';
 export 'widgets/avatar_image.dart';
 export 'widgets/brazil_plate.dart';

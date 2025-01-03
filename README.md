@@ -15,7 +15,7 @@ The project was born out of the need to repeat code in various projects. Initial
 - Export methods from many external libraries like `darq`, `GetX`, `collection` and more
 
 
-and many other functions, see the complete documentation [here](http://zonaro.github.io/innerlibs_dart)
+and many other functions, see the complete documentation [here](https://zonaro.github.io/innerlibs_dart)
 
 ## Getting started
 
