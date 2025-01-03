@@ -113,7 +113,7 @@ and</li>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
   return DateTimePickerFormField(
-    decoration: outlineInputStyle(label, icon),
+    decoration: outlineInputStyle(context, label, icon),
     invalidDateMessage: context.translations.invalidItem(context.translations.date),
     outOfRangeMessage: context.translations.dateOutOfRange,
     value: value ?? now,
@@ -149,7 +149,7 @@ Widget build(BuildContext context) {
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

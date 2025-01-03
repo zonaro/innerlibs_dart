@@ -89,7 +89,7 @@
       onFieldSubmitted: widget.onFieldSubmitted,
       inputFormatters: _inputFormatters,
       keyboardType: _keyboardType,
-      decoration: outlineInputStyle(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
+      decoration: outlineInputStyle(context, widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
       validator: (s) {
         if (widget.validator != null) {
           try {
@@ -132,7 +132,7 @@
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

@@ -9,3 +9,7 @@
 ## 0.0.1-dev.3
 
 * Add debounce functions
+
+## 0.0.1-dev.4
+
+* remove getX

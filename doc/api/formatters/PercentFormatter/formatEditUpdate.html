@@ -86,11 +86,12 @@ the incoming new text value.</p>
   <pre class="language-dart"><code class="language-dart">@override
 TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
   locale ??= platformLocaleCode;
-  decimalDigits ??= NumberFormat.decimalPattern(locale).decimalDigits ?? 4;
-  var simb = Get.localeNumberSymbols(locale!);
-  var decimalSeparator = simb?.DECIMAL_SEP ?? &quot;.&quot;;
-  var minusSign = simb?.MINUS_SIGN ?? &quot;-&quot;;
-  var percentSign = simb?.PERCENT ?? &quot;%&quot;;
+  var form = NumberFormat.decimalPattern(locale);
+  decimalDigits ??= form.decimalDigits ?? 4;
+  var simb = form.symbols;
+  var decimalSeparator = simb.DECIMAL_SEP;
+  var minusSign = simb.MINUS_SIGN;
+  var percentSign = simb.PERCENT;
 
   String formattedValue = &quot;&quot;;
 
@@ -193,7 +194,7 @@ TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue ne
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

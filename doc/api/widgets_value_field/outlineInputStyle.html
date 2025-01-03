@@ -58,7 +58,8 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="https://api.flutter.dev/flutter/material/InputDecoration-class.html">InputDecoration</a></span>
-<span class="name ">outlineInputStyle</span>(<wbr>[<ol class="parameter-list"> <li><span class="parameter" id="outlineInputStyle-param-label"><span class="type-annotation"><a href="../innerlibs/string.html">string</a>?</span> <span class="parameter-name">label</span>, </span></li>
+<span class="name ">outlineInputStyle</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="outlineInputStyle-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span>, [</span></li>
+<li><span class="parameter" id="outlineInputStyle-param-label"><span class="type-annotation"><a href="../innerlibs/string.html">string</a>?</span> <span class="parameter-name">label</span>, </span></li>
 <li><span class="parameter" id="outlineInputStyle-param-icon"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/IconData-class.html">IconData</a>?</span> <span class="parameter-name">icon</span>, </span></li>
 <li><span class="parameter" id="outlineInputStyle-param-onIconTap"><span class="type-annotation">void</span> <span class="parameter-name">onIconTap</span>()?, </span></li>
 <li><span class="parameter" id="outlineInputStyle-param-color"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a>?</span> <span class="parameter-name">color</span>, </span></li>
@@ -76,16 +77,16 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">InputDecoration outlineInputStyle([string? label, IconData? icon, void Function()? onIconTap, Color? color, dynamic suffixIcon, void Function()? onSuffixIconTap, InputDecoration? other]) {
+  <pre class="language-dart"><code class="language-dart">InputDecoration outlineInputStyle(BuildContext context, [string? label, IconData? icon, void Function()? onIconTap, Color? color, dynamic suffixIcon, void Function()? onSuffixIconTap, InputDecoration? other]) {
   other = other ?? const InputDecoration();
   return other.copyWith(
     fillColor: Colors.transparent,
     label: label.asNullableText(),
-    icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
-    suffixIcon: suffixIcon == null ? null : forceWidget(suffixIcon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onSuffixIconTap),
+    icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? context.colorScheme.onSurface))?.onTap(onIconTap),
+    suffixIcon: suffixIcon == null ? null : forceWidget(suffixIcon, style: TextStyle(color: color ?? context.colorScheme.onSurface))?.onTap(onSuffixIconTap),
     border: OutlineInputBorder(
       borderRadius: const BorderRadius.all(Radius.circular(5)),
-      borderSide: BorderSide(color: color ?? Get.context!.colorScheme.primary, width: 20),
+      borderSide: BorderSide(color: color ?? context.colorScheme.primary, width: 20),
     ),
     filled: true,
   );
@@ -116,7 +117,7 @@
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

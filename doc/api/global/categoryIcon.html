@@ -73,9 +73,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IconData categoryIcon(String category) {
-  return category.getUniqueWords.whereValid.map((x) =&gt; categoryIcons[x.toLowerCase()]).mostFrequent ?? Icons.category;
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">IconData categoryIcon(String category) =&gt; category.getUniqueWords.whereValid.map((x) =&gt; categoryIcons[x.toLowerCase()]).mostFrequent ?? Icons.category;</code></pre>
 </section>
 
 
@@ -102,7 +100,7 @@
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

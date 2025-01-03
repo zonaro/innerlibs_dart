@@ -78,9 +78,9 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">int get currentLineIndex {
   var cursorPos = selection.base.offset;
-  String txt = text.replaceMany(Get.breaklineChars, Get.breakline);
+  String txt = text.replaceMany(breaklineChars, breakline);
   var textpart = txt.first(cursorPos);
-  var curIndex = textpart.count(Get.breakline);
+  var curIndex = textpart.count(breakline);
   curIndex = curIndex.clamp(0, countLines - 1);
   return curIndex;
 }</code></pre>
@@ -113,7 +113,7 @@
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

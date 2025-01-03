@@ -88,12 +88,12 @@
   void Function()? onSuffixIconTap,
 }) {
   var tt = &quot;${context.translations.search} $title:&quot;.trim();
-  return Get.screenTier &lt; ScreenTier.sm
+  return context.screenTier &lt; ScreenTier.sm
       ? PopupProps.modalBottomSheet(
           constraints: const BoxConstraints.expand(),
-          searchFieldProps: TextFieldProps(decoration: outlineInputStyle(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
+          searchFieldProps: TextFieldProps(decoration: outlineInputStyle(context, tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
           title: InkWell(
-            onTap: () =&gt; Get.back(),
+            onTap: () =&gt; context.pop(),
             child: Padding(
               padding: 6.allAround,
               child: Row(
@@ -101,12 +101,12 @@
                 children: [
                   const Icon(Icons.arrow_back),
                   const Gap(10),
-                  Get.context!.translations.back.asText().fontSize(10),
+                  context.translations.back.asText().fontSize(10),
                 ],
               ).toCenter().paddingAll(8),
             ),
           ),
-          modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: Get.context?.colorScheme.surfaceBright),
+          modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: context.colorScheme.surfaceBright),
           showSearchBox: true,
           emptyBuilder: (context, search) =&gt; emptySearch(context, search, title ?? &quot;&quot;),
           itemBuilder: itemBuilder,
@@ -116,7 +116,7 @@
           showSearchBox: true,
           emptyBuilder: (context, search) =&gt; emptySearch(context, search, title ?? &quot;&quot;),
           itemBuilder: itemBuilder,
-          searchFieldProps: TextFieldProps(decoration: outlineInputStyle(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
+          searchFieldProps: TextFieldProps(decoration: outlineInputStyle(context, tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
         );
 }</code></pre>
 </section>
@@ -146,7 +146,7 @@
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

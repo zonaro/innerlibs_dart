@@ -79,7 +79,7 @@
 }) =&gt;
     ColorScheme.fromImageProvider(
       provider: this,
-      brightness: brightness ?? Get.theme.brightness,
+      brightness: brightness ?? platformBrightness,
       dynamicSchemeVariant: dynamicSchemeVariant,
       contrastLevel: contrastLevel,
     );</code></pre>
@@ -110,7 +110,7 @@
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

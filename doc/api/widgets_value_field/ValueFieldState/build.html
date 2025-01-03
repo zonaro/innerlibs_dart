@@ -203,7 +203,7 @@ Widget build(BuildContext context) {
     return DropdownSearch&lt;T&gt;(
       filterFn: (item, filters) =&gt;
           filters.isBlank ||
-          Get.fullFilterFunction(
+          FilterFunctions.fullFilterFunction(
             searchTerms: filters,
             searchOnItems: searchOn(item),
           ),
@@ -216,7 +216,7 @@ Widget build(BuildContext context) {
       ),
       selectedItem: _value,
       decoratorProps: DropDownDecoratorProps(
-        decoration: outlineInputStyle(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
+        decoration: outlineInputStyle(context, widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
       ),
       items: (v, l) async =&gt; await allOptions(v),
       itemAsString: (x) =&gt; textSelector(x),
@@ -258,7 +258,7 @@ Widget build(BuildContext context) {
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

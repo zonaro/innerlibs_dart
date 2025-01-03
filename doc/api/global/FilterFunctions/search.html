@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the search method from the FilterFunctions extension, for the Dart programming language.">
-  <title>search method - FilterFunctions extension - global library - Dart API</title>
+  <meta name="description" content="API docs for the search method from the FilterFunctions class, for the Dart programming language.">
+  <title>search method - FilterFunctions class - global library - Dart API</title>
 
 
   
@@ -26,8 +26,8 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../global/global-library.html">global.dart</a></li>
-    <li><a href="../../global/FilterFunctions.html">FilterFunctions</a></li>
-    <li class="self-crumb">search&lt;<wbr><span class="type-parameter">T</span>&gt; method</li>
+    <li><a href="../../global/FilterFunctions-class.html">FilterFunctions</a></li>
+    <li class="self-crumb">search&lt;<wbr><span class="type-parameter">T</span>&gt; static method</li>
   </ol>
   <div class="self-name">search</div>
   <form class="search navbar-right" role="search">
@@ -49,10 +49,10 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="global&#47;FilterFunctions-extension-sidebar.html"
+    data-above-sidebar="global&#47;FilterFunctions-class-sidebar.html"
     data-below-sidebar="">
     <div>
-<h1><span class="kind-method">search&lt;<wbr><span class="type-parameter">T</span>&gt;</span> method 
+<h1><span class="kind-method">search&lt;<wbr><span class="type-parameter">T</span>&gt;</span> static method 
 </h1></div>
 
     <section class="multi-line-signature">
@@ -92,7 +92,7 @@ The relevance is determined by the number of matches and the Levenshtein distanc
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Iterable&lt;T&gt; search&lt;T&gt;({
+  <pre class="language-dart"><code class="language-dart">static Iterable&lt;T&gt; search&lt;T&gt;({
   required Iterable&lt;T&gt; items,
   required dynamic searchTerms,
   SearchOnFunction&lt;T&gt;? searchOn,
@@ -128,7 +128,7 @@ The relevance is determined by the number of matches and the Levenshtein distanc
   var l = [
     ...items.where(
       (item) {
-        return Get.searchFunction(
+        return searchFunction(
           searchTerms: searches,
           searchOnItems: searchOn!(item),
           ignoreCase: ignoreCase,
@@ -185,11 +185,11 @@ The relevance is determined by the number of matches and the Levenshtein distanc
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">innerlibs</a></li>
     <li><a href="../../global/global-library.html">global</a></li>
-    <li><a href="../../global/FilterFunctions.html">FilterFunctions</a></li>
-    <li class="self-crumb">search&lt;<wbr><span class="type-parameter">T</span>&gt; method</li>
+    <li><a href="../../global/FilterFunctions-class.html">FilterFunctions</a></li>
+    <li class="self-crumb">search&lt;<wbr><span class="type-parameter">T</span>&gt; static method</li>
 </ol>
 
-    <h5>FilterFunctions extension on <a href="https://pub.dev/documentation/get/4.6.6/get/GetInterface-class.html">GetInterface</a></h5>
+    <h5>FilterFunctions class</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
@@ -198,7 +198,7 @@ The relevance is determined by the number of matches and the Levenshtein distanc
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

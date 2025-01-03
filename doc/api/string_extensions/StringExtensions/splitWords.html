@@ -83,15 +83,15 @@
   if (isBlank) {
     return [];
   } else if (mode == WordSplitMode.wordsOnly) {
-    return splitAny(Get.wordSplitters, false);
+    return splitAny(wordSplitters, false);
   } else if (mode == WordSplitMode.whitespace) {
-    return splitAny(Get.whiteSpaceOrBreakChars, false);
+    return splitAny(whiteSpaceOrBreakChars, false);
   } else if (mode == WordSplitMode.keepSplitters) {
     var entries = &lt;string&gt;[];
     var entry = &#39;&#39;;
     for (var i = 0; i &lt; length; i++) {
       var char = this[i];
-      if (Get.wordSplitters.contains(char)) {
+      if (wordSplitters.contains(char)) {
         if (entry.isNotEmpty) {
           entries.add(entry);
           entry = &#39;&#39;;
@@ -134,7 +134,7 @@
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

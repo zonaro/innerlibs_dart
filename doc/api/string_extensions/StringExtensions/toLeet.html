@@ -88,9 +88,9 @@ String leet = foo.toLeet ; // returns '€5£п+!$';
   final letters = split(&#39;&#39;);
   final leetLetters = [];
   for (var e in letters) {
-    final count = Get.leetAlphabet[e]?.length ?? 0;
+    final count = leetAlphabet[e]?.length ?? 0;
     final random = randomInt(0, count - 1);
-    leetLetters.add(Get.leetAlphabet[e]?[random] ?? e);
+    leetLetters.add(leetAlphabet[e]?[random] ?? e);
   }
   return leetLetters.join();
 }</code></pre>
@@ -123,7 +123,7 @@ String leet = foo.toLeet ; // returns '€5£п+!$';
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

@@ -80,16 +80,16 @@ The generated string consists of random consonants and vowels in a pronounceable
   String word = &#39;&#39;;
 
   if (length == 1) {
-    return Get.lowerVowels.randomItem!;
+    return lowerVowels.randomItem!;
   }
 
   while (word.length &lt; length) {
-    String consonant = Get.lowerConsonants.randomItem!;
+    String consonant = lowerConsonants.randomItem!;
     if (consonant == &#39;q&#39; &amp;&amp; word.length + 3 &lt;= length) {
       word += &#39;qu&#39;;
     } else {
       while (consonant == &#39;q&#39;) {
-        consonant = Get.lowerConsonants.randomItem!;
+        consonant = lowerConsonants.randomItem!;
       }
       if (word.length + 1 &lt;= length) {
         word += consonant;
@@ -97,7 +97,7 @@ The generated string consists of random consonants and vowels in a pronounceable
     }
 
     if (word.length + 1 &lt;= length) {
-      word += Get.lowerVowels.randomItem!;
+      word += lowerVowels.randomItem!;
     }
   }
 
@@ -129,7 +129,7 @@ The generated string consists of random consonants and vowels in a pronounceable
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>

@@ -74,7 +74,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Iterable&lt;Map&lt;K, V&gt;&gt; searchMap({required Iterable&lt;V&gt; searchTerms, Iterable&lt;K&gt; keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
-  return Get.searchMap&lt;K, V&gt;(
+  return FilterFunctions.searchMap&lt;K, V&gt;(
     items: this,
     searchTerms: searchTerms,
     keys: keys,
@@ -109,7 +109,7 @@
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.3
+      0.0.1-dev.4
   </span>
   
 </footer>
