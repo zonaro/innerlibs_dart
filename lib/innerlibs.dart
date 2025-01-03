@@ -51,6 +51,7 @@ export 'oembed.dart';
 export 'opacity_extension.dart';
 export 'padding_extension.dart';
 export 'pixel_converter.dart';
+export 'platform/platform.dart';
 export 'positioned_extensions.dart';
 export 'preset_buttons.dart';
 export 'self_map.dart';

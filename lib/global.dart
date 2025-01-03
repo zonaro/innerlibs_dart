@@ -10,8 +10,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 
-import 'platform/platform.dart';
-
 const Map<String, IconData> categoryIcons = {
   "audio": Icons.audiotrack,
   "book": Icons.book,
@@ -62,31 +60,6 @@ const Map<String, IconData> categoryIcons = {
 };
 
 final _random = Random();
-
-bool get isAndroid => GetPlatform.isAndroid;
-bool get isApple => (isIOS || isMacOS);
-bool get isDesktop => (isMacOS || isWindows || isLinux);
-bool get isFuchsia => GetPlatform.isFuchsia;
-bool get isGoogle => (isAndroid || isFuchsia);
-bool get isIOS => GetPlatform.isIOS;
-bool get isLinux => GetPlatform.isLinux;
-bool get isMacOS => GetPlatform.isMacOS;
-bool get isMobile => (isIOS || isAndroid);
-bool get isNativeAndroid => isAndroid && !isWeb;
-bool get isNativeApple => isApple && !isWeb;
-bool get isNativeDesktop => isDesktop && !isWeb;
-bool get isNativeFuchsia => isFuchsia && !isWeb;
-bool get isNativeGoogle => isGoogle && !isWeb;
-bool get isNativeIOS => isIOS && !isWeb;
-bool get isNativeLinux => isLinux && !isWeb;
-bool get isNativeMacOS => isMacOS && !isWeb;
-bool get isNativeMobile => isMobile && !isWeb;
-bool get isNativeWindows => isWindows && !isWeb;
-bool get isPlatformDarkMode => platformBrightness == Brightness.dark;
-bool get isPlatformLightMode => platformBrightness == Brightness.light;
-bool get isWeb => GetPlatform.isWeb;
-
-bool get isWindows => GetPlatform.isWindows;
 
 /// Returns a date representing the last week.
 date get lastWeek => now.lastDayOfWeek - 7.days;
