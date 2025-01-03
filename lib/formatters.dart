@@ -104,11 +104,11 @@ class NumberInputFormatter extends TextInputFormatter {
 
     String newText = newValue.text;
 
-    var simb = Get.localeNumberSymbols(locale!);
+    var simb = format?.symbols;
     if (simb != null) {
       newText = newText.removeWhere(
         (x) => x.isNotIn([
-          ...Get.numberChars,
+          ...numberChars,
           simb.DECIMAL_SEP,
         ]),
       );
@@ -134,7 +134,7 @@ class NumberInputFormatter extends TextInputFormatter {
 class PascalCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    return TextEditingValue(text: newValue.text.toCamelCase.capitalizeFirst ?? "", selection: newValue.selection);
+    return TextEditingValue(text: newValue.text.toCamelCase.capitalizeFirst, selection: newValue.selection);
   }
 }
 
@@ -148,11 +148,12 @@ class PercentFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     locale ??= platformLocaleCode;
-    decimalDigits ??= NumberFormat.decimalPattern(locale).decimalDigits ?? 4;
-    var simb = Get.localeNumberSymbols(locale!);
-    var decimalSeparator = simb?.DECIMAL_SEP ?? ".";
-    var minusSign = simb?.MINUS_SIGN ?? "-";
-    var percentSign = simb?.PERCENT ?? "%";
+    var form = NumberFormat.decimalPattern(locale);
+    decimalDigits ??= form.decimalDigits ?? 4;
+    var simb = form.symbols;
+    var decimalSeparator = simb.DECIMAL_SEP;
+    var minusSign = simb.MINUS_SIGN;
+    var percentSign = simb.PERCENT;
 
     String formattedValue = "";
 

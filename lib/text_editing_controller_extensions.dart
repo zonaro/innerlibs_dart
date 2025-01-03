@@ -8,7 +8,7 @@ extension TextEditingControllerExtensions on TextEditingController {
   /// Gets or sets the current line where the cursor is located.
   int get currentLineIndex => value.currentLineIndex;
   set currentLineIndex(int value) {
-    var cursorPosition = lines.take(value.clamp(0, lines.length - 1).clampMin(0)).join(Get.breakline).length;
+    var cursorPosition = lines.take(value.clamp(0, lines.length - 1).clampMin(0)).join(breakline).length;
     selection = TextSelection.collapsed(offset: cursorPosition);
   }
 
@@ -30,7 +30,7 @@ extension TextEditingControllerExtensions on TextEditingController {
   /// Gets all lines in the text.
   Iterable<string> get lines => value.lines;
 
-  set lines(Iterable<String> value) => text = value.join(Get.breakline);
+  set lines(Iterable<String> value) => text = value.join(breakline);
 
   /// Gets or sets all words in the text. this includes the splitters.
   ///
@@ -66,9 +66,9 @@ extension TextEditingValueExtensions on TextEditingValue {
   /// Gets the index of the current line where the cursor is located.
   int get currentLineIndex {
     var cursorPos = selection.base.offset;
-    String txt = text.replaceMany(Get.breaklineChars, Get.breakline);
+    String txt = text.replaceMany(breaklineChars, breakline);
     var textpart = txt.first(cursorPos);
-    var curIndex = textpart.count(Get.breakline);
+    var curIndex = textpart.count(breakline);
     curIndex = curIndex.clamp(0, countLines - 1);
     return curIndex;
   }

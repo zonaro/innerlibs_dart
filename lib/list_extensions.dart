@@ -207,7 +207,7 @@ extension IterablesExtension<T> on Iterable<T> {
     required dynamic searchTerms,
     int maxResults = 0,
   }) {
-    return Get.keySearch(
+    return FilterFunctions.keySearch(
       items: this,
       searchTerms: searchTerms,
       maxResults: maxResults,
@@ -263,7 +263,7 @@ extension IterablesExtension<T> on Iterable<T> {
     int minChars = 0,
     int maxResults = 0,
   }) =>
-      Get.search(
+      FilterFunctions.search(
         items: this,
         searchTerms: searchTerms,
         searchOn: searchOn,
@@ -488,7 +488,7 @@ extension ListExtension2<T> on List<T> {
 
 extension MapSearch<K, V> on Iterable<Map<K, V>> {
   Iterable<Map<K, V>> searchMap({required Iterable<V> searchTerms, Iterable<K> keys = const [], int levenshteinDistance = 0, bool allIfEmpty = true}) {
-    return Get.searchMap<K, V>(
+    return FilterFunctions.searchMap<K, V>(
       items: this,
       searchTerms: searchTerms,
       keys: keys,

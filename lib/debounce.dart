@@ -1,18 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:innerlibs/innerlibs.dart';
-
-class _InnerOperation {
-  VoidCallback callback;
-  VoidCallback? onAfter;
-  Timer timer;
-
-  _InnerOperation({required this.timer, required this.callback, this.onAfter});
-}
-
 /// A static class for handling method call debouncing.
-extension InnerDebounce on GetInterface {
+abstract class InnerDebounce {
   static final Map<String, _InnerOperation> _debounceOperations = {};
 
   static final Map<String, _InnerOperation> _rateLimitOperations = {};
@@ -221,4 +211,12 @@ extension InnerDebounce on GetInterface {
 
     return false;
   }
+}
+
+class _InnerOperation {
+  VoidCallback callback;
+  VoidCallback? onAfter;
+  Timer timer;
+
+  _InnerOperation({required this.timer, required this.callback, this.onAfter});
 }

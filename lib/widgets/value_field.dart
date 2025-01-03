@@ -7,16 +7,16 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:innerlibs/innerlibs.dart';
 import 'package:intl/intl.dart';
 
-InputDecoration outlineInputStyle([string? label, IconData? icon, void Function()? onIconTap, Color? color, dynamic suffixIcon, void Function()? onSuffixIconTap, InputDecoration? other]) {
+InputDecoration outlineInputStyle(BuildContext context, [string? label, IconData? icon, void Function()? onIconTap, Color? color, dynamic suffixIcon, void Function()? onSuffixIconTap, InputDecoration? other]) {
   other = other ?? const InputDecoration();
   return other.copyWith(
     fillColor: Colors.transparent,
     label: label.asNullableText(),
-    icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onIconTap),
-    suffixIcon: suffixIcon == null ? null : forceWidget(suffixIcon, style: TextStyle(color: color ?? Get.context!.colorScheme.onSurface))?.onTap(onSuffixIconTap),
+    icon: icon == null ? null : forceWidget(icon, style: TextStyle(color: color ?? context.colorScheme.onSurface))?.onTap(onIconTap),
+    suffixIcon: suffixIcon == null ? null : forceWidget(suffixIcon, style: TextStyle(color: color ?? context.colorScheme.onSurface))?.onTap(onSuffixIconTap),
     border: OutlineInputBorder(
       borderRadius: const BorderRadius.all(Radius.circular(5)),
-      borderSide: BorderSide(color: color ?? Get.context!.colorScheme.primary, width: 20),
+      borderSide: BorderSide(color: color ?? context.colorScheme.primary, width: 20),
     ),
     filled: true,
   );
@@ -284,7 +284,7 @@ class DateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DateTimePickerFormField(
-      decoration: outlineInputStyle(label, icon),
+      decoration: outlineInputStyle(context, label, icon),
       invalidDateMessage: context.translations.invalidItem(context.translations.date),
       outOfRangeMessage: context.translations.dateOutOfRange,
       value: value ?? now,
@@ -524,7 +524,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
       return DropdownSearch<T>(
         filterFn: (item, filters) =>
             filters.isBlank ||
-            Get.fullFilterFunction(
+            FilterFunctions.fullFilterFunction(
               searchTerms: filters,
               searchOnItems: searchOn(item),
             ),
@@ -537,7 +537,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         ),
         selectedItem: _value,
         decoratorProps: DropDownDecoratorProps(
-          decoration: outlineInputStyle(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
+          decoration: outlineInputStyle(context, widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
         ),
         items: (v, l) async => await allOptions(v),
         itemAsString: (x) => textSelector(x),
@@ -604,7 +604,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         onFieldSubmitted: widget.onFieldSubmitted,
         inputFormatters: _inputFormatters,
         keyboardType: _keyboardType,
-        decoration: outlineInputStyle(widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
+        decoration: outlineInputStyle(context, widget.label, widget.icon, widget.onIconTap, widget.color, widget.suffixIcon, widget.onSuffixIconTap, widget.decoration),
         validator: (s) {
           if (widget.validator != null) {
             try {
@@ -694,12 +694,12 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     void Function()? onSuffixIconTap,
   }) {
     var tt = "${context.translations.search} $title:".trim();
-    return Get.screenTier < ScreenTier.sm
+    return context.screenTier < ScreenTier.sm
         ? PopupProps.modalBottomSheet(
             constraints: const BoxConstraints.expand(),
-            searchFieldProps: TextFieldProps(decoration: outlineInputStyle(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
+            searchFieldProps: TextFieldProps(decoration: outlineInputStyle(context, tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
             title: InkWell(
-              onTap: () => Get.back(),
+              onTap: () => context.pop(),
               child: Padding(
                 padding: 6.allAround,
                 child: Row(
@@ -707,12 +707,12 @@ class ValueFieldState<T> extends State<ValueField<T>> {
                   children: [
                     const Icon(Icons.arrow_back),
                     const Gap(10),
-                    Get.context!.translations.back.asText().fontSize(10),
+                    context.translations.back.asText().fontSize(10),
                   ],
                 ).toCenter().paddingAll(8),
               ),
             ),
-            modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: Get.context?.colorScheme.surfaceBright),
+            modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: context.colorScheme.surfaceBright),
             showSearchBox: true,
             emptyBuilder: (context, search) => emptySearch(context, search, title ?? ""),
             itemBuilder: itemBuilder,
@@ -722,7 +722,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
             showSearchBox: true,
             emptyBuilder: (context, search) => emptySearch(context, search, title ?? ""),
             itemBuilder: itemBuilder,
-            searchFieldProps: TextFieldProps(decoration: outlineInputStyle(tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
+            searchFieldProps: TextFieldProps(decoration: outlineInputStyle(context, tt, icon, onIconTap, color, suffixIcon, onSuffixIconTap, widget.decoration)),
           );
   }
 

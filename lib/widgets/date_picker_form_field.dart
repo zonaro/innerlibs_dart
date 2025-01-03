@@ -83,7 +83,7 @@ class _DateTimePickerFormFieldState extends State<DateTimePickerFormField> {
 
     format = DateFormat(widget.maskFormat);
     dateMaskFormatter = MaskTextInputFormatter(
-      mask: widget.maskFormat.replaceMany(Get.numberChars, "#"), // Date format mask
+      mask: widget.maskFormat.replaceMany(numberChars, "#"), // Date format mask
       filter: {
         '#': RegExp(r'[0-9]'),
         'A': RegExp(r'[A-Za-z]'),

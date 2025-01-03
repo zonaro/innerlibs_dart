@@ -674,19 +674,19 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
   }
 
   /// Get the title of the file or directory.
-  /// 
+  ///
   /// The title is the name of the file or directory without the extension. If the name is camelCase or snake_case, it will be converted into Title Case
   string get title => nameWithoutExtension.friendlyTitle();
 
   /// Get the type description of the file or directory
   string get typeDescription {
     if (this is File) {
-      return Get.context?.innerLibsLocalizations.file ?? "File";
+      return "File";
     }
     if (this is Directory) {
-      return Get.context?.innerLibsLocalizations.directory ?? "Directory";
+      return "Directory";
     }
-    return Get.context?.innerLibsLocalizations.unknown ?? "Unknown";
+    return "Unknown";
   }
 
   /// Delete empty directories and files.
@@ -722,6 +722,17 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
       await (this as File).copy(p);
     }
     return destination;
+  }
+
+  /// Get the type description of the file or directory
+  string localizedTypeDescription(BuildContext context) {
+    if (this is File) {
+      return context.translations.file;
+    }
+    if (this is Directory) {
+      return context.translations.directory;
+    }
+    return context.translations.unknown;
   }
 
   /// Get relative path from root path

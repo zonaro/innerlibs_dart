@@ -28,7 +28,7 @@ void main() {
       expect(200.heightBox.height, equals(200));
     });
 
-    test('delay', () async {
+    test('wait', () async {
       final start = DateTime.now();
       await 100.delay();
       final end = DateTime.now();

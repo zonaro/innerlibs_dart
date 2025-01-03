@@ -344,6 +344,9 @@ extension StringExtensions on String {
     return result.toString();
   }
 
+
+  string get capitalizeFirst => isBlank ? blankIfNull : "${this[0].trim().toUpperCase()}${substring(1)}";
+
   /// Finds all character occurrences and returns count as:
   /// ```dart
   /// List<Map<dynamic,dynamic>>
@@ -697,7 +700,7 @@ extension StringExtensions on String {
   /// ```dart
   /// bool isCloseWrap = ")".isCloseWrapChar(); // returns true;
   /// ```
-  bool get isCloseWrap => Get.closeWrappers.contains(this);
+  bool get isCloseWrap => closeWrappers.contains(this);
 
   /// Checks if the `String` provided is a valid credit card number using Luhn Algorithm.
   ///
@@ -765,6 +768,8 @@ extension StringExtensions on String {
     }
   }
 
+  bool get isEmail => RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(this);
+
   /// Checks if the `String` has only Greek characters.
   /// ### Example
   /// ```dart
@@ -800,12 +805,41 @@ extension StringExtensions on String {
     return regex.hasMatch(this);
   }
 
+  bool get isHexadecimal => RegExp(r'^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$').hasMatch(this);
+
   bool get isHexadecimalColor {
     final hexColorRegex = RegExp(r'^#?([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})$');
     return hexColorRegex.hasMatch(this);
   }
 
   bool get isIP => isIPv4 || isIPv6;
+
+  bool get isIPv4 {
+    if (isBlank) {
+      return false;
+    }
+    var parts = split('.');
+    if (parts.length != 4) {
+      return false;
+    }
+    return parts.every((part) {
+      var partAsInt = int.tryParse(part);
+      return partAsInt != null && partAsInt >= 0 && partAsInt <= 255;
+    });
+  }
+
+  bool get isIPv6 {
+    if (isBlank) {
+      return false;
+    }
+    var parts = split(':');
+    if (parts.length != 8) {
+      return false;
+    }
+    return parts.every((part) {
+      return RegExp(r'^[0-9a-fA-F]{1,4}$').hasMatch(part);
+    });
+  }
 
   /// Checks if the `String` is a valid `json` format.
   ///
@@ -908,13 +942,15 @@ extension StringExtensions on String {
 
   bool get isNumberOrBlank => isBlank || num.tryParse(this) != null;
 
+  bool get isNumericOnly => onlyNumbers == this;
+
   /// Check if `String` is a open wrap char: `<`, `{`, `[`, `"`, `'`.
   /// ### Example
   ///
   /// ```dart
   /// bool isOpenWrap = "(".isOpenWrapChar(); // returns true;
   /// ```
-  bool get isOpenWrap => Get.openWrappers.contains(this);
+  bool get isOpenWrap => openWrappers.contains(this);
 
   /// Checks whether the `String` is a palindrome.
   ///
@@ -1072,14 +1108,14 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return only(Get.alphaChars);
+    return only(alphaChars);
   }
 
   String get onlyLettersOrNumbers {
     if (isBlank) {
       return blankIfNull;
     }
-    return only(Get.alphaNumericChars);
+    return only(alphaNumericChars);
   }
 
   /// Returns only the numbers from the `String`.
@@ -1092,14 +1128,14 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return only(Get.numberChars);
+    return only(numberChars);
   }
 
   String get onlyNumbersDotsAndCommas {
     if (isBlank) {
       return blankIfNull;
     }
-    return only([...Get.numberChars, '.', ","]);
+    return only([...numberChars, '.', ","]);
   }
 
   double get onlyNumbersDouble => onlyNumbersDotsAndCommas.toDouble ?? 0;
@@ -1143,7 +1179,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return removeAny(Get.breaklineChars);
+    return removeAny(breaklineChars);
   }
 
   /// Removes diacritics from the string.
@@ -1230,7 +1266,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return removeAny(Get.whiteSpaceChars);
+    return removeAny(whiteSpaceChars);
   }
 
   /// Removes all word splitters from the `String`.
@@ -1238,7 +1274,7 @@ extension StringExtensions on String {
     if (isBlank) {
       return blankIfNull;
     }
-    return removeAny(Get.wordSplitters);
+    return removeAny(wordSplitters);
   }
 
   /// Returns the `String` reversed.
@@ -1283,7 +1319,7 @@ extension StringExtensions on String {
   /// List<String> lines = text.splitLines();
   /// print(lines); // prints ['hello', 'world']
   /// ```
-  Iterable<String> get splitLines => splitAny(Get.breaklineChars);
+  Iterable<String> get splitLines => splitAny(breaklineChars);
 
   /// Strips all HTML code from `String`.
   ///
@@ -1347,7 +1383,7 @@ extension StringExtensions on String {
   /// String result = input.toCamelCaseJoin;
   /// print(result); // Output: "helloWorld"
   /// ```
-  string get toCamelCaseJoin => toCamelCase.splitAny(Get.wordSplitters, true).join('');
+  string get toCamelCaseJoin => toCamelCase.splitAny(wordSplitters, true).join('');
 
   /// Converts a `String` to`double` if possible.
   ///
@@ -1421,9 +1457,9 @@ extension StringExtensions on String {
     final letters = split('');
     final leetLetters = [];
     for (var e in letters) {
-      final count = Get.leetAlphabet[e]?.length ?? 0;
+      final count = leetAlphabet[e]?.length ?? 0;
       final random = randomInt(0, count - 1);
-      leetLetters.add(Get.leetAlphabet[e]?[random] ?? e);
+      leetLetters.add(leetAlphabet[e]?[random] ?? e);
     }
     return leetLetters.join();
   }
@@ -1597,7 +1633,7 @@ extension StringExtensions on String {
     }
 
     var t = trim();
-    if (t.startsWithAny(Get.openWrappers)) {
+    if (t.startsWithAny(openWrappers)) {
       if (t.endsWith(t.first().getOppositeWrap)) {
         t = t.removeFirst().removeLast();
       }
@@ -1627,8 +1663,8 @@ extension StringExtensions on String {
 
   /// Returns a string ready for use in url paths.
   string get urlFriendly => replaceAll(" ", "-").toLowerCase().only([
-        ...Get.alphaChars,
-        ...Get.numberChars,
+        ...alphaChars,
+        ...numberChars,
         "-",
         "_",
       ]);
@@ -2277,7 +2313,7 @@ extension StringExtensions on String {
   }
 
   /// return a string in a friendly format
-  string friendlyTitle([bool? forceCase]) => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(Get.endOfSentenceChars).toTitleCase(forceCase);
+  string friendlyTitle([bool? forceCase]) => camelSplitString.replaceAll("_", " ").fixText.removeLastAny(endOfSentenceChars).toTitleCase(forceCase);
 
   /// Returns the day name of the date provided in `String` format.
   ///
@@ -3201,15 +3237,15 @@ extension StringExtensions on String {
     if (isBlank) {
       return [];
     } else if (mode == WordSplitMode.wordsOnly) {
-      return splitAny(Get.wordSplitters, false);
+      return splitAny(wordSplitters, false);
     } else if (mode == WordSplitMode.whitespace) {
-      return splitAny(Get.whiteSpaceOrBreakChars, false);
+      return splitAny(whiteSpaceOrBreakChars, false);
     } else if (mode == WordSplitMode.keepSplitters) {
       var entries = <string>[];
       var entry = '';
       for (var i = 0; i < length; i++) {
         var char = this[i];
-        if (Get.wordSplitters.contains(char)) {
+        if (wordSplitters.contains(char)) {
           if (entry.isNotEmpty) {
             entries.add(entry);
             entry = '';
@@ -3398,7 +3434,7 @@ extension StringExtensions on String {
       return this;
     }
 
-    int index = lastIndexOfAny(Get.wordSplitters, maxChars);
+    int index = lastIndexOfAny(wordSplitters, maxChars);
     if (index == -1) {
       return blankIfNull;
     }

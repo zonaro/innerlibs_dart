@@ -4,12 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:innerlibs/innerlibs.dart';
+import 'package:intl/intl.dart';
 import 'package:intl/number_symbols.dart';
 import 'package:intl/number_symbols_data.dart';
 
 typedef ScreenTierMap<T> = Map<T, ScreenTier>;
 
 extension BuildContextExtensions on BuildContext {
+  Iterable<NumberSymbols> get allNumberSymbols => numberFormatSymbols.values.whereType<NumberSymbols>();
+
   bool get alwaysUse24HourFormat => MediaQuery.alwaysUse24HourFormatOf(this);
 
   /// performs a simple [Theme.of(context).appBarTheme] action and returns given [appBarTheme]
@@ -46,18 +49,22 @@ extension BuildContextExtensions on BuildContext {
   /// performs a simple [Theme.of(context).bottomAppBarTheme] action and returns given [bottomAppBarTheme]
   BottomAppBarTheme get bottomAppBarTheme => theme.bottomAppBarTheme;
 
-  // COLOR
-
   /// performs a simple [Theme.of(context).bottomSheetTheme] action and returns given [bottomSheetTheme]
   BottomSheetThemeData get bottomSheetTheme => theme.bottomSheetTheme;
 
   /// Returns the boundary of the render object.
   RenderRepaintBoundary? get boundary => [findRenderObject()].nonNulls.whereType<RenderRepaintBoundary>().firstOrNull;
 
+  // COLOR
+
   /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
   ColorScheme get colorScheme => theme.colorScheme;
 
   CupertinoLocalizations get cupertinoLocalizations => CupertinoLocalizations.of(this);
+
+  Locale get currentLocale => Localizations.localeOf(this);
+
+  NumberSymbols? get currentLocaleNumberSymbols => NumberFormat(null, languageCode).symbols;
 
   /// similar to [MediaQuery.devicePixelRatioOf(context)]
   double get devicePixelRatio => MediaQuery.devicePixelRatioOf(this);
@@ -110,6 +117,8 @@ extension BuildContextExtensions on BuildContext {
   /// Headline styles are smaller than display styles. They're best-suited for
   /// short, high-emphasis text on smaller screens.
   TextStyle? get headlineSmall => textTheme.headlineSmall;
+
+  double get height => size?.height ?? double.infinity;
 
   /// The hover color used to indicate when a pointer is hovering over a
   /// component.
@@ -184,6 +193,8 @@ extension BuildContextExtensions on BuildContext {
   /// content body, like captions
   TextStyle? get labelSmall => textTheme.labelSmall;
 
+  string get languageCode => currentLocale.languageCode;
+
   /// Returns the logical aspect ratio of the screen.
   double get logicalAspectRatio => logicalWidth / logicalHeight;
 
@@ -217,6 +228,8 @@ extension BuildContextExtensions on BuildContext {
   /// Returns the [RouteSettings] of the current modal route, or `null` if there is no modal route.
   RouteSettings? get modalRouteSettings => modalRoute?.settings;
 
+  NavigatorState get navigator => Navigator.of(this);
+
   /// Returns the error color from the current theme's color scheme.
   Color get onErrorColor => theme.colorScheme.onError;
 
@@ -228,14 +241,16 @@ extension BuildContextExtensions on BuildContext {
 
   /// Returns the color of the surface text on the current theme.
   Color get onSurfaceColor => theme.colorScheme.onSurface;
+
   //Padding in physical pixels
   ViewPadding get padding => flutterView.padding;
-
   double get paddingBottom => flutterView.padding.bottom / flutterView.devicePixelRatio;
+
   //Safe area paddings in logical pixels
   double get paddingLeft => flutterView.padding.left / flutterView.devicePixelRatio;
 
   double get paddingRight => flutterView.padding.right / flutterView.devicePixelRatio;
+
   double get paddingTop => flutterView.padding.top / flutterView.devicePixelRatio;
 
   /// Returns the physical aspect ratio of the screen.
@@ -274,10 +289,10 @@ extension BuildContextExtensions on BuildContext {
   /// Returns the safe height of the screen.
   double get safeHeight => logicalHeight - paddingTop - paddingBottom;
 
-  //Safe area in logical pixels
   /// Returns the safe width of the screen.
   double get safeWidth => logicalWidth - paddingLeft - paddingRight;
 
+  //Safe area in logical pixels
   ScaffoldState get scaffold => Scaffold.of(this);
 
   /// The default color of the [Material] that underlies the [Scaffold]. The
@@ -311,6 +326,8 @@ extension BuildContextExtensions on BuildContext {
   /// performs a simple [Theme.of(context).textTheme] action and returns given [textTheme]
   TextTheme get textTheme => theme.textTheme;
 
+  ThemeData get theme => Theme.of(this);
+
   Brightness get themeBrightness => theme.brightness;
 
   /// Largest of the title styles.
@@ -338,6 +355,8 @@ extension BuildContextExtensions on BuildContext {
 
   /// similar to [MediaQuery.of(context).viewPadding]
   EdgeInsets get viewPadding => MediaQuery.viewPaddingOf(this);
+
+  double get width => size?.width ?? double.infinity;
 
   /// a size computed by [ScreenTier]
 
@@ -381,6 +400,8 @@ extension BuildContextExtensions on BuildContext {
     }
     return b;
   }
+
+  NumberSymbols? localeNumberSymbols(string localeCode) => allNumberSymbols.firstWhere((element) => element.NAME.flatEqual(localeCode));
 
   bool nextFocus() => FocusScope.of(this).nextFocus();
 
@@ -438,6 +459,12 @@ extension BuildContextExtensions on BuildContext {
 
   void unfocus({UnfocusDisposition disposition = UnfocusDisposition.scope}) => FocusScope.of(this).unfocus(disposition: disposition);
 
+  void until(RoutePredicate predicate) => navigator.popUntil(predicate);
+
+  void untilFirst() => until((route) => route.isFirst);
+
+  void untilRoute(String screenName) => until((route) => route.settings.name == screenName);
+
   /// returns a specific value according to the current screen [width] or [height] or the next lower value if omitted
 
   T valueByBreakpoint<T>({required Map<double, T> breakpoints, Axis direction = Axis.horizontal}) => getBreakpointValue(direction == Axis.horizontal ? width : height, breakpoints);
@@ -472,25 +499,4 @@ extension BuildContextExtensions on BuildContext {
         return (xxl ?? xl ?? lg ?? md ?? sm ?? xs ?? xxs) as T;
     }
   }
-}
-
-extension MoreGetExtensions on GetInterface {
-  Iterable<NumberSymbols> get allNumberSymbols => numberFormatSymbols.values.whereType<NumberSymbols>();
-
-  NumberSymbols? get currentLocaleNumberSymbols => localeNumberSymbols(deviceLocale?.languageCode ?? platformLocaleCode);
-
-  // Returns the current [ScreenTier] based on the current [width] of the screen.
-  ScreenTier get screenTier => ScreenTier.fromWidth(width);
-
-  closeDialog() => Get.until((_) => Get.isDialogOpen == true);
-
-  bool focus([int times = 1]) => Get.context!.focus(times);
-
-  NumberSymbols? localeNumberSymbols(string localeCode) => allNumberSymbols.firstWhere((element) => element.NAME.flatEqual(localeCode));
-
-  void unfocus({UnfocusDisposition disposition = UnfocusDisposition.scope}) => Get.context!.unfocus(disposition: disposition);
-
-  void untilFirst({int? id}) => Get.until((route) => route.isFirst, id: id);
-
-  void untilRoute(String screenName, {int? id}) => Get.until((route) => route.settings.name == screenName, id: id);
 }

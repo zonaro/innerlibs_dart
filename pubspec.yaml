@@ -18,7 +18,7 @@ dependencies:
   mask_text_input_formatter: 
   path: 
   xml: 
-  get: 
+  web:
   crypto: 
   intl: 
   brasil_fields: 

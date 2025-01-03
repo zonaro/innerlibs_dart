@@ -11,7 +11,7 @@ extension ImageProviderExtensions<T extends Object> on ImageProvider<T> {
   }) =>
       ColorScheme.fromImageProvider(
         provider: this,
-        brightness: brightness ?? Get.theme.brightness,
+        brightness: brightness ?? platformBrightness,
         dynamicSchemeVariant: dynamicSchemeVariant,
         contrastLevel: contrastLevel,
       );

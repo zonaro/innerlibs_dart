@@ -239,5 +239,5 @@ class TagXml extends XmlElement implements Validator, Comparable {
 
 /// Represents a tag that uses his type as tagName.
 class TypeTag<T extends TagXml> extends TagXml {
-  TypeTag() : super.fromTagName("$T".camelCase!);
+  TypeTag() : super.fromTagName("$T".toCamelCase);
 }

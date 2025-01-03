@@ -10,6 +10,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 
+import 'platform/platform.dart';
+
 const Map<String, IconData> categoryIcons = {
   "audio": Icons.audiotrack,
   "book": Icons.book,
@@ -126,9 +128,7 @@ date get tomorrow => today.add(1.days);
 date get yesterday => today.subtract(1.days);
 
 /// Returns the [IconData] associated with the given app [category].
-IconData categoryIcon(String category) {
-  return category.getUniqueWords.whereValid.map((x) => categoryIcons[x.toLowerCase()]).mostFrequent ?? Icons.category;
-}
+IconData categoryIcon(String category) => category.getUniqueWords.whereValid.map((x) => categoryIcons[x.toLowerCase()]).mostFrequent ?? Icons.category;
 
 /// Try change a value of any type into a value of type [R].
 ///
@@ -796,7 +796,7 @@ double randomPercent([int min = 0, int max = 100]) => randomInt(min.clamp(0, 100
 /// Generates a random string of the specified [length].
 /// The generated string consists of random alphanumeric and special characters.
 String randomString([int length = 10]) {
-  var chars = [...Get.alphaNumericChars, Get.specialChars];
+  var chars = [...alphaNumericChars, specialChars];
   return List.generate(length, (index) => [randomInt(0, chars.length - 1)]).join();
 }
 
@@ -808,16 +808,16 @@ String randomWord([int length = 0]) {
   String word = '';
 
   if (length == 1) {
-    return Get.lowerVowels.randomItem!;
+    return lowerVowels.randomItem!;
   }
 
   while (word.length < length) {
-    String consonant = Get.lowerConsonants.randomItem!;
+    String consonant = lowerConsonants.randomItem!;
     if (consonant == 'q' && word.length + 3 <= length) {
       word += 'qu';
     } else {
       while (consonant == 'q') {
-        consonant = Get.lowerConsonants.randomItem!;
+        consonant = lowerConsonants.randomItem!;
       }
       if (word.length + 1 <= length) {
         word += consonant;
@@ -825,17 +825,12 @@ String randomWord([int length = 0]) {
     }
 
     if (word.length + 1 <= length) {
-      word += Get.lowerVowels.randomItem!;
+      word += lowerVowels.randomItem!;
     }
   }
 
   return word;
 }
-
-///Shows a [SnackBar] with the given [content] in the current [Scaffold].
-///If the [content] is a [String], it will be converted to a [Text] widget. If the [content] is not a [SnackBar] and is a [Widget], it will be wrapped in a [SnackBar] widget. If the [content] is a [SnackBar], it will be shown. If none of the above conditions are met, the [content] will be converted to a [String] and shown as a [SnackBar].
-///Returns the [ScaffoldFeatureController] for the shown [SnackBar].
-ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(dynamic content) => Get.context?.showSnackBar(content);
 
 /// Calculates the size based on the aspect ratio and optional width and height.
 ///
@@ -891,7 +886,7 @@ typedef SearchOnFunction<T> = Iterable Function(T item);
 ///
 /// This mixin contains static methods that can be used to transform strings, count search results,
 /// perform Levenshtein distance calculations, and apply filters based on search terms.
-extension FilterFunctions on GetInterface {
+abstract interface class FilterFunctions {
   /// Calculates the Jaro similarity score between an item and a list of search terms.
   ///
   /// The Jaro similarity score is a measure of the similarity between two strings.
@@ -906,7 +901,7 @@ extension FilterFunctions on GetInterface {
   /// - The [splitCamelCase] parameter specifies whether to split camel case words when comparing strings (default is true).
   ///
   /// Returns the sum of the Jaro similarity scores between the item and each search term.
-  double countJaro({
+  static double countJaro({
     required dynamic searchTerms,
     required Iterable searchOn,
     bool ignoreCase = true,
@@ -956,7 +951,7 @@ extension FilterFunctions on GetInterface {
   ///
   /// Returns the count of [searchTerms] that have a Levenshtein distance less than or equal to [levenshteinDistance].
 
-  int countLevenshtein({
+  static int countLevenshtein({
     required dynamic searchTerms,
     required Iterable searchOnItems,
     required int levenshteinDistance,
@@ -1010,7 +1005,7 @@ extension FilterFunctions on GetInterface {
   /// - [useWildcards]: A boolean indicating whether to use wildcards (*) for matching (true) or a standard `string.contains()` (false) (default is false).
   ///
   /// The function returns the count of occurrences of the search terms in the item.
-  int countSearch({
+  static int countSearch({
     required dynamic searchTerms,
     required Iterable searchOnItems,
     bool ignoreCase = true,
@@ -1070,7 +1065,7 @@ extension FilterFunctions on GetInterface {
   /// - The [useWildcards] parameter is an optional parameter that specifies whether to use wildcards when performing the filter.
   ///
   /// The function returns `true` if the item passes the filter, and `false` otherwise.
-  bool fullFilterFunction({
+  static bool fullFilterFunction({
     required dynamic searchTerms,
     required Iterable searchOnItems,
     int levenshteinDistance = 0,
@@ -1109,7 +1104,7 @@ extension FilterFunctions on GetInterface {
   /// The [maxResults] parameter specifies the maximum number of results to return. If it is 0, all matching items are returned.
   ///
   /// Returns an iterable of items that match the search criteria.
-  Iterable<T> keySearch<T>({
+  static Iterable<T> keySearch<T>({
     required KeyCharSearches<T> keyCharSearches,
     required Iterable<T> items,
     required dynamic searchTerms,
@@ -1156,7 +1151,7 @@ extension FilterFunctions on GetInterface {
   ///
   /// Returns `true` if there is at least one search term within the specified Levenshtein distance of the item,
   /// and `false` otherwise.
-  bool levenshteinFunction({
+  static bool levenshteinFunction({
     required dynamic searchTerms,
     required Iterable searchOnItems,
     required int levenshteinDistance,
@@ -1180,7 +1175,7 @@ extension FilterFunctions on GetInterface {
   /// Returns an iterable of items that match the search criteria, ordered by relevance.
   /// The relevance is determined by the number of matches and the Levenshtein distance (if applicable).
 
-  Iterable<T> search<T>({
+  static Iterable<T> search<T>({
     required Iterable<T> items,
     required dynamic searchTerms,
     SearchOnFunction<T>? searchOn,
@@ -1216,7 +1211,7 @@ extension FilterFunctions on GetInterface {
     var l = [
       ...items.where(
         (item) {
-          return Get.searchFunction(
+          return searchFunction(
             searchTerms: searches,
             searchOnItems: searchOn!(item),
             ignoreCase: ignoreCase,
@@ -1273,7 +1268,7 @@ extension FilterFunctions on GetInterface {
   /// - [useWildcards]: Whether to use wildcards (*) for partial matching. Defaults to false.
   ///
   /// Returns `true` if the item matches any of the search terms based on the given criteria, `false` otherwise.
-  bool searchFunction({
+  static bool searchFunction({
     required dynamic searchTerms,
     required Iterable searchOnItems,
     int levenshteinDistance = 0,
@@ -1302,7 +1297,7 @@ extension FilterFunctions on GetInterface {
   /// The [allIfEmpty] parameter determines whether to return all [JsonRow] objects if the search term is empty.
   ///
   /// Returns an iterable of [JsonRow] objects that match the search criteria.
-  Iterable<Map<K, V>> searchMap<K, V>({
+  static Iterable<Map<K, V>> searchMap<K, V>({
     required Iterable<Map<K, V>> items,
     required dynamic searchTerms,
     Iterable<K> keys = const [],

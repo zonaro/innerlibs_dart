@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 extension DurationExtensions on Duration {
   String get formatted => format();
 
+  Future<F> delay<F>([FutureOr<F> Function()? callback]) async => Future.delayed(this, callback);
+
   string format({
     bool? includeMilliseconds,
     bool? includeMicroseconds,
