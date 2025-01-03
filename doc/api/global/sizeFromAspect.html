@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the sizeFromAspect function from the global library, for the Dart programming language.">
+  <title>sizeFromAspect function - global library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../global/global-library.html">global.dart</a></li>
+    <li class="self-crumb">sizeFromAspect function</li>
+  </ol>
+  <div class="self-name">sizeFromAspect</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="global&#47;global-library-sidebar.html"
+      data-below-sidebar="">
+      <div>
+<h1><span class="kind-function">sizeFromAspect</span> function 
+ 
+</h1></div>
+
+    <section class="multi-line-signature">
+        
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-ui/Size-class.html">Size</a></span>
+<span class="name ">sizeFromAspect</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="sizeFromAspect-param-aspectRatio"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">aspectRatio</span>, </span></li>
+<li><span class="parameter" id="sizeFromAspect-param-width"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span> <span class="parameter-name">width</span>, </span></li>
+<li><span class="parameter" id="sizeFromAspect-param-height"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span> <span class="parameter-name">height</span>, </span></li>
+</ol>})
+
+        
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Calculates the size based on the aspect ratio and optional width and height.</p>
+<p>If both <code>width</code> and <code>height</code> are provided, it returns a <a href="https://api.flutter.dev/flutter/dart-ui/Size-class.html">Size</a> object with the specified width and height.
+If only <code>width</code> is provided, it calculates the height based on the aspect ratio and returns a <a href="https://api.flutter.dev/flutter/dart-ui/Size-class.html">Size</a> object with the specified width and calculated height.
+If only <code>height</code> is provided, it calculates the width based on the aspect ratio and returns a <a href="https://api.flutter.dev/flutter/dart-ui/Size-class.html">Size</a> object with the calculated width and specified height.
+If neither <code>width</code> nor <code>height</code> is provided, it returns a <a href="https://api.flutter.dev/flutter/dart-ui/Size-class.html">Size</a> object based on the aspect ratio.</p>
+<p>Throws an <a href="https://api.flutter.dev/flutter/dart-core/ArgumentError-class.html">ArgumentError</a> if the aspect ratio format is invalid.</p>
+<ul>
+<li><code>aspectRatio</code>: The aspect ratio in string format.</li>
+<li><code>width</code>: The optional width.</li>
+<li><code>height</code>: The optional height.</li>
+</ul>
+<p>Returns a <a href="https://api.flutter.dev/flutter/dart-ui/Size-class.html">Size</a> object representing the calculated size.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Size sizeFromAspect({required String aspectRatio, double? width, double? height}) {
+  if (width != null &amp;&amp; height != null) {
+    return Size(width, height);
+  }
+
+  Size size = aspectRatio.toSize;
+
+  if (size.width &lt;= 0 &amp;&amp; size.height &lt;= 0) {
+    throw ArgumentError(&#39;Invalid aspect ratio format.&#39;);
+  }
+
+  if (width != null) {
+    return Size(width, width &#47; max(size.width, size.height) * min(size.width, size.height));
+  } else if (height != null) {
+    return Size(height &#47; min(size.width, size.height) * max(size.width, size.height), height);
+  } else {
+    return size;
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../global/global-library.html">global</a></li>
+    <li class="self-crumb">sizeFromAspect function</li>
+</ol>
+
+    <h5>global library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-left-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1-dev.3
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the navigate method from the PageTabController class, for the Dart programming language.">
+  <title>navigate method - PageTabController class - scaffold_builder library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">widgets\scaffold_builder.dart</a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
+    <li class="self-crumb">navigate method</li>
+  </ol>
+  <div class="self-name">navigate</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="widgets_scaffold_builder&#47;PageTabController-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">navigate</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype">void</span>
+<span class="name ">navigate</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="navigate-param-pageIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">pageIndex</span>, </span></li>
+<li><span class="parameter" id="navigate-param-tabIndex"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">tabIndex</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Navigates to the specified page and tab indices.</p>
+<p>If <code>pageIndex</code> is not provided, the current page index is used.
+If <code>tabIndex</code> is not provided and <code>pageIndex</code> is different from the
+current page index, the tab index is set to 0. Otherwise, the current
+tab index is used.</p>
+<p>If either <code>pageIndex</code> or <code>tabIndex</code> is different from the current indices,
+the previous indices are stored in the history list, and the current
+indices are updated. Additionally, a log message is printed to the console
+indicating the navigation change.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">void navigate({int? pageIndex, int? tabIndex}) {
+  if (pageCount == 0) return;
+  pageIndex ??= this.pageIndex;
+
+  &#47;&#47; if page index is higher than the page count, round navigate to index 0 + the difference
+  if (pageIndex &gt;= pageCount) {
+    pageIndex = 0 + (pageIndex - pageCount);
+  }
+
+  if (pageIndex != this.pageIndex &amp;&amp; tabIndex == null) {
+    tabIndex = 0;
+  } else {
+    tabIndex ??= this.tabIndex;
+  }
+
+  if (pageIndex != this.pageIndex || tabIndex != this.tabIndex) {
+    consoleLog(&quot;From $previousPageIndex:$previousTabIndex to $pageIndex:$tabIndex&quot;);
+    _pageIndex = pageIndex;
+    if (currentPage.hasTabs) {
+      &#47;&#47; if page index is higher than the tab count, round navigate to index 0 + the difference
+      if (tabIndex &gt;= currentPage.tabs.length) {
+        tabIndex = 0 + (tabIndex - currentPage.tabs.length);
+        currentPage.tabController?.animateTo(tabIndex);
+      }
+    } else {
+      tabIndex = 0;
+    }
+    _tabIndex = tabIndex;
+    insertHistory(pageIndex, tabIndex);
+    notifyListeners();
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../widgets_scaffold_builder/widgets_scaffold_builder-library.html">scaffold_builder</a></li>
+    <li><a href="../../widgets_scaffold_builder/PageTabController-class.html">PageTabController</a></li>
+    <li class="self-crumb">navigate method</li>
+</ol>
+
+    <h5>PageTabController class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1-dev.3
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

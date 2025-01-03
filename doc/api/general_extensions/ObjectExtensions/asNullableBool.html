@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the asNullableBool method from the ObjectExtensions extension, for the Dart programming language.">
+  <title>asNullableBool method - ObjectExtensions extension - general_extensions library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../general_extensions/general_extensions-library.html">general_extensions.dart</a></li>
+    <li><a href="../../general_extensions/ObjectExtensions.html">ObjectExtensions<span class="signature">&lt;<wbr><span class="type-parameter">T extends Object?</span>&gt;</span></a></li>
+    <li class="self-crumb">asNullableBool method</li>
+  </ol>
+  <div class="self-name">asNullableBool</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="general_extensions&#47;ObjectExtensions-extension-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">asNullableBool</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+<span class="name ">asNullableBool</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="asNullableBool-param-everythingIsTrue"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">everythingIsTrue</span> = <span class="default-value">true</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Converts the current object to a nullable boolean value.</p>
+<p>If the object is null, this function returns <code>null</code>.///
+Recognized keywords (case-insensitive):</p>
+<ul>
+<li>'NULL', 'CANCEL', 'CANCELAR','ABORT', 'ABORTAR': Returns <code>null</code>.</li>
+<li>'', '!', '0', 'FALSE', 'NOT', 'NAO', 'NO', 'NOP', 'DISABLED', 'DISABLE', 'OFF', 'DESATIVADO', 'DESATIVAR', 'DESATIVO', 'N','X','E','ERRADO', 'FALSO', 'MENTIRA' : Returns <code>false</code>.</li>
+<li>'1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO', 'OK','C','VERDADE','VERDADEIRO','CORRETO','CERTO': Returns <code>true</code>.</li>
+</ul>
+<p>If the object doesn't match any of the recognized keywords:</p>
+<ul>
+<li>If <code>everythingIsTrue</code> is <code>true</code>, returns <code>true</code>.</li>
+<li>If <code>everythingIsTrue</code> is <code>false</code>, throws an <a href="https://api.flutter.dev/flutter/dart-core/ArgumentError-class.html">ArgumentError</a>.</li>
+</ul>
+<p>Example usage:</p>
+<pre class="language-dart"><code class="language-dart">bool? result = someObject.asNullableBool(everythingIsTrue: false);
+</code></pre>
+<ul>
+<li><code>everythingIsTrue</code>: A boolean flag indicating whether to treat all non-null values as <code>true</code>.
+If set to <code>true</code>, any non-null value (except specific keywords) will be considered <code>true</code>.
+If set to <code>false</code>, an exception will be thrown for unrecognized values.</li>
+</ul>
+<p>Returns <code>true</code>, <code>false</code>, or <code>null</code> based on the object's representation.
+Throws an <a href="https://api.flutter.dev/flutter/dart-core/ArgumentError-class.html">ArgumentError</a> if the object doesn't represent a valid option and <code>everythingIsTrue</code> is <code>false</code>.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">bool? asNullableBool({bool everythingIsTrue = true}) {
+  if (this == null) return null;
+  if (this is bool) return this as bool;
+  var x = &#39;$this&#39;.toUpperCase().removeDiacritics.trimAll;
+  switch (x) {
+    case &#39;NULL&#39;:
+    case &#39;CANCEL&#39;:
+    case &#39;CANCELAR&#39;:
+    case &#39;ABORT&#39;:
+    case &#39;ABORTAR&#39;:
+      return null;
+    case &#39;&#39;:
+    case &#39;!&#39;:
+    case &#39;0&#39;:
+    case &#39;FALSE&#39;:
+    case &#39;NOT&#39;:
+    case &#39;NAO&#39;:
+    case &#39;NO&#39;:
+    case &#39;NOP&#39;:
+    case &#39;DISABLED&#39;:
+    case &#39;DISABLE&#39;:
+    case &#39;OFF&#39;:
+    case &#39;DESATIVADO&#39;:
+    case &#39;DESATIVAR&#39;:
+    case &#39;DESATIVO&#39;:
+    case &#39;N&#39;:
+    case &#39;X&#39;:
+    case &#39;F&#39;:
+    case &#39;FALSO&#39;:
+    case &#39;MENTIRA&#39;:
+    case &#39;ERRADO&#39;:
+    case &#39;E&#39;:
+      return false;
+    case &#39;1&#39;:
+    case &#39;S&#39;:
+    case &#39;TRUE&#39;:
+    case &#39;YES&#39;:
+    case &#39;YEP&#39;:
+    case &#39;SIM&#39;:
+    case &#39;ENABLED&#39;:
+    case &#39;ENABLE&#39;:
+    case &#39;ON&#39;:
+    case &#39;Y&#39;:
+    case &#39;ATIVO&#39;:
+    case &#39;ATIVAR&#39;:
+    case &#39;ATIVADO&#39;:
+    case &#39;OK&#39;:
+    case &#39;C&#39;:
+    case &#39;V&#39;:
+    case &#39;VERDADEIRO&#39;:
+    case &#39;VERDADE&#39;:
+    case &#39;CERTO&#39;:
+    case &#39;CORRETO&#39;:
+      return true;
+    default:
+      return everythingIsTrue ? true : throw ArgumentError(&#39;The object does not represent a valid option and the EverythingIsTrue flag is set to false.&#39;);
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../general_extensions/general_extensions-library.html">general_extensions</a></li>
+    <li><a href="../../general_extensions/ObjectExtensions.html">ObjectExtensions<span class="signature">&lt;<wbr><span class="type-parameter">T extends Object?</span>&gt;</span></a></li>
+    <li class="self-crumb">asNullableBool method</li>
+</ol>
+
+    <h5>ObjectExtensions extension on T</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1-dev.3
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

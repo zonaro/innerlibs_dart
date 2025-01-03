@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the alignment property from the ImageOfWidget class, for the Dart programming language.">
+  <title>alignment property - ImageOfWidget class - image_of_widget library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../widgets_image_of_widget/widgets_image_of_widget-library.html">widgets\image_of_widget.dart</a></li>
+    <li><a href="../../widgets_image_of_widget/ImageOfWidget-class.html">ImageOfWidget</a></li>
+    <li class="self-crumb">alignment property</li>
+  </ol>
+  <div class="self-name">alignment</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="widgets_image_of_widget&#47;ImageOfWidget-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-property">alignment</span> property 
+</h1></div>
+
+    
+      <section class="multi-line-signature">
+        
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
+        <a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a>
+        <span class="name ">alignment</span>
+        <div class="features"><span class="feature">final</span></div>
+
+      </section>
+      
+<section class="desc markdown">
+  <p>How to align the image within its bounds.</p>
+<p>The alignment aligns the given position in the image to the given position
+in the layout bounds. For example, an <a href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment</a> alignment of (-1.0,
+-1.0) aligns the image to the top-left corner of its layout bounds, while an
+<a href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment</a> alignment of (1.0, 1.0) aligns the bottom right of the
+image with the bottom right corner of its layout bounds. Similarly, an
+alignment of (0.0, 1.0) aligns the bottom middle of the image with the
+middle of the bottom edge of its layout bounds.</p>
+<p>To display a subpart of an image, consider using a <a href="https://api.flutter.dev/flutter/rendering/CustomPainter-class.html">CustomPainter</a> and
+<a href="https://api.flutter.dev/flutter/painting/Canvas/drawImageRect.html">Canvas.drawImageRect</a>.</p>
+<p>If the <a href="../../widgets_image_of_widget/ImageOfWidget/alignment.html">alignment</a> is <a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection</a>-dependent (i.e. if it is a
+<a href="https://api.flutter.dev/flutter/painting/AlignmentDirectional-class.html">AlignmentDirectional</a>), then an ambient <a href="https://api.flutter.dev/flutter/widgets/Directionality-class.html">Directionality</a> widget
+must be in scope.</p>
+<p>Defaults to <a href="https://api.flutter.dev/flutter/painting/Alignment/center-constant.html">Alignment.center</a>.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment</a>, a class with convenient constants typically used to
+specify an <a href="https://api.flutter.dev/flutter/painting/AlignmentGeometry-class.html">AlignmentGeometry</a>.</li>
+<li><a href="https://api.flutter.dev/flutter/painting/AlignmentDirectional-class.html">AlignmentDirectional</a>, like <a href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment</a> for specifying alignments
+relative to text direction.</li>
+</ul>
+</section>
+
+      
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">@override
+final AlignmentGeometry alignment;</code></pre>
+</section>
+
+
+    
+</div> <!-- /.main-content -->
+<div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+  <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../widgets_image_of_widget/widgets_image_of_widget-library.html">image_of_widget</a></li>
+    <li><a href="../../widgets_image_of_widget/ImageOfWidget-class.html">ImageOfWidget</a></li>
+    <li class="self-crumb">alignment property</li>
+</ol>
+
+  <h5>ImageOfWidget class</h5>
+  <div id="dartdoc-sidebar-left-content"></div>
+</div><!--/.sidebar-offcanvas-->
+<div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1-dev.3
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

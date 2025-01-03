@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the getColor method from the NumNullExtensions extension, for the Dart programming language.">
+  <title>getColor method - NumNullExtensions extension - num_extensions library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../num_extensions/num_extensions-library.html">num_extensions.dart</a></li>
+    <li><a href="../../num_extensions/NumNullExtensions.html">NumNullExtensions<span class="signature">&lt;<wbr><span class="type-parameter">T extends num?</span>&gt;</span></a></li>
+    <li class="self-crumb">getColor method</li>
+  </ol>
+  <div class="self-name">getColor</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="num_extensions&#47;NumNullExtensions-extension-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">getColor</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span>
+<span class="name ">getColor</span>(<wbr>[<ol class="parameter-list single-line"> <li><span class="parameter" id="getColor-param-colorStep"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span>&gt;</span></span> <span class="parameter-name">colorStep</span> = <span class="default-value">const {}</span></span></li>
+</ol>])
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Get the color of a number based on a map of color steps.
+if the number is less than the minimum key, the color of the minimum key is returned.
+if the number is greater than the maximum key, the color of the maximum key is returned.
+if the number is between two keys, the color is interpolated between the two colors.
+if the number is equal to a key, the color of the key is returned.
+if the number is null, the color is transparent.
+if the color step is empty, the color is computed by converting the int value into <a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a> using the default constuctor .</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Color getColor([Map&lt;T, Color&gt; colorStep = const {}]) {
+  if (this == null) {
+    return Colors.transparent;
+  }
+
+  if (colorStep.isEmpty) {
+    return Color(this!.round());
+  }
+
+  T x = this!;
+  if (colorStep.containsKey(x)) {
+    return colorStep[x]!;
+  }
+
+  if (x &lt;= colorStep.keys.min()!) {
+    return colorStep[colorStep.keys.min()]!;
+  }
+
+  if (x &gt;= colorStep.keys.max()!) {
+    return colorStep[colorStep.keys.max()]!;
+  }
+
+  num lowerKey = -1 as num;
+  num upperKey = -1 as num;
+
+  for (var key in colorStep.keys) {
+    if (key! &lt; x &amp;&amp; (lowerKey == -1 || key &gt; lowerKey)) {
+      lowerKey = key;
+    }
+    if (key &gt; x &amp;&amp; (upperKey == -1 || key &lt; upperKey)) {
+      upperKey = key;
+    }
+  }
+
+  Color lowerColor = colorStep[lowerKey]!;
+  Color upperColor = colorStep[upperKey]!;
+
+  double proportion = (x - lowerKey) &#47; (upperKey - lowerKey);
+  return lowerColor.mixChannel(upperColor, proportion);
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../num_extensions/num_extensions-library.html">num_extensions</a></li>
+    <li><a href="../../num_extensions/NumNullExtensions.html">NumNullExtensions<span class="signature">&lt;<wbr><span class="type-parameter">T extends num?</span>&gt;</span></a></li>
+    <li class="self-crumb">getColor method</li>
+</ol>
+
+    <h5>NumNullExtensions extension on T</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1-dev.3
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

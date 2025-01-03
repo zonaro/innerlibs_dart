@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="innerlibs API docs, for the Dart programming language.">
+  <title>innerlibs - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="https://zonaro.github.io/innerlibs_dart">innerlibs package</a></li>
+  </ol>
+  <div class="self-name">innerlibs</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="innerlibs-">InnerLibs 🦞</h1>
+<p>A library of classes and methods for Dart. Flexible and easy-to-use options to simplify and keep your code clean.
+The project was born out of the need to repeat code in various projects. Initially, it was a class with some methods that always needed to be modified in each project. Today, InnerLibs has more than 120 extension methods for various common operations.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Tons of <code>String</code>, <code>num</code> , <code>bool</code> and <code>date</code> manipulation methods</li>
+<li>Classes <code>Brasil</code>, <code>Cidade</code>, <code>Estado</code>, <code>Endereco</code>, and <code>InfoUsuario</code> for Brazilian developers to integrate information about cities and states into their applications.</li>
+<li>Enum <code>NamedColors</code> with almost all color names in the world.</li>
+<li>Export methods from many external libraries like <code>darq</code>, <code>GetX</code>, <code>collection</code> and more</li>
+</ul>
+<p>and many other functions, see the complete documentation <a href="https://zonaro.github.io/innerlibs_dart">here</a></p>
+<h2 id="getting-started">Getting started</h2>
+<p>Just add <code>innerlibs</code> into your <code>pubspec.yaml</code>  and the following line on top of your file to access all methods</p>
+<pre class="language-dart"><code class="language-dart">  import 'package:innerlibs/innerlibs.dart'
+</code></pre>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="align_extensions">
+  <span class="name"><a href="align_extensions/align_extensions-library.html">align_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="alignment_extensions">
+  <span class="name"><a href="alignment_extensions/alignment_extensions-library.html">alignment_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="boolean_extensions">
+  <span class="name"><a href="boolean_extensions/boolean_extensions-library.html">boolean_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="brasil">
+  <span class="name"><a href="brasil/brasil-library.html">brasil</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="build_context_extensions">
+  <span class="name"><a href="build_context_extensions/build_context_extensions-library.html">build_context_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="center_extensions">
+  <span class="name"><a href="center_extensions/center_extensions-library.html">center_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="cidade">
+  <span class="name"><a href="cidade/cidade-library.html">cidade</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="color_extensions">
+  <span class="name"><a href="color_extensions/color_extensions-library.html">color_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="container_extension">
+  <span class="name"><a href="container_extension/container_extension-library.html">container_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="data_directory">
+  <span class="name"><a href="data_directory/data_directory-library.html">data_directory</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="date_extension">
+  <span class="name"><a href="date_extension/date_extension-library.html">date_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="date_range">
+  <span class="name"><a href="date_range/date_range-library.html">date_range</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="debounce">
+  <span class="name"><a href="debounce/debounce-library.html">debounce</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="dialog_extension">
+  <span class="name"><a href="dialog_extension/dialog_extension-library.html">dialog_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="edge_insets_extensions">
+  <span class="name"><a href="edge_insets_extensions/edge_insets_extensions-library.html">edge_insets_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="endereco">
+  <span class="name"><a href="endereco/endereco-library.html">endereco</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="estado">
+  <span class="name"><a href="estado/estado-library.html">estado</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="expanded_extension">
+  <span class="name"><a href="expanded_extension/expanded_extension-library.html">expanded_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="file_extensions">
+  <span class="name"><a href="file_extensions/file_extensions-library.html">file_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="flexible_extension">
+  <span class="name"><a href="flexible_extension/flexible_extension-library.html">flexible_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="formatters">
+  <span class="name"><a href="formatters/formatters-library.html">formatters</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="general_extensions">
+  <span class="name"><a href="general_extensions/general_extensions-library.html">general_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="gesture_detector_extension">
+  <span class="name"><a href="gesture_detector_extension/gesture_detector_extension-library.html">gesture_detector_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="global">
+  <span class="name"><a href="global/global-library.html">global</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="icon_extensions">
+  <span class="name"><a href="icon_extensions/icon_extensions-library.html">icon_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="image_provider_extensions">
+  <span class="name"><a href="image_provider_extensions/image_provider_extensions-library.html">image_provider_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="info_usuario">
+  <span class="name"><a href="info_usuario/info_usuario-library.html">info_usuario</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="innerlibs">
+  <span class="name"><a href="innerlibs/innerlibs-library.html">innerlibs</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="keyed_json_table">
+  <span class="name"><a href="keyed_json_table/keyed_json_table-library.html">keyed_json_table</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="app_localizations">
+  <span class="name"><a href="l10n_app_localizations/l10n_app_localizations-library.html">l10n\app_localizations</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="app_localizations_en">
+  <span class="name"><a href="l10n_app_localizations_en/l10n_app_localizations_en-library.html">l10n\app_localizations_en</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="app_localizations_pt">
+  <span class="name"><a href="l10n_app_localizations_pt/l10n_app_localizations_pt-library.html">l10n\app_localizations_pt</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="list_extensions">
+  <span class="name"><a href="list_extensions/list_extensions-library.html">list_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="map_extensions">
+  <span class="name"><a href="map_extensions/map_extensions-library.html">map_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="named_color">
+  <span class="name"><a href="named_color/named_color-library.html">named_color</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="num_extensions">
+  <span class="name"><a href="num_extensions/num_extensions-library.html">num_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="oembed">
+  <span class="name"><a href="oembed/oembed-library.html">oembed</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="opacity_extension">
+  <span class="name"><a href="opacity_extension/opacity_extension-library.html">opacity_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="padding_extension">
+  <span class="name"><a href="padding_extension/padding_extension-library.html">padding_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="pixel_converter">
+  <span class="name"><a href="pixel_converter/pixel_converter-library.html">pixel_converter</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="positioned_extensions">
+  <span class="name"><a href="positioned_extensions/positioned_extensions-library.html">positioned_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="preset_buttons">
+  <span class="name"><a href="preset_buttons/preset_buttons-library.html">preset_buttons</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="self_map">
+  <span class="name"><a href="self_map/self_map-library.html">self_map</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="shimmer_extensions">
+  <span class="name"><a href="shimmer_extensions/shimmer_extensions-library.html">shimmer_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="size_box_extension">
+  <span class="name"><a href="size_box_extension/size_box_extension-library.html">size_box_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="size_extensions">
+  <span class="name"><a href="size_extensions/size_extensions-library.html">size_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="sql_response">
+  <span class="name"><a href="sql_response/sql_response-library.html">sql_response</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="sql_row_extensions">
+  <span class="name"><a href="sql_row_extensions/sql_row_extensions-library.html">sql_row_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="string_extensions">
+  <span class="name"><a href="string_extensions/string_extensions-library.html">string_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="string_helpers">
+  <span class="name"><a href="string_helpers/string_helpers-library.html">string_helpers</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="tag_xml">
+  <span class="name"><a href="tag_xml/tag_xml-library.html">tag_xml</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="telefone">
+  <span class="name"><a href="telefone/telefone-library.html">telefone</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="text_editing_controller_extensions">
+  <span class="name"><a href="text_editing_controller_extensions/text_editing_controller_extensions-library.html">text_editing_controller_extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="text_extension">
+  <span class="name"><a href="text_extension/text_extension-library.html">text_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="text_style_extension">
+  <span class="name"><a href="text_style_extension/text_style_extension-library.html">text_style_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="theme_extension">
+  <span class="name"><a href="theme_extension/theme_extension-library.html">theme_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="tooltip_extension">
+  <span class="name"><a href="tooltip_extension/tooltip_extension-library.html">tooltip_extension</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="validation_interface">
+  <span class="name"><a href="validation_interface/validation_interface-library.html">validation_interface</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="widget_ext">
+  <span class="name"><a href="widget_ext/widget_ext-library.html">widget_ext</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="auto_size_text">
+  <span class="name"><a href="widgets_auto_size_text/widgets_auto_size_text-library.html">widgets\auto_size_text</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="avatar_image">
+  <span class="name"><a href="widgets_avatar_image/widgets_avatar_image-library.html">widgets\avatar_image</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="brazil_plate">
+  <span class="name"><a href="widgets_brazil_plate/widgets_brazil_plate-library.html">widgets\brazil_plate</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="custom_calendar">
+  <span class="name"><a href="widgets_custom_calendar/widgets_custom_calendar-library.html">widgets\custom_calendar</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="custom_date_range_picker">
+  <span class="name"><a href="widgets_custom_date_range_picker/widgets_custom_date_range_picker-library.html">widgets\custom_date_range_picker</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="date_picker_form_field">
+  <span class="name"><a href="widgets_date_picker_form_field/widgets_date_picker_form_field-library.html">widgets\date_picker_form_field</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="digital_clock">
+  <span class="name"><a href="widgets_digital_clock/widgets_digital_clock-library.html">widgets\digital_clock</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="empty_widget">
+  <span class="name"><a href="widgets_empty_widget/widgets_empty_widget-library.html">widgets\empty_widget</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="expandable">
+  <span class="name"><a href="widgets_expandable/widgets_expandable-library.html">widgets\expandable</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="future_awaiter">
+  <span class="name"><a href="widgets_future_awaiter/widgets_future_awaiter-library.html">widgets\future_awaiter</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="icon_card">
+  <span class="name"><a href="widgets_icon_card/widgets_icon_card-library.html">widgets\icon_card</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="icon_menu">
+  <span class="name"><a href="widgets_icon_menu/widgets_icon_menu-library.html">widgets\icon_menu</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="image_card">
+  <span class="name"><a href="widgets_image_card/widgets_image_card-library.html">widgets\image_card</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="image_of_widget">
+  <span class="name"><a href="widgets_image_of_widget/widgets_image_of_widget-library.html">widgets\image_of_widget</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="milk_truck">
+  <span class="name"><a href="widgets_milk_truck/widgets_milk_truck-library.html">widgets\milk_truck</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="min_size">
+  <span class="name"><a href="widgets_min_size/widgets_min_size-library.html">widgets\min_size</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="nil">
+  <span class="name"><a href="widgets_nil/widgets_nil-library.html">widgets\nil</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="placeholders">
+  <span class="name"><a href="widgets_placeholders/widgets_placeholders-library.html">widgets\placeholders</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="responsive">
+  <span class="name"><a href="widgets_responsive/widgets_responsive-library.html">widgets\responsive</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="responsive_grid">
+  <span class="name"><a href="widgets_responsive_grid/widgets_responsive_grid-library.html">widgets\responsive_grid</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="scaffold_builder">
+  <span class="name"><a href="widgets_scaffold_builder/widgets_scaffold_builder-library.html">widgets\scaffold_builder</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="shimmer">
+  <span class="name"><a href="widgets_shimmer/widgets_shimmer-library.html">widgets\shimmer</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="square_button">
+  <span class="name"><a href="widgets_square_button/widgets_square_button-library.html">widgets\square_button</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="value_field">
+  <span class="name"><a href="widgets_value_field/widgets_value_field-library.html">widgets\value_field</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="widgets_to_image">
+  <span class="name"><a href="widgets_widgets_to_image/widgets_widgets_to_image-library.html">widgets\widgets_to_image</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="https://zonaro.github.io/innerlibs_dart">innerlibs package</a></li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">innerlibs</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="align_extensions/align_extensions-library.html">align_extensions</a></li>
+      <li><a href="alignment_extensions/alignment_extensions-library.html">alignment_extensions</a></li>
+      <li><a href="boolean_extensions/boolean_extensions-library.html">boolean_extensions</a></li>
+      <li><a href="brasil/brasil-library.html">brasil</a></li>
+      <li><a href="build_context_extensions/build_context_extensions-library.html">build_context_extensions</a></li>
+      <li><a href="center_extensions/center_extensions-library.html">center_extensions</a></li>
+      <li><a href="cidade/cidade-library.html">cidade</a></li>
+      <li><a href="color_extensions/color_extensions-library.html">color_extensions</a></li>
+      <li><a href="container_extension/container_extension-library.html">container_extension</a></li>
+      <li><a href="data_directory/data_directory-library.html">data_directory</a></li>
+      <li><a href="date_extension/date_extension-library.html">date_extension</a></li>
+      <li><a href="date_range/date_range-library.html">date_range</a></li>
+      <li><a href="debounce/debounce-library.html">debounce</a></li>
+      <li><a href="dialog_extension/dialog_extension-library.html">dialog_extension</a></li>
+      <li><a href="edge_insets_extensions/edge_insets_extensions-library.html">edge_insets_extensions</a></li>
+      <li><a href="endereco/endereco-library.html">endereco</a></li>
+      <li><a href="estado/estado-library.html">estado</a></li>
+      <li><a href="expanded_extension/expanded_extension-library.html">expanded_extension</a></li>
+      <li><a href="file_extensions/file_extensions-library.html">file_extensions</a></li>
+      <li><a href="flexible_extension/flexible_extension-library.html">flexible_extension</a></li>
+      <li><a href="formatters/formatters-library.html">formatters</a></li>
+      <li><a href="general_extensions/general_extensions-library.html">general_extensions</a></li>
+      <li><a href="gesture_detector_extension/gesture_detector_extension-library.html">gesture_detector_extension</a></li>
+      <li><a href="global/global-library.html">global</a></li>
+      <li><a href="icon_extensions/icon_extensions-library.html">icon_extensions</a></li>
+      <li><a href="image_provider_extensions/image_provider_extensions-library.html">image_provider_extensions</a></li>
+      <li><a href="info_usuario/info_usuario-library.html">info_usuario</a></li>
+      <li><a href="innerlibs/innerlibs-library.html">innerlibs</a></li>
+      <li><a href="keyed_json_table/keyed_json_table-library.html">keyed_json_table</a></li>
+      <li><a href="l10n_app_localizations/l10n_app_localizations-library.html">l10n\app_localizations</a></li>
+      <li><a href="l10n_app_localizations_en/l10n_app_localizations_en-library.html">l10n\app_localizations_en</a></li>
+      <li><a href="l10n_app_localizations_pt/l10n_app_localizations_pt-library.html">l10n\app_localizations_pt</a></li>
+      <li><a href="list_extensions/list_extensions-library.html">list_extensions</a></li>
+      <li><a href="map_extensions/map_extensions-library.html">map_extensions</a></li>
+      <li><a href="named_color/named_color-library.html">named_color</a></li>
+      <li><a href="num_extensions/num_extensions-library.html">num_extensions</a></li>
+      <li><a href="oembed/oembed-library.html">oembed</a></li>
+      <li><a href="opacity_extension/opacity_extension-library.html">opacity_extension</a></li>
+      <li><a href="padding_extension/padding_extension-library.html">padding_extension</a></li>
+      <li><a href="pixel_converter/pixel_converter-library.html">pixel_converter</a></li>
+      <li><a href="positioned_extensions/positioned_extensions-library.html">positioned_extensions</a></li>
+      <li><a href="preset_buttons/preset_buttons-library.html">preset_buttons</a></li>
+      <li><a href="self_map/self_map-library.html">self_map</a></li>
+      <li><a href="shimmer_extensions/shimmer_extensions-library.html">shimmer_extensions</a></li>
+      <li><a href="size_box_extension/size_box_extension-library.html">size_box_extension</a></li>
+      <li><a href="size_extensions/size_extensions-library.html">size_extensions</a></li>
+      <li><a href="sql_response/sql_response-library.html">sql_response</a></li>
+      <li><a href="sql_row_extensions/sql_row_extensions-library.html">sql_row_extensions</a></li>
+      <li><a href="string_extensions/string_extensions-library.html">string_extensions</a></li>
+      <li><a href="string_helpers/string_helpers-library.html">string_helpers</a></li>
+      <li><a href="tag_xml/tag_xml-library.html">tag_xml</a></li>
+      <li><a href="telefone/telefone-library.html">telefone</a></li>
+      <li><a href="text_editing_controller_extensions/text_editing_controller_extensions-library.html">text_editing_controller_extensions</a></li>
+      <li><a href="text_extension/text_extension-library.html">text_extension</a></li>
+      <li><a href="text_style_extension/text_style_extension-library.html">text_style_extension</a></li>
+      <li><a href="theme_extension/theme_extension-library.html">theme_extension</a></li>
+      <li><a href="tooltip_extension/tooltip_extension-library.html">tooltip_extension</a></li>
+      <li><a href="validation_interface/validation_interface-library.html">validation_interface</a></li>
+      <li><a href="widget_ext/widget_ext-library.html">widget_ext</a></li>
+      <li><a href="widgets_auto_size_text/widgets_auto_size_text-library.html">widgets\auto_size_text</a></li>
+      <li><a href="widgets_avatar_image/widgets_avatar_image-library.html">widgets\avatar_image</a></li>
+      <li><a href="widgets_brazil_plate/widgets_brazil_plate-library.html">widgets\brazil_plate</a></li>
+      <li><a href="widgets_custom_calendar/widgets_custom_calendar-library.html">widgets\custom_calendar</a></li>
+      <li><a href="widgets_custom_date_range_picker/widgets_custom_date_range_picker-library.html">widgets\custom_date_range_picker</a></li>
+      <li><a href="widgets_date_picker_form_field/widgets_date_picker_form_field-library.html">widgets\date_picker_form_field</a></li>
+      <li><a href="widgets_digital_clock/widgets_digital_clock-library.html">widgets\digital_clock</a></li>
+      <li><a href="widgets_empty_widget/widgets_empty_widget-library.html">widgets\empty_widget</a></li>
+      <li><a href="widgets_expandable/widgets_expandable-library.html">widgets\expandable</a></li>
+      <li><a href="widgets_future_awaiter/widgets_future_awaiter-library.html">widgets\future_awaiter</a></li>
+      <li><a href="widgets_icon_card/widgets_icon_card-library.html">widgets\icon_card</a></li>
+      <li><a href="widgets_icon_menu/widgets_icon_menu-library.html">widgets\icon_menu</a></li>
+      <li><a href="widgets_image_card/widgets_image_card-library.html">widgets\image_card</a></li>
+      <li><a href="widgets_image_of_widget/widgets_image_of_widget-library.html">widgets\image_of_widget</a></li>
+      <li><a href="widgets_milk_truck/widgets_milk_truck-library.html">widgets\milk_truck</a></li>
+      <li><a href="widgets_min_size/widgets_min_size-library.html">widgets\min_size</a></li>
+      <li><a href="widgets_nil/widgets_nil-library.html">widgets\nil</a></li>
+      <li><a href="widgets_placeholders/widgets_placeholders-library.html">widgets\placeholders</a></li>
+      <li><a href="widgets_responsive/widgets_responsive-library.html">widgets\responsive</a></li>
+      <li><a href="widgets_responsive_grid/widgets_responsive_grid-library.html">widgets\responsive_grid</a></li>
+      <li><a href="widgets_scaffold_builder/widgets_scaffold_builder-library.html">widgets\scaffold_builder</a></li>
+      <li><a href="widgets_shimmer/widgets_shimmer-library.html">widgets\shimmer</a></li>
+      <li><a href="widgets_square_button/widgets_square_button-library.html">widgets\square_button</a></li>
+      <li><a href="widgets_value_field/widgets_value_field-library.html">widgets\value_field</a></li>
+      <li><a href="widgets_widgets_to_image/widgets_widgets_to_image-library.html">widgets\widgets_to_image</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1-dev.3
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

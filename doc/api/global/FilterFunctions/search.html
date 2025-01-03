@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the search method from the FilterFunctions extension, for the Dart programming language.">
+  <title>search method - FilterFunctions extension - global library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../global/global-library.html">global.dart</a></li>
+    <li><a href="../../global/FilterFunctions.html">FilterFunctions</a></li>
+    <li class="self-crumb">search&lt;<wbr><span class="type-parameter">T</span>&gt; method</li>
+  </ol>
+  <div class="self-name">search</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="global&#47;FilterFunctions-extension-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">search&lt;<wbr><span class="type-parameter">T</span>&gt;</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+<span class="name ">search</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="search-param-items"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">items</span>, </span></li>
+<li><span class="parameter" id="search-param-searchTerms"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">searchTerms</span>, </span></li>
+<li><span class="parameter" id="search-param-searchOn"><span class="type-annotation"><a href="../../global/SearchOnFunction.html">SearchOnFunction</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span>?</span> <span class="parameter-name">searchOn</span>, </span></li>
+<li><span class="parameter" id="search-param-levenshteinDistance"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">levenshteinDistance</span> = <span class="default-value">0</span>, </span></li>
+<li><span class="parameter" id="search-param-ignoreCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreCase</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="search-param-ignoreDiacritics"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreDiacritics</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="search-param-ignoreWordSplitters"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">ignoreWordSplitters</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="search-param-splitCamelCase"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">splitCamelCase</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="search-param-useWildcards"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useWildcards</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="search-param-allIfEmpty"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">allIfEmpty</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="search-param-maxResults"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxResults</span> = <span class="default-value">0</span>, </span></li>
+<li><span class="parameter" id="search-param-minChars"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">minChars</span> = <span class="default-value">0</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Searches the iterable for items that match the specified search criteria.</p>
+<ul>
+<li>The <code>searchTerms</code> parameter specifies the term to search for. Can be a string or a list of strings.</li>
+<li>The <code>searchOn</code> parameter is a function that returns a list of strings to search on for each item.</li>
+<li>The <code>levenshteinDistance</code> parameter specifies the maximum Levenshtein distance allowed for fuzzy matching.</li>
+<li>The <code>ignoreCase</code>, <code>ignoreDiacritics</code>, <code>ignoreWordSplitters</code>, <code>splitCamelCase</code>, <code>useWildcards</code>, and <code>allIfEmpty</code> parameters control various search options.</li>
+</ul>
+<p>Returns an iterable of items that match the search criteria, ordered by relevance.
+The relevance is determined by the number of matches and the Levenshtein distance (if applicable).</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Iterable&lt;T&gt; search&lt;T&gt;({
+  required Iterable&lt;T&gt; items,
+  required dynamic searchTerms,
+  SearchOnFunction&lt;T&gt;? searchOn,
+  int levenshteinDistance = 0,
+  bool ignoreCase = true,
+  bool ignoreDiacritics = true,
+  bool ignoreWordSplitters = true,
+  bool splitCamelCase = true,
+  bool useWildcards = false,
+  bool allIfEmpty = true,
+  int maxResults = 0,
+  int minChars = 0,
+}) {
+  if (items.isEmpty) return &lt;T&gt;[].orderBy((e) =&gt; true);
+
+  var searches = forceRecursiveList(searchTerms).whereNotBlank;
+
+  if (minChars &gt; 0) {
+    searches = searches.where((e) =&gt; flatString(e).length &gt;= minChars);
+    allIfEmpty = false;
+  }
+
+  if (searches.isEmpty) {
+    if (allIfEmpty) {
+      return items;
+    } else {
+      return &lt;T&gt;[];
+    }
+  }
+
+  searchOn ??= (T item) =&gt; [changeTo&lt;string&gt;(item)];
+
+  var l = [
+    ...items.where(
+      (item) {
+        return Get.searchFunction(
+          searchTerms: searches,
+          searchOnItems: searchOn!(item),
+          ignoreCase: ignoreCase,
+          ignoreDiacritics: ignoreDiacritics,
+          ignoreWordSplitters: ignoreWordSplitters,
+          splitCamelCase: splitCamelCase,
+          useWildcards: useWildcards,
+          levenshteinDistance: levenshteinDistance,
+        );
+      },
+    )
+  ];
+
+  if (l.isEmpty &amp;&amp; levenshteinDistance &gt; 0) {
+    l = [
+      ...items.where(
+        (item) =&gt; levenshteinFunction(
+          searchTerms: searches,
+          searchOnItems: searchOn!(item),
+          levenshteinDistance: levenshteinDistance,
+          ignoreCase: ignoreCase,
+        ),
+      )
+    ];
+  }
+
+  l = [
+    ...l.orderByDescending(
+      (item) =&gt; countJaro(
+        searchTerms: searches,
+        searchOn: searchOn!(item),
+        ignoreCase: ignoreCase,
+        ignoreDiacritics: ignoreDiacritics,
+        ignoreWordSplitters: ignoreWordSplitters,
+        splitCamelCase: splitCamelCase,
+      ),
+    ),
+  ];
+
+  if (maxResults &gt; 0) l = [...l.take(maxResults)];
+  return l;
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../global/global-library.html">global</a></li>
+    <li><a href="../../global/FilterFunctions.html">FilterFunctions</a></li>
+    <li class="self-crumb">search&lt;<wbr><span class="type-parameter">T</span>&gt; method</li>
+</ol>
+
+    <h5>FilterFunctions extension on <a href="https://pub.dev/documentation/get/4.6.6/get/GetInterface-class.html">GetInterface</a></h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1-dev.3
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

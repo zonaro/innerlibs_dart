@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the changeTo function from the global library, for the Dart programming language.">
+  <title>changeTo function - global library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../global/global-library.html">global.dart</a></li>
+    <li class="self-crumb">changeTo&lt;<wbr><span class="type-parameter">R</span>&gt; function</li>
+  </ol>
+  <div class="self-name">changeTo</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="global&#47;global-library-sidebar.html"
+      data-below-sidebar="">
+      <div>
+<h1><span class="kind-function">changeTo&lt;<wbr><span class="type-parameter">R</span>&gt;</span> function 
+ 
+</h1></div>
+
+    <section class="multi-line-signature">
+        
+<span class="returntype">R</span>
+<span class="name ">changeTo</span>&lt;<wbr><span class="type-parameter">R</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="changeTo-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, [</span></li>
+<li><span class="parameter" id="changeTo-param-locale"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">locale</span></span></li>
+</ol>])
+
+        
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Try change a value of any type into a value of type <code>R</code>.</p>
+<ul>
+<li>If the value is <code>null</code>, returns <code>null</code> if R is nullable otherwise throws an exception.</li>
+<li>If <code>value</code> is <code>R</code> returns the value as is.</li>
+<li>If <code>R</code> is <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a>, converts the value to a <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a> using the <code>toDate()</code> method.</li>
+<li>If <code>R</code> is <a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a>, parses the value as a <a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a> using the <code>num.parse()</code> method.</li>
+<li>If <code>R</code> is <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>, parses the value as an <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a> using the <code>int.parse()</code> method.</li>
+<li>If <code>R</code> is <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>, parses the value as a <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a> using the <code>double.parse()</code> method.</li>
+<li>If <code>R</code> is <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>, returns the value as a <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a> using <code>jsonEncode()</code>.</li>
+<li>If <code>R</code> is <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>, converts the value to a <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a> using the <code>asBool()</code> method.</li>
+<li>If <code>R</code> is <a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a>, converts the value to a <a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a> using the <code>forceWidget()</code> method.</li>
+<li>If <code>R</code> is <a href="https://api.flutter.dev/flutter/widgets/Text-class.html">Text</a>, converts the value to a <a href="https://api.flutter.dev/flutter/widgets/Text-class.html">Text</a> using the <code>asText()</code> method.</li>
+<li>If <code>R</code> is <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a>, converts the value to a <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a> containing the value.</li>
+<li>if <code>R</code> is another type, try returns the value as <code>R</code>.</li>
+<li>If none of the above conditions are met, throws an exception.</li>
+</ul>
+<p>if <code>locale</code> is provided, it is used to format and parse numbers and dates.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">R changeTo&lt;R&gt;(dynamic value, [String? locale]) {
+  locale = locale?.nullIfBlank;
+  if (value is R) return value;
+  if (value != null) {
+    &#47;&#47; consoleLog(&quot;Changing $value from ${value.runtimeType} to $R&quot;);
+    NumberFormat? nf = locale == null ? null : NumberFormat(null, locale);
+    if (isSameType&lt;R, DateTime&gt;()) {
+      if (value is num) return DateTime.fromMillisecondsSinceEpoch(value.round()) as R;
+      if (locale == null) return date.parse(&quot;$value&quot;) as R;
+      return &quot;$value&quot;.toDate(null, locale) as R;
+    } else if (isSameType&lt;R, int&gt;()) {
+      if (value is DateTime) {
+        return changeTo(value.millisecondsSinceEpoch, locale);
+      } else if (value is num) {
+        return value.toInt() as R;
+      } else {
+        return int.parse(&quot;$value&quot;.ifBlank(&quot;0&quot;).onlyNumbers) as R;
+      }
+    } else if (isSameType&lt;R, double&gt;()) {
+      if (value is DateTime) {
+        return changeTo(value.millisecondsSinceEpoch, locale);
+      } else if (value is num) {
+        return value.toDouble() as R;
+      } else {
+        return (nf?.tryParse(changeTo(value, locale))?.toDouble() ?? double.parse(changeTo&lt;string&gt;(value, locale).ifBlank(&quot;0&quot;).removeLetters)) as R;
+      }
+    } else if (isSameType&lt;R, num&gt;()) {
+      if (value is DateTime) {
+        return changeTo(value.millisecondsSinceEpoch, locale);
+      } else {
+        return (nf?.tryParse(changeTo(value, locale)) ?? num.parse(changeTo&lt;string&gt;(value, locale).ifBlank(&quot;0&quot;).removeLetters)) as R;
+      }
+    } else if (isSameType&lt;R, Color&gt;()) {
+      if (value is num) {
+        return Color(value.round()) as R;
+      }
+      if (value is NamedColor) {
+        return value as R;
+      }
+      return changeTo&lt;string&gt;(value).asColor as R;
+    } else if (isSameType&lt;R, String&gt;()) {
+      if (value is DateTime) {
+        return value.format() as R;
+      } else if (value is Duration) {
+        return value.formatted as R;
+      } else if (value is num) {
+        return (nf?.format(value) ?? &quot;$value&quot;) as R;
+      } else if (value is Color) {
+        return value.hexadecimal as R;
+      } else if (value is Uri) {
+        return value.toString() as R;
+      } else if (value is Widget) {
+        return value.text as R;
+      } else if (value is List) {
+        return jsonEncode(value) as R;
+      } else if (value is Map) {
+        return jsonEncode(value) as R;
+      } else {
+        return &quot;$value&quot; as R;
+      }
+    } else if (isSameType&lt;R, bool&gt;()) {
+      return &quot;$value&quot;.asBool() as R;
+    } else if (isSameType&lt;R, Uri&gt;()) {
+      return Uri.parse(&quot;$value&quot;) as R;
+    } else if (isSameType&lt;R, Widget&gt;()) {
+      return forceWidget(value) as R;
+    } else if (isSameType&lt;R, Text&gt;()) {
+      return (value as Object?).asNullableText() as R;
+    } else if (isSameType&lt;R, List&gt;()) {
+      return forceList(value) as R;
+    }
+  } else {
+    if (isNullable&lt;R&gt;()) {
+      return null as R;
+    } else if (isSameType&lt;R, string&gt;()) {
+      return &quot;&quot; as R;
+    } else if (isSameType&lt;R, bool&gt;()) {
+      return false as R;
+    } else if (isSameType&lt;R, int&gt;()) {
+      return 0 as R;
+    } else if (isSameType&lt;R, num&gt;()) {
+      return 0.0 as R;
+    } else if (isSameType&lt;R, double&gt;()) {
+      return 0.0 as R;
+    } else if (isSameType&lt;R, DateTime&gt;()) {
+      return minDate as R;
+    } else if (isSameType&lt;R, List&gt;()) {
+      return [] as R;
+    } else if (isSameType&lt;R, Text&gt;()) {
+      return const Text(&quot;&quot;) as R;
+    } else if (isSameType&lt;R, Widget&gt;()) {
+      return nil as R;
+    } else if (isSameType&lt;R, Color&gt;()) {
+      return Colors.transparent as R;
+    } else if (isSameType&lt;R, Uri&gt;()) {
+      return Uri.parse(&quot;http:&#47;&#47;localhost:80&quot;) as R;
+    }
+  }
+  throw Exception(&quot;Incompatible conversion&quot;);
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">innerlibs</a></li>
+    <li><a href="../global/global-library.html">global</a></li>
+    <li class="self-crumb">changeTo&lt;<wbr><span class="type-parameter">R</span>&gt; function</li>
+</ol>
+
+    <h5>global library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-left-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1-dev.3
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

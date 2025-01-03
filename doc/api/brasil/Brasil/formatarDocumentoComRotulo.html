@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the formatarDocumentoComRotulo method from the Brasil class, for the Dart programming language.">
+  <title>formatarDocumentoComRotulo method - Brasil class - brasil library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../brasil/brasil-library.html">brasil.dart</a></li>
+    <li><a href="../../brasil/Brasil-class.html">Brasil</a></li>
+    <li class="self-crumb">formatarDocumentoComRotulo static method</li>
+  </ol>
+  <div class="self-name">formatarDocumentoComRotulo</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="brasil&#47;Brasil-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">formatarDocumentoComRotulo</span> static method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype"><a href="../../innerlibs/string.html">string</a></span>
+<span class="name ">formatarDocumentoComRotulo</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="formatarDocumentoComRotulo-param-documento"><span class="type-annotation">dynamic</span> <span class="parameter-name">documento</span>, </span></li>
+<li><span class="parameter" id="formatarDocumentoComRotulo-param-rotuloPadrao"><span class="type-annotation"><a href="../../innerlibs/string.html">string</a></span> <span class="parameter-name">rotuloPadrao</span> = <span class="default-value">&quot;&quot;</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Formata um documento com um rótulo opcional.</p>
+<p>O parâmetro <code>documento</code> pode ser um valor único, uma lista ou um mapa.
+Se <code>documento</code> for uma lista, cada elemento será formatado individualmente e separado por uma quebra de linha.
+Se <code>documento</code> for um mapa, a chave é utilizada como rótulo e o valor será formatado individualmente e separado por uma quebra de linha.
+O parâmetro <code>rotuloPadrao</code> é opcional e define um rótulo padrão para ser usado caso a chave do mapa seja vazia.</p>
+<p>Retorna o documento formatado como uma string.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">static string formatarDocumentoComRotulo({dynamic documento, string rotuloPadrao = &quot;&quot;}) {
+  if (documento is Iterable) {
+    return documento.map((e) =&gt; formatarDocumentoComRotulo(documento: e, rotuloPadrao: rotuloPadrao)).join(&quot;\r\n&quot;);
+  }
+  if (documento is Map) {
+    return documento.entries.map((e) =&gt; &quot;${flatString(e.key).isBlank ? rotuloPadrao : e.key.toString().pascalSplitString}: ${e.value}&quot;).join(&quot;\r\n&quot;);
+  }
+
+  var rotulo = pegarRotuloDocumento(documento: documento, rotuloPadrao: rotuloPadrao);
+
+  if (rotulo.isNotBlank) {
+    return &quot;$rotulo: ${formatarDocumento(documento)}&quot;;
+  }
+  return formatarDocumento(documento);
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">innerlibs</a></li>
+    <li><a href="../../brasil/brasil-library.html">brasil</a></li>
+    <li><a href="../../brasil/Brasil-class.html">Brasil</a></li>
+    <li class="self-crumb">formatarDocumentoComRotulo static method</li>
+</ol>
+
+    <h5>Brasil class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    innerlibs
+      0.0.1-dev.3
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
