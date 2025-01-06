@@ -113,15 +113,17 @@ enum Estado implements Comparable<Estado> {
   /// ```dart
   /// List<Estado> estados = await Estado.pegarEstados;
   /// ```
-  static List<Estado> get pegarEstados => values.whereNot((e) => [
-        Estado.naoDefinido,
-        Estado.suframa,
-        Estado.an,
-        Estado.svcrs,
-        Estado.svcsp,
-        Estado.ex,
-        Estado.sincChavesRSparaSVSP,
-      ].contains(e)).toList();
+  static List<Estado> get pegarEstados => values
+      .whereNot((e) => [
+            Estado.naoDefinido,
+            Estado.suframa,
+            Estado.an,
+            Estado.svcrs,
+            Estado.svcsp,
+            Estado.ex,
+            Estado.sincChavesRSparaSVSP,
+          ].contains(e))
+      .toList();
 
   static List<Estado> get pegarEstadosECodigosEspeciais => values;
 
@@ -144,6 +146,9 @@ enum Estado implements Comparable<Estado> {
 
   /// Constrói um [Estado] com o valor fornecido.
   const Estado(this.ibge, this.latitude, this.longitude, this.nome, this.uf, this.regiao);
+
+  /// Cria uma instancia de Estado a partir da inscrição estadual
+  factory Estado.fromInscricaoEstadual(dynamic value) => values.firstWhereOrNull((e) => e.validarInscricaoEstadual(value)) ?? Estado.naoDefinido;
 
   /// Cria uma instância de Estado a partir do código IBGE.
   factory Estado.fromUForIbge(dynamic value) {
@@ -935,18 +940,15 @@ enum Estado implements Comparable<Estado> {
           }
         }
         break;
+      case Estado.naoDefinido:
       case Estado.suframa:
-        return false;
       case Estado.svcrs:
-        return false;
       case Estado.svcsp:
-        return false;
       case Estado.sincChavesRSparaSVSP:
         return false;
       case Estado.ex:
         return "$value".flatEqual("EX");
       case Estado.an:
-      case Estado.naoDefinido:
         return Brasil.estados.any((x) => x.validarInscricaoEstadual(value));
     }
 

@@ -790,18 +790,15 @@
         }
       }
       break;
+    case Estado.naoDefinido:
     case Estado.suframa:
-      return false;
     case Estado.svcrs:
-      return false;
     case Estado.svcsp:
-      return false;
     case Estado.sincChavesRSparaSVSP:
       return false;
     case Estado.ex:
       return &quot;$value&quot;.flatEqual(&quot;EX&quot;);
     case Estado.an:
-    case Estado.naoDefinido:
       return Brasil.estados.any((x) =&gt; x.validarInscricaoEstadual(value));
   }
 
@@ -834,7 +831,7 @@
 <footer>
   <span class="no-break">
     innerlibs
-      0.0.1-dev.4
+      0.0.1-dev.5
   </span>
   
 </footer>
