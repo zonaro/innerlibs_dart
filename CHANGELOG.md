@@ -13,3 +13,8 @@
 ## 0.0.1-dev.4
 
 * remove getX
+  
+## 0.0.1-dev.5
+
+* Add CampoListaCidadeMap
+
