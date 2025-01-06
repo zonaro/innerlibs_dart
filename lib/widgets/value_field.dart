@@ -96,6 +96,59 @@ class CampoListaCidade extends StatelessWidget {
   }
 }
 
+class CampoListaCidadeMap<T> extends StatelessWidget {
+  final T? value;
+  final T? Function(Cidade?) valueSelector;
+  final dynamic nomeEstadoOuUFOuIBGEouRegiao;
+  final void Function(T?) onChanged;
+  final String? Function(T?)? validator;
+  final String? label;
+  final bool readOnly;
+  final IconData? icon;
+  final bool isAutoComplete;
+  final bool useIbge;
+  final int minChars = 0;
+  final int levenshteinDistance = 2;
+
+  const CampoListaCidadeMap({
+    super.key,
+    this.value,
+    this.nomeEstadoOuUFOuIBGEouRegiao,
+    required this.onChanged,
+    this.validator,
+    this.label,
+    this.readOnly = false,
+    this.icon = Icons.location_city,
+    this.isAutoComplete = false,
+    this.useIbge = false,
+    required this.valueSelector,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureAwaiter(
+      data: AwaiterData(expireDataAfter: 1.seconds),
+      future: () async => Brasil.pegarCidade(value, nomeEstadoOuUFOuIBGEouRegiao),
+      builder: (x) => CampoListaCidade(
+        onChanged: (x) => onChanged(valueSelector(x)),
+        value: x,
+        nomeEstadoOuUFOuIBGEouRegiao: nomeEstadoOuUFOuIBGEouRegiao,
+        validator: (x){
+          if (validator != null) {
+            return validator!(valueSelector(x));
+          }
+          return null;
+        },
+        label: label,
+        readOnly: readOnly,
+        icon: icon,
+        isAutoComplete: isAutoComplete,
+        useIbge: useIbge,
+      ),
+    );
+  }
+}
+
 class CampoListaEstado extends StatelessWidget {
   final Estado estadoValue;
   final void Function(Estado) onChanged;
