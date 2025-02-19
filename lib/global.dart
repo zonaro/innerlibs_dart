@@ -412,7 +412,25 @@ Set<T> forceSetOf<T>(dynamic item) => forceListOf<T>(item).toSet();
 ///   defaultText: 'No object provided',
 /// );
 /// ```
-Widget? forceWidget(dynamic item, {TextStyle? style, StrutStyle? strutStyle, TextAlign? textAlign, TextDirection? textDirection, Locale? locale, bool? softWrap, TextOverflow? overflow, TextScaler? textScaler, int? maxLines, String? semanticsLabel, TextWidthBasis? textWidthBasis, bool validate = true, String? defaultText, BoxFit? fit, AlignmentGeometry? alignment, ResponsiveColumn? columnSizes}) {
+Widget? forceWidget(
+  dynamic item, {
+  TextStyle? style,
+  StrutStyle? strutStyle,
+  TextAlign? textAlign,
+  TextDirection? textDirection,
+  Locale? locale,
+  bool? softWrap,
+  TextOverflow? overflow,
+  TextScaler? textScaler,
+  int? maxLines,
+  String? semanticsLabel,
+  TextWidthBasis? textWidthBasis,
+  bool validate = true,
+  String? defaultText,
+  BoxFit? fit,
+  AlignmentGeometry? alignment,
+  ResponsiveColumn? columnSizes,
+}) {
   if (item == null) return null;
   if (item is Widget) return item;
   if (item is ResponsiveColumn) return item.child;

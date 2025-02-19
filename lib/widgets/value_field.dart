@@ -73,6 +73,7 @@ class CampoListaCidade extends StatelessWidget {
         item.nome,
         item.ibge,
         item.estado.uf,
+        item.capital ? 'Capital' : '',
       ],
       label: label ?? (isValid(nomeEstadoOuUFOuIBGEouRegiao) ? "Cidade" : "Cidade/Estado"),
       itemBuilder: (context, item, isSelected) {
@@ -133,7 +134,7 @@ class CampoListaCidadeMap<T> extends StatelessWidget {
         onChanged: (x) => onChanged(valueSelector(x)),
         value: x,
         nomeEstadoOuUFOuIBGEouRegiao: nomeEstadoOuUFOuIBGEouRegiao,
-        validator: (x){
+        validator: (x) {
           if (validator != null) {
             return validator!(valueSelector(x));
           }

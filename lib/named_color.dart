@@ -3534,6 +3534,9 @@ enum NamedColor implements Color {
   double computeLuminance() => _color.computeLuminance();
 
   @override
+  int toARGB32() => _color.toARGB32();
+
+  @override
   string toString() => "${name.toTitleCase()} - $hexadecimal";
 
   @override

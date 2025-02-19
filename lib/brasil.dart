@@ -621,7 +621,7 @@ abstract interface class Brasil {
       cids.removeWhere((c) => c.estado.ibge != est.ibge);
     }
 
-    return cids.singleWhereOrNull((x) => x.nome.flatEqual(nomeCidadeOuIBGE) || x.ibge.toString() == nomeCidadeOuIBGE.toString());
+    return cids.trySingleWhereOrDefault((x) => x.nome.flatEqual(nomeCidadeOuIBGE) || x.ibge.toString() == nomeCidadeOuIBGE.toString());
   }
 
   /// Pega um estado a partir do nome, UF ou IBGE
@@ -783,7 +783,6 @@ abstract interface class Brasil {
         searchOn: (x) => [x.nome, x.ibge],
         minChars: minChars,
         levenshteinDistance: levenshteinDistance,
-        
       );
     } catch (e) {
       return [];

@@ -85,8 +85,7 @@ class Dao {
   /// The [nullAsBlank] parameter specifies whether to treat null values as blank.
   /// The [and] parameter specifies whether to use the AND operator in the WHERE clause.
   /// The [transform] parameter is an optional function to transform the query result.
-  Future<SQLResponseOf<T>> executeSelect<T>(
-      {required String tableName, List<String> columns = const [], JsonRow where = const {}, bool nullAsBlank = false, bool and = true, T Function(dynamic)? transform}) {
+  Future<SQLResponseOf<T>> executeSelect<T>({required String tableName, List<String> columns = const [], JsonRow where = const {}, bool nullAsBlank = false, bool and = true, T Function(dynamic)? transform}) {
     return executeSQL(
       dataSetType: "table",
       transform: transform,
@@ -170,15 +169,13 @@ mixin SqlUtil {
   ///
   /// The [quoteChar] parameter specifies the quote character to use for wrapping column names.
   /// The [dataBaseProvider] parameter is used to determine the appropriate quote character if [quoteChar] is not provided.
-  static String columnsFromList({required List<String> items, dynamic quoteChar, String dataBaseProvider = ""}) =>
-      items.map((x) => x.split(".").map((e) => SqlUtil.wrap(e, quoteChar, dataBaseProvider)).join(".")).join(", ");
+  static String columnsFromList({required List<String> items, dynamic quoteChar, String dataBaseProvider = ""}) => items.map((x) => x.split(".").map((e) => SqlUtil.wrap(e, quoteChar, dataBaseProvider)).join(".")).join(", ");
 
   /// Returns a comma-separated string of wrapped column names from the given map.
   ///
   /// The [quoteChar] parameter specifies the quote character to use for wrapping column names.
   /// The [dataBaseProvider] parameter is used to determine the appropriate quote character if [quoteChar] is not provided.
-  static String columnsFromMap<K, V>({required Map<K, V> items, dynamic quoteChar, String dataBaseProvider = ""}) =>
-      columnsFromList(items: items.keys.map((x) => "$x").toList(), quoteChar: quoteChar, dataBaseProvider: dataBaseProvider);
+  static String columnsFromMap<K, V>({required Map<K, V> items, dynamic quoteChar, String dataBaseProvider = ""}) => columnsFromList(items: items.keys.map((x) => "$x").toList(), quoteChar: quoteChar, dataBaseProvider: dataBaseProvider);
 
   static String generateSQLSearch(List<dynamic> values, List<String> columns, [string? quoteChar, String dataBaseProvider = ""]) {
     var whereClause = "";
@@ -236,8 +233,7 @@ mixin SqlUtil {
     return defaultQuoteChar;
   }
 
-  static String replaceSQLParameters(string s, JsonRow params, [bool nullAsBlank = true, string parameterMatch = ":"]) =>
-      s.replaceParameters(params.map((k, v) => MapEntry(k, value(v, nullAsBlank))), parameterMatch);
+  static String replaceSQLParameters(string s, JsonRow params, [bool nullAsBlank = true, string parameterMatch = ":"]) => s.replaceParameters(params.map((k, v) => MapEntry(k, value(v, nullAsBlank))), parameterMatch);
 
   /// Returns the appropriate "TOP" or "LIMIT" clause based on the given database provider and count.
   ///
@@ -255,7 +251,7 @@ mixin SqlUtil {
     return "";
   }
 
-  static string value<T>(T? value, [bool nullAsBlank = false, bool quoteStrings = true]) {
+  static String value<T>(T? value, [bool nullAsBlank = false, bool quoteStrings = true]) {
     // return a string of this object as a SQL Value
     if (value == null) {
       if (quoteStrings) {
@@ -296,7 +292,7 @@ mixin SqlUtil {
   /// Wraps the given object name with the specified quote character.
   /// If the quote character is not provided and the database provider is specified, it uses the appropriate quote character.
   /// Otherwise, it uses the [defaultQuoteChar].
-  static wrap(String objectName, [dynamic quoteChar, String dataBaseProvider = ""]) {
+  static String wrap(String objectName, [dynamic quoteChar, String dataBaseProvider = ""]) {
     if (quoteChar is bool) {
       if (quoteChar == false) {
         return objectName;
@@ -518,9 +514,7 @@ extension SqlRowExtensions on JsonRow {
     String dataBaseProvider = "",
     bool and = true,
   }) {
-    return entries
-        .map((e) => "${SqlUtil.wrap(e.key, quoteChar, dataBaseProvider)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${SqlUtil.value(e.value, nullAsBlank)}")
-        .join(' ${and ? "AND" : "OR"} ');
+    return entries.map((e) => "${SqlUtil.wrap(e.key, quoteChar, dataBaseProvider)} ${e.value == null && nullAsBlank == false ? "is" : "="} ${SqlUtil.value(e.value, nullAsBlank)}").join(' ${and ? "AND" : "OR"} ');
   }
 
   /// Generates a SQL call string for a given stored procedure and database provider.
