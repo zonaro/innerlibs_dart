@@ -118,7 +118,7 @@ extension BuildContextExtensions on BuildContext {
   /// short, high-emphasis text on smaller screens.
   TextStyle? get headlineSmall => textTheme.headlineSmall;
 
-  double get height => size?.height ?? double.infinity;
+  double get height => screenSize.height;
 
   /// The hover color used to indicate when a pointer is hovering over a
   /// component.
@@ -356,7 +356,7 @@ extension BuildContextExtensions on BuildContext {
   /// similar to [MediaQuery.of(context).viewPadding]
   EdgeInsets get viewPadding => MediaQuery.viewPaddingOf(this);
 
-  double get width => size?.width ?? double.infinity;
+  double get width => screenSize.width;
 
   /// a size computed by [ScreenTier]
 

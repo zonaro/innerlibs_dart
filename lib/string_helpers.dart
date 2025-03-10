@@ -22,7 +22,7 @@ string get breakLine => breaklineChars.first;
 string get breakline => breakLine;
 
 /// Line feed and carriage retrun
-Iterable<string> get breaklineChars => [Platform.lineTerminator, "\n", "\r", "\r\n"].distinct();
+Iterable<string> get breaklineChars => [if (!isWeb) Platform.lineTerminator, "\n", "\r", "\r\n"].distinct();
 
 /// Double-Quotes, Single-Quotes, Close Brackets etc
 Iterable<string> get closeWrappers => openCloseWrappers.map((x) => x.$2);

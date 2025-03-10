@@ -344,7 +344,6 @@ extension StringExtensions on String {
     return result.toString();
   }
 
-
   string get capitalizeFirst => isBlank ? blankIfNull : "${this[0].trim().toUpperCase()}${substring(1)}";
 
   /// Finds all character occurrences and returns count as:
@@ -2517,6 +2516,23 @@ extension StringExtensions on String {
       }
     }
     return index == length ? -1 : index;
+  }
+
+  string initials([int? maxLetters]) {
+    if (isBlank) {
+      return blankIfNull;
+    }
+    var initials = splitWords(WordSplitMode.wordsOnly).map((e) => e.first().toUpperCase());
+    maxLetters ??= initials.length;
+    maxLetters = maxLetters.clampMin(1);
+    if (initials.length <= maxLetters) return initials.join();
+
+    var last = initials.last;
+    var others = initials.skipLast(1);
+    while (others.join().length > maxLetters - 1) {
+      others = others.skipLast(1);
+    }
+    return others.join() + last;
   }
 
   /// Inserts a `String` at the specified index.
