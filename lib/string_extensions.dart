@@ -1047,8 +1047,29 @@ extension StringExtensions on String {
       return false;
     }
     // uses regex for url (with or without port) or IP (with or withou port)
-    return RegExp(r'^((http|https):\/\/)?(www\.)?([a-zA-Z0-9]+([a-zA-Z0-9-]+[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(:[0-9]{1,5})?$|^((http|https):\/\/)?([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,5})?$').hasMatch(this);
+    return hasMatch(r'^((http|https):\/\/)?(www\.)?([a-zA-Z0-9]+([a-zA-Z0-9-]+[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(:[0-9]{1,5})?$|^((http|https):\/\/)?([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,5})?$');
   }
+
+  bool get isURL {
+    if (isBlank) {
+      return false;
+    }
+    // uses regex for url (with or without port)
+    return hasMatch(r'^(https?:\/\/)?([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,6}(\/[^\s]*)?$');
+  }
+
+  bool get isAlphabetOnly {
+    if (isBlank) {
+      return false;
+    }
+    return hasMatch(r'^[a-zA-Z]+$');
+  }
+
+  bool get isAlphabetOrNumbersOrWhitespace => hasMatch(r'^[a-zA-Z0-9\s]+$');
+
+  bool get isAlphabetOrWhitespace => hasMatch(r'^[a-zA-Z\s]+$');
+
+  bool hasMatch(string regex) => RegExp(regex).hasMatch(this);
 
   /// Checks if the string is a valid EAN (European Article Number) barcode.
   ///
