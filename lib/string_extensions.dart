@@ -665,6 +665,17 @@ extension StringExtensions on String {
     return contains(RegExp(r'\s'));
   }
 
+  bool get isAlphabetOnly {
+    if (isBlank) {
+      return false;
+    }
+    return hasMatch(r'^[a-zA-Z]+$');
+  }
+
+  bool get isAlphabetOrNumbersOrWhitespaceOnly => hasMatch(r'^[a-zA-Z0-9\s]+$');
+
+  bool get isAlphabetOrWhitespaceOnly => hasMatch(r'^[a-zA-Z\s]+$');
+
   /// Checks whether the `String` is a valid ASCII string.
   ///
   /// ### Example
@@ -1018,6 +1029,14 @@ extension StringExtensions on String {
     return this == toUpperCase();
   }
 
+  bool get isURL {
+    if (isBlank) {
+      return false;
+    }
+    // uses regex for url (with or without port)
+    return hasMatch(r'^(https?:\/\/)?([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,6}(\/[^\s]*)?$');
+  }
+
   /// Checks if the `String` is a valid URL or IP address.
   /// Allow URls and IPs with or without http:// or https:// and with or without port.
   /// ### Example
@@ -1047,29 +1066,8 @@ extension StringExtensions on String {
       return false;
     }
     // uses regex for url (with or without port) or IP (with or withou port)
-    return hasMatch(r'^((http|https):\/\/)?(www\.)?([a-zA-Z0-9]+([a-zA-Z0-9-]+[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(:[0-9]{1,5})?$|^((http|https):\/\/)?([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,5})?$');
+    return isURL || isIP;
   }
-
-  bool get isURL {
-    if (isBlank) {
-      return false;
-    }
-    // uses regex for url (with or without port)
-    return hasMatch(r'^(https?:\/\/)?([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,6}(\/[^\s]*)?$');
-  }
-
-  bool get isAlphabetOnly {
-    if (isBlank) {
-      return false;
-    }
-    return hasMatch(r'^[a-zA-Z]+$');
-  }
-
-  bool get isAlphabetOrNumbersOrWhitespace => hasMatch(r'^[a-zA-Z0-9\s]+$');
-
-  bool get isAlphabetOrWhitespace => hasMatch(r'^[a-zA-Z\s]+$');
-
-  bool hasMatch(string regex) => RegExp(regex).hasMatch(this);
 
   /// Checks if the string is a valid EAN (European Article Number) barcode.
   ///
