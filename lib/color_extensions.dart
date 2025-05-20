@@ -199,6 +199,8 @@ extension ColorExtensions<T extends Color> on T {
     return Color.from(alpha: alpha, red: red, green: green, blue: blue);
   }
 
+  Color changeOpacity(double opacity) => withAlpha((a * opacity.clamp(0, 100)).round());
+
   /// Compares this color to another color.
   int compareColor(dynamic other) {
     if (other is int) {

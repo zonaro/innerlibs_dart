@@ -147,6 +147,8 @@ extension BuildContextExtensions on BuildContext {
   /// is dark mode currently enabled?
   bool get isDarkMode => themeBrightness == Brightness.dark;
 
+  bool get isLandscape => width > height;
+
   /// True if the shortestSide is largest than 720p
   bool get isLargeTabletSize => (shortestSide >= 720);
 
@@ -157,6 +159,8 @@ extension BuildContextExtensions on BuildContext {
 
   /// True if the shortestSide is smaller than 600p
   bool get isPhoneSize => (shortestSide < 600);
+
+  bool get isPortrait => height >= width;
 
   /// True if the shortestSide is largest than 600p
   bool get isSmallTabletSize => (shortestSide >= 600);
