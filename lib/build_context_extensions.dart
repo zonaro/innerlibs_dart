@@ -147,6 +147,7 @@ extension BuildContextExtensions on BuildContext {
   /// is dark mode currently enabled?
   bool get isDarkMode => themeBrightness == Brightness.dark;
 
+  /// Check if the device is in landscape mode
   bool get isLandscape => width > height;
 
   /// True if the shortestSide is largest than 720p
@@ -155,6 +156,7 @@ extension BuildContextExtensions on BuildContext {
   /// is light mode currently enabled?
   bool get isLightMode => themeBrightness == Brightness.light;
 
+  /// Check if the device is 4x3 aspect ratio
   bool get isOldTV => is4x3;
 
   /// True if the shortestSide is smaller than 600p
@@ -170,8 +172,10 @@ extension BuildContextExtensions on BuildContext {
   /// True if the current device is Tablet
   bool get isTabletSize => isSmallTabletSize || isLargeTabletSize;
 
+  /// Check if the device is 21x9 aspect ratio
   bool get isUltraWide => is21x9;
 
+  /// Check if the device is 16x9 aspect ratio
   bool get isWidescreen => is16x9;
 
   /// Largest of the label styles.
@@ -232,6 +236,7 @@ extension BuildContextExtensions on BuildContext {
   /// Returns the [RouteSettings] of the current modal route, or `null` if there is no modal route.
   RouteSettings? get modalRouteSettings => modalRoute?.settings;
 
+  /// Returns the [Navigator] associated with this [BuildContext].
   NavigatorState get navigator => Navigator.of(this);
 
   /// Returns the error color from the current theme's color scheme.
@@ -248,9 +253,9 @@ extension BuildContextExtensions on BuildContext {
 
   //Padding in physical pixels
   ViewPadding get padding => flutterView.padding;
+
   double get paddingBottom => flutterView.padding.bottom / flutterView.devicePixelRatio;
 
-  //Safe area paddings in logical pixels
   double get paddingLeft => flutterView.padding.left / flutterView.devicePixelRatio;
 
   double get paddingRight => flutterView.padding.right / flutterView.devicePixelRatio;
@@ -303,6 +308,7 @@ extension BuildContextExtensions on BuildContext {
   /// background color for a typical material app or a page within the app.
   Color get scaffoldBackgroundColor => theme.scaffoldBackgroundColor;
 
+  /// The [ScaffoldMessenger] that is associated with this [BuildContext].
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
 
   /// This change makes MediaQuery an InheritedModel rather than an InheritedWidget,
@@ -363,7 +369,6 @@ extension BuildContextExtensions on BuildContext {
   double get width => screenSize.width;
 
   /// a size computed by [ScreenTier]
-
   double adaptativeSize([double? size, double factor = .1]) {
     size ??= textTheme.bodyMedium?.fontSize ?? 14;
     size = size.forcePositive;
@@ -382,6 +387,7 @@ extension BuildContextExtensions on BuildContext {
   ///  just call this [canPop()] method and it would return true if this route can be popped and false if it’s not possible.
   bool canPop() => Navigator.canPop(this);
 
+  /// Clear all the snack bars from the current [ScaffoldMessenger].
   void clearSnackBars() => scaffoldMessenger.clearSnackBars();
 
   /// Control the focus of the current context
@@ -405,8 +411,10 @@ extension BuildContextExtensions on BuildContext {
     return b;
   }
 
+  /// Returns the [NumberSymbols] for the given [localeCode].
   NumberSymbols? localeNumberSymbols(string localeCode) => allNumberSymbols.firstWhere((element) => element.NAME.flatEqual(localeCode));
 
+  /// Request to move the focus to the next focus node
   bool nextFocus() => FocusScope.of(this).nextFocus();
 
   /// performs a simple [Navigator.pop] action and returns given [result]
@@ -421,6 +429,7 @@ extension BuildContextExtensions on BuildContext {
   /// perform replash with routeName
   void popUntilRoute(String screenName, {bool rootNavigator = false}) => Navigator.of(this, rootNavigator: rootNavigator).popUntil(ModalRoute.withName(screenName));
 
+  /// Request to move the focus to the previous focus node
   bool previousFocus() => FocusScope.of(this).previousFocus();
 
   /// performs a simple [Navigator.push] action with given [route]
