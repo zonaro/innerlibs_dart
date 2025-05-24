@@ -284,17 +284,19 @@ class CampoTipoPessoa extends StatelessWidget {
 }
 
 class CnpjCpfField extends StatelessWidget {
-  final void Function(String?) onChanged;
+  final void Function(String?)? onChanged;
   final bool readOnly;
   final string? label;
   final string? value;
+  final TextEditingController? controller;
 
   const CnpjCpfField({
     super.key,
-    required this.onChanged,
+    this.onChanged,
     this.readOnly = false,
     this.label,
     this.value,
+    this.controller,
   });
 
   @override
@@ -309,8 +311,11 @@ class CnpjCpfField extends StatelessWidget {
       keyboardType: const TextInputType.numberWithOptions(),
       validator: (newValue) => Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!",
       onChanged: (v, _) {
-        onChanged(v);
+        if (onChanged != null) {
+          onChanged!(v);
+        }
       },
+      controller: controller,
       readOnly: readOnly,
     );
   }
