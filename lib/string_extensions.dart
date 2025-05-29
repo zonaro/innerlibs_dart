@@ -1680,7 +1680,7 @@ extension StringExtensions on String {
   String get urlEncode => Uri.encodeQueryComponent(this);
 
   /// Returns a string ready for use in url paths.
-  string get urlFriendly => replaceAll(" ", "-").toLowerCase().only([
+  string get urlFriendly => replaceAll(" ", "-").toLowerCase().removeDiacritics.only([
         ...alphaChars,
         ...numberChars,
         "-",

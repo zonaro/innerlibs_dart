@@ -50,21 +50,9 @@ extension ObjectExtensions<T extends Object?> on T {
   /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO', 'OK', 'C': Returns `true`.
   ///
   /// If the object doesn't match any of the recognized keywords:
-  /// - If [everythingIsTrue] is `true`, returns `true`.
-  /// - If [everythingIsTrue] is `false`, throws an [ArgumentError].
-  ///
-  /// Example usage:
-  /// ```dart
-  /// bool result = someObject.asNullableBool(everythingIsTrue: false);
-  /// ```
-  ///
-  /// - [everythingIsTrue]: A boolean flag indicating whether to treat all non-null values as `true`.
-  ///   If set to `true`, any non-null value (except specific keywords) will be considered `true`.
-  ///   If set to `false`, an exception will be thrown for unrecognized values.
-  ///
+  /// - Return [defaultReturn]
   /// Returns `true` or `false` based on the object's representation.
-  /// Throws an [ArgumentError] if the object doesn't represent a valid option and [everythingIsTrue] is `false`.
-  bool asBool({bool everythingIsTrue = true}) => asNullableBool(everythingIsTrue: everythingIsTrue) ?? false;
+  bool asBool({bool defaultReturn = true}) => asNullableBool(defaultReturn: defaultReturn) ?? defaultReturn;
 
   /// Converts the current object to a nullable boolean value.
   ///
@@ -75,21 +63,10 @@ extension ObjectExtensions<T extends Object?> on T {
   /// - '1', 'S', 'TRUE', 'YES', 'YEP', 'SIM', 'ENABLED', 'ENABLE', 'ON', 'Y', 'ATIVO', 'ATIVAR', 'ATIVADO', 'OK','C','VERDADE','VERDADEIRO','CORRETO','CERTO': Returns `true`.
   ///
   /// If the object doesn't match any of the recognized keywords:
-  /// - If [everythingIsTrue] is `true`, returns `true`.
-  /// - If [everythingIsTrue] is `false`, throws an [ArgumentError].
-  ///
-  /// Example usage:
-  /// ```dart
-  /// bool? result = someObject.asNullableBool(everythingIsTrue: false);
-  /// ```
-  ///
-  /// - [everythingIsTrue]: A boolean flag indicating whether to treat all non-null values as `true`.
-  ///   If set to `true`, any non-null value (except specific keywords) will be considered `true`.
-  ///   If set to `false`, an exception will be thrown for unrecognized values.
-  ///
+  /// - Return [defaultReturn]
+  /// Returns `true` or `false` based on the object's representation.
   /// Returns `true`, `false`, or `null` based on the object's representation.
-  /// Throws an [ArgumentError] if the object doesn't represent a valid option and [everythingIsTrue] is `false`.
-  bool? asNullableBool({bool everythingIsTrue = true}) {
+  bool? asNullableBool({bool? defaultReturn}) {
     if (this == null) return null;
     if (this is bool) return this as bool;
     var x = '$this'.toUpperCase().removeDiacritics.trimAll;
@@ -144,7 +121,7 @@ extension ObjectExtensions<T extends Object?> on T {
       case 'CORRETO':
         return true;
       default:
-        return everythingIsTrue ? true : throw ArgumentError('The object does not represent a valid option and the EverythingIsTrue flag is set to false.');
+        return defaultReturn;
     }
   }
 
@@ -428,8 +405,7 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(
-          value.map((e) => generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase).containsAny(value.map((e) => generateKeyword(e, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase)));
 
   bool keywordEqual(
     T value, {
@@ -438,8 +414,7 @@ extension ObjectExtensions<T extends Object?> on T {
     bool removeWordSplitters = true,
     bool splitCamelCase = true,
   }) =>
-      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) ==
-      generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
+      generateKeyword(this, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase) == generateKeyword(value, forceLowerCase: forceLowerCase, removeDiacritics: removeDiacritics, removeWordSplitters: removeWordSplitters, splitCamelCase: splitCamelCase);
 
   T? nullIf(bool Function(T) test) => test(this) ? null : this;
 
