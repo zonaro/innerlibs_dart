@@ -283,6 +283,11 @@ class ResponsiveRow extends StatelessWidget {
     TextDirection textDirection = TextDirection.ltr,
     WrapAlignment alignment = WrapAlignment.start,
     WrapAlignment runAlignment = WrapAlignment.start,
+    Alignment? columnAlignment,
+    EdgeInsets? columnPadding,
+    EdgeInsets? columnMargin,
+    Decoration? decoration,
+    Decoration? foregroundDecoration,
   }) =>
       ResponsiveRow.withColumns(
         xxs: xxs,
@@ -305,6 +310,11 @@ class ResponsiveRow extends StatelessWidget {
         textDirection: textDirection,
         alignment: alignment,
         runAlignment: runAlignment,
+        columnAlignment: columnAlignment,
+        columnPadding: columnPadding,
+        columnMargin: columnMargin,
+        decoration: decoration,
+        foregroundDecoration: foregroundDecoration,
       );
 
   /// Creates a [ResponsiveRow] with a specific number of columns in each [ScreenTier]
@@ -353,8 +363,13 @@ class ResponsiveRow extends StatelessWidget {
     Axis direction = Axis.horizontal,
     VerticalDirection verticalDirection = VerticalDirection.down,
     TextDirection textDirection = TextDirection.ltr,
-    WrapAlignment alignment = WrapAlignment.start,
+    Alignment? columnAlignment,
     WrapAlignment runAlignment = WrapAlignment.start,
+    WrapAlignment alignment = WrapAlignment.start,
+    EdgeInsets? columnPadding,
+    EdgeInsets? columnMargin,
+    Decoration? decoration,
+    Decoration? foregroundDecoration,
   }) {
     List<ResponsiveColumn> newChildren = [];
 
@@ -386,6 +401,11 @@ class ResponsiveRow extends StatelessWidget {
             xl: getColumnSizeBySegments(totalSegments, [xl, lg, md, sm, xs, xxs, xxl]),
             xxl: getColumnSizeBySegments(totalSegments, [xxl, xl, lg, md, sm, xs, xxs]),
             child: children[i],
+            padding: columnPadding,
+            alignment: columnAlignment,
+            margin: columnMargin,
+            decoration: decoration,
+            foregroundDecoration: decoration,
           ),
         );
       }
