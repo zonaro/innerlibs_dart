@@ -220,6 +220,7 @@ extension ObjectExtensions<T extends Object?> on T {
     TextWidthBasis? textWidthBasis,
     String defaultText = "",
     bool validate = true,
+    string dateFormat = "",
   }) =>
       asNullableText(
         style: style,
@@ -234,7 +235,10 @@ extension ObjectExtensions<T extends Object?> on T {
         semanticsLabel: semanticsLabel,
         textWidthBasis: textWidthBasis,
         validate: validate,
-      )!;
+        defaultText: defaultText,
+        dateFormat: dateFormat,
+      ) !;
+      
 
   /// Converts a value of type `Object` to a specified type `T`.
   ///
