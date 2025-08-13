@@ -218,6 +218,13 @@ extension ColorExtensions<T extends Color> on T {
     }
   }
 
+  /// Returns a color that is a darker version of this color.
+  Color darken([double amount = .5]) {
+    assert(amount >= 0 && amount <= 1);
+    final darker = this.withLightness((this.lightness - amount).clamp(0.0, 1.0));
+    return darker;
+  }
+
   /// Calculates the distance between this HSVColor and the provided [color].
   ///
   /// The distance is calculated by taking the absolute difference between the hue,
@@ -243,7 +250,7 @@ extension ColorExtensions<T extends Color> on T {
   /// Percent: Degree of blending of the dark or light color
   ///
   /// Returns a light color if the first color is dark, a dark color if the first color is light.
-  Color getContrastColor([double percent = .8]) => luminance < 0.5 ? this.makeDarker(percent) : this.makeLighter(percent);
+  Color getContrastColor([double percent = .8]) => luminance < 0.5 ? this.darken(percent) : this.lighten(percent);
 
   /// Checks if the color is a named color.
   bool isNamedColor(String value) {
@@ -281,21 +288,12 @@ extension ColorExtensions<T extends Color> on T {
     return Color.fromRGBO(r, g, b, 1.0);
   }
 
-  /// Darkens the color by blending it with black
-  ///
-  /// TheColor: Color
-  /// percent: Blending percentage
-  ///
-  /// Returns the blended color
-  Color makeDarker([double percent = .5]) => mergeWith(Colors.black, percent);
-
-  /// Lightens the color by blending it with white
-  ///
-  /// TheColor: Color
-  /// percent: Blending percentage
-  ///
-  /// Returns the blended color
-  Color makeLighter([double percent = .5]) => mergeWith(Colors.white, percent);
+  /// Returns a color that is a lighter version of this color.
+  Color lighten([double amount = .5]) {
+    assert(amount >= 0 && amount <= 1);
+    final lighter = this.withLightness((this.lightness + amount).clamp(0.0, 1.0));
+    return lighter;
+  }
 
   /// Blends two colors based on a percentage
   ///
@@ -324,4 +322,19 @@ extension ColorExtensions<T extends Color> on T {
         var hsv = HSVColor.fromColor(this);
         return hsv.withHue((hsv.hue + degree) % 360).toColor();
       });
+
+  /// Returns a color with the specified lightness value.
+  ///
+  /// The value should be between 0 and 1, where 0 is black and 1 is white.
+  /// Values outside this range will throw an assertion error.
+  ///
+  /// Example:
+  /// ```dart
+  /// final color = Colors.blue;
+  /// final lighterColor = color.withLightness(0.8);
+  /// ```
+  Color withLightness(double value) {
+    assert(value >= 0 && value <= 1);
+    return hsl.withLightness(value).toColor();
+  }
 }

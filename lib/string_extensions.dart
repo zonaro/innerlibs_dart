@@ -1887,7 +1887,6 @@ extension StringExtensions on String {
 
   /// Returns the left side of the `String` starting from [char].
   ///
-  /// If [char] doesn't exist, `null` is returned.
   /// ### Example
   ///
   /// ```dart

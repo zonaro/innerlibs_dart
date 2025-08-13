@@ -42,11 +42,11 @@ class MilkTruck extends StatelessWidget {
     return MilkTruck(
       width: width,
       boxColor: theme.colorScheme.secondary,
-      patchColor: theme.colorScheme.primary.makeLighter(),
+      patchColor: theme.colorScheme.primary.lighten(),
       truckColor: theme.colorScheme.primary,
       strokeColor: theme.colorScheme.tertiary,
-      bumperColor: theme.colorScheme.onSurface.makeDarker(),
-      headLightColor: theme.colorScheme.onSurface.makeLighter(),
+      bumperColor: theme.colorScheme.onSurface.darken(),
+      headLightColor: theme.colorScheme.onSurface.lighten(),
       rearViewMirrorColor: theme.colorScheme.onSurface,
       frontGrilleColor: theme.colorScheme.onSurface,
       ornamentColor: theme.colorScheme.secondary,
@@ -445,7 +445,7 @@ class _CaminhaoPainter extends CustomPainter {
     path_18.close();
 
     Paint paint18Fill = Paint()..style = PaintingStyle.fill;
-    paint18Fill.shader = ui.Gradient.linear(Offset(size.width * 0.09230769, size.height * 0.6571719), Offset(size.width * 0.9115385, size.height * 0.6571719), [windshieldColor.makeLighter(), windshieldColor, windshieldColor.makeLighter()], [0, 0.51, 1]);
+    paint18Fill.shader = ui.Gradient.linear(Offset(size.width * 0.09230769, size.height * 0.6571719), Offset(size.width * 0.9115385, size.height * 0.6571719), [windshieldColor.lighten(), windshieldColor, windshieldColor.lighten()], [0, 0.51, 1]);
     canvas.drawPath(path_18, paint18Fill);
 
     Path path_19 = Path();

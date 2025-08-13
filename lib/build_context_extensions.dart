@@ -11,8 +11,10 @@ import 'package:intl/number_symbols_data.dart';
 typedef ScreenTierMap<T> = Map<T, ScreenTier>;
 
 extension BuildContextExtensions on BuildContext {
+  /// Returns the [NumberSymbols] for the current context.
   Iterable<NumberSymbols> get allNumberSymbols => numberFormatSymbols.values.whereType<NumberSymbols>();
 
+  /// Returns [MediaQueryData.alwaysUse24HourFormat] for the nearest [MediaQuery] ancestor or throws an exception, if no such ancestor exists.
   bool get alwaysUse24HourFormat => MediaQuery.alwaysUse24HourFormatOf(this);
 
   /// performs a simple [Theme.of(context).appBarTheme] action and returns given [appBarTheme]
@@ -55,15 +57,15 @@ extension BuildContextExtensions on BuildContext {
   /// Returns the boundary of the render object.
   RenderRepaintBoundary? get boundary => [findRenderObject()].nonNulls.whereType<RenderRepaintBoundary>().firstOrNull;
 
-  // COLOR
-
   /// performs a simple [Theme.of(context).colorScheme] action and returns given [colorScheme]
   ColorScheme get colorScheme => theme.colorScheme;
 
   CupertinoLocalizations get cupertinoLocalizations => CupertinoLocalizations.of(this);
 
+  /// Returns the current locale of the [BuildContext].
   Locale get currentLocale => Localizations.localeOf(this);
 
+  /// Returns the current locale's number symbols.
   NumberSymbols? get currentLocaleNumberSymbols => NumberFormat(null, languageCode).symbols;
 
   /// similar to [MediaQuery.devicePixelRatioOf(context)]
@@ -124,6 +126,7 @@ extension BuildContextExtensions on BuildContext {
   /// component.
   Color get hoverColor => theme.hoverColor;
 
+  /// Returns the [InnerLibsLocalizations] for this [BuildContext].
   InnerLibsLocalizations get innerLibsLocalizations => InnerLibsLocalizations.of(this);
 
   /// Returns true if the aspect ratio is 16:9.
@@ -167,6 +170,7 @@ extension BuildContextExtensions on BuildContext {
   /// True if the shortestSide is largest than 600p
   bool get isSmallTabletSize => (shortestSide >= 600);
 
+  /// True if the current device is 1x1 aspect ratio
   bool get isSquare => is1x1;
 
   /// True if the current device is Tablet
@@ -201,6 +205,7 @@ extension BuildContextExtensions on BuildContext {
   /// content body, like captions
   TextStyle? get labelSmall => textTheme.labelSmall;
 
+  /// Return the current language code
   string get languageCode => currentLocale.languageCode;
 
   /// Returns the logical aspect ratio of the screen.
@@ -221,6 +226,7 @@ extension BuildContextExtensions on BuildContext {
   /// Returns the longest side of the screen.
   double get longestSide => screenSize.longestSide;
 
+  /// Returns the [MaterialLocalizations] for this [BuildContext].
   MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
 
   /// Returns the [ModalRoute] associated with this [BuildContext].
@@ -254,13 +260,13 @@ extension BuildContextExtensions on BuildContext {
   //Padding in physical pixels
   ViewPadding get padding => flutterView.padding;
 
-  double get paddingBottom => flutterView.padding.bottom / flutterView.devicePixelRatio;
+  double get paddingBottom => padding.bottom / devicePixelRatio;
 
-  double get paddingLeft => flutterView.padding.left / flutterView.devicePixelRatio;
+  double get paddingLeft => padding.left / devicePixelRatio;
 
-  double get paddingRight => flutterView.padding.right / flutterView.devicePixelRatio;
+  double get paddingRight => padding.right / devicePixelRatio;
 
-  double get paddingTop => flutterView.padding.top / flutterView.devicePixelRatio;
+  double get paddingTop => padding.top / devicePixelRatio;
 
   /// Returns the physical aspect ratio of the screen.
   double get physicalAspectRatio => physicalWidth / physicalHeight;
@@ -336,6 +342,7 @@ extension BuildContextExtensions on BuildContext {
   /// performs a simple [Theme.of(context).textTheme] action and returns given [textTheme]
   TextTheme get textTheme => theme.textTheme;
 
+  /// Returns the current [ThemeData] for this [BuildContext].
   ThemeData get theme => Theme.of(this);
 
   Brightness get themeBrightness => theme.brightness;
@@ -358,6 +365,7 @@ extension BuildContextExtensions on BuildContext {
   /// medium-emphasis text.
   TextStyle? get titleSmall => textTheme.titleSmall;
 
+  /// Returns the [InnerLibsLocalizations] for this [BuildContext].
   InnerLibsLocalizations get translations => innerLibsLocalizations;
 
   /// similar to [MediaQuery.of(context).viewInsets]
@@ -366,6 +374,7 @@ extension BuildContextExtensions on BuildContext {
   /// similar to [MediaQuery.of(context).viewPadding]
   EdgeInsets get viewPadding => MediaQuery.viewPaddingOf(this);
 
+  /// Returns the width of the screen.
   double get width => screenSize.width;
 
   /// a size computed by [ScreenTier]
@@ -389,6 +398,16 @@ extension BuildContextExtensions on BuildContext {
 
   /// Clear all the snack bars from the current [ScaffoldMessenger].
   void clearSnackBars() => scaffoldMessenger.clearSnackBars();
+
+  /// Closes the main drawer of the scaffold.
+  ///
+  /// Typically used to hide the navigation drawer.
+  void closeDrawer() => scaffold.closeDrawer();
+
+  /// Closes the end drawer of the scaffold.
+  ///
+  /// Typically used to hide the end drawer.
+  void closeEndDrawer() => scaffold.closeEndDrawer();
 
   /// Control the focus of the current context
   /// [times] is the number of times to move the focus.
@@ -416,6 +435,16 @@ extension BuildContextExtensions on BuildContext {
 
   /// Request to move the focus to the next focus node
   bool nextFocus() => FocusScope.of(this).nextFocus();
+
+  /// Opens the main drawer of the scaffold.
+  ///
+  /// Typically used to display the navigation drawer.
+  void openDrawer() => scaffold.openDrawer();
+
+  /// Opens the end drawer of the scaffold.
+  ///
+  /// The end drawer is usually displayed on the opposite side of the main drawer.
+  void openEndDrawer() => scaffold.openEndDrawer();
 
   /// performs a simple [Navigator.pop] action and returns given [result]
   void pop<T>([result]) => Navigator.pop(this, result);
@@ -492,9 +521,13 @@ extension BuildContextExtensions on BuildContext {
     T? xl,
     T? xxl,
   }) {
-    if ((xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl) == null) {
+    var s = [xxs, xs, sm, md, lg, xl, xxl].nonNull();
+    if (s.isEmpty) {
       throw ArgumentError("You need to provide at least one value (xxs, xs, sm, md, lg, xl, xxl)");
     }
+    
+    if (s.length == 1) return s.first;
+
     switch (screenTier) {
       case ScreenTier.xxs:
         return (xxs ?? xs ?? sm ?? md ?? lg ?? xl ?? xxl) as T;

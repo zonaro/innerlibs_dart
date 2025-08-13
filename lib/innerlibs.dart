@@ -40,6 +40,7 @@ export 'general_extensions.dart';
 export 'gesture_detector_extension.dart';
 export 'global.dart';
 export 'icon_extensions.dart';
+export 'image.dart';
 export 'info_usuario.dart';
 export 'keyed_json_table.dart';
 export 'l10n/app_localizations.dart';
