@@ -18,7 +18,7 @@ extension BuildContextExtensions on BuildContext {
   bool get alwaysUse24HourFormat => MediaQuery.alwaysUse24HourFormatOf(this);
 
   /// performs a simple [Theme.of(context).appBarTheme] action and returns given [appBarTheme]
-  AppBarTheme get appBarTheme => theme.appBarTheme;
+  AppBarThemeData get appBarTheme => theme.appBarTheme;
 
   /// Returns the aspect ratio of the screen.
   double get aspectRatio => width / height;
@@ -49,7 +49,7 @@ extension BuildContextExtensions on BuildContext {
   TextStyle? get bodySmall => textTheme.bodySmall;
 
   /// performs a simple [Theme.of(context).bottomAppBarTheme] action and returns given [bottomAppBarTheme]
-  BottomAppBarTheme get bottomAppBarTheme => theme.bottomAppBarTheme;
+  BottomAppBarThemeData get bottomAppBarTheme => theme.bottomAppBarTheme;
 
   /// performs a simple [Theme.of(context).bottomSheetTheme] action and returns given [bottomSheetTheme]
   BottomSheetThemeData get bottomSheetTheme => theme.bottomSheetTheme;
@@ -525,7 +525,7 @@ extension BuildContextExtensions on BuildContext {
     if (s.isEmpty) {
       throw ArgumentError("You need to provide at least one value (xxs, xs, sm, md, lg, xl, xxl)");
     }
-    
+
     if (s.length == 1) return s.first;
 
     switch (screenTier) {

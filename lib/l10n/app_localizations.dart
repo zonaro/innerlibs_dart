@@ -62,15 +62,18 @@ import 'app_localizations_pt.dart';
 /// be consistent with the languages listed in the InnerLibsLocalizations.supportedLocales
 /// property.
 abstract class InnerLibsLocalizations {
-  InnerLibsLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  InnerLibsLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
   static InnerLibsLocalizations of(BuildContext context) {
-    return Localizations.of<InnerLibsLocalizations>(context, InnerLibsLocalizations)!;
+    return Localizations.of<InnerLibsLocalizations>(
+        context, InnerLibsLocalizations)!;
   }
 
-  static const LocalizationsDelegate<InnerLibsLocalizations> delegate = _InnerLibsLocalizationsDelegate();
+  static const LocalizationsDelegate<InnerLibsLocalizations> delegate =
+      _InnerLibsLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +85,8 @@ abstract class InnerLibsLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -1506,34 +1510,36 @@ abstract class InnerLibsLocalizations {
   String addItem(String item);
 }
 
-class _InnerLibsLocalizationsDelegate extends LocalizationsDelegate<InnerLibsLocalizations> {
+class _InnerLibsLocalizationsDelegate
+    extends LocalizationsDelegate<InnerLibsLocalizations> {
   const _InnerLibsLocalizationsDelegate();
 
   @override
   Future<InnerLibsLocalizations> load(Locale locale) {
-    return SynchronousFuture<InnerLibsLocalizations>(lookupInnerLibsLocalizations(locale));
+    return SynchronousFuture<InnerLibsLocalizations>(
+        lookupInnerLibsLocalizations(locale));
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'pt'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_InnerLibsLocalizationsDelegate old) => false;
 }
 
 InnerLibsLocalizations lookupInnerLibsLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return InnerLibsLocalizationsEn();
-    case 'pt': return InnerLibsLocalizationsPt();
+    case 'en':
+      return InnerLibsLocalizationsEn();
+    case 'pt':
+      return InnerLibsLocalizationsPt();
   }
 
   throw FlutterError(
-    'InnerLibsLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'InnerLibsLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

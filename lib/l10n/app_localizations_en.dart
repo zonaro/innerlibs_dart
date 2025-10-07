@@ -121,7 +121,6 @@ class InnerLibsLocalizationsEn extends InnerLibsLocalizations {
   String confirmDeleteMultiple(int count, String plural, String singular) {
     final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
       locale: localeName,
-      
     );
     final String countString = countNumberFormat.format(count);
 
