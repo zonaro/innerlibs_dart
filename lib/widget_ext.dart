@@ -33,18 +33,22 @@ extension WidgetExt on Widget {
   string get text => texts.join(" ");
 
   /// get all the [Text] children in the widget tree and return their text as list of string
-  Iterable<string> get texts {
-    List<Text> textWidgets = [if (this is Text) this as Text];
-    void findTextWidgetsRecursive(Element element) {
-      if (element.widget is Text) {
-        textWidgets.add(element.widget as Text);
+  Iterable<String> get texts sync* {
+    if (this is Text) {
+      yield (this as Text).text;
+    } else if (this is TextFormField) {
+      String? text = (this as TextFormField).controller?.text;
+      if (text != null) {
+        yield text;
       }
-      element.visitChildren(findTextWidgetsRecursive);
+    } else {
+      List<String> collected = [];
+      // ignore: invalid_use_of_protected_member
+      createElement().visitChildren((x) {
+        collected.addAll(x.widget.texts);
+      });
+      yield* collected;
     }
-
-    // ignore: invalid_use_of_protected_member
-    createElement().visitChildren(findTextWidgetsRecursive);
-    return textWidgets.map((x) => x.text);
   }
 
   Widget blurEffect([double sigmaX = 5, double sigmaY = 5, TileMode tileMode = TileMode.clamp]) {

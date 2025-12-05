@@ -11,8 +11,8 @@ class SelfMap<K, V> implements Map<K, V> {
   /// - If [keyFunc] is not provided, the default key function is used, which returns the hash code of the value.
   /// - The [keyFunc] function is used to ensure that the keys are unique. If the [items] list contains duplicate keys, only the first value with the key is retained.
   SelfMap(Iterable<V> items, [K Function(V)? keyFunc]) {
-    this._keyFunc = keyFunc ?? ((e) => e.hashCode as K);
-    this._items = items.distinctBy(this._keyFunc);
+    _keyFunc = keyFunc ?? ((e) => e.hashCode as K);
+    _items = items.distinctBy(_keyFunc);
   }
 
   late K Function(V) _keyFunc;

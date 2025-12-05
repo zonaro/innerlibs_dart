@@ -72,6 +72,9 @@ class PageEntry {
   /// The tab controller of the page.
   TabController? tabController;
 
+  /// A fallback title string to use if the title is not provided or cannot be extracted.
+  final String fallbackTitle;
+
   PageEntry({
     this.route,
     this.showAllToolbarActions = true,
@@ -92,6 +95,7 @@ class PageEntry {
     this.persistentFooterButtons,
     this.showAppBar = true,
     this.onSearch,
+    this.fallbackTitle = '',
   });
 
   /// Returns the current full route of the page.
@@ -127,7 +131,7 @@ class PageEntry {
   int get tabIndex => hasTabs ? tabController?.index ?? 0 : 0;
 
   /// Returns the title string.
-  String get titleString => titleWidget?.text | "";
+  String get titleString => titleWidget?.text | fallbackTitle | "";
 
   // String get titleString => title is Text ? (title as Text).text : "$title" | "";
 
@@ -624,6 +628,8 @@ class TabEntry {
   /// The search callback function for the tab.
   final void Function(String value)? onSearch;
 
+ 
+
   /// The floating action button location of the tab.
   FloatingActionButtonLocation? floatingActionButtonLocation;
 
@@ -637,6 +643,7 @@ class TabEntry {
     this.floatingActionButtonLocation,
     this.route,
     this.inheritIcon = true,
+ 
   });
 
   /// Returns the subtitle string of the tab.
@@ -651,7 +658,7 @@ class TabEntry {
   /// Returns the title string of the tab.
   ///
   /// This will extract the text from widget tree if the title is a widget.
-  String get titleString => titleWidget?.text | "";
+  String get titleString => titleWidget?.text |  "";
 
   /// Returns the title widget of the tab.
   Widget? get titleWidget => forceWidget(title);

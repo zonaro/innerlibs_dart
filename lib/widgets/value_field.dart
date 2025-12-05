@@ -685,9 +685,9 @@ class ValueFieldState<T> extends State<ValueField<T>> {
     super.initState();
     _focusNode = widget.focusNode ?? FocusNode();
     _value = widget.value;
-    this._textController = widget.controller ?? TextEditingController();
+    _textController = widget.controller ?? TextEditingController();
     if (_value != null) {
-      this._textController.text = valueSelector(_value as T);
+      _textController.text = valueSelector(_value as T);
     }
 
     if (isSameType<T, num>() || isSameType<T, double>() || isSameType<T, int>()) {
@@ -728,7 +728,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         value = (value as num).clampMax(widget.max!) as T;
       }
       textValue = textValue?.first(_maxLen!);
-      this._textController.text = textValue!;
+      _textController.text = textValue!;
     }
 
     if (widget.debounce == null) {

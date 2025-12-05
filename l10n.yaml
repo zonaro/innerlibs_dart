@@ -4,5 +4,5 @@ output-localization-file: app_localizations.dart
 output-class: InnerLibsLocalizations 
 nullable-getter: false
 use-escaping: true
-synthetic-package: false  
+
  

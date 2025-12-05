@@ -54,6 +54,10 @@ extension NumExtensions2<T extends num> on T {
     }
   }
 
+  int get floatToInt8 {
+    return (this * 255.0).round() & 0xff;
+  }
+
   /// Returns the value with a negative sign, regardless of its original sign.
   ///
   /// If the value is already negative, it returns the value itself.
@@ -64,7 +68,7 @@ extension NumExtensions2<T extends num> on T {
   /// var num = 5;
   /// var result = num.forceNegative; // result is -5
   /// ```
-  T get forceNegative => (-1 * this.forcePositive) as T;
+  T get forceNegative => (-1 * forcePositive) as T;
 
   /// Returns the value unsigned, regardless of its original sign.
   ///
@@ -213,7 +217,7 @@ extension NumExtensions2<T extends num> on T {
   }
 
   /// delay a callback for the given milliseconds
-  FutureOr<F> delay<F>([FutureOr<F> Function()? callback]) async => await this.milliseconds.delay(callback);
+  FutureOr<F> delay<F>([FutureOr<F> Function()? callback]) async => await milliseconds.delay(callback);
 
   /// Finds the greatest common divisor between this integer and the given integer [other].
   ///
@@ -232,7 +236,7 @@ extension NumExtensions2<T extends num> on T {
 
   bool isBetween(num start, num end) => isGreaterThan(start) && isLowerThan(end);
 
-  bool isBetweenOrEqual(num start, num end) => isBetween(start, end) || this.isEqual(start) || this.isEqual(end);
+  bool isBetweenOrEqual(num start, num end) => isBetween(start, end) || isEqual(start) || isEqual(end);
 
   bool isEqual(num b) => this == b;
 

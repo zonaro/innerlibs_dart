@@ -162,7 +162,7 @@ extension ObjectExtensions<T extends Object?> on T {
     if (this is Text) {
       text = this as Text;
     } else {
-      if (validate == false || this.isValid()) {
+      if (validate == false || isValid()) {
         if (this is Map || this is List) {
           text = Text(jsonEncode(this));
         } else if (this is DateTime) {

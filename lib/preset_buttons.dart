@@ -91,6 +91,29 @@ class DeleteButton extends StatelessWidget {
   }
 }
 
+class FabAdd extends StatelessWidget {
+
+
+  /// Callback when the button is pressed.
+  final VoidCallback onPressed;
+
+  /// Creates a FabAdd button.
+  const FabAdd({
+    Key? key, 
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FabTextBase(
+      label: context.translations.add,
+      icon: Icons.add,
+      onPressed: onPressed,
+      heroTag: (randomInt()),
+    );
+  }
+}
+
 /// A floating action button for saving or registering.
 class FabSave<T> extends StatelessWidget {
   /// The ID associated with the save action.

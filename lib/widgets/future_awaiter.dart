@@ -58,7 +58,7 @@ class AwaiterData<T> extends ValueNotifier<T?> implements Validator {
 
   @override
   Iterable<String> validate() {
-    if (this.validateData) {
+    if (validateData) {
       if (validations.isEmpty) {
         return value.isValid() ? [] : ["Data is invalid"];
       }

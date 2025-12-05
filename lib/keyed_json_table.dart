@@ -123,7 +123,7 @@ class KeyedJsonTable<T extends Comparable> extends Iterable<JsonRow> {
   /// Returns a list of pairs computed from the elements in the table using the provided [keyFunc] and [valueFunc].
   /// The [keyFunc] is a function that takes a [JsonRow] and returns a value of type [T1].
   /// The [valueFunc] is a function that takes a [JsonRow] and returns a value of type [T2].
-  List<(T1, T2)> getPairs<T1, T2>((T1, T2) Function(JsonRow) func) => this._table.where((e) => e[keyName] != null).map((e) => getPair(e[keyName] as T, func)).toList();
+  List<(T1, T2)> getPairs<T1, T2>((T1, T2) Function(JsonRow) func) => _table.where((e) => e[keyName] != null).map((e) => getPair(e[keyName] as T, func)).toList();
 
   /// Reload the table with the provided rows.
   /// Only rows with valid Ids will be added.

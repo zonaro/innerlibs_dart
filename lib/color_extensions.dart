@@ -27,7 +27,7 @@ extension ColorExtensions<T extends Color> on T {
   /// * Bits 16-23 are the red value.
   /// * Bits 8-15 are the green value.
   /// * Bits 0-7 are the blue value.
-  int get argb => floatToInt8(a) << 24 | floatToInt8(r) << 16 | floatToInt8(g) << 8 | floatToInt8(b) << 0;
+  int get argb => a.floatToInt8 << 24 | r.floatToInt8 << 16 | g.floatToInt8 << 8 | b.floatToInt8 << 0;
 
   /// Returns the black component of the color in CMYK color model.
   double get b => cmyk[3];
@@ -114,6 +114,8 @@ extension ColorExtensions<T extends Color> on T {
   /// Returns the magenta component of the color in CMYK color model.
   double get m => cmyk[1];
 
+  Color get readableColor => isLight ? Colors.black : Colors.white;
+
   Iterable<double> get rgb => [r, g, b];
 
   Iterable<double> get rgba => [r, g, b, a];
@@ -199,7 +201,10 @@ extension ColorExtensions<T extends Color> on T {
     return Color.from(alpha: alpha, red: red, green: green, blue: blue);
   }
 
+  /// Change the color opacity
   Color changeOpacity(double opacity) => withAlpha((opacity.clamp(0, 1) * 255).round());
+  
+  Color changeOpacityPercent(int opacity) => changeOpacity(opacity.clamp(0, 100) / 100);
 
   /// Compares this color to another color.
   int compareColor(dynamic other) {
@@ -221,7 +226,7 @@ extension ColorExtensions<T extends Color> on T {
   /// Returns a color that is a darker version of this color.
   Color darken([double amount = .5]) {
     assert(amount >= 0 && amount <= 1);
-    final darker = this.withLightness((this.lightness - amount).clamp(0.0, 1.0));
+    final darker = withLightness((lightness - amount).clamp(0.0, 1.0));
     return darker;
   }
 
@@ -239,10 +244,6 @@ extension ColorExtensions<T extends Color> on T {
     return h + s + v;
   }
 
-  int floatToInt8(double x) {
-    return (x * 255.0).round() & 0xff;
-  }
-
   /// Returns a contrast color based on the brightness of the first color: A light color if the
   /// first color is dark. A dark color if the first color is light.
   ///
@@ -250,7 +251,7 @@ extension ColorExtensions<T extends Color> on T {
   /// Percent: Degree of blending of the dark or light color
   ///
   /// Returns a light color if the first color is dark, a dark color if the first color is light.
-  Color getContrastColor([double percent = .8]) => luminance < 0.5 ? this.darken(percent) : this.lighten(percent);
+  Color getContrastColor([double percent = .8]) => isLight ? darken(percent) : lighten(percent);
 
   /// Checks if the color is a named color.
   bool isNamedColor(String value) {
@@ -291,7 +292,7 @@ extension ColorExtensions<T extends Color> on T {
   /// Returns a color that is a lighter version of this color.
   Color lighten([double amount = .5]) {
     assert(amount >= 0 && amount <= 1);
-    final lighter = this.withLightness((this.lightness + amount).clamp(0.0, 1.0));
+    final lighter = withLightness((lightness + amount).clamp(0.0, 1.0));
     return lighter;
   }
 
