@@ -291,7 +291,7 @@ extension ObjectExtensions<T extends Object?> on T {
 
   /// Checks if the current string is equal to the given [value] when both are flattened.
   /// Returns `true` if they are equal, `false` otherwise.
-  bool flatEqual<V>(V value) => asFlat == value?.asFlat;
+  bool flatEqual<V>(V value) => asFlat == flatString(value);
 
   /// Checks if any of the strings in the given [values] iterable is equal to the current string.
   /// Returns `true` if any string is equal, otherwise returns `false`.

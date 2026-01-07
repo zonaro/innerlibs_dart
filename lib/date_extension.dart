@@ -384,6 +384,18 @@ extension DateTimeExtensions on DateTime {
   /// Checks if the current date and time is greater than or equal to the given date and time.
   bool operator >=(DateTime other) => this > other || this == other;
 
+  /// Calculate Age
+  int age([date? today]) {
+    today ??= DateTime.now().beginOfDay;
+    var birthDate = [this, today].min.beginOfDay;
+    today = [this, today].max.beginOfDay;
+    int age = today.year - birthDate.year;
+    if (today.month < birthDate.month || (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+    return age;
+  }
+
   /// Returns a [DateTime] object representing the specified date and time.
   ///
   /// The optional parameters allow you to specify the year, month, day, hour, minute, second, millisecond, and microsecond.
