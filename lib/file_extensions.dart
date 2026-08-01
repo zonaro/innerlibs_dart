@@ -284,20 +284,19 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
     return path.basename(this.path);
   }
 
-  /// Get the best icon for the file or directory
-  IconData get icon {
+  FaIconData get faIcon {
     if (this is Directory) {
-      return FontAwesome.folder;
+      return FontAwesomeIcons.folder;
     } else if (this is File) {
       var f = this as File;
       if (f.mimeTypeType == "image") {
-        return FontAwesome.file_image;
+        return FontAwesomeIcons.fileImage;
       } else if (f.mimeTypeType == "video") {
-        return FontAwesome.file_video;
+        return FontAwesomeIcons.fileVideo;
       } else if (f.mimeTypeType == "audio") {
-        return FontAwesome.file_audio;
+        return FontAwesomeIcons.fileAudio;
       } else if (f.mimeTypeType == "text") {
-        return FontAwesome.file_code;
+        return FontAwesomeIcons.fileCode;
       } else {
         switch (f.fileExtensionWithoutDot.toLowerCase()) {
           case 'jpg':
@@ -309,23 +308,23 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
           case 'svg':
           case 'tiff':
           case 'ico':
-            return FontAwesome.file_image;
+            return FontAwesomeIcons.fileImage;
           case 'pdf':
-            return FontAwesome.file_pdf;
+            return FontAwesomeIcons.filePdf;
           case 'doc':
           case 'docx':
-            return FontAwesome.file_word;
+            return FontAwesomeIcons.fileWord;
           case 'xls':
           case 'xlsx':
           case 'csv':
-            return FontAwesome.file_excel;
+            return FontAwesomeIcons.fileExcel;
           case 'ppt':
           case 'pptx':
           case 'pps':
-            return FontAwesome.file_powerpoint;
+            return FontAwesomeIcons.filePowerpoint;
           case 'txt':
           case 'md':
-            return FontAwesome.file_lines;
+            return FontAwesomeIcons.fileLines;
           case 'html':
           case 'htm':
           case 'css':
@@ -339,9 +338,9 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
           case 'java':
           case 'php':
           case 'py':
-            return FontAwesome.file_code;
+            return FontAwesomeIcons.fileCode;
           case 'sql':
-            return FontAwesome.database_solid;
+            return FontAwesomeIcons.database;
           case 'zip':
           case 'rar':
           case 'rar5':
@@ -351,7 +350,7 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
           case 'bz2':
           case 'xz':
           case 'zst':
-            return FontAwesome.file_zipper;
+            return FontAwesomeIcons.fileZipper;
           case 'mp3':
           case 'wav':
           case 'flac':
@@ -360,7 +359,7 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
           case 'wma':
           case 'aac':
           case 'opus':
-            return FontAwesome.file_audio;
+            return FontAwesomeIcons.fileAudio;
           case 'mp4':
           case 'mkv':
           case 'webm':
@@ -371,19 +370,19 @@ extension FileSystemEntityExtensionPlus on FileSystemEntity {
           case '3g2':
           case 'm4v':
           case 'avi':
-            return FontAwesome.file_video;
+            return FontAwesomeIcons.fileVideo;
           case 'apk':
           case 'appbundle':
-            return FontAwesome.android_brand;
+            return FontAwesomeIcons.android;
           case 'exe':
           case 'msi':
-            return FontAwesome.window_maximize;
+            return FontAwesomeIcons.windowMaximize;
           default:
-            return FontAwesome.file;
+            return FontAwesomeIcons.file;
         }
       }
     }
-    return FontAwesome.file;
+    return FontAwesomeIcons.file;
   }
 
   /// Get the ID of the file or directory

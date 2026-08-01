@@ -23,12 +23,12 @@ dependencies:
   intl: 
   brasil_fields: 
   download: 
+  font_awesome_flutter:  
   gap: 
   dropdown_search:
-  flutter_typeahead : 
+  flutter_typeahead: 
   mime:
-  latlong2:
-  icons_plus:
+  latlong2:  
   date_field:
   flutter_localizations:
     sdk: flutter

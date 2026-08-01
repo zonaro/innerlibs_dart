@@ -12,8 +12,8 @@ export 'package:brasil_fields/brasil_fields.dart' hide Estados;
 export 'package:collection/collection.dart' hide groupBy;
 export 'package:darq/darq.dart';
 export 'package:date_field/date_field.dart';
+export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:gap/gap.dart';
-export 'package:icons_plus/icons_plus.dart';
 export 'package:innerlibs/innerlibs.dart';
 export 'package:latlong2/latlong.dart' hide Path;
 

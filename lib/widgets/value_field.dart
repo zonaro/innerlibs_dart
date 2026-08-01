@@ -32,6 +32,56 @@ typedef NumField = ValueField<num>;
 
 typedef StringField = ValueField<string>;
 
+class AddressGroupField extends StatefulWidget {
+  final Endereco? value;
+  final void Function(Endereco?)? onChanged;
+  final bool readOnly;
+  final bool useCityList;
+  final bool useUF;
+  final String? Function(String?)? cepValidator;
+  final String? Function(String?)? logradouroValidator;
+  final String? Function(String?)? numeroValidator;
+  final String? Function(String?)? complementoValidator;
+  final String? Function(String?)? bairroValidator;
+  final String? Function(Cidade?)? cidadeValidator;
+  final String? cepLabel;
+  final String? logradouroLabel;
+  final String? numeroLabel;
+  final String? complementoLabel;
+  final String? bairroLabel;
+  final String? cidadeLabel;
+  final String? estadoLabel;
+  final double spacing;
+  final double runSpacing;
+
+  const AddressGroupField({
+    super.key,
+    this.value,
+    this.onChanged,
+    this.readOnly = false,
+    this.useCityList = true,
+    this.useUF = false,
+    this.cepValidator,
+    this.logradouroValidator,
+    this.numeroValidator,
+    this.complementoValidator,
+    this.bairroValidator,
+    this.cidadeValidator,
+    this.cepLabel,
+    this.logradouroLabel,
+    this.numeroLabel,
+    this.complementoLabel,
+    this.bairroLabel,
+    this.cidadeLabel,
+    this.estadoLabel,
+    this.spacing = 8,
+    this.runSpacing = 8,
+  });
+
+  @override
+  State<AddressGroupField> createState() => _AddressGroupFieldState();
+}
+
 class CampoListaCidade extends StatelessWidget {
   final Cidade? value;
   final dynamic nomeEstadoOuUFOuIBGEouRegiao;
@@ -283,12 +333,53 @@ class CampoTipoPessoa extends StatelessWidget {
   }
 }
 
+class CepField extends StatelessWidget {
+  final void Function(String?)? onChanged;
+  final bool readOnly;
+  final string? label;
+  final string? value;
+  final TextEditingController? controller;
+
+  const CepField({
+    super.key,
+    this.onChanged,
+    this.readOnly = false,
+    this.label,
+    this.value,
+    this.controller,
+    required TextEditingController logradouroCtrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StringField(
+      label: label ?? 'CEP',
+      value: value,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        CepInputFormatter(),
+      ],
+      keyboardType: const TextInputType.numberWithOptions(),
+      validator: (newValue) => Brasil.validarCEP(newValue ?? "") ? null : "CEP inválido!",
+      onChanged: (v, _) {
+        if (onChanged != null) {
+          onChanged!(v);
+        }
+      },
+      controller: controller,
+      readOnly: readOnly,
+    );
+  }
+}
+
 class CnpjCpfField extends StatelessWidget {
   final void Function(String?)? onChanged;
   final bool readOnly;
   final string? label;
   final string? value;
   final TextEditingController? controller;
+  final bool _allowCpf;
+  final bool _allowCnpj;
 
   const CnpjCpfField({
     super.key,
@@ -297,19 +388,53 @@ class CnpjCpfField extends StatelessWidget {
     this.label,
     this.value,
     this.controller,
-  });
+  })  : _allowCpf = true,
+        _allowCnpj = true;
+
+  const CnpjCpfField.cnpjOnly({
+    super.key,
+    this.onChanged,
+    this.readOnly = false,
+    this.label,
+    this.value,
+    this.controller,
+  })  : _allowCpf = false,
+        _allowCnpj = true;
+
+  const CnpjCpfField.cpfOnly({
+    super.key,
+    this.onChanged,
+    this.readOnly = false,
+    this.label,
+    this.value,
+    this.controller,
+  })  : _allowCpf = true,
+        _allowCnpj = false;
 
   @override
   Widget build(BuildContext context) {
     return StringField(
-      label: label ?? 'CPF/CNPJ',
+      label: label ??
+          (_allowCpf && _allowCnpj
+              ? 'CPF/CNPJ'
+              : _allowCpf
+                  ? 'CPF'
+                  : 'CNPJ'),
       value: value,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
-        CpfOuCnpjFormatter(),
+        if (!_allowCpf && _allowCnpj) CnpjInputFormatter() else if (_allowCpf && !_allowCnpj) CpfInputFormatter() else CpfOuCnpjFormatter(),
       ],
       keyboardType: const TextInputType.numberWithOptions(),
-      validator: (newValue) => Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!",
+      validator: (newValue) {
+        if (newValue.isBlank) return null;
+        if (!_allowCpf && _allowCnpj) {
+          return Brasil.validarCNPJ(newValue ?? "") ? null : "CNPJ inválido!";
+        } else if (_allowCpf && !_allowCnpj) {
+          return Brasil.validarCPF(newValue ?? "") ? null : "CPF inválido!";
+        }
+        return Brasil.validarCPFouCNPJ(newValue ?? "") ? null : "CPF ou CNPJ inválido!";
+      },
       onChanged: (v, _) {
         if (onChanged != null) {
           onChanged!(v);
@@ -600,7 +725,7 @@ class ValueFieldState<T> extends State<ValueField<T>> {
         ),
         items: (v, l) async => await allOptions(v),
         itemAsString: (x) => textSelector(x),
-        onChanged: (newValue) {
+        onSaved: (newValue) {
           if (newValue == null || (_value != null && equalityFunction(_value as T, newValue))) {
             _value = null;
           } else {
@@ -833,5 +958,252 @@ class YesNoField extends StatelessWidget {
       onChanged: (v, _) => onChanged(v),
       validator: (newValue) => newValue.flatEqualAny(opt) ? null : context.translations.invalidItem(context.translations.value),
     );
+  }
+}
+
+class _AddressGroupFieldState extends State<AddressGroupField> {
+  late final TextEditingController _cepCtrl;
+  late final TextEditingController _logradouroCtrl;
+  late final TextEditingController _numeroCtrl;
+  late final TextEditingController _complementoCtrl;
+  late final TextEditingController _bairroCtrl;
+
+  late final FocusNode _cepFn;
+  late final FocusNode _logradouroFn;
+  late final FocusNode _numeroFn;
+  late final FocusNode _complementoFn;
+  late final FocusNode _bairroFn;
+
+  Cidade? _cidade;
+  Estado _estado = Estado.naoDefinido;
+  bool _isLookingUpCep = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveRow(
+      horizontalSpacing: widget.spacing,
+      runSpacing: widget.runSpacing,
+      children: [
+        ResponsiveColumn(
+          xxs: 12,
+          sm: 3,
+          md: 2,
+          child: StringField(
+            label: widget.cepLabel ?? 'CEP',
+            controller: _cepCtrl,
+            focusNode: _cepFn,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              CepInputFormatter(),
+            ],
+            keyboardType: const TextInputType.numberWithOptions(),
+            readOnly: widget.readOnly,
+            validator: (v) {
+              if (v.isNotBlank && !Brasil.validarCEP(v ?? "")) {
+                return "CEP inválido!";
+              }
+              return widget.cepValidator?.call(v);
+            },
+            onChanged: _onCepChanged,
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        ResponsiveColumn(
+          xxs: 12,
+          sm: 5,
+          md: 6,
+          child: StringField(
+            label: widget.logradouroLabel ?? 'Logradouro',
+            controller: _logradouroCtrl,
+            focusNode: _logradouroFn,
+            readOnly: widget.readOnly,
+            validator: widget.logradouroValidator,
+            onChanged: (v, _) => _notifyChanged(),
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        ResponsiveColumn(
+          xxs: 12,
+          sm: 2,
+          md: 2,
+          child: StringField(
+            label: widget.numeroLabel ?? 'Número',
+            controller: _numeroCtrl,
+            focusNode: _numeroFn,
+            readOnly: widget.readOnly,
+            validator: widget.numeroValidator,
+            onChanged: (v, _) => _notifyChanged(),
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        ResponsiveColumn(
+          xxs: 12,
+          sm: 2,
+          md: 2,
+          child: StringField(
+            label: widget.complementoLabel ?? 'Complemento',
+            controller: _complementoCtrl,
+            focusNode: _complementoFn,
+            readOnly: widget.readOnly,
+            validator: widget.complementoValidator,
+            onChanged: (v, _) => _notifyChanged(),
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        ResponsiveColumn(
+          xxs: 12,
+          sm: 3,
+          md: 3,
+          child: StringField(
+            label: widget.bairroLabel ?? 'Bairro',
+            controller: _bairroCtrl,
+            focusNode: _bairroFn,
+            readOnly: widget.readOnly,
+            validator: widget.bairroValidator,
+            onChanged: (v, _) => _notifyChanged(),
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        ResponsiveColumn(
+          xxs: 12,
+          sm: 7,
+          md: 7,
+          child: widget.useCityList
+              ? CampoListaCidade(
+                  value: _cidade,
+                  nomeEstadoOuUFOuIBGEouRegiao: _estado != Estado.naoDefinido ? _estado.uf : null,
+                  onChanged: (cidade) {
+                    setState(() => _cidade = cidade);
+                    _notifyChanged();
+                  },
+                  label: widget.cidadeLabel ?? 'Cidade',
+                  readOnly: widget.readOnly,
+                  validator: widget.cidadeValidator,
+                )
+              : StringField(
+                  label: widget.cidadeLabel ?? 'Cidade',
+                  value: _cidade?.nome ?? "",
+                  readOnly: widget.readOnly,
+                  onChanged: (v, _) {
+                    _cidade = null;
+                    _notifyChanged();
+                  },
+                  textInputAction: TextInputAction.next,
+                ),
+        ),
+        ResponsiveColumn(
+          xxs: 12,
+          sm: 2,
+          md: 2,
+          child: CampoListaEstado(
+            estadoValue: _estado,
+            onChanged: (estado) {
+              setState(() => _estado = estado);
+              _notifyChanged();
+            },
+            modoCompacto: widget.useUF,
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void didUpdateWidget(AddressGroupField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value && widget.value != null) {
+      _populateFromEndereco(widget.value!);
+    }
+  }
+
+  @override
+  void dispose() {
+    _cepCtrl.dispose();
+    _logradouroCtrl.dispose();
+    _numeroCtrl.dispose();
+    _complementoCtrl.dispose();
+    _bairroCtrl.dispose();
+    _cepFn.dispose();
+    _logradouroFn.dispose();
+    _numeroFn.dispose();
+    _complementoFn.dispose();
+    _bairroFn.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _cepCtrl = TextEditingController();
+    _logradouroCtrl = TextEditingController();
+    _numeroCtrl = TextEditingController();
+    _complementoCtrl = TextEditingController();
+    _bairroCtrl = TextEditingController();
+    _cepFn = FocusNode();
+    _logradouroFn = FocusNode();
+    _numeroFn = FocusNode();
+    _complementoFn = FocusNode();
+    _bairroFn = FocusNode();
+
+    if (widget.value != null) {
+      _populateFromEndereco(widget.value!);
+    }
+  }
+
+  Endereco? _buildEndereco() {
+    var cep = _cepCtrl.text.onlyNumbers;
+    if (cep.isBlank) return null;
+    return Endereco(
+      cep: Brasil.formatarCEP(cep),
+      logradouro: _logradouroCtrl.text,
+      numero: _numeroCtrl.text,
+      complemento: _complementoCtrl.text,
+      bairro: _bairroCtrl.text,
+      cidade: _cidade,
+    );
+  }
+
+  Future<void> _lookupCep(String cep) async {
+    _isLookingUpCep = true;
+    try {
+      var endereco = await Brasil.pesquisarCEP(cep);
+      if (endereco != null && mounted) {
+        setState(() {
+          _logradouroCtrl.text = endereco.logradouro;
+          _bairroCtrl.text = endereco.bairro;
+          _cidade = endereco.cidade;
+          _estado = endereco.estado ?? Estado.naoDefinido;
+          _numeroCtrl.text = endereco.numero;
+          _complementoCtrl.text = endereco.complemento;
+        });
+        _numeroFn.requestFocus();
+      } else if (mounted) {
+        _logradouroFn.requestFocus();
+      }
+    } finally {
+      _isLookingUpCep = false;
+    }
+  }
+
+  void _notifyChanged() {
+    widget.onChanged?.call(_buildEndereco());
+  }
+
+  void _onCepChanged(String? cep, string? _) {
+    var cepNumbers = cep?.onlyNumbers ?? "";
+    if (cepNumbers.length == 8 && !_isLookingUpCep) {
+      _lookupCep(cepNumbers);
+    }
+    _notifyChanged();
+  }
+
+  void _populateFromEndereco(Endereco e) {
+    _cepCtrl.text = Brasil.formatarCEP(e.cep);
+    _logradouroCtrl.text = e.logradouro;
+    _numeroCtrl.text = e.numero;
+    _complementoCtrl.text = e.complemento;
+    _bairroCtrl.text = e.bairro;
+    _cidade = e.cidade;
+    _estado = e.estado ?? Estado.naoDefinido;
   }
 }

@@ -11,6 +11,35 @@ class IconMenu extends StatefulWidget {
   createState() => _IconMenuState();
 }
 
+class IconMenuButton extends IconMenuItem {
+  final IconData icon;
+  final String text;
+  final bool extended;
+  final bool enabled;
+  final void Function()? onPressed;
+  final List<IconMenuItem> subMenu;
+
+  IconMenuButton({
+    required this.icon,
+    required this.text,
+    this.extended = false,
+    this.enabled = true,
+    this.onPressed,
+    super.color,
+    this.subMenu = const [],
+  });
+}
+
+class IconMenuDivider extends IconMenuItem {
+  IconMenuDivider({super.color});
+}
+
+abstract class IconMenuItem {
+  final Color? color;
+
+  IconMenuItem({this.color});
+}
+
 class _IconMenuState extends State<IconMenu> {
   @override
   Widget build(BuildContext context) {
@@ -26,7 +55,7 @@ class _IconMenuState extends State<IconMenu> {
         var maxWidth = widget.maxWidth ?? constraints.maxWidth;
 
         if (widget.buttons.isEmpty) {
-          return   nil;
+          return nil;
         }
         if (widget.buttons.length == 1) {
           var button = widget.buttons.first;
@@ -53,7 +82,7 @@ class _IconMenuState extends State<IconMenu> {
               );
             }
           } else if (button is IconMenuDivider) {
-            return   nil;
+            return nil;
           } else {
             throw Exception("Invalid IconMenuItem type");
           }
@@ -139,34 +168,4 @@ class _IconMenuState extends State<IconMenu> {
       );
     }
   }
-}
-
-abstract class IconMenuItem {
-  final Color? color;
-
-  IconMenuItem({this.color});
-}
-
-class IconMenuDivider extends IconMenuItem {
-  @override
-  IconMenuDivider({super.color});
-}
-
-class IconMenuButton extends IconMenuItem {
-  final IconData icon;
-  final String text;
-  final bool extended;
-  final bool enabled;
-  final void Function()? onPressed;
-  final List<IconMenuItem> subMenu;
-
-  IconMenuButton({
-    required this.icon,
-    required this.text,
-    this.extended = false,
-    this.enabled = true,
-    this.onPressed,
-    super.color,
-    this.subMenu = const [],
-  });
 }

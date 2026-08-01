@@ -6,7 +6,7 @@ import 'package:xml/xml.dart';
 
 class TagXml extends XmlElement implements Validator, Comparable {
   /// Constructs a [TagXml] instance with the given [name].
-  TagXml.fromTagName(String name) : super((XmlName(name)));
+  TagXml.fromTagName(String name) : super((XmlName.parts(name)));
 
   /// Return a string with a arrow with length equal to [deepLevel]
   string get deepArrow => "${identArrow(length: deepLevel, pattern: "|=>")} ($tagName)".trim();
@@ -162,7 +162,7 @@ class TagXml extends XmlElement implements Validator, Comparable {
       consoleLog("Setting $tag to $svalue");
       if (element == null) {
         // If the element does not exist, create a new one with the provided value
-        final newNode = XmlElement(XmlName(tag));
+        final newNode = XmlElement(XmlName.parts(tag));
         newNode.innerText = svalue;
         children.add(newNode);
       } else {

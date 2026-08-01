@@ -181,9 +181,9 @@ class Endereco extends LatLng implements Comparable<Endereco> {
   ///
   /// Retorna:
   ///     - O endereço correspondente ao CEP.
-  Future<Endereco> fromCEP(String cep) async {
+  Future<Endereco?> fromCEP(String cep) async {
     try {
-      return (await Brasil.pesquisarCEP(cep))!;
+      return Brasil.pesquisarCEP(cep);
     } on Exception catch (e) {
       throw Exception("Erro ao buscar o CEP: $e");
     }

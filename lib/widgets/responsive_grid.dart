@@ -504,18 +504,18 @@ enum ScreenTier {
   /// Double Extra Large screen.
   xxl(6);
 
-  static ScreenTierMap<double> _bp = {};
+  static Map<double, ScreenTier> _bp = {};
 
   /// The breakpoints for different screen sizes defined by user.
   /// if empty, the [defaultBreakpoints] will be used.
-  static ScreenTierMap<double> get breakpoints {
+  static Map<double, ScreenTier> get breakpoints {
     if (_bp.isEmpty) {
       _bp = defaultBreakpoints;
     }
     return _bp;
   }
 
-  static set breakpoints(ScreenTierMap<double> value) {
+  static set breakpoints(Map<double, ScreenTier> value) {
     _bp = value;
   }
 
@@ -528,7 +528,7 @@ enum ScreenTier {
   /// - lg: 1200
   /// - xl: 1600
   /// - xxl: double.infinity
-  static ScreenTierMap<double> get defaultBreakpoints => <double, ScreenTier>{
+  static Map<double, ScreenTier> get defaultBreakpoints => <double, ScreenTier>{
         360: ScreenTier.xxs,
         576: ScreenTier.xs,
         768: ScreenTier.sm,
@@ -547,7 +547,7 @@ enum ScreenTier {
   /// If no custom breakpoints are provided, the [breakpoints] will be used.
   ///
   /// Returns a [ScreenTier] object based on the given [width] and [customBreakPoints].
-  factory ScreenTier.fromWidth(double width, [ScreenTierMap<double> customBreakPoints = const {}]) {
+  factory ScreenTier.fromWidth(double width, [Map<double, ScreenTier> customBreakPoints = const {}]) {
     if (customBreakPoints.isEmpty) customBreakPoints = breakpoints;
     return getBreakpointValue(width, customBreakPoints);
   }
